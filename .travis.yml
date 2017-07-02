@@ -1,0 +1,19 @@
+language: python
+
+sudo: false
+
+python:
+  - 2.7
+  - 3.3
+  - 3.4
+  - 3.5
+  - 3.6
+
+install:
+  - pip install pytest coverage coveralls six
+
+script:
+  - coverage run --source=uwsgiconf setup.py test
+
+after_success:
+  - coveralls

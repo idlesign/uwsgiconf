@@ -1,11 +1,13 @@
 import os
 import io
+import sys
 from setuptools import setup, find_packages
 
 from uwsgiconf import VERSION
 
 
 PATH_BASE = os.path.dirname(__file__)
+PYTEST_RUNNER = ['pytest-runner'] if 'test' in sys.argv else []
 
 
 def get_readme():
@@ -31,7 +33,7 @@ setup(
     zip_safe=False,
 
     install_requires=[],
-    setup_requires=[],
+    setup_requires=[] + PYTEST_RUNNER,
 
     entry_points={
         'console_scripts': ['uwsgiconf = uwsgiconf.cli:main'],
@@ -46,6 +48,11 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'License :: OSI Approved :: BSD License'
     ],
 )

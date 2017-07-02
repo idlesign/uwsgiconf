@@ -1,0 +1,50 @@
+from ..config import Section as _Section
+
+
+class Section(_Section):
+    """Basic nice configuration."""
+
+    def __init__(self, name=None, touch_reload=None, workers=None, threads=None, **kwargs):
+        super(Section, self).__init__(strict_config=True, name=name, **kwargs)
+
+        if touch_reload:
+            self.grp_main_process.set_basic_params(touch_reload=touch_reload)
+
+        if workers:
+            self.grp_workers.set_basic_params(count=workers)
+        else:
+            self.grp_workers.set_count_auto()
+
+        self.grp_workers.set_thread_params(per_worker=threads)
+        self.grp_main_process.set_basic_params(vacuum=True)
+        self.grp_main_process.set_naming_params(autonaming=True)
+        self.grp_master_process.set_basic_params(enabled=True)
+        self.grp_locks.set_basic_params(thunder_lock=True)
+
+
+class PythonSection(Section):
+    """Basic nice configuration using Python plugin."""
+
+    def __init__(self, name=None, python_basic_params=None, wsgi_module=None, **kwargs):
+        """
+
+        :param str|unicode name:
+
+        :param dict basic_params_plugin_python: See PythonPlugin params
+
+        :param str|unicode wsgi_module: wsgi application module path or filepath
+
+            Example:
+                mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
+                mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
+
+        :param kwargs:
+        """
+        super(PythonSection, self).__init__(
+            name=name, basic_params_plugin_python=python_basic_params, **kwargs)
+
+        plugin = self.grp_plugin_python
+        plugin.activate()
+
+        if wsgi_module:
+            plugin.set_wsgi_params(module=wsgi_module)
