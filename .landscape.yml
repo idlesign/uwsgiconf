@@ -2,3 +2,9 @@ strictness: medium
 
 ignore-paths:
     - docs
+
+pylint:
+  disable:
+    - unused-import
+    - protected-access
+    - too-many-arguments
