@@ -18,14 +18,15 @@ class PythonPlugin(PluginOptionsGroupBase):
         :param str|unicode|int version: Python version plugin supports.
 
             Example:
-                    3 - version 3
-                    <empty> - version 2
-                    <default> - version deduced by uwsgiconf
+                * 3 - version 3
+                * <empty> - version 2
+                * <default> - version deduced by uwsgiconf
 
         :param str|unicode python_home: Set python executable directory - PYTHONHOME/virtualenv.
 
         :param str|unicode search_path: Add directory (or an .egg or a glob) to the Python search path.
-            This can be specified up to 64 times.
+
+            .. note:: This can be specified up to 64 times.
 
         :param str|unicode python_binary: Set python program name.
 
@@ -36,8 +37,9 @@ class PythonPlugin(PluginOptionsGroupBase):
 
         :param bool enable_threads: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
-            Threads will simply *not work* if this option is not enabled. There will likely be no error,
-            just no execution of your thread code.
+
+            .. warning:: Threads will simply *not work* if this option is not enabled.
+                         There will likely be no error, just no execution of your thread code.
 
         """
         self.name = self.get_name(version)
@@ -69,7 +71,8 @@ class PythonPlugin(PluginOptionsGroupBase):
     def set_app_args(self, *args):
         """Sets ``sys.argv`` for python apps.
 
-        pyargv="one two three" will set ``sys.argv`` to ``('one', 'two', 'three')``.
+        Examples:
+            * pyargv="one two three" will set ``sys.argv`` to ``('one', 'two', 'three')``.
 
         :param args:
         """
@@ -84,11 +87,12 @@ class PythonPlugin(PluginOptionsGroupBase):
         :param str|unicode module:
             * load .wsgi file as the Python application
             * load a WSGI module as the application.
-              The module (sans ``.py``) must be importable, ie. be in ``PYTHONPATH``.
 
-            Example:
-                mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
-                mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
+            .. note:: The module (sans ``.py``) must be importable, ie. be in ``PYTHONPATH``.
+
+            Examples:
+                * mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
+                * mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
         :param str|unicode callable_name: Set WSGI callable name. Default: application.
 
@@ -117,11 +121,9 @@ class PythonPlugin(PluginOptionsGroupBase):
     def set_autoreload_params(self, scan_interval=None, ignore_modules=None):
         """Sets autoreload related parameters.
 
-        :param int scan_interval: Monitor Python modules' modification times to trigger reload.
+        :param int scan_interval: Seconds. Monitor Python modules' modification times to trigger reload.
 
-            WARNING: Use only in development!
-
-            Modification scan interval given in seconds.
+            .. warning:: Use only in development.
 
         :param list|st|unicode ignore_modules: Ignore the specified module during auto-reload scan.
 

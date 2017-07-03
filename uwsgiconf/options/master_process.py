@@ -8,7 +8,8 @@ class MasterProcess(OptionsGroup):
 
     uWSGI's built-in prefork+threading multi-worker management mode,
     activated by flicking the master switch on.
-    For all practical serving deployments it's not really a good idea not to use master mode.
+
+    .. note:: For all practical serving deployments it's not really a good idea not to use master mode.
 
     """
 
@@ -26,7 +27,8 @@ class MasterProcess(OptionsGroup):
 
         :param int subproc_check_interval: Set the interval (in seconds) of master checks. Default: 1
             The master process makes a scan of subprocesses, etc. every N seconds.
-            You can increase this time if you need to, but it's DISCOURAGED.
+
+            .. warning:: You can increase this time if you need to, but it's DISCOURAGED.
 
         """
         self._set('master', enabled, cast=bool)
@@ -49,7 +51,7 @@ class MasterProcess(OptionsGroup):
             * Use - (minus) to make interval:
                 minute='13-18'  stands for `from minute 13 to 18`
 
-        NOTE: We use cron2 option available since 1.9.11.
+        .. note:: We use cron2 option available since 1.9.11.
 
         :param str|unicode command: Command to execute on schedule (with or without path).
 

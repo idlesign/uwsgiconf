@@ -49,7 +49,7 @@ class MainProcess(OptionsGroup):
     def set_naming_params(self, autonaming=None, prefix=None, postfix=None, name=None):
         """Setups processes naming parameters.
 
-        :param bool autonaming: Automatically set process name to something meaningful
+        :param bool autonaming: Automatically set process name to something meaningful.
             Generated process names may be 'uWSGI Master', 'uWSGI Worker #', etc.
 
         :param str prefix: Add prefix to process names.

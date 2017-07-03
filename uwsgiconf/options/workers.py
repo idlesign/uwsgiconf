@@ -102,8 +102,11 @@ class Workers(OptionsGroup):
             just no execution of your thread code.
 
         :param int per_worker: Run each worker in prethreaded mode with the specified number
-            of threads per worker.\n\nDo not use with ``gevent``.
-            NOTE: Enables threads automatically.
+            of threads per worker.
+
+            .. warning:: Do not use with ``gevent``.
+
+            .. note:: Enables threads automatically.
 
         :param int stack_size: Set threads stacksize.
 

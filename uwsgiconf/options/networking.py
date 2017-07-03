@@ -13,22 +13,22 @@ class Networking(OptionsGroup):
     SOCK_HTTP11 = 'http11'  # Keep-Alive
 
     SOCK_UDP = 'upd'
-    """run the udp server on the specified address
+    """Run the udp server on the specified address.
     
-    Mainly useful for SNMP or shared UDP logging.
+    .. note:: Mainly useful for SNMP or shared UDP logging.
     
     """
     SOCK_FASTCGI = 'fastcgi'
-    """Bind to the specified socket using FastCGI"""
+    """Bind to the specified socket using FastCGI."""
 
     SOCK_SCGI = 'scgi'
-    """bind to the specified UNIX/TCP socket using SCGI protocol"""
+    """Bind to the specified UNIX/TCP socket using SCGI protocol."""
 
     SOCK_RAW = 'raw'
-    """bind to the specified UNIX/TCP socket using RAW protocol"""
+    """Bind to the specified UNIX/TCP socket using RAW protocol."""
 
     SOCK_SHARED = 'shared'
-    """Create a shared socket for advanced jailing or IPC purposes
+    """Create a shared socket for advanced jailing or IPC purposes.
     
     Allows you to create a socket early in the server's startup 
     and use it after privileges drop or jailing. This can be used 
@@ -36,18 +36,19 @@ class Networking(OptionsGroup):
     
     """
     SOCK_ZERO_MQ = 'zmq'
-    """zeromq pub/sub pair"""
+    """Introduce zeromq pub/sub pair."""
 
-    SOCK__MODE_SSL = '+ssl'
+    MODE_SSL = '+ssl'
+    """Use SSL."""
 
-    SOCK__MODE_NPH = '+nph'
-    """bind to the specified UNIX/TCP socket (nph mode)"""
+    MODE_NPH = '+nph'
+    """Bind to the specified UNIX/TCP socket using nph mode."""
 
-    SOCK__MODE_PERSISTENT = '+persistent'
-    """persistent uwsgi protocol (puwsgi)"""
+    MODE_PERSISTENT = '+persistent'
+    """Use persistent uwsgi protocol (puwsgi)."""
 
-    SOCK__MODE_UNDEFERRED = '+undeferred'
-    """shared socket undeferred mode"""
+    MODE_UNDEFERRED = '+undeferred'
+    """Use shared socket undeferred mode."""
 
     def __init__(self, *args, **kwargs):
         super(Networking, self).__init__(*args, **kwargs)
@@ -60,7 +61,9 @@ class Networking(OptionsGroup):
 
         :param int queue_size: Every socket has an associated queue where request will be put waiting
             for a process to became ready to accept them. When this queue is full, requests will be rejected.
-            Default 100. The maximum value is system/kernel dependent.
+            Default 100.
+
+            .. note:: The maximum value is system/kernel dependent.
 
         :param bool freebind: Put socket in freebind mode (Linux only).
             Allows binding to non-existent network addresses.
@@ -137,7 +140,7 @@ class Networking(OptionsGroup):
 
         :param str type: Socket type. See Networking.SOCK_*
 
-        :param str mode: Socket mode. See Networking.SOCK__MODE*
+        :param str mode: Socket mode. See Networking.MODE_*
 
         :param str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
@@ -152,21 +155,21 @@ class Networking(OptionsGroup):
 
         param_name = {
             self.SOCK_UWSGI: {
-                self.SOCK__MODE_SSL: 'suwsgi-socket',
-                self.SOCK__MODE_PERSISTENT: 'puwsgi-socket',
+                self.MODE_SSL: 'suwsgi-socket',
+                self.MODE_PERSISTENT: 'puwsgi-socket',
             }.get(mode, 'uwsgi-socket'),  # Default: Bind to the specified socket with default protocol (see `protocol`)
 
-            self.SOCK_HTTP: 'https-socket' if mode == self.SOCK__MODE_SSL else 'http-socket',
+            self.SOCK_HTTP: 'https-socket' if mode == self.MODE_SSL else 'http-socket',
 
             self.SOCK_HTTP11: 'http11-socket',
 
-            self.SOCK_FASTCGI: 'fastcgi-nph-socket' if mode == self.SOCK__MODE_NPH else 'fastcgi-socket',
+            self.SOCK_FASTCGI: 'fastcgi-nph-socket' if mode == self.MODE_NPH else 'fastcgi-socket',
 
-            self.SOCK_SCGI: 'scgi-nph-socket' if mode == self.SOCK__MODE_NPH else 'scgi-socket',
+            self.SOCK_SCGI: 'scgi-nph-socket' if mode == self.MODE_NPH else 'scgi-socket',
 
             self.SOCK_RAW: 'raw-socket',
 
-            self.SOCK_SHARED: 'undeferred-shared-socket' if mode == self.SOCK__MODE_UNDEFERRED else 'shared-socket',
+            self.SOCK_SHARED: 'undeferred-shared-socket' if mode == self.MODE_UNDEFERRED else 'shared-socket',
 
             self.SOCK_UDP: 'upd',
 
