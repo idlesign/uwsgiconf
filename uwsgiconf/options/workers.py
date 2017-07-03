@@ -27,7 +27,7 @@ class Workers(OptionsGroup):
                          cpu_affinity=None):
         """
 
-        :param int count: Spawn the specified number of workers/processes.
+        :param int count: Spawn the specified number of workers (processes).
             Set the number of workers for preforking mode.
             This is the base for easy and safe concurrency in your app.
             More workers you add, more concurrent requests you can manage.
@@ -37,20 +37,20 @@ class Workers(OptionsGroup):
             Setting ``workers`` to a ridiculously high number will *not*
             magically make your application web scale -- quite the contrary.
 
-        :param bool zombie_reaper: call waitpid(-1,...) after each request to get rid of zombies
+        :param bool zombie_reaper: Call waitpid(-1,...) after each request to get rid of zombies
             Enables reaper mode. After each request the server will call ``waitpid(-1)``
             to get rid of zombie processes.
             If you spawn subprocesses in your app and you happen to end up with zombie processes
             all over the place you can enable this option. (It really would be better
             if you could fix your application's process spawning usage though.)
 
-        :param int limit_addr_space: limit process address space (vsz) (in megabytes)
+        :param int limit_addr_space: Limit process address space (vsz) (in megabytes)
             Limits the address space usage of each uWSGI (worker) process using POSIX/UNIX ``setrlimit()``.
             For example, ``limit-as 256`` will disallow uWSGI processes to grow over 256MB of address space.
             Address space is the virtual memory a process has access to. It does *not* correspond to physical memory.
             Read and understand this page before enabling this option: http://en.wikipedia.org/wiki/Virtual_memory
 
-        :param int limit_count: limit the number of spawnable processes
+        :param int limit_count: Limit the number of spawnable processes.
 
         :param int cpu_affinity: number of cores for each worker (Linux only)
             Set the number of cores (CPUs) to allocate to each worker process.
@@ -94,7 +94,7 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_thread_params(self, enable_threads=None, per_worker=None, stack_size=None):
-        """
+        """Sets threads related params.
 
         :param bool enable_threads: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
@@ -105,7 +105,7 @@ class Workers(OptionsGroup):
             of threads per worker.\n\nDo not use with ``gevent``.
             NOTE: Enables threads automatically.
 
-        :param int stack_size: set threads stacksize
+        :param int stack_size: Set threads stacksize.
 
         """
         self._set('enable-threads', enable_threads, cast=bool)
@@ -119,11 +119,15 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_mule_params(self, mules=None, harakiri_timeout=None, farms=None):
-        """
+        """Sets mules related params.
+        http://uwsgi.readthedocs.io/en/latest/Mules.html
 
-        :param int|list mules: add the specified mules or number of mules
+        Mules are worker processes living in the uWSGI stack but not reachable via socket connections,
+        that can be used as a generic subsystem to offload tasks.
 
-        :param int harakiri_timeout: Set harakiri timeout for mule tasks
+        :param int|list mules: Add the specified mules or number of mules.
+
+        :param int harakiri_timeout: Set harakiri timeout for mule tasks.
 
         :param list[MuleFarm] farms: Mule farms list.
 
@@ -165,7 +169,7 @@ class Workers(OptionsGroup):
     def set_reload_params(self, min_lifetime=None, max_lifetime=None, max_requests=None,
                           max_addr_space=None, max_rss=None,
                           max_addr_space_forced=None, max_rss_forced=None):
-        """Workers reload parameters.
+        """Sets workers reload parameters.
 
         :param int min_lifetime: A worker cannot be destroyed/reloaded unless it has been alive
             for N seconds (default 60). This is an anti-fork-bomb measure.
@@ -174,8 +178,8 @@ class Workers(OptionsGroup):
         :param int max_lifetime: Reload workers after this many seconds. Disabled by default.
             Since 1.9
 
-        :param int max_requests: reload workers after the specified amount of managed
-            requests (avoid memory leaks)
+        :param int max_requests: Reload workers after the specified amount of managed
+            requests (avoid memory leaks).
             When a worker reaches this number of requests it will get recycled (killed and restarted).
             You can use this option to "dumb fight" memory leaks.
 
@@ -187,17 +191,17 @@ class Workers(OptionsGroup):
             Do not use with benchmarking as you'll get stalls
             such as `worker respawning too fast !!! i have to sleep a bit (2 seconds)...`
 
-        :param int max_addr_space: reload a worker if its address space usage is higher
-            than the specified value (in megabytes)
+        :param int max_addr_space: Reload a worker if its address space usage is higher
+            than the specified value (in megabytes).
 
-        :param int max_rss: reload a worker if its physical unshared memory is higher
-            than the specified value (in megabytes)
+        :param int max_rss: Reload a worker if its physical unshared memory is higher
+            than the specified value (in megabytes).
 
-        :param int max_addr_space_forced: force the master to reload a worker if its address space is higher
-            than specified megabytes (in megabytes)
+        :param int max_addr_space_forced: Force the master to reload a worker if its address space is higher
+            than specified megabytes (in megabytes).
 
-        :param int max_rss_forced: force the master to reload a worker if its rss memory is higher
-            than specified megabytes (in megabytes)
+        :param int max_rss_forced: Force the master to reload a worker if its rss memory is higher
+            than specified megabytes (in megabytes).
 
         """
         self._set('max-requests', max_requests)
@@ -214,12 +218,15 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_reload_on_exception_params(self, do_reload=None, etype=None, evalue=None, erepr=None):
-        """Workers reload parameters.
+        """Sets workers reload on exceptions parameters.
 
-        :param bool do_reload: reload a worker when an exception is raised
-        :param str etype: reload a worker when a specific exception type is raised
-        :param str evalue: reload a worker when a specific exception value is raised
-        :param str erepr: reload a worker when a specific exception type+value (language-specific) is raised
+        :param bool do_reload: Reload a worker when an exception is raised.
+
+        :param str etype: Reload a worker when a specific exception type is raised.
+
+        :param str evalue: Reload a worker when a specific exception value is raised.
+
+        :param str erepr: Reload a worker when a specific exception type+value (language-specific) is raised.
 
         """
         self._set('reload-on-exception', do_reload, cast=bool)
@@ -230,9 +237,9 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_harakiri_params(self, timeout=None, verbose=None, disable_for_arh=None):
-        """Workers harakiri parameters.
+        """Sets workers harakiri parameters.
 
-        :param timeout: Harakiri timeout in seconds
+        :param timeout: Harakiri timeout in seconds.
             Every request that will take longer than the seconds specified
             in the harakiri timeout will be dropped and the corresponding
             worker is thereafter recycled.

@@ -22,17 +22,17 @@ class PythonPlugin(PluginOptionsGroupBase):
                     <empty> - version 2
                     <default> - version deduced by uwsgiconf
 
-        :param str|unicode python_home: set python executable directory - PYTHONHOME/virtualenv
+        :param str|unicode python_home: Set python executable directory - PYTHONHOME/virtualenv.
 
-        :param str|unicode search_path: add directory (or an .egg or a glob) to the Python search path.
+        :param str|unicode search_path: Add directory (or an .egg or a glob) to the Python search path.
             This can be specified up to 64 times.
 
-        :param str|unicode python_binary: set python program name
+        :param str|unicode python_binary: Set python program name.
 
-        :param str|unicode tracebacker_path: enable the uWSGI Python tracebacker
+        :param str|unicode tracebacker_path: Enable the uWSGI Python tracebacker.
             http://uwsgi-docs.readthedocs.io/en/latest/Tracebacker.html
 
-        :param str|unicode plugin_dir: directory to search for plugin
+        :param str|unicode plugin_dir: Directory to search for plugin.
 
         :param bool enable_threads: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
@@ -67,7 +67,7 @@ class PythonPlugin(PluginOptionsGroupBase):
         return name
 
     def set_app_args(self, *args):
-        """manually set ``sys.argv`` for python apps.
+        """Sets ``sys.argv`` for python apps.
 
         pyargv="one two three" will set ``sys.argv`` to ``('one', 'two', 'three')``.
 
@@ -79,7 +79,7 @@ class PythonPlugin(PluginOptionsGroupBase):
         return self._section
 
     def set_wsgi_params(self, module=None, callable_name=None):
-        """
+        """Set wsgi related parameters.
 
         :param str|unicode module:
             * load .wsgi file as the Python application
@@ -90,7 +90,7 @@ class PythonPlugin(PluginOptionsGroupBase):
                 mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
-        :param str|unicode callable_name: set WSGI callable name. Default: application
+        :param str|unicode callable_name: Set WSGI callable name. Default: application.
 
         """
         module = module or ''
@@ -106,7 +106,7 @@ class PythonPlugin(PluginOptionsGroupBase):
         return self._section
 
     def eval_wsgi_entrypoint(self, code):
-        """Evaluate Python code as WSGI entry point
+        """Evaluates Python code as WSGI entry point.
 
         :param str|unicode code:
         """
@@ -115,15 +115,15 @@ class PythonPlugin(PluginOptionsGroupBase):
         return self._section
 
     def set_autoreload_params(self, scan_interval=None, ignore_modules=None):
-        """
+        """Sets autoreload related parameters.
 
         :param int scan_interval: Monitor Python modules' modification times to trigger reload.
 
-            WARNING: use only in development.
+            WARNING: Use only in development!
 
             Modification scan interval given in seconds.
 
-        :param list|st|unicode ignore_modules: ignore the specified module during auto-reload scan
+        :param list|st|unicode ignore_modules: Ignore the specified module during auto-reload scan.
 
         """
         self._set('py-auto-reload', scan_interval)
@@ -132,7 +132,7 @@ class PythonPlugin(PluginOptionsGroupBase):
         return self._section
 
     def register_module_alias(self, alias, module_path, after_init=False):
-        """add a python alias module
+        """Adds an alias for a module.
 
         http://uwsgi-docs.readthedocs.io/en/latest/PythonModuleAlias.html
 
@@ -146,13 +146,14 @@ class PythonPlugin(PluginOptionsGroupBase):
         return self._section
 
     def import_module(self, modules, shared=False, into_spooler=False):
-        """import a python module
+        """Imports a python module.
 
         :param list|str|unicode modules:
 
-        :param bool shared: import a python module in all of the processes
+        :param bool shared: Import a python module in all of the processes.
 
-        :param bool into_spooler: import a python module in the spooler
+        :param bool into_spooler: Import a python module in the spooler.
+            http://uwsgi-docs.readthedocs.io/en/latest/Spooler.html
 
         """
         if all((shared, into_spooler)):
@@ -168,7 +169,7 @@ class PythonPlugin(PluginOptionsGroupBase):
         return self._section
 
     def run_module(self, module):
-        """Run a Python script in the uWSGI environment
+        """Runs a Python script in the uWSGI environment.
 
         :param str|unicode module:
 

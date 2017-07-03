@@ -16,15 +16,15 @@ class MasterProcess(OptionsGroup):
                          subproc_check_interval=None):
         """
 
-        :param bool enabled: Enable uWSGI master process
+        :param bool enabled: Enable uWSGI master process.
 
-        :param str|unicode master_enabled: Set master process name to given value
+        :param str|unicode master_enabled: Set master process name to given value.
 
-        :param bool no_orphans: automatically kill workers if master dies (can be dangerous for availability)
+        :param bool no_orphans: Automatically kill workers if master dies (can be dangerous for availability).
 
-        :param bool as_root: leave master process running as root
+        :param bool as_root: Leave master process running as root.
 
-        :param int subproc_check_interval: set the interval (in seconds) of master checks. Default: 1
+        :param int subproc_check_interval: Set the interval (in seconds) of master checks. Default: 1
             The master process makes a scan of subprocesses, etc. every N seconds.
             You can increase this time if you need to, but it's DISCOURAGED.
 
@@ -39,7 +39,7 @@ class MasterProcess(OptionsGroup):
 
     def add_cron_task(self, command, weekday=None, month=None, day=None, hour=None, minute=None,
                       legion=None, unique=None, harakiri=None):
-        """Add a cron task running the given command on the given schedule.
+        """Adds a cron task running the given command on the given schedule.
         http://uwsgi.readthedocs.io/en/latest/Cron.html
 
         HINTS:
@@ -93,7 +93,7 @@ class MasterProcess(OptionsGroup):
         return self._section
 
     def attach_process(self, process_or_pid_path, background):
-        """Attach a command/daemon to the master process optionally managed by a pidfile.
+        """Attaches a command/daemon to the master process optionally managed by a pidfile.
 
         This will allow the uWSGI master to control/monitor/respawn this process.
 
