@@ -87,7 +87,7 @@ class OptionsGroup(object):
                     values.append(value)
 
             else:
-                value = str(value)
+                value = str(value).strip()
 
                 opts[key] = value
 
