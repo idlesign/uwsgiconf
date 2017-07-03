@@ -1,0 +1,4 @@
+strictness: medium
+
+ignore-paths:
+    - docs
