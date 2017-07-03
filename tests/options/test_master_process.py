@@ -4,7 +4,6 @@ from uwsgiconf import Section
 from uwsgiconf.exceptions import ConfigurationError
 
 
-
 def test_master_process_basics(assert_lines):
 
     assert_lines([
@@ -27,3 +26,16 @@ def test_master_process_basics(assert_lines):
     assert_lines([
         'attach-daemon = command',
     ], Section().grp_master_process.attach_process(process_or_pid_path='command', background=False))
+
+
+def test_cron(assert_lines):
+
+    assert_lines([
+        'cron2 = torrt walk',
+    ], Section().grp_master_process.add_cron_task('torrt walk'))
+
+    assert_lines([
+        'cron2 = weekday=1-3,hour=2,minute=-10,harakiri=10,legion=first,unique=1 some',
+    ], Section().grp_master_process.add_cron_task(
+        'some', hour=2, minute=-10, weekday='1-3', harakiri=10, unique=True, legion='first'
+    ))
