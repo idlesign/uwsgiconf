@@ -3,6 +3,7 @@ import argparse
 
 
 def main():
+    from uwsgiconf import VERSION
 
     arg_parser = argparse.ArgumentParser(prog='uwsgiconf', description='Configure uWSGI from your Python code')
     arg_parser.add_argument('--version', action='version', version='.'.join(map(str, VERSION)))
