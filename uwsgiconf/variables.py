@@ -26,13 +26,19 @@ DIR_VASSALS = '%v'
 '''Vassals directory - pwd.'''
 
 HOST_NAME = '%h'
+'''Host name.'''
 CPU_CORES = '%k'
+'''Detected CPU count.'''
 
 USER_ID = '%u'
+'''User ID.'''
 USER_NAME = '%U'
+'''User name.'''
 
 GROUP_ID = '%g'
+'''Use group ID.'''
 GROUP_NAME = '%G'
+'''Use group name.'''
 
 
 def get_descriptions():
