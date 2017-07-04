@@ -2,19 +2,28 @@ from collections import OrderedDict
 
 
 VERSION = '%V'
+'''uWSGI version number'''
+
 FORMAT_ESCAPE = '%['
+'''ANSI escape \\033. useful for printing colors'''
+
 FORMAT_END = '%s[0m' % FORMAT_ESCAPE
 
 CONF_CURRENT_SECTION = '%x'
+'''The current section identifier, eg. conf.ini:section.'''
 CONF_CURRENT_SECTION_NTPL = '%x'
 
 CONF_NAME_ORIGINAL = '%o'
+'''The original conf filename, as specified on the command line'''
 CONF_NAME_ORIGINAL_NTPL = '%O'
 
 TIMESTAMP_STARTUP_S = '%t'
+'''Unix time s, gathered at instance startup.'''
 TIMESTAMP_STARTUP_MS = '%T'
+'''Unix time ms, gathered at instance startup'''
 
 DIR_VASSALS = '%v'
+'''Vassals directory - pwd.'''
 
 HOST_NAME = '%h'
 CPU_CORES = '%k'
