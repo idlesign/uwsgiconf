@@ -47,7 +47,7 @@ API
 ---
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     config
     grp_locks
@@ -58,6 +58,14 @@ API
     grp_plugin_python
     variables
     formatters
+
+Presets
+-------
+
+.. toctree::
+    :maxdepth: 3
+
+    preset_nice
 
 
 Get involved into uwsgiconf
