@@ -37,3 +37,15 @@ def test_networking_basics(assert_lines):
             '',
         ], Section().grp_networking.register_socket(address='127.0.0.1', type='dummy'))
     assert 'Unknown' in str(einfo.value)  # unknown socket type
+
+    # batch socket registration
+    assert_lines([
+        'http-socket = :8001',
+        'http-socket = :8002',
+        'http-socket = :8003',
+
+    ], Section().grp_networking.register_sockets(
+        dict(address=':8001'),
+        dict(address=':8002'),
+        dict(address=':8003'),
+    ))

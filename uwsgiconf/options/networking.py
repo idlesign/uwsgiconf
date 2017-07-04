@@ -12,12 +12,13 @@ class Networking(OptionsGroup):
 
     SOCK_HTTP11 = 'http11'  # Keep-Alive
 
-    SOCK_UDP = 'upd'
+    SOCK_UDP = 'udp'
     """Run the udp server on the specified address.
     
     .. note:: Mainly useful for SNMP or shared UDP logging.
     
     """
+
     SOCK_FASTCGI = 'fastcgi'
     """Bind to the specified socket using FastCGI."""
 
@@ -35,6 +36,7 @@ class Networking(OptionsGroup):
     to bind to privileged (<1024) ports.
     
     """
+
     SOCK_ZERO_MQ = 'zmq'
     """Introduce zeromq pub/sub pair."""
 
@@ -125,6 +127,18 @@ class Networking(OptionsGroup):
 
         """
         self._set('reuse-port', port_reuse, cast=bool)
+
+        return self._section
+
+    def register_sockets(self, *reg_dicts):
+        """Convenience-method for batch socket registration.
+
+        :param reg_dicts: Registration dictionaries with the same keys,
+            which are accepted by .register_socket().
+
+        """
+        for reg_dict in reg_dicts:
+            self.register_socket(**reg_dict)
 
         return self._section
 
