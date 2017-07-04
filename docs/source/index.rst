@@ -55,6 +55,8 @@ API
     grp_networking
     grp_workers
     grp_plugin_python
+    variables
+    formatters
 
 
 Get involved into uwsgiconf
