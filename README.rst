@@ -59,9 +59,40 @@ Two main strategies to use **uwsgiconf**:
     uwsgi --ini 'exec://path/to/myconf.py'
 
 
+A taste of it
+-------------
+
+Let's make ``myconf.py``, enable its execution (``-x`` permission and ``#!``).
+
+There we configure it using nice ``PythonSection`` preset to run our web app.
+
+.. code-block:: python
+
+    #! /usr/bin/env python3
+    from uwsgiconf.presets.nice import PythonSection
+
+
+    PythonSection(
+        # Reload uWSGI when this file is updated.
+        touch_reload=__file__,
+
+        python_basic_params=dict(
+            python_home='/home/idle/venv/',
+            search_path='/home/idle/apps/',
+        ),
+
+        # Load wsgi.py module from myapp package.
+        wsgi_module='myapp.wsgi',
+
+    ).grp_networking.register_socket(
+        address='127.0.0.1:8000'
+
+    ).as_configuration().print_ini()
+
+Now we are ready to use this configuration dynamically (see ``Strategies`` paragraph above).
+
+
 Documentation
 -------------
 
 http://uwsgiconf.readthedocs.org/
-
-
