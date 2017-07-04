@@ -18,6 +18,22 @@ def test_section_basics(ini, assert_lines):
         'strict',
     ], my_section)
 
+    # unset bool
+    my_section.set_basic_params(strict_config=False)
+    assert_lines([
+        'strict',
+    ], my_section, assert_in=False)
+
+    # successive unset bool
+    my_section.set_basic_params(strict_config=False)
+
+    # bogus basic params handling
+    Section(
+        basic_params_networking=None,
+        basic_params_nonexistent={'a': 'b'},
+        dummy_key=1,
+    )
+
 
 def test_section_print(assert_lines):
 
@@ -64,6 +80,12 @@ def test_plugin_init(assert_lines):
         'plugin = python33',
 
     ], Section().grp_plugin_python.activate(version=33))
+
+    # automatic activation
+    assert_lines([
+        'plugin = python34',
+
+    ], Section(basic_params_plugin_python={'version': 34}))
 
 
 def test_configuration(capsys, assert_lines):

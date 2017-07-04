@@ -13,13 +13,16 @@ def ini():
 @pytest.fixture(scope='session')
 def assert_lines(ini):
 
-    def wrapped(lines, source):
+    def wrapped(lines, source, assert_in=True):
         source = ini(source)
 
         if not isinstance(lines, list):
             lines = [lines]
 
         for line in lines:
-            assert line in source
+            if assert_in:
+                assert line in source
+            else:
+                assert line not in source
 
     return wrapped

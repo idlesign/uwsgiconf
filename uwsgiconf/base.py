@@ -117,15 +117,17 @@ class SectionBase(OptionsGroup):
                 continue
 
             group_attr_name = 'grp_%s' % key.replace('basic_params_', '')
-            options_group = getattr(self, group_attr_name)  # type: Union[OptionsGroup, PluginOptionsGroupBase]
+            options_group = getattr(self, group_attr_name, None)  # type: Union[OptionsGroup, PluginOptionsGroupBase]
 
-            if 'plugin' in group_attr_name:
-                # Automatic plugin activation.
-                # Otherwise uWSGI in strict mode will complain
-                # about unknown options (from plugin).
-                options_group.activate()
+            if options_group is not None:
+                if 'plugin' in group_attr_name:
+                    # Automatic plugin activation.
+                    # Otherwise uWSGI in strict mode will complain
+                    # about unknown options (from plugin).
+                    options_group.activate(**value)
 
-            options_group.set_basic_params(**value)
+                else:
+                    options_group.set_basic_params(**value)
 
     def __str__(self):
         return self.name
