@@ -7,5 +7,4 @@ The following variables also known as magic_ variables could be used as option v
 
 
 .. automodule:: uwsgiconf.variables
-   :members:
    :undoc-members:
