@@ -6,6 +6,6 @@ The following variables also known as magic_ variables could be used as option v
 .. _magic: http://uwsgi-docs.readthedocs.io/en/latest/Configuration.html#magic-variables
 
 
-.. automodule:: uwsgiconf.options.variables
+.. automodule:: uwsgiconf.variables
    :members:
 
