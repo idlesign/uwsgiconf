@@ -11,8 +11,8 @@ def test_plugin_python_basics(assert_lines):
         return section.grp_plugin_python
 
     assert_lines([
-        'plugin = python36',
-    ], get_plugin_group().set_basic_params(version=36))
+        'enable-threads = true',
+    ], get_plugin_group().set_basic_params(enable_threads=True))
 
     assert_lines([
         'pyargv = a b',

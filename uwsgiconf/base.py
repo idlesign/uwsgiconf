@@ -5,6 +5,7 @@ from six import python_2_unicode_compatible
 
 if False:  # pragma: nocover
     from .config import Section
+    from types import Union
 
 
 class Options(object):
@@ -82,9 +83,9 @@ class OptionsGroup(object):
                 values = opts.setdefault(key, [])
 
                 if isinstance(value, list):
-                    values.extend(value)
+                    values.extend(map(str, value))
                 else:
-                    values.append(value)
+                    values.append(str(value))
 
             else:
                 value = str(value).strip()
@@ -108,15 +109,26 @@ class SectionBase(OptionsGroup):
 
         super(SectionBase, self).__init__(**kwargs)
 
-        for key, value in kwargs.items():
+        self._set_basic_params_from_dict(kwargs)
+
+        self.name = name
+
+    def _set_basic_params_from_dict(self, src_dict):
+
+        for key, value in src_dict.items():
             if not key.startswith('basic_params_') or not value:
                 continue
 
             group_attr_name = 'grp_%s' % key.replace('basic_params_', '')
-            options_group = getattr(self, group_attr_name)  # type: OptionsGroup
-            options_group.set_basic_params(**value)
+            options_group = getattr(self, group_attr_name)  # type: Union[OptionsGroup, PluginOptionsGroupBase]
 
-        self.name = name
+            if 'plugin' in group_attr_name:
+                # Automatic plugin activation.
+                # Otherwise uWSGI in strict mode will complain
+                # about unknown options (from plugin).
+                options_group.activate()
+
+            options_group.set_basic_params(**value)
 
     def __str__(self):
         return self.name
@@ -141,6 +153,10 @@ class PluginOptionsGroupBase(OptionsGroup):
 
     name = None
 
+    def __init__(self, *args, **kwargs):
+        self._active = False
+        super(PluginOptionsGroupBase, self).__init__(*args, **kwargs)
+
     def set_basic_params(self, plugin_dir=None, **kwargs):
         """
 
@@ -153,8 +169,13 @@ class PluginOptionsGroupBase(OptionsGroup):
         return self._section
 
     def activate(self, **kwargs):
-        self._section.set_plugins_params(plugins=self)
+        """Activates the given plugin putting its definition into section."""
         self.set_basic_params(**kwargs)
+
+        if not self._active:
+            # Prevent successive activations.
+            self._section.set_plugins_params(plugins=self)
+            self._active = True
 
         return self._section
 
