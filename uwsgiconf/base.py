@@ -1,7 +1,5 @@
 from collections import OrderedDict
 
-from six import python_2_unicode_compatible
-
 
 if False:  # pragma: nocover
     from .config import Section
@@ -93,7 +91,6 @@ class OptionsGroup(object):
                 opts[key] = value
 
 
-@python_2_unicode_compatible
 class SectionBase(OptionsGroup):
 
     def __init__(self, name='uwsgi', **kwargs):
@@ -147,7 +144,6 @@ class SectionBase(OptionsGroup):
         return options
 
 
-@python_2_unicode_compatible
 class PluginOptionsGroupBase(OptionsGroup):
     """Plugin options."""
 
@@ -181,4 +177,3 @@ class PluginOptionsGroupBase(OptionsGroup):
 
     def __str__(self):
         return self.name
-

@@ -10,7 +10,7 @@ python:
   - 3.6
 
 install:
-  - pip install pytest coverage coveralls six
+  - pip install pytest coverage coveralls
 
 script:
   - coverage run --source=uwsgiconf setup.py test

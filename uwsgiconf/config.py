@@ -2,8 +2,6 @@ import os
 from datetime import datetime
 from functools import partial
 
-from six import text_type
-
 from .base import SectionBase, PluginOptionsGroupBase, Options
 from .options import *
 from .formatters import IniFormatter, format_print_text
@@ -87,7 +85,7 @@ class Section(SectionBase):
         if indent is None:
             indent = '>   '
 
-        text = indent + text_type(value)
+        text = indent + str(value)
 
         if format_options is None:
             format_options = 'gray'
