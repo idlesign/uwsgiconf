@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from functools import partial
 
 from six import text_type
@@ -48,7 +49,7 @@ class Section(SectionBase):
         :param str name: Configuration section name
 
         """
-        super(Section, self).__init__(name=name or 'uwsgi', strict_config = strict_config, **kwargs)
+        super(Section, self).__init__(name=name or 'uwsgi', strict_config=strict_config, **kwargs)
 
     def set_basic_params(self, strict_config=None, **kwargs):
 
@@ -57,11 +58,24 @@ class Section(SectionBase):
         return self
 
     def as_configuration(self):
-        """Returns configuration object made of this section.
+        """Returns configuration object including only one (this very) section.
 
         :rtype: Configuration
         """
         return Configuration([self])
+
+    def add_stamp(self):
+        """Adds a stamp containing useful information,
+        such as what and when has generated this configuration.
+
+        """
+        from . import VERSION
+
+        print_out = partial(self.print_out, format_options='red')
+        print_out('This configuration was automatically generated using')
+        print_out('uwsgiconf v%s on %s' % ('.'.join(map(str, VERSION)), datetime.now().isoformat(' ')))
+
+        return self
 
     def print_out(self, value, indent=None, format_options=None):
         """Prints out the given value.
@@ -111,7 +125,7 @@ class Section(SectionBase):
         return self
 
     def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None):
-        """
+        """Sets plugin-related parameters.
 
         :param list|str|unicode|PluginOptionsGroupBase plugins: uWSGI plugins to load
 
@@ -182,12 +196,18 @@ class Section(SectionBase):
 
 
 class Configuration(object):
-    """Configuration."""
+    """
+    Configuration is comprised from one or more Sections and could
+    be represented in format natively supported by uWSGI.
+
+    """
 
     def __init__(self, sections=None, autoinclude_sections=True):
         """
 
-        :param list[Section] sections:
+        :param list[Section] sections: If not provided, empty section
+            will be automatically generated.
+
         :param bool autoinclude_sections: Whether to include
             in the first sections all subsequent sections.
 
@@ -195,7 +215,7 @@ class Configuration(object):
         super(Configuration, self).__init__()
 
         sections = sections or [Section()]
-        self.validate_sections(sections)
+        self._validate_sections(sections)
 
         if autoinclude_sections:
 
@@ -206,7 +226,8 @@ class Configuration(object):
         self.sections = sections
 
     @classmethod
-    def validate_sections(cls, sections):
+    def _validate_sections(cls, sections):
+        """Validates sections types and uniqueness."""
         names = []
         for section in sections:
 
@@ -219,7 +240,18 @@ class Configuration(object):
 
             names.append(name)
 
-    def format(self, do_print=False):
+    def format(self, do_print=False, stamp=True):
+        """Applies formatting to configuration.
+
+        *Currently formats to .ini*
+
+        :param bool do_print: Whether to print out formatted config.
+        :param bool stamp: Whether to add stamp data to the first configuration section.
+        :rtype: str|unicode
+        """
+        if stamp and self.sections:
+            self.sections[0].add_stamp()
+
         formatted = IniFormatter(self.sections).format()
 
         if do_print:
@@ -228,4 +260,8 @@ class Configuration(object):
         return formatted
 
     def print_ini(self):
+        """Print out this configuration as .ini.
+
+        :rtype: str|unicode
+        """
         return self.format(do_print=True)

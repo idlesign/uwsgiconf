@@ -9,7 +9,7 @@ def test_section_basics(ini, assert_lines):
 
     my_section = Section()
 
-    assert ini(my_section) == ''
+    assert_lines('automatically generated', my_section)
 
     my_section.set_basic_params(strict_config=True)
 
@@ -90,3 +90,6 @@ def test_configuration(capsys, assert_lines):
     s2.name = 'another'
 
     assert Configuration([s1, s2]).print_ini()
+
+
+
