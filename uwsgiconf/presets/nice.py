@@ -5,6 +5,19 @@ class Section(_Section):
     """Basic nice configuration."""
 
     def __init__(self, name=None, touch_reload=None, workers=None, threads=None, **kwargs):
+        """
+
+        :param str|unicode name: Section name.
+
+        :param str|list touch_reload: Reload uWSGI if the specified file or directory is modified/touched.
+
+        :param int workers: Spawn the specified number of workers (processes).
+            Default: workers number equals to CPU count.
+
+        :param int threads: Number of threads per worker.
+
+        :param kwargs:
+        """
         super(Section, self).__init__(strict_config=True, name=name, **kwargs)
 
         if touch_reload:
@@ -25,12 +38,12 @@ class Section(_Section):
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
 
-    def __init__(self, name=None, python_basic_params=None, wsgi_module=None, **kwargs):
+    def __init__(self, name=None, basic_params_python=None, wsgi_module=None, **kwargs):
         """
 
-        :param str|unicode name:
+        :param str|unicode name: Section name.
 
-        :param dict basic_params_plugin_python: See PythonPlugin params
+        :param dict basic_params_python: See PythonPlugin params
 
         :param str|unicode wsgi_module: wsgi application module path or filepath
 
@@ -41,7 +54,7 @@ class PythonSection(Section):
         :param kwargs:
         """
         super(PythonSection, self).__init__(
-            name=name, basic_params_plugin_python=python_basic_params, **kwargs)
+            name=name, basic_params_plugin_python=basic_params_python, **kwargs)
 
         plugin = self.grp_plugin_python
         plugin.activate()
