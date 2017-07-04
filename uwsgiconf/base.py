@@ -109,7 +109,7 @@ class SectionBase(OptionsGroup):
         super(SectionBase, self).__init__(**kwargs)
 
         for key, value in kwargs.items():
-            if not key.startswith('basic_params_'):
+            if not key.startswith('basic_params_') or not value:
                 continue
 
             group_attr_name = 'grp_%s' % key.replace('basic_params_', '')
