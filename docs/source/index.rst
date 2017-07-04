@@ -49,6 +49,7 @@ API
 .. toctree::
     :maxdepth: 2
 
+    config
     grp_locks
     grp_main_process
     grp_master_process
