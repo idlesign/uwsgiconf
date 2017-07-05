@@ -94,7 +94,7 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def attach_process(self, process_or_pid_path, background):
+    def attach_process(self, process_or_pid_path, background, control=False):
         """Attaches a command/daemon to the master process optionally managed by a pidfile.
 
         This will allow the uWSGI master to control/monitor/respawn this process.
@@ -103,7 +103,13 @@ class MasterProcess(OptionsGroup):
 
         :param bool background: Must indicate whether process is in background.
 
+        :param bool control: Consider this process a control: when the daemon dies, the master exits.
+
+            .. note:: pidfile managed processed not supported.
+
         """
+        # todo decide for legion attach
+
         if '/' in process_or_pid_path:  # todo check / - could't be in process name
 
             if background:
@@ -118,7 +124,12 @@ class MasterProcess(OptionsGroup):
             if background:
                 raise ConfigurationError('Background flag is only supported for pid-governed commands')
 
-            # Attach a command/daemon to the master process (the command has to remain in foreground)
-            self._set('attach-daemon', process_or_pid_path, multi=True)
+            if control:
+                # todo needs check
+                self._set('attach-control-daemon', process_or_pid_path, multi=True)
+
+            else:
+                # Attach a command/daemon to the master process (the command has to remain in foreground)
+                self._set('attach-daemon', process_or_pid_path, multi=True)
 
         return self._section

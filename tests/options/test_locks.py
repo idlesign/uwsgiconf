@@ -9,7 +9,7 @@ def test_locks_basics(assert_lines):
 
     assert_lines([
         'ftok = a',
-    ], Section().grp_locks.set_thread_ipcsem_params(ftok='a'))
+    ], Section().grp_locks.set_ipcsem_params(ftok='a'))
 
     assert_lines([
         'flock2 = /here',

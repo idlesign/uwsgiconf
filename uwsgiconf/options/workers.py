@@ -23,9 +23,13 @@ class Workers(OptionsGroup):
 
     cls_mule_farm = MuleFarm
 
-    def set_basic_params(self, count=None, zombie_reaper=None, limit_addr_space=None, limit_count=None,
-                         cpu_affinity=None):
+    def set_basic_params(
+            self, count=None, touch_reload=None, zombie_reaper=None,
+            limit_addr_space=None, limit_count=None, cpu_affinity=None):
         """
+
+        :param str|list touch_reload: Trigger reload of (and only) workers
+            if the specified file is modified/touched.
 
         :param int count: Spawn the specified number of workers (processes).
             Set the number of workers for preforking mode.
@@ -37,7 +41,7 @@ class Workers(OptionsGroup):
             Setting ``workers`` to a ridiculously high number will *not*
             magically make your application web scale -- quite the contrary.
 
-        :param bool zombie_reaper: Call waitpid(-1,...) after each request to get rid of zombies
+        :param bool zombie_reaper: Call waitpid(-1,...) after each request to get rid of zombies.
             Enables reaper mode. After each request the server will call ``waitpid(-1)``
             to get rid of zombie processes.
             If you spawn subprocesses in your app and you happen to end up with zombie processes
@@ -73,6 +77,9 @@ class Workers(OptionsGroup):
         # networking.register_socket - workers_binding
 
         self.set_count_auto(count)
+
+        self._set('touch-workers-reload', touch_reload, multi=True)
+
         self._set('reaper', zombie_reaper, cast=bool)
 
         self._set('limit-as', limit_addr_space)
@@ -93,7 +100,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_thread_params(self, enable_threads=None, per_worker=None, stack_size=None):
+    def set_thread_params(self, enable_threads=None, per_worker=None, stack_size=None, no_wait=None):
         """Sets threads related params.
 
         :param bool enable_threads: Enable threads in the embedded languages.
@@ -110,8 +117,11 @@ class Workers(OptionsGroup):
 
         :param int stack_size: Set threads stacksize.
 
+        :param bool no_wait: Do not wait for threads cancellation on quit/reload.
+
         """
         self._set('enable-threads', enable_threads, cast=bool)
+        self._set('no-threads-wait', no_wait, cast=bool)
         self._set('threads', per_worker)
 
         if per_worker:
@@ -121,14 +131,19 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_mule_params(self, mules=None, harakiri_timeout=None, farms=None):
+    def set_mules_params(
+            self, mules=None, touch_reload=None, harakiri_timeout=None, farms=None, reload_mercy=None,
+            msg_buffer=None, msg_buffer_recv=None):
         """Sets mules related params.
+
         http://uwsgi.readthedocs.io/en/latest/Mules.html
 
         Mules are worker processes living in the uWSGI stack but not reachable via socket connections,
         that can be used as a generic subsystem to offload tasks.
 
         :param int|list mules: Add the specified mules or number of mules.
+
+        :param str|list touch_reload: Reload mules if the specified file is modified/touched.
 
         :param int harakiri_timeout: Set harakiri timeout for mule tasks.
 
@@ -137,6 +152,14 @@ class Workers(OptionsGroup):
             Examples:
                 * cls_mule_farm('first', 2)
                 * cls_mule_farm('first', [4, 5])
+
+        :param int reload_mercy: Set the maximum time (in seconds) a mule can take
+            to reload/shutdown. Default: 60.
+
+        :param int msg_buffer: Set mule message buffer size (bytes) given
+            for mule message queue.
+
+        :param int msg_buffer: Set mule message recv buffer size (bytes).
 
         """
         farms = farms or []
@@ -165,13 +188,22 @@ class Workers(OptionsGroup):
             for mule in mules:
                 self._set('mule', mule, multi=True)
 
+        self._set('touch-mules-reload', touch_reload, multi=True)
+
         self._set('mule-harakiri', harakiri_timeout)
+        self._set('mule-reload-mercy', reload_mercy)
+
+        self._set('mule-msg-size', msg_buffer)
+        self._set('mule-msg-recv-size', msg_buffer_recv)
 
         return self._section
 
-    def set_reload_params(self, min_lifetime=None, max_lifetime=None, max_requests=None,
-                          max_addr_space=None, max_rss=None,
-                          max_addr_space_forced=None, max_rss_forced=None):
+    def set_reload_params(
+            self, min_lifetime=None, max_lifetime=None,
+            max_requests=None, max_requests_delta=None,
+            max_addr_space=None, max_rss=None, max_uss=None, max_pss=None,
+            max_addr_space_forced=None, max_rss_forced=None,
+            mercy=None):
         """Sets workers reload parameters.
 
         :param int min_lifetime: A worker cannot be destroyed/reloaded unless it has been alive
@@ -189,34 +221,54 @@ class Workers(OptionsGroup):
             Also take a look at the ``reload-on-as`` and ``reload-on-rss`` options
             as they are more useful for memory leaks.
 
-            Beware: The default min-worker-lifetime 60 seconds takes priority over `max-requests`.
+            .. warning:: The default min-worker-lifetime 60 seconds takes priority over `max-requests`.
 
             Do not use with benchmarking as you'll get stalls
             such as `worker respawning too fast !!! i have to sleep a bit (2 seconds)...`
 
+        :param int max_requests_delta: Add (worker_id * delta) to the max_requests value of each worker.
+
         :param int max_addr_space: Reload a worker if its address space usage is higher
+            than the specified value in megabytes.
+
+        :param int max_rss: Reload a worker if its physical unshared memory (resident set size) is higher
             than the specified value (in megabytes).
 
-        :param int max_rss: Reload a worker if its physical unshared memory is higher
-            than the specified value (in megabytes).
+        :param int max_uss: Reload a worker if Unique Set Size is higher
+            than the specified value in megabytes.
+
+            .. note:: Linux only.
+
+        :param int max_pss: Reload a worker if Proportional Set Size is higher
+            than the specified value in megabytes.
+
+            .. note:: Linux only.
 
         :param int max_addr_space_forced: Force the master to reload a worker if its address space is higher
             than specified megabytes (in megabytes).
 
-        :param int max_rss_forced: Force the master to reload a worker if its rss memory is higher
-            than specified megabytes (in megabytes).
+        :param int max_rss_forced: Force the master to reload a worker
+            if its resident set size memory is higher than specified in megabytes.
+
+        :param int mercy: Set the maximum time (in seconds) a worker can take
+            before reload/shutdown. Default: 60.
 
         """
         self._set('max-requests', max_requests)
+        self._set('max-requests-delta', max_requests_delta)
 
         self._set('min-worker-lifetime', min_lifetime)
         self._set('max-worker-lifetime', max_lifetime)
 
         self._set('reload-on-as', max_addr_space)
         self._set('reload-on-rss', max_rss)
+        self._set('reload-on-uss', max_uss)
+        self._set('reload-on-pss', max_pss)
 
         self._set('evil-reload-on-as', max_addr_space_forced)
         self._set('evil-reload-on-rss', max_rss_forced)
+
+        self._set('worker-reload-mercy', mercy)
 
         return self._section
 

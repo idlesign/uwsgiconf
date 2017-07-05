@@ -28,7 +28,7 @@ def test_mules(assert_lines):
 
     assert_lines([
         'mule-harakiri = 3',
-    ], Section().grp_workers.set_mule_params(harakiri_timeout=3))
+    ], Section().grp_workers.set_mules_params(harakiri_timeout=3))
 
     section = Section()
 
@@ -37,7 +37,7 @@ def test_mules(assert_lines):
         'farm = second:3,4,5',
         'mules = 5',
 
-    ], section.grp_workers.set_mule_params(farms=[
+    ], section.grp_workers.set_mules_params(farms=[
         section.grp_workers.cls_mule_farm('first', 2),
         section.grp_workers.cls_mule_farm('second', 3),
     ]))
@@ -46,7 +46,7 @@ def test_mules(assert_lines):
         'mule = mule1.py',
         'mule = mule2.py',
 
-    ], Section().grp_workers.set_mule_params(mules=[
+    ], Section().grp_workers.set_mules_params(mules=[
         'mule1.py',
         'mule2.py',
     ]))

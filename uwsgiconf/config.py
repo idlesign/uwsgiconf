@@ -75,12 +75,17 @@ class Section(SectionBase):
 
         return self
 
-    def print_out(self, value, indent=None, format_options=None):
+    def print_out(self, value, indent=None, format_options=None, immediate=False):
         """Prints out the given value.
 
         :param value:
+
         :param str|unicode indent:
+
         :param dict|str|unicode format_options: text color
+
+        :param bool immediate: Print as soon as possible.
+
         """
         if indent is None:
             indent = '>   '
@@ -97,7 +102,8 @@ class Section(SectionBase):
 
             text = format_print_text(text, **format_options)
 
-        self._set('print', text, multi=True)
+        command = 'iprint' if immediate else 'print'
+        self._set(command, text, multi=True)
 
         return self
 
@@ -122,14 +128,16 @@ class Section(SectionBase):
 
         return self
 
-    def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None):
+    def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None, required=False):
         """Sets plugin-related parameters.
 
         :param list|str|unicode|PluginOptionsGroupBase plugins: uWSGI plugins to load
 
-        :param list|str|unicode search_dirs: directories to search for uWSGI plugins
+        :param list|str|unicode search_dirs: Directories to search for uWSGI plugins.
 
-        :param bool autoload: try to automatically load plugins when unknown options are found
+        :param bool autoload: Try to automatically load plugins when unknown options are found.
+
+        :param bool required: Load uWSGI plugins and exit on error.
 
         """
         plugins = plugins or []
@@ -137,8 +145,10 @@ class Section(SectionBase):
         if not isinstance(plugins, list):
             plugins = [plugins]
 
+        command = 'need-plugin' if required else 'plugin'
+
         for plugin in plugins:
-            self._set('plugin', plugin, multi=True)
+            self._set(command, plugin, multi=True)
 
         self._set('plugins-dir', search_dirs, multi=True)
         self._set('autoload', autoload, cast=bool)
@@ -159,14 +169,19 @@ class Section(SectionBase):
 
         return self
 
-    def env(self, key, value=None, unset=False):
+    def env(self, key, value=None, unset=False, immediate=False):
         """Processes (sets/unsets) environment variable.
 
         If is not given in `set` mode value will be taken from current env.
 
         :param str|unicode key:
+
         :param value:
-        :param bool unset:
+
+        :param bool unset: Whether to unset this variable.
+
+        :param bool immediate: If True env variable will be set as soon as possible.
+
         """
         if unset:
             self._set('unenv', key, multi=True)
@@ -174,7 +189,7 @@ class Section(SectionBase):
             if value is None:
                 value = os.environ.get(key)
 
-            self._set('env', '%s=%s' % (key, value), multi=True)
+            self._set('%senv' % ('i' if immediate else ''), '%s=%s' % (key, value), multi=True)
 
         return self
 
