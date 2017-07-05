@@ -27,11 +27,12 @@ class Section(SectionBase):
         )
 
     """
+    grp_applications = Options(Applications)  # type: Applications
+    grp_locks = Options(Locks)  # type: Locks
+    grp_main_process = Options(MainProcess)  # type: MainProcess
+    grp_master_process = Options(MasterProcess)  # type: MasterProcess
     grp_networking = Options(Networking)  # type: Networking
     grp_workers = Options(Workers)  # type: Workers
-    grp_master_process = Options(MasterProcess)  # type: MasterProcess
-    grp_main_process = Options(MainProcess)  # type: MainProcess
-    grp_locks = Options(Locks)  # type: Locks
 
     grp_plugin_python = Options(PythonPlugin)  # type: PythonPlugin
 

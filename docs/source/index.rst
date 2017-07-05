@@ -50,6 +50,7 @@ API
     :maxdepth: 3
 
     config
+    grp_applications
     grp_locks
     grp_main_process
     grp_master_process

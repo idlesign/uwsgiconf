@@ -1,3 +1,4 @@
+from .applications import Applications
 from .locks import Locks
 from .main_process import MainProcess
 from .master_process import MasterProcess
