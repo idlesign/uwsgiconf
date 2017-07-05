@@ -62,8 +62,8 @@ class Section(SectionBase):
         """
         return Configuration([self])
 
-    def add_stamp(self):
-        """Adds a stamp containing useful information,
+    def print_stamp(self):
+        """Prints out a stamp containing useful information,
         such as what and when has generated this configuration.
 
         """
@@ -250,7 +250,7 @@ class Configuration(object):
         :rtype: str|unicode
         """
         if stamp and self.sections:
-            self.sections[0].add_stamp()
+            self.sections[0].print_stamp()
 
         formatted = IniFormatter(self.sections).format()
 
