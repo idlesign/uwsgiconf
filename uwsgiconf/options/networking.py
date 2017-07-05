@@ -67,8 +67,10 @@ class Networking(OptionsGroup):
 
             .. note:: The maximum value is system/kernel dependent.
 
-        :param bool freebind: Put socket in freebind mode (Linux only).
+        :param bool freebind: Put socket in freebind mode.
             Allows binding to non-existent network addresses.
+
+            .. note:: Linux only.
 
         """
         self._set('listen', queue_size)
@@ -171,7 +173,11 @@ class Networking(OptionsGroup):
             self.SOCK_UWSGI: {
                 self.MODE_SSL: 'suwsgi-socket',
                 self.MODE_PERSISTENT: 'puwsgi-socket',
-            }.get(mode, 'uwsgi-socket'),  # Default: Bind to the specified socket with default protocol (see `protocol`)
+
+            }.get(mode, 'uwsgi-socket'),
+            # Default: Bind to the specified socket with default protocol (see `protocol/socket-protocol`)
+            # socket-protocol = 0,uwsgi
+            # socket-protocol = 3,uwsgidump
 
             self.SOCK_HTTP: 'https-socket' if mode == self.MODE_SSL else 'http-socket',
 
