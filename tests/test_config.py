@@ -81,7 +81,7 @@ def test_plugin_init(assert_lines):
     assert_lines([
         'plugin = python33',
 
-    ], Section().grp_plugin_python.activate(version=33))
+    ], Section().plugin_python.activate(version=33))
 
     # automatic activation
     assert_lines([

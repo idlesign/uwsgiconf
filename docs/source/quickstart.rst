@@ -39,7 +39,7 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
         # Load wsgi.py module from myapp package.
         wsgi_module='myapp.wsgi',
 
-    ).grp_networking.register_socket(
+    ).networking.register_socket(
         address='127.0.0.1:8000'
 
     ).as_configuration().print_ini()

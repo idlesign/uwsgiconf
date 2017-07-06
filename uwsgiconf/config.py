@@ -11,8 +11,17 @@ from .exceptions import ConfigurationError
 class Section(SectionBase):
     """Configuration section.
 
-    Options within configuration section are gathered into groups.
-    Options groups attributes are prefixed with `grp_`.
+    Options within configuration section are gathered into groups such as:
+        * applications
+        * locks
+        * main_process
+        * master_process
+        * networking
+        * workers
+
+    Options offered by plugins are prefixed with `plugin_`:
+
+        * plugin_python
 
     Usually in group objects methods setting parameters are named `set_***_params`.
     Methods ending with `_params` usually return section object to allow chaining.
@@ -27,14 +36,14 @@ class Section(SectionBase):
         )
 
     """
-    grp_applications = Options(Applications)  # type: Applications
-    grp_locks = Options(Locks)  # type: Locks
-    grp_main_process = Options(MainProcess)  # type: MainProcess
-    grp_master_process = Options(MasterProcess)  # type: MasterProcess
-    grp_networking = Options(Networking)  # type: Networking
-    grp_workers = Options(Workers)  # type: Workers
+    applications = Options(Applications)  # type: Applications
+    locks = Options(Locks)  # type: Locks
+    main_process = Options(MainProcess)  # type: MainProcess
+    master_process = Options(MasterProcess)  # type: MasterProcess
+    networking = Options(Networking)  # type: Networking
+    workers = Options(Workers)  # type: Workers
 
-    grp_plugin_python = Options(PythonPlugin)  # type: PythonPlugin
+    plugin_python = Options(PythonPlugin)  # type: PythonPlugin
 
     def __init__(self, strict_config=None, name=None, **kwargs):
         """

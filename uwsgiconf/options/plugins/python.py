@@ -44,7 +44,7 @@ class PythonPlugin(PluginOptionsGroupBase):
         """
         self.name = self.get_name(version)
 
-        self._section.grp_workers.set_thread_params(enable_threads=enable_threads)
+        self._section.workers.set_thread_params(enable_threads=enable_threads)
         self._set('py-tracebacker', tracebacker_path)
         self._set('py-program-name', python_binary)
         self._set('pyhome', python_home)

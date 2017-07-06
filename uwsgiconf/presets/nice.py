@@ -21,18 +21,18 @@ class Section(_Section):
         super(Section, self).__init__(strict_config=True, name=name, **kwargs)
 
         if touch_reload:
-            self.grp_main_process.set_basic_params(touch_reload=touch_reload)
+            self.main_process.set_basic_params(touch_reload=touch_reload)
 
         if workers:
-            self.grp_workers.set_basic_params(count=workers)
+            self.workers.set_basic_params(count=workers)
         else:
-            self.grp_workers.set_count_auto()
+            self.workers.set_count_auto()
 
-        self.grp_workers.set_thread_params(per_worker=threads)
-        self.grp_main_process.set_basic_params(vacuum=True)
-        self.grp_main_process.set_naming_params(autonaming=True)
-        self.grp_master_process.set_basic_params(enabled=True)
-        self.grp_locks.set_basic_params(thunder_lock=True)
+        self.workers.set_thread_params(per_worker=threads)
+        self.main_process.set_basic_params(vacuum=True)
+        self.main_process.set_naming_params(autonaming=True)
+        self.master_process.set_basic_params(enabled=True)
+        self.locks.set_basic_params(thunder_lock=True)
 
 
 class PythonSection(Section):
@@ -56,7 +56,7 @@ class PythonSection(Section):
         super(PythonSection, self).__init__(
             name=name, basic_params_plugin_python=basic_params_python, **kwargs)
 
-        plugin = self.grp_plugin_python
+        plugin = self.plugin_python
         plugin.activate()
 
         if wsgi_module:

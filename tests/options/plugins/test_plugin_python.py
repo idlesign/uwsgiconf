@@ -7,8 +7,8 @@ from uwsgiconf.exceptions import ConfigurationError
 def test_plugin_python_basics(assert_lines):
 
     def get_plugin_group():
-        section = Section().grp_plugin_python.activate()
-        return section.grp_plugin_python
+        section = Section().plugin_python.activate()
+        return section.plugin_python
 
     assert_lines([
         'enable-threads = true',

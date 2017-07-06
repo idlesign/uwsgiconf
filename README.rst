@@ -29,7 +29,7 @@ Description
 *Configure uWSGI from your Python code*
 
 If you think you known uWSGI you're probably wrong. It is always more than you think it is.
-There are so many subsystems and options_ it is difficult to even try to wrap your mind around.
+There are so many subsystems and options_ (800+) it is difficult to even try to wrap your mind around.
 
 .. _options: http://uwsgi-docs.readthedocs.io/en/latest/Options.html
 
@@ -84,7 +84,7 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
         # Load wsgi.py module from myapp package.
         wsgi_module='myapp.wsgi',
 
-    ).grp_networking.register_socket(
+    ).networking.register_socket(
         address='127.0.0.1:8000'
 
     ).as_configuration().print_ini()

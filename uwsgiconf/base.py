@@ -116,7 +116,7 @@ class SectionBase(OptionsGroup):
             if not key.startswith('basic_params_') or not value:
                 continue
 
-            group_attr_name = 'grp_%s' % key.replace('basic_params_', '')
+            group_attr_name = key.replace('basic_params_', '')
             options_group = getattr(self, group_attr_name, None)  # type: Union[OptionsGroup, PluginOptionsGroupBase]
 
             if options_group is not None:
