@@ -82,10 +82,14 @@ class MasterProcess(OptionsGroup):
         rule = []
         locals_ = locals()
 
+        aliases = {
+            'weekday': 'week',
+        }
+
         for chunk in ['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion']:
             val = locals_[chunk]
             if val is not None:
-                rule.append('%s=%s' % (chunk, val))
+                rule.append('%s=%s' % (aliases.get(chunk, chunk), val))
 
         if unique:
             rule.append('unique=1')
@@ -94,12 +98,17 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def attach_process(self, process_or_pid_path, background, control=False):
+    def attach_process_classic(self, command_or_pid_path, background, control=False, for_legion=False):
         """Attaches a command/daemon to the master process optionally managed by a pidfile.
 
         This will allow the uWSGI master to control/monitor/respawn this process.
 
-        :param str|unicode process_or_pid_path:
+        .. note:: This uses old classic uWSGI means of process attaching
+            To have more control use ``.attach_process()`` method (requires  uWSGI 2.0+)
+
+        http://uwsgi-docs.readthedocs.io/en/latest/AttachingDaemons.html
+
+        :param str|unicode command_or_pid_path:
 
         :param bool background: Must indicate whether process is in background.
 
@@ -107,18 +116,24 @@ class MasterProcess(OptionsGroup):
 
             .. note:: pidfile managed processed not supported.
 
-        """
-        # todo decide for legion attach
+        :param bool for_legion: Legion daemons will be executed only on the legion lord node,
+            so there will always be a single daemon instance running in each legion.
+            Once the lord dies a daemon will be spawned on another node.
 
-        if '/' in process_or_pid_path:  # todo check / - could't be in process name
+            .. note:: uWSGI 1.9.9+ required.
+
+        """
+        prefix = 'legion-' if for_legion else ''
+
+        if '.pid' in command_or_pid_path:
 
             if background:
                 # Attach a command/daemon to the master process managed by a pidfile (the command must daemonize)
-                self._set('smart-attach-daemon', process_or_pid_path, multi=True)
+                self._set(prefix + 'smart-attach-daemon', command_or_pid_path, multi=True)
 
             else:
                 # Attach a command/daemon to the master process managed by a pidfile (the command must NOT daemonize)
-                self._set('smart-attach-daemon2', process_or_pid_path, multi=True)
+                self._set(prefix + 'smart-attach-daemon2', command_or_pid_path, multi=True)
 
         else:
             if background:
@@ -126,10 +141,103 @@ class MasterProcess(OptionsGroup):
 
             if control:
                 # todo needs check
-                self._set('attach-control-daemon', process_or_pid_path, multi=True)
+                self._set('attach-control-daemon', command_or_pid_path, multi=True)
 
             else:
                 # Attach a command/daemon to the master process (the command has to remain in foreground)
-                self._set('attach-daemon', process_or_pid_path, multi=True)
+                self._set(prefix + 'attach-daemon', command_or_pid_path, multi=True)
+
+        return self._section
+
+    def attach_process(
+            self, command, for_legion=False, broken_counter=None, pidfile=None, control=None, daemonize=None,
+            touch_reload=None, signal_stop=None, signal_reload=None, honour_stdin=None,
+            uid=None, gid=None, new_pid_ns=None, change_dir=None):
+        """Attaches a command/daemon to the master process.
+
+        This will allow the uWSGI master to control/monitor/respawn this process.
+
+        http://uwsgi-docs.readthedocs.io/en/latest/AttachingDaemons.html
+
+        :param str|unicode command: The command line to execute.
+
+        :param bool for_legion: Legion daemons will be executed only on the legion lord node,
+            so there will always be a single daemon instance running in each legion.
+            Once the lord dies a daemon will be spawned on another node.
+
+        :param int broken_counter: Maximum attempts before considering a daemon "broken".
+
+        :param str|unicode pidfile: The pidfile path to check (enable smart mode).
+
+        :param bool control: If True, the daemon becomes a `control` one:
+            if it dies the whole uWSGI instance dies.
+
+        :param bool daemonize: Daemonize the process (enable smart2 mode).
+
+        :param list|str|unicode touch_reload: List of files to check:
+            whenever they are 'touched', the daemon is restarted
+
+        :param int signal_stop: The signal number to send to the daemon when uWSGI is stopped.
+
+        :param int signal_reload: The signal number to send to the daemon when uWSGI is reloaded.
+
+        :param bool honour_stdin: The signal number to send to the daemon when uWSGI is reloaded.
+
+        :param str|unicode|int uid: Drop privileges to the specified uid.
+
+            .. note:: Requires master running as root.
+
+        :param str|unicode|int gid: Drop privileges to the specified gid.
+
+            .. note:: Requires master running as root.
+
+        :param bool new_pid_ns: Spawn the process in a new pid namespace.
+
+            .. note:: Requires master running as root.
+
+            .. note:: Linux only.
+
+        :param str|unicode change_dir: Use chdir() to the specified directory
+            before running the command.
+
+        """
+        line = []
+        locals_ = locals()
+
+        aliases = {
+            'command': 'cmd',
+            'broken_counter': 'freq',
+            'touch_reload': 'touch',
+            'signal_stop': 'stopsignal',
+            'signal_reload': 'reloadsignal',
+            'honour_stdin': 'stdin',
+            'new_pid_ns': 'ns_pid',
+            'change_dir': 'chdir',
+        }
+
+        bool_chunks = ['control', 'daemonize', 'honour_stdin']
+
+        chunks = [
+            'command', 'broken_counter', 'pidfile', 'control', 'daemonize',
+            'signal_stop', 'signal_reload', 'honour_stdin',
+            'uid', 'gid', 'new_pid_ns', 'change_dir',
+        ]
+
+        for chunk in chunks:
+            val = locals_[chunk]
+
+            if val is not None:
+                val = 1 if chunk in bool_chunks else val
+                line.append('%s=%s' % (aliases.get(chunk, chunk), val))
+
+        if touch_reload:
+            if not isinstance(touch_reload, list):
+                touch_reload = [touch_reload]
+
+            line.append('touch=%s' % ';'.join(touch_reload))
+
+        prefix = 'legion-' if for_legion else ''
+
+        self._set(prefix + 'attach-daemon2', ','.join(line), multi=True)
 
         return self._section
