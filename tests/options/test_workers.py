@@ -23,6 +23,10 @@ def test_workers_basics(assert_lines):
         'harakiri = 20',
     ], Section().grp_workers.set_harakiri_params(timeout=20))
 
+    assert_lines([
+        'worker-exec = date',
+    ], Section().grp_workers.run_command_as_worker('date'))
+
 
 def test_mules(assert_lines):
 

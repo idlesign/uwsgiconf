@@ -63,6 +63,13 @@ class Section(SectionBase):
         """
         return Configuration([self])
 
+    def print_plugins(self):
+        """Print out enabled plugins."""
+
+        self._set('plugins-list', True, cast=bool)
+
+        return self
+
     def print_stamp(self):
         """Prints out a stamp containing useful information,
         such as what and when has generated this configuration.

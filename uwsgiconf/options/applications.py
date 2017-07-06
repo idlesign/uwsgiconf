@@ -52,23 +52,27 @@ class Applications(OptionsGroup):
             * .mount('/app1', 'app1.py')
             * .mount('example.com', 'app2.py')
             * .mount('the_app3', 'app3.py')
-            * .mount('/pinax', '/var/www/pinax/deploy/pinax.wsgi')
+            * .mount('/pinax/here', '/var/www/pinax/deploy/pinax.wsgi')
 
         http://uwsgi-docs.readthedocs.io/en/latest/Nginx.html?highlight=mount#hosting-multiple-apps-in-the-same-process-aka-managing-script-name-and-path-info
 
-        :param str|unicode mountpoint:
+        :param str|unicode mountpoint: Host name, URL part, etc.
 
-        :param str|unicode app:
+        :param str|unicode app: App module/file.
+
+        :param bool into_worker: Load application under mountpoint
+            in the specified worker or after workers spawn.
+
         """
-        self._set('mount', '%s=%s' % (mountpoint, app), cast=bool)
+        # todo check worker mount -- uwsgi_init_worker_mount_app() expects worker://
+        self._set('worker-mount' if into_worker else 'mount', '%s=%s' % (mountpoint, app), multi=True)
 
         return self._section
 
     def set_idle_params(self, timeout=None, exit=None):
-        """
+        """Activate idle mode - put uWSGI in cheap mode after inactivity timeout.
 
-        :param int timeout: Activate idle mode - put uWSGI in cheap mode
-            after inactivity timeout.
+        :param int timeout: Inactivity timeout in seconds.
 
         :param bool exit: Shutdown uWSGI when idle.
 
@@ -78,7 +82,7 @@ class Applications(OptionsGroup):
 
         return self._section
 
-    def set_lazy_mode(self, affect_master=None):
+    def switch_into_lazy_mode(self, affect_master=None):
         """Load apps in workers instead of master.
 
         This option may have memory usage implications

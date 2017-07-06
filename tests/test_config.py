@@ -27,7 +27,9 @@ def test_section_basics(ini, assert_lines):
     # successive unset bool
     my_section.set_basic_params(strict_config=False)
 
-    # bogus basic params handling
+    assert_lines('plugins-list = true', Section().print_plugins())
+
+    # bogus basic params handling. test for no error
     Section(
         basic_params_networking=None,
         basic_params_nonexistent={'a': 'b'},

@@ -4,6 +4,43 @@ from ..base import OptionsGroup
 class MainProcess(OptionsGroup):
     """Main process is the uWSGi process."""
 
+    EVENT_ASAP = 'asap'
+    '''As soon as possible.'''
+
+    EVENT_JAIL_PRE = 'jail-pre'
+    '''Before jailing.'''
+
+    EVENT_JAIL_IN = 'jail-in'
+    '''In jail after initialization.'''
+
+    EVENT_JAIL_POST = 'jail-post'
+    '''After jailing.'''
+
+    EVENT_PRIV_DROP_PRE = 'priv-drop-pre'
+    '''Before privileges drop.'''
+
+    EVENT_PRIV_DROP_POST = 'priv-drop-post'
+    '''Before privileges drop.'''
+
+    EVENT_EXIT = 'exit'
+    '''Before app exit and reload.'''
+
+    EVENT_APP_LOAD_PRE = 'app-pre'
+    '''Before app loading.'''
+
+    EVENT_APP_LOAD_POST = 'app-post'
+    '''After app loading.'''
+
+    EVENT_VASSAL_START_IN = 'vassal-start-in'
+    '''In vassal on start just before calling exec() directly in the new namespace.'''
+
+    EVENT_VASSAL_START_POST = 'vassal-start-post'
+    '''In the emperor soon after a vassal has been spawn 
+    setting 4 env vars, UWSGI_VASSAL_CONFIG, UWSGI_VASSAL_PID, 
+    UWSGI_VASSAL_UID and UWSGI_VASSAL_GID.
+
+    '''
+
     def set_basic_params(
             self, touch_reload=None, priority=None, vacuum=None, binary_path=None, honour_stdin=None):
         """
@@ -36,11 +73,11 @@ class MainProcess(OptionsGroup):
     def set_owner_params(self, uid=None, gid=None, add_gids=None, set_immediate=False):
         """Set process owner params - user, group.
 
-        :param str|unicode uid: Set uid to the specified username or uid.
+        :param str|unicode|int uid: Set uid to the specified username or uid.
 
-        :param str|unicode gid: Set gid to the specified groupname or gid.
+        :param str|unicode|int gid: Set gid to the specified groupname or gid.
 
-        :param list|str|unicode add_gids: Add the specified group id to the process credentials.
+        :param list|str|unicode|int add_gids: Add the specified group id to the process credentials.
             This options allows you to add additional group ids to the current process.
             You can specify it multiple times.
 
@@ -57,12 +94,50 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_pid_file(self, fpath, before_privileges_drop=True, safe=False):
+    def run_command_on_event(self, command, event=EVENT_ASAP):
+        """Run the given command on a given event.
+
+        :param str|unicode command:
+
+        :param str|unicode event: See EVENT_* constants.
+
+        """
+        directive = {
+            self.EVENT_ASAP: 'exec-asap',
+            self.EVENT_JAIL_PRE: 'exec-pre-jail',
+            self.EVENT_JAIL_IN: 'exec-in-jail',
+            self.EVENT_JAIL_POST: 'exec-post-jail',
+            self.EVENT_PRIV_DROP_PRE: 'exec-as-root',
+            self.EVENT_PRIV_DROP_POST: 'exec-as-user',
+            self.EVENT_EXIT: 'exec-as-user-atexit',
+            self.EVENT_APP_LOAD_PRE: 'exec-pre-app',
+            self.EVENT_APP_LOAD_POST: 'exec-post-app',
+            self.EVENT_VASSAL_START_IN: 'exec-as-vassal',
+            self.EVENT_VASSAL_START_POST: 'exec-as-emperor',
+        }.get(event)
+
+        self._set(directive, command, multi=True)
+
+        return self._section
+
+    def run_command_on_touch(self, command, target):
+        """Run command when the specified file is modified/touched.
+
+        :param str|unicode command:
+
+        :param str|unicode target: File path.
+
+        """
+        self._set('touch-exec', '%s %s' % (target, command), multi=True)
+
+        return self._section
+
+    def set_pid_file(self, fpath, before_priv_drop=True, safe=False):
         """Creates pidfile before or after privileges drop.
 
         :param str|unicode fpath: File path.
 
-        :param bool before_privileges_drop:
+        :param bool before_priv_drop:
 
         :param bool safe: The safe-pidfile works similar to pidfile
             but performs the write a little later in the loading process.
@@ -72,7 +147,7 @@ class MainProcess(OptionsGroup):
         """
         command = 'pidfile'
 
-        if not before_privileges_drop:
+        if not before_priv_drop:
             command += '2'
 
         if safe:
