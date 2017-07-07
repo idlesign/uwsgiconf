@@ -56,9 +56,10 @@ class OptionsGroup(object):
     def set_basic_params(self, *args, **kwargs):
         pass  # pragma: nocover
 
-    def _make_key_val_option_chunks(self, locals_dict, keys, aliases=None, bool_keys=None, list_keys=None):
-        chunks = []
+    def _make_key_val_string(self, locals_dict, keys=None, aliases=None, bool_keys=None, list_keys=None):
+        value_chunks = []
 
+        keys = keys or locals_dict.keys()
         aliases = aliases or {}
         bool_keys = bool_keys or []
         list_keys = list_keys or []
@@ -78,9 +79,9 @@ class OptionsGroup(object):
 
                     val = ';'.join(val)
 
-                chunks.append('%s=%s' % (aliases.get(key, key), val))
+                value_chunks.append('%s=%s' % (aliases.get(key, key), val))
 
-        return chunks
+        return ','.join(value_chunks).strip()
 
     def _set(self, key, value, condition=True, cast=None, multi=False):
 

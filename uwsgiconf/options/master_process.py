@@ -80,14 +80,14 @@ class MasterProcess(OptionsGroup):
             If a command is taking longer it will be killed.
 
         """
-        chunks = self._make_key_val_option_chunks(
+        rule = self._make_key_val_string(
             locals(),
             keys=['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion', 'unique'],
             aliases={'weekday': 'week'},
             bool_keys=['unique'],
         )
 
-        self._set('cron2', '%s %s' % (','.join(chunks), command), multi=True)
+        self._set('cron2', ('%s %s' % (rule, command)).strip(), multi=True)
 
         return self._section
 
@@ -194,7 +194,7 @@ class MasterProcess(OptionsGroup):
             before running the command.
 
         """
-        chunks = self._make_key_val_option_chunks(
+        rule = self._make_key_val_string(
             locals(),
             keys=[
                 'command', 'broken_counter', 'pidfile', 'control', 'daemonize', 'touch_reload',
@@ -217,6 +217,6 @@ class MasterProcess(OptionsGroup):
 
         prefix = 'legion-' if for_legion else ''
 
-        self._set(prefix + 'attach-daemon2', ','.join(chunks), multi=True)
+        self._set(prefix + 'attach-daemon2', rule, multi=True)
 
         return self._section
