@@ -51,6 +51,7 @@ API
 
     config
     grp_applications
+    grp_caching
     grp_locks
     grp_main_process
     grp_master_process

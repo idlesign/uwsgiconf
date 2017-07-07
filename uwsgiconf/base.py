@@ -54,7 +54,7 @@ class OptionsGroup(object):
         self.set_basic_params(*args, **kwargs)
 
     def set_basic_params(self, *args, **kwargs):
-        pass  # pragma: nocover
+        return self._section
 
     def _make_key_val_string(self, locals_dict, keys=None, aliases=None, bool_keys=None, list_keys=None):
         value_chunks = []
@@ -195,12 +195,13 @@ class PluginOptionsGroupBase(OptionsGroup):
 
     def activate(self, **kwargs):
         """Activates the given plugin putting its definition into section."""
-        self.set_basic_params(**kwargs)
 
         if not self._active:
             # Prevent successive activations.
             self._section.set_plugins_params(plugins=self)
             self._active = True
+
+        self.set_basic_params(**kwargs)
 
         return self._section
 

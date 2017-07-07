@@ -37,6 +37,7 @@ class Section(SectionBase):
 
     """
     applications = Options(Applications)  # type: Applications
+    caching = Options(Caching)  # type: Caching
     locks = Options(Locks)  # type: Locks
     main_process = Options(MainProcess)  # type: MainProcess
     master_process = Options(MasterProcess)  # type: MasterProcess
