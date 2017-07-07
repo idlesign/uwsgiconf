@@ -83,7 +83,7 @@ class OptionsGroup(object):
 
         return ','.join(value_chunks).strip()
 
-    def _set(self, key, value, condition=True, cast=None, multi=False):
+    def _set(self, key, value, condition=True, cast=None, multi=False, on_top=False):
 
         if condition is True:
             condition = value is not None
@@ -108,13 +108,11 @@ class OptionsGroup(object):
                 values = opts.setdefault(key, [])
 
                 if isinstance(value, list):
-                    values.extend(map(str, value))
+                    values.extend(value)
                 else:
-                    values.append(str(value))
+                    values.append(value)
 
             else:
-                value = str(value).strip()
-
                 opts[key] = value
 
 

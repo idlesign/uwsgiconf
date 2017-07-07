@@ -95,7 +95,7 @@ class IniFormatter(FormatterBase):
                 lines.append('\n[%s]' % section_name)
                 last_section = section_name
 
-            lines.append('%s = %s' % (key, value))
+            lines.append('%s = %s' % (key, str(value).strip()))
 
         lines = '\n'.join(lines)
         return lines
