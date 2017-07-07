@@ -39,8 +39,9 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def add_cron_task(self, command, weekday=None, month=None, day=None, hour=None, minute=None,
-                      legion=None, unique=None, harakiri=None):
+    def add_cron_task(
+            self, command, weekday=None, month=None, day=None, hour=None, minute=None,
+            legion=None, unique=None, harakiri=None):
         """Adds a cron task running the given command on the given schedule.
         http://uwsgi.readthedocs.io/en/latest/Cron.html
 
@@ -79,17 +80,11 @@ class MasterProcess(OptionsGroup):
             If a command is taking longer it will be killed.
 
         """
-        rule = []
-        locals_ = locals()
-
-        aliases = {
-            'weekday': 'week',
-        }
-
-        for chunk in ['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion']:
-            val = locals_[chunk]
-            if val is not None:
-                rule.append('%s=%s' % (aliases.get(chunk, chunk), val))
+        rule = self._make_key_val_option_chunks(
+            locals(),
+            keys=['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion'],
+            aliases={'weekday': 'week'}
+        )
 
         if unique:
             rule.append('unique=1')
@@ -201,43 +196,34 @@ class MasterProcess(OptionsGroup):
             before running the command.
 
         """
-        line = []
-        locals_ = locals()
-
-        aliases = {
-            'command': 'cmd',
-            'broken_counter': 'freq',
-            'touch_reload': 'touch',
-            'signal_stop': 'stopsignal',
-            'signal_reload': 'reloadsignal',
-            'honour_stdin': 'stdin',
-            'new_pid_ns': 'ns_pid',
-            'change_dir': 'chdir',
-        }
-
-        bool_chunks = ['control', 'daemonize', 'honour_stdin']
-
-        chunks = [
-            'command', 'broken_counter', 'pidfile', 'control', 'daemonize',
-            'signal_stop', 'signal_reload', 'honour_stdin',
-            'uid', 'gid', 'new_pid_ns', 'change_dir',
-        ]
-
-        for chunk in chunks:
-            val = locals_[chunk]
-
-            if val is not None:
-                val = 1 if chunk in bool_chunks else val
-                line.append('%s=%s' % (aliases.get(chunk, chunk), val))
+        chunks = self._make_key_val_option_chunks(
+            locals(),
+            keys=[
+                'command', 'broken_counter', 'pidfile', 'control', 'daemonize',
+                'signal_stop', 'signal_reload', 'honour_stdin',
+                'uid', 'gid', 'new_pid_ns', 'change_dir',
+            ],
+            aliases={
+                'command': 'cmd',
+                'broken_counter': 'freq',
+                'touch_reload': 'touch',
+                'signal_stop': 'stopsignal',
+                'signal_reload': 'reloadsignal',
+                'honour_stdin': 'stdin',
+                'new_pid_ns': 'ns_pid',
+                'change_dir': 'chdir',
+            },
+            bool_keys=['control', 'daemonize', 'honour_stdin'],
+        )
 
         if touch_reload:
             if not isinstance(touch_reload, list):
                 touch_reload = [touch_reload]
 
-            line.append('touch=%s' % ';'.join(touch_reload))
+            chunks.append('touch=%s' % ';'.join(touch_reload))
 
         prefix = 'legion-' if for_legion else ''
 
-        self._set(prefix + 'attach-daemon2', ','.join(line), multi=True)
+        self._set(prefix + 'attach-daemon2', ','.join(chunks), multi=True)
 
         return self._section
