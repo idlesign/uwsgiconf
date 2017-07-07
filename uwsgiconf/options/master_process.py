@@ -80,16 +80,14 @@ class MasterProcess(OptionsGroup):
             If a command is taking longer it will be killed.
 
         """
-        rule = self._make_key_val_option_chunks(
+        chunks = self._make_key_val_option_chunks(
             locals(),
-            keys=['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion'],
-            aliases={'weekday': 'week'}
+            keys=['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion', 'unique'],
+            aliases={'weekday': 'week'},
+            bool_keys=['unique'],
         )
 
-        if unique:
-            rule.append('unique=1')
-
-        self._set('cron2', '%s %s' % (','.join(rule), command))
+        self._set('cron2', '%s %s' % (','.join(chunks), command))
 
         return self._section
 
@@ -199,7 +197,7 @@ class MasterProcess(OptionsGroup):
         chunks = self._make_key_val_option_chunks(
             locals(),
             keys=[
-                'command', 'broken_counter', 'pidfile', 'control', 'daemonize',
+                'command', 'broken_counter', 'pidfile', 'control', 'daemonize', 'touch_reload',
                 'signal_stop', 'signal_reload', 'honour_stdin',
                 'uid', 'gid', 'new_pid_ns', 'change_dir',
             ],
@@ -214,13 +212,8 @@ class MasterProcess(OptionsGroup):
                 'change_dir': 'chdir',
             },
             bool_keys=['control', 'daemonize', 'honour_stdin'],
+            list_keys=['touch_reload'],
         )
-
-        if touch_reload:
-            if not isinstance(touch_reload, list):
-                touch_reload = [touch_reload]
-
-            chunks.append('touch=%s' % ';'.join(touch_reload))
 
         prefix = 'legion-' if for_legion else ''
 
