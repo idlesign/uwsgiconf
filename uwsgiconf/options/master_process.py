@@ -87,7 +87,7 @@ class MasterProcess(OptionsGroup):
             bool_keys=['unique'],
         )
 
-        self._set('cron2', '%s %s' % (','.join(chunks), command))
+        self._set('cron2', '%s %s' % (','.join(chunks), command), multi=True)
 
         return self._section
 
