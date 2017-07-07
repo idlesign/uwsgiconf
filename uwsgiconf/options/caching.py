@@ -10,8 +10,8 @@ class Caching(OptionsGroup):
     A single uWSGI instance can create an unlimited number of "caches" each one
     with different setup and purpose.
 
-    http://uwsgi-docs.readthedocs.io/en/latest/Caching.html
-    http://uwsgi-docs.readthedocs.io/en/latest/tutorials/CachingCookbook.html
+    * http://uwsgi-docs.readthedocs.io/en/latest/Caching.html
+    * http://uwsgi-docs.readthedocs.io/en/latest/tutorials/CachingCookbook.html
 
     """
 
@@ -157,7 +157,7 @@ class Caching(OptionsGroup):
         :param bool full_silent: By default uWSGI will print warning message on every cache set operation
             if the cache is full. To disable this warning set this option.
 
-            ..note:: Available since 2.0.4
+            .. note:: Available since 2.0.4.
 
         :param bool full_purge_lru: Allows the caching framework to evict Least Recently Used (LRU)
             item when you try to add new item to cache storage that is full.
