@@ -43,6 +43,7 @@ class Section(SectionBase):
     master_process = Options(MasterProcess)  # type: MasterProcess
     networking = Options(Networking)  # type: Networking
     queue = Options(Queue)  # type: Queue
+    spooler = Options(Spooler)  # type: Spooler
     workers = Options(Workers)  # type: Workers
 
     plugin_python = Options(PythonPlugin)  # type: PythonPlugin
