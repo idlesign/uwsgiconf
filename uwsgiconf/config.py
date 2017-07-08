@@ -42,6 +42,7 @@ class Section(SectionBase):
     main_process = Options(MainProcess)  # type: MainProcess
     master_process = Options(MasterProcess)  # type: MasterProcess
     networking = Options(Networking)  # type: Networking
+    queue = Options(Queue)  # type: Queue
     workers = Options(Workers)  # type: Workers
 
     plugin_python = Options(PythonPlugin)  # type: PythonPlugin

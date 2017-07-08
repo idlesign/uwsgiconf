@@ -56,6 +56,7 @@ API
     grp_main_process
     grp_master_process
     grp_networking
+    grp_queue
     grp_workers
     grp_plugin_python
     variables
