@@ -2,7 +2,7 @@ uwsgiconf
 =========
 https://github.com/idlesign/uwsgiconf
 
-|release| |stats|  |lic| |ci| |coverage| |health|
+|release| |stats|  |lic| |ci| |coverage|
 
 .. |release| image:: https://img.shields.io/pypi/v/uwsgiconf.svg
     :target: https://pypi.python.org/pypi/uwsgiconf
@@ -18,9 +18,6 @@ https://github.com/idlesign/uwsgiconf
 
 .. |coverage| image:: https://img.shields.io/coveralls/idlesign/uwsgiconf/master.svg
     :target: https://coveralls.io/r/idlesign/uwsgiconf
-
-.. |health| image:: https://landscape.io/github/idlesign/uwsgiconf/master/landscape.svg?style=flat
-    :target: https://landscape.io/github/idlesign/uwsgiconf/master
 
 
 Description
