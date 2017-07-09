@@ -200,17 +200,3 @@ class MainProcess(OptionsGroup):
         self._set('procname', name)
 
         return self._section
-
-    def set_reload_params(self, mercy=None, exit=None):
-        """
-
-        :param int mercy: Set the maximum time (in seconds) we wait
-            for workers and other processes to die during reload/shutdown.
-
-        :param bool exit: Force exit even if a reload is requested.
-
-        """
-        self._set('reload-mercy', mercy)
-        self._set('exit-on-reload', exit)  # todo maybe move into separate exit-dedicated method
-
-        return self._section

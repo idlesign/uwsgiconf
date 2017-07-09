@@ -16,9 +16,5 @@ def test_applications_basics(assert_lines):
     ], Section().applications.mount('/articles', 'app.py'))
 
     assert_lines([
-        'idle = 10',
-    ], Section().applications.set_idle_params(timeout=10))
-
-    assert_lines([
         'lazy-apps = true',
     ], Section().applications.switch_into_lazy_mode())

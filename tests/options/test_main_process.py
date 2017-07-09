@@ -39,7 +39,3 @@ def test_main_process_basics(assert_lines):
     assert_lines([
         'touch-exec = myfile.txt date',
     ], Section().main_process.run_command_on_touch('date', 'myfile.txt'))
-
-    assert_lines([
-        'reload-mercy = 10',
-    ], Section().main_process.set_reload_params(mercy=10))

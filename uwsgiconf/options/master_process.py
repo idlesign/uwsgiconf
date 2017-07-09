@@ -13,8 +13,9 @@ class MasterProcess(OptionsGroup):
 
     """
 
-    def set_basic_params(self, enabled=None, name=None, no_orphans=None, as_root=None,
-                         subproc_check_interval=None):
+    def set_basic_params(
+            self, enabled=None, name=None, no_orphans=None, as_root=None,
+            subproc_check_interval=None):
         """
 
         :param bool enabled: Enable uWSGI master process.
@@ -36,6 +37,47 @@ class MasterProcess(OptionsGroup):
         self._set('no-orphans', no_orphans)
         self._set('master-as-root', as_root)
         self._set('check-interval', subproc_check_interval)
+
+        return self._section
+
+    def set_exit_events(self, no_workers=None, idle=None, reload=None):
+        """Do exit on certain events
+
+        :param bool no_workers: Shutdown uWSGI when no workers are running.
+
+        :param bool idle: Shutdown uWSGI when idle.
+
+        :param bool reload: Force exit even if a reload is requested.
+
+        """
+        self._set('die-on-no-workers', no_workers, cast=bool)
+        self._set('exit-on-reload', reload, cast=bool)
+        self.set_idle_params(exit=idle)
+
+    def set_idle_params(self, timeout=None, exit=None):
+        """Activate idle mode - put uWSGI in cheap mode after inactivity timeout.
+
+        :param int timeout: Inactivity timeout in seconds.
+
+        :param bool exit: Shutdown uWSGI when idle.
+
+        """
+        self._set('idle', timeout)
+        self._set('die-on-idle', exit, cast=bool)
+
+        return self._section
+
+    def set_reload_params(self, mercy=None, exit=None):
+        """Set reload related params.
+
+        :param int mercy: Set the maximum time (in seconds) we wait
+            for workers and other processes to die during reload/shutdown.
+
+        :param bool exit: Force exit even if a reload is requested.
+
+        """
+        self._set('reload-mercy', mercy)
+        self.set_exit_events(reload=exit)
 
         return self._section
 

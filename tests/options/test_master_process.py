@@ -10,6 +10,14 @@ def test_master_process_basics(assert_lines):
         'master = true',
     ], Section().master_process.set_basic_params(enabled=True))
 
+    assert_lines([
+        'reload-mercy = 10',
+    ], Section().master_process.set_reload_params(mercy=10))
+
+    assert_lines([
+        'idle = 10',
+    ], Section().master_process.set_idle_params(timeout=10))
+
 
 def test_master_attach_process_classic(assert_lines):
 
