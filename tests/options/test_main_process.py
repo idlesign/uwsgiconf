@@ -8,6 +8,14 @@ def test_main_process_basics(assert_lines):
     ], Section().main_process.set_basic_params(touch_reload='/here/a'))
 
     assert_lines([
+        'daemonize = /here/app.log',
+    ], Section().main_process.daemonize('/here/app.log'))
+
+    assert_lines([
+        'daemonize2 = /here/app.log',
+    ], Section().main_process.daemonize('/here/app.log', after_app_loading=True))
+
+    assert_lines([
         'pidfile = /here/file',
     ], Section().main_process.set_pid_file('/here/file'))
 
