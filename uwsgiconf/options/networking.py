@@ -1,5 +1,6 @@
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
+from ..utils import listify
 
 
 class Networking(OptionsGroup):
@@ -216,8 +217,7 @@ class Networking(OptionsGroup):
         self._set(param_name, address, multi=True)
 
         if bound_workers:
-            if not isinstance(bound_workers, list):
-                bound_workers = [bound_workers]
+            bound_workers = listify(bound_workers)
 
             self._set(
                 'map-socket', '%s:%s' % (self._current_socket_idx, ','.join(map(str, bound_workers))),

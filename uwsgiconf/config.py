@@ -7,6 +7,7 @@ from .base import SectionBase, PluginBase, Options
 from .options import *
 from .formatters import IniFormatter, format_print_text
 from .exceptions import ConfigurationError
+from .utils import listify
 
 
 class Section(SectionBase):
@@ -250,12 +251,9 @@ class Section(SectionBase):
         """
         plugins = plugins or []
 
-        if not isinstance(plugins, list):
-            plugins = [plugins]
-
         command = 'need-plugin' if required else 'plugin'
 
-        for plugin in plugins:
+        for plugin in listify(plugins):
             self._set(command, plugin, multi=True)
 
         self._set('plugins-dir', search_dirs, multi=True)
@@ -306,10 +304,7 @@ class Section(SectionBase):
 
         :param str|unicode|Section|list target: File path or Section to include.
         """
-        if not isinstance(target, list):
-            target = [target]
-
-        for target_ in target:
+        for target_ in listify(target):
             if isinstance(target_, Section):
                 target_ = ':' + target_.name
 

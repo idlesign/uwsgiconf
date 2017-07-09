@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from .utils import listify
 
 
 if False:  # pragma: nocover
@@ -74,10 +75,7 @@ class OptionsGroup(object):
 
                 elif key in list_keys:
 
-                    if not isinstance(val, list):
-                        val = [val]
-
-                    val = ';'.join(val)
+                    val = ';'.join(listify(val))
 
                 value_chunks.append('%s=%s' % (aliases.get(key, key), val))
 
@@ -162,10 +160,7 @@ class SectionBase(OptionsGroup):
 
         for name, val in self._section._opts.items():
 
-            if not isinstance(val, list):
-                val = [val]
-
-            for val_ in val:
+            for val_ in listify(val):
                 options.append((name, val_))
 
         return options
