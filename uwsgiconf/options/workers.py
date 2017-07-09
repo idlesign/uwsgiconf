@@ -23,12 +23,9 @@ class Workers(OptionsGroup):
             return '%s:%s' % (self.name, ','.join(map(str, self.mule_numbers)))
 
     def set_basic_params(
-            self, count=None, touch_reload=None, zombie_reaper=None,
+            self, count=None, touch_reload=None, touch_chain_reload=None, zombie_reaper=None,
             limit_addr_space=None, limit_count=None, cpu_affinity=None):
         """
-
-        :param str|list touch_reload: Trigger reload of (and only) workers
-            if the specified file is modified/touched.
 
         :param int count: Spawn the specified number of workers (processes).
             Set the number of workers for preforking mode.
@@ -39,6 +36,16 @@ class Workers(OptionsGroup):
             to its knees by setting a too high value.
             Setting ``workers`` to a ridiculously high number will *not*
             magically make your application web scale -- quite the contrary.
+
+        :param str|list touch_reload: Trigger reload of (and only) workers
+            if the specified file is modified/touched.
+
+        :param str|list touch_chain_reload: Trigger chain workers reload on file touch.
+            When in lazy/lazy_apps mode, you can simply destroy a worker to force it to reload the application code.
+            A new reloading system named "chain reload", allows you to reload one worker at time
+            (opposed to the standard way where all of the workers are destroyed in bulk)
+
+            * http://uwsgi-docs.readthedocs.io/en/latest/articles/TheArtOfGracefulReloading.html#chain-reloading-lazy-apps
 
         :param bool zombie_reaper: Call waitpid(-1,...) after each request to get rid of zombies.
             Enables reaper mode. After each request the server will call ``waitpid(-1)``

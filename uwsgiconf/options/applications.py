@@ -88,6 +88,9 @@ class Applications(OptionsGroup):
         This option may have memory usage implications
         as Copy-on-Write semantics can not be used.
 
+        .. note:: Consider using ``touch_chain_reload`` option in ``workers`` basic params
+            for lazy apps reloading.
+
         :param bool affect_master: If **True** only workers will be
           reloaded by uWSGI's reload signals; the master will remain alive.
 
