@@ -3,7 +3,6 @@ from ..utils import listify
 
 
 class Logger(object):
-    """Base for loggers."""
 
     plugin = None
 
@@ -153,7 +152,6 @@ class ZeroMqLogger(Logger):
 
 
 class Encoder(object):
-    """Base for logger encoders."""
 
     name = None
 
@@ -465,10 +463,10 @@ class Logging(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/LogEncoders.html
 
-            .. note:: Encoders automatically enable ``log-master``
+            .. note:: Encoders automatically enable master log handling (see ``.set_master_logging_params()``).
 
             .. note:: For best performance consider allocating a thread
-                for log sending with ``threaded-logger``.
+                for log sending with ``dedicate_thread``.
 
         :param str|unicode|list|Encoder encoder: Encoder (or a list) to add into processing.
 
@@ -604,9 +602,6 @@ class Logging(OptionsGroup):
         MOD2 = '%(modifier2)'
         '''modifier2 of the request.'''
 
-        A = '%(metric.XXX)'
-        '''access the XXX metric value (see The Metrics subsystem)'''
-
         REQ_COUNT_ERR_READ = '%(rerr)'
         '''Number of read errors for the request.
     
@@ -642,5 +637,5 @@ class Logging(OptionsGroup):
     
         '''
 
-        # todo %(metric.XXX)
+        # todo %(metric.XXX) - access the XXX metric value (see The Metrics subsystem)
         # todo %(var.XXX)
