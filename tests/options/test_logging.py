@@ -3,9 +3,16 @@ from uwsgiconf import Section
 
 def test_logging_basics(assert_lines):
 
+    logging = Section().logging
+
     assert_lines([
         'disable-logging = true',
-    ], Section().logging.set_basic_params(no_requests=True))
+        'log-format = %(method) --> %(uri)',
+
+    ], logging.set_basic_params(
+        no_requests=True,
+        template='%s --> %s' % (logging.Vars.REQ_METHOD, logging.Vars.REQ_URL)
+    ))
 
     assert_lines([
         'log-reopen = true',
@@ -77,3 +84,27 @@ def test_logging_add_logger(assert_lines):
     assert_lines([
         'logger = my zeromq:tcp://192.168.173.18:9191',
     ], logging.add_logger(logging.cls_logger_zeromq('my', 'tcp://192.168.173.18:9191')))
+
+
+def test_logging_add_logger_encoder(assert_lines):
+
+    logging = Section().logging
+
+    assert_lines([
+        'worker-log-encoder = prefix -->',
+        'worker-log-encoder = suffix <--',
+
+    ], logging.add_logger_encoder([
+        logging.cls_encoder_prefix('-->'),
+        logging.cls_encoder_suffix('<--'),
+    ], for_single_worker=True))
+
+    logging = Section().logging
+    enc_format = logging.cls_encoder_format
+
+    assert_lines([
+        'log-encoder = format > ${msg} <:myfile',
+
+    ], logging.add_logger_encoder([
+        enc_format('> %s <' % enc_format.Vars.MESSAGE),
+    ], logger=logging.cls_logger_file('myfile', '/home/here.log')))

@@ -181,7 +181,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_naming_params(self, autonaming=None, prefix=None, postfix=None, name=None):
+    def set_naming_params(self, autonaming=None, prefix=None, suffix=None, name=None):
         """Setups processes naming parameters.
 
         :param bool autonaming: Automatically set process name to something meaningful.
@@ -189,14 +189,14 @@ class MainProcess(OptionsGroup):
 
         :param str prefix: Add prefix to process names.
 
-        :param str postfix: Append string to process names.
+        :param str suffix: Append string to process names.
 
         :param str name: Set process names to given static value.
 
         """
         self._set('auto-procname', autonaming, cast=bool)
         self._set('procname-prefix%s' % ('-spaced' if prefix and prefix.endswith(' ') else ''), prefix)
-        self._set('procname-append', postfix)
+        self._set('procname-append', suffix)
         self._set('procname', name)
 
         return self._section

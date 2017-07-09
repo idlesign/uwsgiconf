@@ -2,13 +2,13 @@ from ..base import OptionsGroup
 from ..utils import listify
 
 
-class LoggerBase(object):
+class Logger(object):
     """Base for loggers."""
 
     plugin = None
 
     def __init__(self, alias, *args):
-        self.name = alias or ''
+        self.alias = alias or ''
         self.args = args
 
     def __str__(self):
@@ -19,10 +19,10 @@ class LoggerBase(object):
         if args:
             chunks.append(':%s' % ','.join(args))
 
-        return '%s %s' % (self.name, ''.join(chunks))
+        return '%s %s' % (self.alias, ''.join(chunks))
 
 
-class FileLogger(LoggerBase):
+class FileLogger(Logger):
     """Allows logging into files."""
 
     plugin = 'file'
@@ -37,7 +37,7 @@ class FileLogger(LoggerBase):
         super(FileLogger, self).__init__(alias, filepath)
 
 
-class SocketLogger(LoggerBase):
+class SocketLogger(Logger):
     """Allows logging into UNIX and UDP sockets."""
 
     plugin = 'socket'
@@ -56,7 +56,7 @@ class SocketLogger(LoggerBase):
         super(SocketLogger, self).__init__(alias, addr_or_path)
 
 
-class SyslogLogger(LoggerBase):
+class SyslogLogger(Logger):
     """Allows logging into Unix standard syslog or a remote syslog."""
 
     plugin = 'syslog'
@@ -83,7 +83,7 @@ class SyslogLogger(LoggerBase):
         super(SyslogLogger, self).__init__(alias, *args)
 
 
-class RedisLogger(LoggerBase):
+class RedisLogger(Logger):
     """Allows logging into Redis.
 
     .. note:: Consider using ``dedicate_thread`` param.
@@ -110,7 +110,7 @@ class RedisLogger(LoggerBase):
         super(RedisLogger, self).__init__(alias, host, command, prefix)
 
 
-class MongoLogger(LoggerBase):
+class MongoLogger(Logger):
     """Allows logging into Mongo DB.
 
     .. note:: Consider using ``dedicate_thread`` param.
@@ -134,7 +134,7 @@ class MongoLogger(LoggerBase):
         super(MongoLogger, self).__init__(alias, host, collection, node)
 
 
-class ZeroMqLogger(LoggerBase):
+class ZeroMqLogger(Logger):
     """Allows logging into ZeroMQ sockets."""
 
     plugin = 'zeromq'
@@ -152,6 +152,94 @@ class ZeroMqLogger(LoggerBase):
         super(ZeroMqLogger, self).__init__(alias, connection_str)
 
 
+class Encoder(object):
+    """Base for logger encoders."""
+
+    name = None
+
+    def __init__(self, *args):
+        self.args = args
+
+    def __str__(self):
+        return '%s %s' % (self.name, self.args[0])
+
+
+class PrefixEncoder(Encoder):
+    """Add a raw prefix to each log msg."""
+
+    name = 'prefix'
+
+    def __init__(self, value):
+        """
+
+        :param str|unicode value: Value to be used as affix
+
+        """
+        super(PrefixEncoder, self).__init__(value)
+
+
+class SuffixEncoder(PrefixEncoder):
+    """Add a raw suffix to each log msg"""
+
+    name = 'suffix'
+
+
+class NewlineEncoder(Encoder):
+    """Add a newline char to each log msg."""
+
+    name = 'nl'
+
+
+class GzipEncoder(Encoder):
+    """Compress each msg with gzip (requires zlib)."""
+
+    name = 'gzip'
+
+
+class CompressEncoder(Encoder):
+    """Compress each msg with zlib compress (requires zlib)."""
+
+    name = 'compress'
+
+
+class FormatEncoder(Encoder):
+    """Apply the specified format to each log msg."""
+
+    name = 'format'
+
+    def __init__(self, template):
+        """
+
+        :param str|unicode template: Template string.
+            Available variables are listed in ``FormatEncoder.Vars``.
+
+        """
+        super(FormatEncoder, self).__init__(template)
+
+    class Vars(object):
+        """Variables available to use."""
+
+        MESSAGE = '${msg}'
+        '''Raw log message (newline stripped).'''
+
+        MESSAGE_NEWLINE = '${msgnl}'
+        '''Raw log message (with newline).'''
+
+        TIME = '${unix}'
+        '''Current unix time.'''
+
+        TIME_MS = '${micros}'
+        '''Current unix time in microseconds.'''
+
+        # todo consider adding ${strftime:xxx} - strftime using the xxx format
+
+
+class JsonEncoder(FormatEncoder):
+    """Apply the specified format to each log msg with each variable json escaped."""
+
+    name = 'json'
+
+
 class Logging(OptionsGroup):
     """Logging.
 
@@ -166,18 +254,27 @@ class Logging(OptionsGroup):
     cls_logger_redis = RedisLogger
     cls_logger_mongo = MongoLogger
     cls_logger_zeromq = ZeroMqLogger
-
     # todo consider adding other loggers: crypto, graylog2, systemd
 
+    cls_encoder_prefix = PrefixEncoder
+    cls_encoder_suffix = SuffixEncoder
+    cls_encoder_newline = NewlineEncoder
+    cls_encoder_gzip = GzipEncoder
+    cls_encoder_compress = CompressEncoder
+    cls_encoder_format = FormatEncoder
+    cls_encoder_json = JsonEncoder
+    # todo consider adding msgpack encoder
+
     def set_basic_params(
-            self, no_requests=None, fmt=None, memory_report=None, prefix=None, prefix_date=None,
+            self, no_requests=None, template=None, memory_report=None, prefix=None, prefix_date=None,
             apply_strftime=None, response_ms=None, ip_x_forwarded=None):
         """
 
         :param bool no_requests: Disable requests logging - only uWSGI internal messages
             and errors will be logged.
 
-        :param str|unicode fmt: Set advanced format for request logging.
+        :param str|unicode template: Set advanced format for request logging.
+            This template string can use variables from ``Logging.Vars``.
 
         :param str|unicode prefix: Prefix log items with a string.
 
@@ -196,7 +293,7 @@ class Logging(OptionsGroup):
 
         """
         self._set('disable-logging', no_requests, cast=bool)
-        self._set('log-format', fmt)
+        self._set('log-format', template)
         self._set('memory-report', memory_report)
         self._set('log-prefix', prefix)
         self._set('log-date', prefix_date, cast=bool)
@@ -373,27 +470,31 @@ class Logging(OptionsGroup):
             .. note:: For best performance consider allocating a thread
                 for log sending with ``threaded-logger``.
 
-        :param str|unicode|list encoder: Encoder to add into processing.
+        :param str|unicode|list|Encoder encoder: Encoder (or a list) to add into processing.
 
-        :param str|unicode|list|Logger logger:
+        :param str|unicode|Logger logger: Logger apply associate encoders to.
 
         :param bool requests_only: Encoder to be used only for requests information messages.
 
         :param bool for_single_worker: Encoder to be used in single-worker setup.
 
         """
-        # todo implement
-        value = ''
-
-        if logger:
-            value += ':%s' % logger.alias
-
         if for_single_worker:
             command = 'worker-log-req-encoder' if requests_only else 'worker-log-encoder'
         else:
             command = 'log-req-encoder' if requests_only else 'log-encoder'
 
-        self._set(command, value, multi=True)
+        for encoder in listify(encoder):
+
+            value = '%s' % encoder
+
+            if logger:
+                if isinstance(logger, Logger):
+                    logger = logger.alias
+
+                value += ':%s' % logger
+
+            self._set(command, value, multi=True)
 
         return self._section
 
