@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from functools import partial
 
-from .base import SectionBase, PluginOptionsGroupBase, Options
+from .base import SectionBase, PluginBase, Options
 from .options import *
 from .formatters import IniFormatter, format_print_text
 from .exceptions import ConfigurationError
@@ -151,7 +151,7 @@ class Section(SectionBase):
     def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None, required=False):
         """Sets plugin-related parameters.
 
-        :param list|str|unicode|PluginOptionsGroupBase plugins: uWSGI plugins to load
+        :param list|str|unicode|PluginBase|list[PluginBase] plugins: uWSGI plugins to load
 
         :param list|str|unicode search_dirs: Directories to search for uWSGI plugins.
 

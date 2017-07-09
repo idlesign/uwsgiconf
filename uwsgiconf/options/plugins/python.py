@@ -1,13 +1,13 @@
 import sys
 
-from ...base import PluginOptionsGroupBase
+from ...base import PluginBase
 from ...exceptions import ConfigurationError
 
 
 AUTO = (1,)
 
 
-class PythonPlugin(PluginOptionsGroupBase):
+class PythonPlugin(PluginBase):
     """Python plugin options."""
 
     def set_basic_params(self, version=AUTO, python_home=None, enable_threads=None, search_path=None,

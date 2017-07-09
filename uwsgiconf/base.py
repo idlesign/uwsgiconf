@@ -142,7 +142,7 @@ class SectionBase(OptionsGroup):
                 continue
 
             group_attr_name = key.replace('basic_params_', '')
-            options_group = getattr(self, group_attr_name, None)  # type: Union[OptionsGroup, PluginOptionsGroupBase]
+            options_group = getattr(self, group_attr_name, None)  # type: Union[OptionsGroup, PluginBase]
 
             if options_group is not None:
                 if 'plugin' in group_attr_name:
@@ -171,14 +171,14 @@ class SectionBase(OptionsGroup):
         return options
 
 
-class PluginOptionsGroupBase(OptionsGroup):
+class PluginBase(OptionsGroup):
     """Plugin options."""
 
     name = None
 
     def __init__(self, *args, **kwargs):
         self._active = False
-        super(PluginOptionsGroupBase, self).__init__(*args, **kwargs)
+        super(PluginBase, self).__init__(*args, **kwargs)
 
     def set_basic_params(self, plugin_dir=None, **kwargs):
         """
