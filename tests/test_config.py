@@ -39,8 +39,8 @@ def test_section_basics(ini, assert_lines):
 
 def test_section_print(assert_lines):
 
-    assert_lines('%[[37;49mAAA a%[[0m', Section().print_out('a', indent='AAA '))
-    assert_lines('%[[32;49m>   ===== variables', Section().print_variables())
+    assert_lines('%[[37;49mAAA a%[[0m', Section(style_prints=True).print_out('a', indent='AAA '))
+    assert_lines('= >   ===== variables', Section().print_variables())
 
 
 def test_section_fallback(assert_lines):
