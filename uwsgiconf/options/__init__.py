@@ -1,6 +1,7 @@
 from .applications import Applications
 from .caching import Caching
 from .locks import Locks
+from .logging import Logging
 from .main_process import MainProcess
 from .master_process import MasterProcess
 from .networking import Networking

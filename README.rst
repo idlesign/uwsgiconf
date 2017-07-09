@@ -20,6 +20,9 @@ https://github.com/idlesign/uwsgiconf
     :target: https://coveralls.io/r/idlesign/uwsgiconf
 
 
+**Work in progress. Stay tuned.**
+
+
 Description
 -----------
 

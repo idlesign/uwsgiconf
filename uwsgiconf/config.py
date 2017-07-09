@@ -41,6 +41,7 @@ class Section(SectionBase):
     applications = Options(Applications)  # type: Applications
     caching = Options(Caching)  # type: Caching
     locks = Options(Locks)  # type: Locks
+    logging = Options(Logging)  # type: Logging
     main_process = Options(MainProcess)  # type: MainProcess
     master_process = Options(MasterProcess)  # type: MasterProcess
     networking = Options(Networking)  # type: Networking
