@@ -32,9 +32,10 @@ class Section(SectionBase):
     not only into `set_basic_params` method by also into section initializer
     using `basic_params_` prefixed group name:
 
+    .. code-block:: python
         Section(
-            basic_params_workers=dict(count=3, zombie_reaper=True)
-            basic_params_master_process=dict(enabled=True)
+            basic_params_workers=dict(count=3, zombie_reaper=True),
+            basic_params_master_process=dict(enabled=True),
         )
 
     """
@@ -52,7 +53,8 @@ class Section(SectionBase):
     plugin_python = Options(PythonPlugin)  # type: PythonPlugin
 
     class Vars(object):
-        """The following variables also known as magic variables could be used as option values where appropriate.
+        """The following variables also known as magic variables
+        could be used as option values where appropriate.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Configuration.html#magic-variables
 
@@ -140,7 +142,7 @@ class Section(SectionBase):
 
             return OrderedDict(descriptions)
 
-    def __init__(self, strict_config=None, name=None, **kwargs):
+    def __init__(self, strict_config=None, name=None, style_prints=False, **kwargs):
         """
 
         :param bool strict_config: Enable strict configuration parsing.
@@ -149,9 +151,14 @@ class Section(SectionBase):
 
             To use placeholder variables when using strict mode, use the ``set-placeholder`` option.
 
-        :param str name: Configuration section name
+        :param str name: Configuration section name.
+
+        :param bool style_prints: Enables styling (e.g. colouring) for ``print_`` family methods.
+            Could be nice for console and distracting in logs.
 
         """
+        self._style_prints = style_prints
+
         super(Section, self).__init__(name=name or 'uwsgi', strict_config=strict_config, **kwargs)
 
     def set_basic_params(self, strict_config=None, **kwargs):
@@ -207,7 +214,7 @@ class Section(SectionBase):
         if format_options is None:
             format_options = 'gray'
 
-        if format_options:
+        if self._style_prints and format_options:
 
             if not isinstance(format_options, dict):
                 format_options = {'color_fg': format_options}
