@@ -4,42 +4,45 @@ from ..base import OptionsGroup
 class MainProcess(OptionsGroup):
     """Main process is the uWSGi process."""
 
-    EVENT_ASAP = 'asap'
-    '''As soon as possible.'''
+    class Events:
+        """Events available for ``.run_command_on_event()`` method."""
 
-    EVENT_JAIL_PRE = 'jail-pre'
-    '''Before jailing.'''
+        ASAP = 'asap'
+        '''As soon as possible.'''
 
-    EVENT_JAIL_IN = 'jail-in'
-    '''In jail after initialization.'''
+        JAIL_PRE = 'jail-pre'
+        '''Before jailing.'''
 
-    EVENT_JAIL_POST = 'jail-post'
-    '''After jailing.'''
+        JAIL_IN = 'jail-in'
+        '''In jail after initialization.'''
 
-    EVENT_PRIV_DROP_PRE = 'priv-drop-pre'
-    '''Before privileges drop.'''
+        JAIL_POST = 'jail-post'
+        '''After jailing.'''
 
-    EVENT_PRIV_DROP_POST = 'priv-drop-post'
-    '''Before privileges drop.'''
+        PRIV_DROP_PRE = 'priv-drop-pre'
+        '''Before privileges drop.'''
 
-    EVENT_EXIT = 'exit'
-    '''Before app exit and reload.'''
+        PRIV_DROP_POST = 'priv-drop-post'
+        '''Before privileges drop.'''
 
-    EVENT_APP_LOAD_PRE = 'app-pre'
-    '''Before app loading.'''
+        EXIT = 'exit'
+        '''Before app exit and reload.'''
 
-    EVENT_APP_LOAD_POST = 'app-post'
-    '''After app loading.'''
+        APP_LOAD_PRE = 'app-pre'
+        '''Before app loading.'''
 
-    EVENT_VASSAL_START_IN = 'vassal-start-in'
-    '''In vassal on start just before calling exec() directly in the new namespace.'''
+        APP_LOAD_POST = 'app-post'
+        '''After app loading.'''
 
-    EVENT_VASSAL_START_POST = 'vassal-start-post'
-    '''In the emperor soon after a vassal has been spawn 
-    setting 4 env vars, UWSGI_VASSAL_CONFIG, UWSGI_VASSAL_PID, 
-    UWSGI_VASSAL_UID and UWSGI_VASSAL_GID.
+        VASSAL_START_IN = 'vassal-start-in'
+        '''In vassal on start just before calling exec() directly in the new namespace.'''
 
-    '''
+        VASSAL_START_POST = 'vassal-start-post'
+        '''In the emperor soon after a vassal has been spawn 
+        setting 4 env vars, UWSGI_VASSAL_CONFIG, UWSGI_VASSAL_PID, 
+        UWSGI_VASSAL_UID and UWSGI_VASSAL_GID.
+
+        '''
 
     def set_basic_params(
             self, touch_reload=None, priority=None, vacuum=None, binary_path=None, honour_stdin=None):
@@ -94,7 +97,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def run_command_on_event(self, command, event=EVENT_ASAP):
+    def run_command_on_event(self, command, event=Events.ASAP):
         """Run the given command on a given event.
 
         :param str|unicode command:
@@ -103,17 +106,17 @@ class MainProcess(OptionsGroup):
 
         """
         directive = {
-            self.EVENT_ASAP: 'exec-asap',
-            self.EVENT_JAIL_PRE: 'exec-pre-jail',
-            self.EVENT_JAIL_IN: 'exec-in-jail',
-            self.EVENT_JAIL_POST: 'exec-post-jail',
-            self.EVENT_PRIV_DROP_PRE: 'exec-as-root',
-            self.EVENT_PRIV_DROP_POST: 'exec-as-user',
-            self.EVENT_EXIT: 'exec-as-user-atexit',
-            self.EVENT_APP_LOAD_PRE: 'exec-pre-app',
-            self.EVENT_APP_LOAD_POST: 'exec-post-app',
-            self.EVENT_VASSAL_START_IN: 'exec-as-vassal',
-            self.EVENT_VASSAL_START_POST: 'exec-as-emperor',
+            self.Events.ASAP: 'exec-asap',
+            self.Events.JAIL_PRE: 'exec-pre-jail',
+            self.Events.JAIL_IN: 'exec-in-jail',
+            self.Events.JAIL_POST: 'exec-post-jail',
+            self.Events.PRIV_DROP_PRE: 'exec-as-root',
+            self.Events.PRIV_DROP_POST: 'exec-as-user',
+            self.Events.EXIT: 'exec-as-user-atexit',
+            self.Events.APP_LOAD_PRE: 'exec-pre-app',
+            self.Events.APP_LOAD_POST: 'exec-post-app',
+            self.Events.VASSAL_START_IN: 'exec-as-vassal',
+            self.Events.VASSAL_START_POST: 'exec-as-emperor',
         }.get(event)
 
         self._set(directive, command, multi=True)
