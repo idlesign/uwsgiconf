@@ -1,26 +1,29 @@
 from ..base import OptionsGroup
 
 
+class MuleFarm(object):
+    """Represents a mule farm."""
+
+    def __init__(self, name, mule_numbers):
+        """
+        :param str|unicode name: Farm alias.
+
+        :param int|list[int] mule_numbers: Total mules on farm count,
+            or a list of mule numbers.
+
+        """
+        # todo http://uwsgi-docs.readthedocs.io/en/latest/Signals.html#signals-targets
+        self.name = name
+        self.mule_numbers = mule_numbers
+
+    def __str__(self):
+        return '%s:%s' % (self.name, ','.join(map(str, self.mule_numbers)))
+
+
 class Workers(OptionsGroup):
     """Workers aka [working] processes."""
 
-    class MuleFarm(object):
-        """Represents a mule farm."""
-
-        def __init__(self, name, mule_numbers):
-            """
-            :param str|unicode name: Farm alias.
-
-            :param int|list[int] mule_numbers: Total mules on farm count,
-                or a list of mule numbers.
-
-            """
-            # todo http://uwsgi-docs.readthedocs.io/en/latest/Signals.html#signals-targets
-            self.name = name
-            self.mule_numbers = mule_numbers
-
-        def __str__(self):
-            return '%s:%s' % (self.name, ','.join(map(str, self.mule_numbers)))
+    cls_mule_farm = MuleFarm
 
     def set_basic_params(
             self, count=None, touch_reload=None, touch_chain_reload=None, zombie_reaper=None,

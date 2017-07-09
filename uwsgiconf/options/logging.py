@@ -160,12 +160,12 @@ class Logging(OptionsGroup):
 
     """
 
-    logger_file = FileLogger
-    logger_socket = SocketLogger
-    logger_syslog = SyslogLogger
-    logger_redis = RedisLogger
-    logger_mongo = MongoLogger
-    logger_zeromq = ZeroMqLogger
+    cls_logger_file = FileLogger
+    cls_logger_socket = SocketLogger
+    cls_logger_syslog = SyslogLogger
+    cls_logger_redis = RedisLogger
+    cls_logger_mongo = MongoLogger
+    cls_logger_zeromq = ZeroMqLogger
 
     # todo consider adding other loggers: crypto, graylog2, systemd
 

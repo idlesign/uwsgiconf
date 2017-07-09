@@ -46,34 +46,34 @@ def test_logging_add_logger(assert_lines):
     logging = Section().logging
     assert_lines([
         'worker-logger = my file:/home/here.log',
-    ], logging.add_logger(logging.logger_file('my', '/home/here.log'), for_single_worker=True))
+    ], logging.add_logger(logging.cls_logger_file('my', '/home/here.log'), for_single_worker=True))
 
     logging = Section().logging
     assert_lines([
         'logger = my socket:/home/here.sock',
-    ], logging.add_logger(logging.logger_socket('my', '/home/here.sock')))
+    ], logging.add_logger(logging.cls_logger_socket('my', '/home/here.sock')))
 
     logging = Section().logging
     assert_lines([
         'logger = my syslog:myapp',
-    ], logging.add_logger(logging.logger_syslog('my', 'myapp')))
+    ], logging.add_logger(logging.cls_logger_syslog('my', 'myapp')))
 
     logging = Section().logging
     assert_lines([
         'logger = my rsyslog:127.0.0.1:1111,myapp',
-    ], logging.add_logger(logging.logger_syslog('my', 'myapp', host='127.0.0.1:1111')))
+    ], logging.add_logger(logging.cls_logger_syslog('my', 'myapp', host='127.0.0.1:1111')))
 
     logging = Section().logging
     assert_lines([
         'logger = my redislog',
-    ], logging.add_logger(logging.logger_redis('my')))
+    ], logging.add_logger(logging.cls_logger_redis('my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my mongodblog',
-    ], logging.add_logger(logging.logger_mongo('my')))
+    ], logging.add_logger(logging.cls_logger_mongo('my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my zeromq:tcp://192.168.173.18:9191',
-    ], logging.add_logger(logging.logger_zeromq('my', 'tcp://192.168.173.18:9191')))
+    ], logging.add_logger(logging.cls_logger_zeromq('my', 'tcp://192.168.173.18:9191')))
