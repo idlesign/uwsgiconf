@@ -4,53 +4,59 @@ from ..exceptions import ConfigurationError
 
 class Networking(OptionsGroup):
     """Networking related stuff. Socket definition, binding and tuning."""
-
-    SOCK_UWSGI = 'uwsgi'
-
-    SOCK_HTTP = 'http'
-    """Bind to the specified socket using HTTP"""
-
-    SOCK_HTTP11 = 'http11'  # Keep-Alive
-
-    SOCK_UDP = 'udp'
-    """Run the udp server on the specified address.
     
-    .. note:: Mainly useful for SNMP or shared UDP logging.
+    class Sockets(object):
+        """Available socket types to use with ``.register_socket()``."""
     
-    """
-
-    SOCK_FASTCGI = 'fastcgi'
-    """Bind to the specified socket using FastCGI."""
-
-    SOCK_SCGI = 'scgi'
-    """Bind to the specified UNIX/TCP socket using SCGI protocol."""
-
-    SOCK_RAW = 'raw'
-    """Bind to the specified UNIX/TCP socket using RAW protocol."""
-
-    SOCK_SHARED = 'shared'
-    """Create a shared socket for advanced jailing or IPC purposes.
+        UWSGI = 'uwsgi'
     
-    Allows you to create a socket early in the server's startup 
-    and use it after privileges drop or jailing. This can be used 
-    to bind to privileged (<1024) ports.
+        HTTP = 'http'
+        """Bind to the specified socket using HTTP"""
     
-    """
+        HTTP11 = 'http11'  # Keep-Alive
+    
+        UDP = 'udp'
+        """Run the udp server on the specified address.
+        
+        .. note:: Mainly useful for SNMP or shared UDP logging.
+        
+        """
+    
+        FASTCGI = 'fastcgi'
+        """Bind to the specified socket using FastCGI."""
+    
+        SCGI = 'scgi'
+        """Bind to the specified UNIX/TCP socket using SCGI protocol."""
+    
+        RAW = 'raw'
+        """Bind to the specified UNIX/TCP socket using RAW protocol."""
+    
+        SHARED = 'shared'
+        """Create a shared socket for advanced jailing or IPC purposes.
+        
+        Allows you to create a socket early in the server's startup 
+        and use it after privileges drop or jailing. This can be used 
+        to bind to privileged (<1024) ports.
+        
+        """
+    
+        ZERO_MQ = 'zmq'
+        """Introduce zeromq pub/sub pair."""
 
-    SOCK_ZERO_MQ = 'zmq'
-    """Introduce zeromq pub/sub pair."""
+    class Modes(object):
+        """Available socket modes to use with ``.register_socket()``."""
 
-    MODE_SSL = '+ssl'
-    """Use SSL."""
+        SSL = '+ssl'
+        """Use SSL."""
 
-    MODE_NPH = '+nph'
-    """Bind to the specified UNIX/TCP socket using nph mode."""
+        NPH = '+nph'
+        """Bind to the specified UNIX/TCP socket using nph mode."""
 
-    MODE_PERSISTENT = '+persistent'
-    """Use persistent uwsgi protocol (puwsgi)."""
+        PERSISTENT = '+persistent'
+        """Use persistent uwsgi protocol (puwsgi)."""
 
-    MODE_UNDEFERRED = '+undeferred'
-    """Use shared socket undeferred mode."""
+        UNDEFERRED = '+undeferred'
+        """Use shared socket undeferred mode."""
 
     def __init__(self, *args, **kwargs):
         super(Networking, self).__init__(*args, **kwargs)
@@ -152,7 +158,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def register_socket(self, address='127.0.0.1:8000', type=SOCK_HTTP, mode=None, bound_workers=None):
+    def register_socket(self, address='127.0.0.1:8000', type=Sockets.HTTP, mode=None, bound_workers=None):
         """Registers a socket.
 
         :param str address: Address to bind socket to.
@@ -178,30 +184,30 @@ class Networking(OptionsGroup):
         mode = mode or ''
 
         param_name = {
-            self.SOCK_UWSGI: {
-                self.MODE_SSL: 'suwsgi-socket',
-                self.MODE_PERSISTENT: 'puwsgi-socket',
+            self.Sockets.UWSGI: {
+                self.Modes.SSL: 'suwsgi-socket',
+                self.Modes.PERSISTENT: 'puwsgi-socket',
 
             }.get(mode, 'uwsgi-socket'),
             # Default: Bind to the specified socket with default protocol (see `protocol/socket-protocol`)
             # socket-protocol = 0,uwsgi
             # socket-protocol = 3,uwsgidump
 
-            self.SOCK_HTTP: 'https-socket' if mode == self.MODE_SSL else 'http-socket',
+            self.Sockets.HTTP: 'https-socket' if mode == self.Modes.SSL else 'http-socket',
 
-            self.SOCK_HTTP11: 'http11-socket',
+            self.Sockets.HTTP11: 'http11-socket',
 
-            self.SOCK_FASTCGI: 'fastcgi-nph-socket' if mode == self.MODE_NPH else 'fastcgi-socket',
+            self.Sockets.FASTCGI: 'fastcgi-nph-socket' if mode == self.Modes.NPH else 'fastcgi-socket',
 
-            self.SOCK_SCGI: 'scgi-nph-socket' if mode == self.MODE_NPH else 'scgi-socket',
+            self.Sockets.SCGI: 'scgi-nph-socket' if mode == self.Modes.NPH else 'scgi-socket',
 
-            self.SOCK_RAW: 'raw-socket',
+            self.Sockets.RAW: 'raw-socket',
 
-            self.SOCK_SHARED: 'undeferred-shared-socket' if mode == self.MODE_UNDEFERRED else 'shared-socket',
+            self.Sockets.SHARED: 'undeferred-shared-socket' if mode == self.Modes.UNDEFERRED else 'shared-socket',
 
-            self.SOCK_UDP: 'upd',
+            self.Sockets.UDP: 'upd',
 
-            self.SOCK_ZERO_MQ: 'zeromq-socket',
+            self.Sockets.ZERO_MQ: 'zeromq-socket',
         }.get(type)
 
         if param_name is None:
