@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from collections import OrderedDict
 from functools import partial
 
 from .base import SectionBase, PluginBase, Options
@@ -47,6 +48,95 @@ class Section(SectionBase):
     workers = Options(Workers)  # type: Workers
 
     plugin_python = Options(PythonPlugin)  # type: PythonPlugin
+
+    class Vars(object):
+        """The following variables also known as magic variables could be used as option values where appropriate.
+
+        * http://uwsgi-docs.readthedocs.io/en/latest/Configuration.html#magic-variables
+
+        """
+        VERSION = '%V'
+        '''uWSGI version number'''
+
+        FORMAT_ESCAPE = '%['
+        '''ANSI escape \\033. useful for printing colors'''
+
+        FORMAT_END = '%s[0m' % FORMAT_ESCAPE
+
+        CONF_CURRENT_SECTION = '%x'
+        '''The current section identifier, eg. conf.ini:section.'''
+        CONF_CURRENT_SECTION_NTPL = '%x'
+
+        CONF_NAME_ORIGINAL = '%o'
+        '''The original conf filename, as specified on the command line'''
+        CONF_NAME_ORIGINAL_NTPL = '%O'
+
+        TIMESTAMP_STARTUP_S = '%t'
+        '''Unix time s, gathered at instance startup.'''
+        TIMESTAMP_STARTUP_MS = '%T'
+        '''Unix time ms, gathered at instance startup'''
+
+        DIR_VASSALS = '%v'
+        '''Vassals directory - pwd.'''
+
+        HOST_NAME = '%h'
+        '''Host name.'''
+        CPU_CORES = '%k'
+        '''Detected CPU count.'''
+
+        USER_ID = '%u'
+        '''User ID.'''
+        USER_NAME = '%U'
+        '''User name.'''
+
+        GROUP_ID = '%g'
+        '''Use group ID.'''
+        GROUP_NAME = '%G'
+        '''Use group name.'''
+
+        @classmethod
+        def get_descriptions(cls):
+            """Returns variable to description mapping.
+
+            :rtype: dict
+            """
+            descriptions = {
+                cls.DIR_VASSALS: 'the vassals directory - pwd',
+                cls.VERSION: 'the uWSGI version',
+                cls.HOST_NAME: 'the hostname',
+                cls.CONF_NAME_ORIGINAL: 'the original conf filename, as specified on the command line',
+                cls.CONF_NAME_ORIGINAL_NTPL: 'as %o but for first non-template conf',
+                '%p': 'the absolute path of the conf',
+                '%P': 'as %p but for first non-template conf',
+                '%s': 'the filename of the conf',
+                '%S': 'as %s but for first non-template conf',
+                '%d': 'the absolute path of the directory containing the conf',
+                '%D': 'as %d but for first non-template conf',
+                '%e': 'the extension of the conf',
+                '%E': 'as %e but for first non-template conf',
+                '%n': 'the filename without extension',
+                '%N': 'as %n but for first non-template conf',
+                '%c': 'the name of the directory containing the conf file',
+                '%C': 'as %c but for first non-template conf',
+                cls.TIMESTAMP_STARTUP_S: 'unix time s, gathered at instance startup',
+                cls.TIMESTAMP_STARTUP_MS: 'unix time ms, gathered at instance startup',
+                cls.CONF_CURRENT_SECTION: 'the current section identifier, eg. conf.ini:section',
+                '%X': 'as %x but for first non-template conf',
+                '%i': 'inode number of the file',
+                '%I': 'as %i but for first non-template conf',
+                cls.FORMAT_ESCAPE: 'ANSI escape \\033. useful for printing colors',
+                cls.CPU_CORES: 'detected cpu cores',
+                cls.USER_ID: 'uid of the user',
+                cls.USER_NAME: 'username or fallback to uid of the user',
+                cls.GROUP_ID: 'gid of the user',
+                cls.GROUP_NAME: 'group name or fallback to gid of the user',
+                '%j': 'HEX representation of the djb33x hash of the full conf path',
+                '%J': 'as %j but for first non-template conf',
+            }
+
+            descriptions = sorted(descriptions.items(), key=lambda item: item[0].lower())
+
+            return OrderedDict(descriptions)
 
     def __init__(self, strict_config=None, name=None, **kwargs):
         """
@@ -135,13 +225,11 @@ class Section(SectionBase):
         http://uwsgi-docs.readthedocs.io/en/latest/Configuration.html#magic-variables
 
         """
-        from .variables import get_descriptions
-
         print_out = partial(self.print_out, format_options='green')
 
         print_out('===== variables =====')
 
-        for var, hint in get_descriptions().items():
+        for var, hint in self.Vars.get_descriptions().items():
             print_out('    %' + var + ' = ' + var + ' = ' + hint.replace('%', '%%'))
 
         print_out('=====================')

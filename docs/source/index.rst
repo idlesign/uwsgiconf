@@ -60,7 +60,6 @@ API
     grp_spooler
     grp_workers
     grp_plugin_python
-    variables
     formatters
 
 Presets

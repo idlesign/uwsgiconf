@@ -1,4 +1,3 @@
-from .variables import FORMAT_ESCAPE, FORMAT_END
 
 
 def format_print_text(text, color_fg=None, color_bg=None):
@@ -11,6 +10,8 @@ def format_print_text(text, color_fg=None, color_bg=None):
     :param str|unicode color_bg: text (background) color
     :rtype: str|unicode
     """
+    from .config import Section
+
     color_fg = {
 
         'black': '30',
@@ -56,8 +57,8 @@ def format_print_text(text, color_fg=None, color_bg=None):
     mod = ';'.join([color_fg, color_bg])
 
     text = '%(esc)s[%(mod)sm%(value)s%(end)s' % {
-        'esc': FORMAT_ESCAPE,
-        'end': FORMAT_END,
+        'esc': Section.Vars.FORMAT_ESCAPE,
+        'end': Section.Vars.FORMAT_END,
         'mod': mod,
         'value': text,
     }

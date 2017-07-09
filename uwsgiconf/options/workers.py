@@ -1,5 +1,4 @@
 from ..base import OptionsGroup
-from ..variables import CPU_CORES
 
 
 class Workers(OptionsGroup):
@@ -101,13 +100,15 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_count_auto(self, count=CPU_CORES):
+    def set_count_auto(self, count=None):
         """Sets workers count.
 
         By default sets it to detected number of available cores
 
         :param int count:
         """
+        count = count or self._section.Vars.CPU_CORES
+
         self._set('workers', count)
 
         return self._section
