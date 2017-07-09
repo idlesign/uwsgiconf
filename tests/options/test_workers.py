@@ -42,8 +42,8 @@ def test_mules(assert_lines):
         'mules = 5',
 
     ], section.workers.set_mules_params(farms=[
-        section.workers.cls_mule_farm('first', 2),
-        section.workers.cls_mule_farm('second', 3),
+        section.workers.MuleFarm('first', 2),
+        section.workers.MuleFarm('second', 3),
     ]))
 
     assert_lines([
