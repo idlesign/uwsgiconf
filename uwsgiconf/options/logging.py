@@ -13,7 +13,7 @@ class Logger(object):
     def __str__(self):
         chunks = [self.plugin]
 
-        args = [arg for arg in self.args if arg is not None]
+        args = [str(arg) for arg in self.args if arg is not None]
 
         if args:
             chunks.append(':%s' % ','.join(args))
