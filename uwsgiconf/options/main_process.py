@@ -1,47 +1,327 @@
 from ..base import OptionsGroup
+from ..utils import listify
+
+
+class Handler(object):
+
+    name = None
+
+    def __init__(self, *args):
+        self.args = args
+
+    def __str__(self):
+        args = [str(arg) for arg in self.args if arg is not None]
+        result = self.name + ':' + ' '.join(args)
+        return result.strip()
+
+
+class MountHandler(Handler):
+    """Mount or unmount filesystems.
+
+    Examples:
+        * Mount: proc none /proc
+        * Unmount: /proc
+
+    """
+
+    name = 'mount'
+
+    def __init__(self, mountpoint, fs=None, src=None, flags=None):
+        """
+
+        :param str|unicode mountpoint:
+
+        :param str|unicode fs: Filesystem. Presence indicates mounting.
+
+        :param str|unicode src: Presence indicates mounting.
+
+        :param str|unicode|list flags: Flags available for the operating system.
+            As an example on Linux you will options like: bind, recursive, readonly, rec, detach etc.
+
+        """
+        if flags is not None:
+            flags = listify(flags)
+            flags = ','.join(flags)
+
+        if fs:
+            args = [fs, src, mountpoint, flags]
+
+        else:
+            args = [mountpoint, flags]
+            self.name = 'umount'
+
+        super(MountHandler, self).__init__(*args)
+
+
+class ExecHandler(Handler):
+    """Run the shell command.
+
+    Command run under ``/bin/sh``.
+    If for some reason you do not want to use ``/bin/sh``,
+    use ``binsh`` option,
+
+    Examples:
+        * cat /proc/self/mounts
+
+    """
+
+    name = 'exec'
+
+    def __init__(self, command):
+        super(ExecHandler, self).__init__(command)
+
+
+class CallHandler(Handler):
+    """Call functions in the current process address space."""
+
+    name = 'call'
+
+    def __init__(self, target, honour_exit_status=False, arg_int=False):
+        """
+        :param str|unicode target: Symbol and args.
+
+        :param bool honour_exit_status: Expect an int return.
+            Anything != 0 means failure.
+
+        :param bool arg_int: Parse the argument as an int.
+
+        """
+        name = self.name
+
+        if arg_int:
+            name += 'int'
+
+        if honour_exit_status:
+            name += 'ret'
+
+        self.name = name
+
+        super(CallHandler, self).__init__(target)
+
+
+class ChangeDirHandler(Handler):
+    """Changes a directory.
+
+    Convenience handler, same as ``call:chdir <directory>``.
+
+    """
+    name = 'cd'
+
+    def __init__(self, target_dir):
+        super(ChangeDirHandler, self).__init__(target_dir)
+
+
+class ExitHandler(Handler):
+    """Exits.
+
+    Convenience handler, same as ``callint:exit [num]``.
+
+    """
+    name = 'exit'
+
+    def __init__(self, status_code=None):
+        super(ExitHandler, self).__init__(status_code)
+
+
+class PrintHandler(Handler):
+    """Prints.
+
+    Convenience handler, same as calling the ``uwsgi_log`` symbol.
+
+    """
+    name = 'print'
+
+    def __init__(self, text=None):
+        super(PrintHandler, self).__init__(text)
+
+
+class WriteHandler(Handler):
+    """Writes a string to the specified file/fifo.
+
+    .. note:: Since 1.9.21
+
+    """
+    name = 'write'
+
+    def __init__(self, target, text, fifo=False):
+        """
+
+        :param str|unicode target: File to write to.
+
+        :param str|unicode text: Text to write into file.
+
+        :param bool fifo: Write to FIFO.
+        """
+
+        if fifo:
+            self.name += 'fifo'
+
+        super(WriteHandler, self).__init__(target, text)
+
+
+class UnlinkHandler(Handler):
+    """Unlink the specified file.
+
+    .. note:: Since 1.9.21
+
+    """
+    name = 'unlink'
+
+    def __init__(self, target):
+        super(UnlinkHandler, self).__init__(target)
 
 
 class MainProcess(OptionsGroup):
     """Main process is the uWSGi process."""
 
-    class Events:
-        """Events available for ``.run_command_on_event()`` method."""
+    cls_handler_mount = MountHandler
+    cls_handler_exec = ExecHandler
+    cls_handler_call = CallHandler
+    cls_handler_change_dir = ChangeDirHandler
+    cls_handler_exit = ExitHandler
+    cls_handler_print = PrintHandler
+    cls_handler_write = WriteHandler
+    cls_handler_unlink = UnlinkHandler
+
+    class Phases:
+        """Phases available for hooking.
+
+        Some of them may be **fatal** - a failing hook for them
+        will mean failing of the whole uWSGI instance (generally calling exit(1)).
+
+        """
+
+        # todo hook-touch: <file> <action>
 
         ASAP = 'asap'
-        '''As soon as possible.'''
+        '''As soon as possible. **Fatal**
+        
+        Run directly after configuration file has been parsed, before anything else is done.
+        
+        '''
 
-        JAIL_PRE = 'jail-pre'
-        '''Before jailing.'''
+        JAIL_PRE = 'pre-jail'
+        '''Before jailing. **Fatal** 
+        
+        Run before any attempt to drop privileges or put the process in some form of jail.        
+        
+        '''
 
-        JAIL_IN = 'jail-in'
-        '''In jail after initialization.'''
+        JAIL_IN = 'in-jail'
+        '''In jail after initialization. **Fatal** 
 
-        JAIL_POST = 'jail-post'
-        '''After jailing.'''
+        Run soon after jayling, but after post-jail. 
+        If jailing requires fork(), the chidlren run this phase.
+        
+        '''
 
-        PRIV_DROP_PRE = 'priv-drop-pre'
-        '''Before privileges drop.'''
+        JAIL_POST = 'post-jail'
+        '''After jailing. **Fatal**
+        
+        Run soon after any jailing, but before privileges drop. 
+        If jailing requires fork(), the parent process run this phase.
+        
+        '''
 
-        PRIV_DROP_POST = 'priv-drop-post'
-        '''Before privileges drop.'''
+        PRIV_DROP_PRE = 'as-root'
+        '''Before privileges drop. **Fatal**
+        
+        Last chance to run something as root.
+        
+        '''
 
-        EXIT = 'exit'
+        PRIV_DROP_POST = 'as-user'
+        '''After privileges drop. **Fatal**'''
+
+        MASTER_START = 'master-start'
+        '''When Master starts.'''
+
+        EMPEROR_START = 'emperor-start'
+        '''When Emperor starts.'''
+
+        EMPEROR_STOP = 'emperor-stop'
+        '''When Emperor sent a stop message.'''
+
+        EMPEROR_RELOAD = 'emperor-reload'
+        '''When Emperor sent a reload message.'''
+
+        EMPEROR_LOST = 'emperor-lost'
+        '''When Emperor connection is lost.'''
+
+        EXIT = 'as-user-atexit'
         '''Before app exit and reload.'''
 
-        APP_LOAD_PRE = 'app-pre'
-        '''Before app loading.'''
+        APP_LOAD_PRE = 'pre-app'
+        '''Before app loading. **Fatal**'''
 
-        APP_LOAD_POST = 'app-post'
-        '''After app loading.'''
+        APP_LOAD_POST = 'post-app'
+        '''After app loading. **Fatal**'''
 
-        VASSAL_START_IN = 'vassal-start-in'
-        '''In vassal on start just before calling exec() directly in the new namespace.'''
+        VASSAL_ON_DEMAND_IN = 'as-on-demand-vassal'
+        '''Whenever a vassal enters on-demand mode.'''
 
-        VASSAL_START_POST = 'vassal-start-post'
-        '''In the emperor soon after a vassal has been spawn 
-        setting 4 env vars, UWSGI_VASSAL_CONFIG, UWSGI_VASSAL_PID, 
-        UWSGI_VASSAL_UID and UWSGI_VASSAL_GID.
+        VASSAL_CONFIG_CHANGE_POST = 'as-on-config-vassal'
+        '''Whenever the emperor detects a config change for an on-demand vassal.'''
 
+        VASSAL_START_PRE = 'as-emperor-before-vassal'
+        '''Before the new vassal is spawned.'''
+
+        VASSAL_PRIV_DRP_PRE = 'as-vassal-before-drop'
+        '''In vassal, before dropping its privileges.'''
+
+        VASSAL_SET_NAMESPACE = 'as-emperor-setns'
+        '''In the emperor entering vassal namespace.'''
+
+        VASSAL_START_IN = 'as-vassal'
+        '''In the vassal before executing the uwsgi binary. **Fatal** 
+        
+        In vassal on start just before calling exec() directly in the new namespace.
+        
+        '''
+
+        VASSAL_START_POST = 'as-emperor'
+        '''In the emperor soon after a vassal has been spawn.
+         
+        Setting 4 env vars:
+            * UWSGI_VASSAL_CONFIG 
+            * UWSGI_VASSAL_PID
+            * UWSGI_VASSAL_UID 
+            * UWSGI_VASSAL_GID
+
+        '''
+
+        GATEWAY_START_IN_EACH = 'as-gateway'
+        '''In each gateway on start.'''
+
+        MULE_START_IN_EACH = 'as-mule'
+        '''In each mule on start.'''
+
+        WORKER_ACCEPTING_PRE_EACH = 'accepting'
+        '''Before the each worker starts accepting requests. 
+        
+        .. note:: Since 1.9.21
+        
+        '''
+
+        WORKER_ACCEPTING_PRE_FIRST = 'accepting1'
+        '''Before the first worker starts accepting requests.
+        
+        .. note:: Since 1.9.21
+        
+        '''
+
+        WORKER_ACCEPTING_PRE_EACH_ONCE = 'accepting-once'
+        '''Before the each worker starts accepting requests, one time per instance. 
+        
+        .. note:: Since 1.9.21
+        
+        '''
+
+        WORKER_ACCEPTING_PRE_FIRST_ONCE = 'accepting1-once'
+        '''Before the first worker starts accepting requests, one time per instance.
+        
+        .. note:: Since 1.9.21
+        
         '''
 
     def set_basic_params(
@@ -118,29 +398,27 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def run_command_on_event(self, command, event=Events.ASAP):
-        """Run the given command on a given event.
+    def set_hook(self, phase, handler):
+        """Allows setting hooks (attaching handlers) for various uWSGI phases.
+
+        :param str|unicode phase: See constants in ``Phases`` class.
+
+        :param str|unicode|list|Handler|list[Handler] handler:
+
+        """
+        self._set('hook-%s' % phase, handler, multi=True)
+
+        return self._section
+
+    def run_command_on_event(self, command, phase=Phases.ASAP):
+        """Run the given command on a given phase.
 
         :param str|unicode command:
 
-        :param str|unicode event: See EVENT_* constants.
+        :param str|unicode phase: See constants in ``Phases`` class.
 
         """
-        directive = {
-            self.Events.ASAP: 'exec-asap',
-            self.Events.JAIL_PRE: 'exec-pre-jail',
-            self.Events.JAIL_IN: 'exec-in-jail',
-            self.Events.JAIL_POST: 'exec-post-jail',
-            self.Events.PRIV_DROP_PRE: 'exec-as-root',
-            self.Events.PRIV_DROP_POST: 'exec-as-user',
-            self.Events.EXIT: 'exec-as-user-atexit',
-            self.Events.APP_LOAD_PRE: 'exec-pre-app',
-            self.Events.APP_LOAD_POST: 'exec-post-app',
-            self.Events.VASSAL_START_IN: 'exec-as-vassal',
-            self.Events.VASSAL_START_POST: 'exec-as-emperor',
-        }.get(event)
-
-        self._set(directive, command, multi=True)
+        self._set('exec-%s' % phase, command, multi=True)
 
         return self._section
 

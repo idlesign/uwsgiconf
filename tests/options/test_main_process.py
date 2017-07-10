@@ -39,3 +39,41 @@ def test_main_process_basics(assert_lines):
     assert_lines([
         'touch-exec = myfile.txt date',
     ], Section().main_process.run_command_on_touch('date', 'myfile.txt'))
+
+
+def test_main_process_hooks(assert_lines):
+
+    section = Section()
+
+    prc = section.main_process
+    asap = prc.Phases.ASAP
+
+    prc.set_hook(asap, prc.cls_handler_mount('/proc', 'proc', 'none'))
+    prc.set_hook(asap, prc.cls_handler_mount('/proc', flags=['rec', 'detach']))
+    prc.set_hook(asap, prc.cls_handler_exec('cat /proc/self/mounts'))
+    prc.set_hook(asap, prc.cls_handler_call('uwsgi_log application has been loaded'))
+    prc.set_hook(asap, prc.cls_handler_call('putenv PATH=bin:$(PATH)', arg_int=True))
+    prc.set_hook(asap, prc.cls_handler_call('some', honour_exit_status=True))
+    prc.set_hook(asap, prc.cls_handler_change_dir('/here'))
+    prc.set_hook(asap, prc.cls_handler_exit())
+    prc.set_hook(prc.Phases.APP_LOAD_PRE, prc.cls_handler_exit(10))
+    prc.set_hook(asap, prc.cls_handler_print('bingo-bongo'))
+    prc.set_hook(asap, prc.cls_handler_write('/here/a.txt', 'sometext'))
+    prc.set_hook(asap, prc.cls_handler_write('/here/b', '10', fifo=True))
+    prc.set_hook(asap, prc.cls_handler_unlink('/here/d'))
+
+    assert_lines([
+        'hook-asap = mount:proc none /proc',
+        'hook-asap = umount:/proc rec,detach',
+        'hook-asap = print:bingo-bongo',
+        'hook-asap = exec:cat /proc/self/mounts',
+        'hook-asap = call:uwsgi_log application has been loaded',
+        'hook-asap = callint:putenv PATH=bin:$(PATH)',
+        'hook-asap = callret:some',
+        'hook-asap = cd:/here',
+        'hook-asap = exit:',
+        'hook-pre-app = exit:10',
+        'hook-asap = write:/here/a.txt sometext',
+        'hook-asap = writefifo:/here/b 10',
+        'hook-asap = unlink:/here/d',
+    ], section)
