@@ -4,7 +4,7 @@ from ..config import Section as _Section
 class Section(_Section):
     """Basic nice configuration."""
 
-    def __init__(self, name=None, touch_reload=None, workers=None, threads=None, **kwargs):
+    def __init__(self, name=None, touch_reload=None, workers=None, threads=None, mules=None, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -15,6 +15,8 @@ class Section(_Section):
             Default: workers number equals to CPU count.
 
         :param int threads: Number of threads per worker.
+
+        :param int mules: Number of mules to spawn.
 
         :param kwargs:
         """
@@ -29,6 +31,7 @@ class Section(_Section):
             self.workers.set_count_auto()
 
         self.workers.set_thread_params(per_worker=threads)
+        self.workers.set_mules_params(mules=mules)
         self.main_process.set_basic_params(vacuum=True)
         self.main_process.set_naming_params(autonaming=True)
         self.master_process.set_basic_params(enabled=True)
