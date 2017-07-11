@@ -3,7 +3,7 @@ from datetime import datetime
 from collections import OrderedDict
 from functools import partial
 
-from .base import SectionBase, PluginBase, Options
+from .base import SectionBase, Options
 from .options import *
 from .formatters import IniFormatter, format_print_text
 from .exceptions import ConfigurationError
@@ -50,7 +50,7 @@ class Section(SectionBase):
     spooler = Options(Spooler)  # type: Spooler
     workers = Options(Workers)  # type: Workers
 
-    plugin_python = Options(PythonPlugin)  # type: PythonPlugin
+    python = Options(Python)  # type: Python
 
     class Vars(object):
         """The following variables also known as magic variables
@@ -158,6 +158,7 @@ class Section(SectionBase):
 
         """
         self._style_prints = style_prints
+        self._plugins = []
 
         super(Section, self).__init__(name=name or 'uwsgi', strict_config=strict_config, **kwargs)
 
@@ -248,7 +249,7 @@ class Section(SectionBase):
     def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None, required=False):
         """Sets plugin-related parameters.
 
-        :param list|str|unicode|PluginBase|list[PluginBase] plugins: uWSGI plugins to load
+        :param list|str|unicode|OptionsGroup|list[OptionsGroup] plugins: uWSGI plugins to load
 
         :param list|str|unicode search_dirs: Directories to search for uWSGI plugins.
 
@@ -262,7 +263,10 @@ class Section(SectionBase):
         command = 'need-plugin' if required else 'plugin'
 
         for plugin in listify(plugins):
-            self._set(command, plugin, multi=True)
+
+            if plugin not in self._plugins:
+                self._set(command, plugin, multi=True)
+                self._plugins.append(plugin)
 
         self._set('plugins-dir', search_dirs, multi=True)
         self._set('autoload', autoload, cast=bool)

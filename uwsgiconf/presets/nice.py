@@ -46,7 +46,7 @@ class PythonSection(Section):
 
         :param str|unicode name: Section name.
 
-        :param dict basic_params_python: See PythonPlugin params
+        :param dict basic_params_python: See Python plugin params.
 
         :param str|unicode wsgi_module: wsgi application module path or filepath
 
@@ -56,11 +56,7 @@ class PythonSection(Section):
 
         :param kwargs:
         """
-        super(PythonSection, self).__init__(
-            name=name, basic_params_plugin_python=basic_params_python, **kwargs)
-
-        plugin = self.plugin_python
-        plugin.activate()
+        super(PythonSection, self).__init__(name=name, basic_params_python=basic_params_python, **kwargs)
 
         if wsgi_module:
-            plugin.set_wsgi_params(module=wsgi_module)
+            self.python.set_wsgi_params(module=wsgi_module)

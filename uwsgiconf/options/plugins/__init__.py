@@ -1,1 +1,1 @@
-from .python import PythonPlugin
+from .python import Python

@@ -47,12 +47,26 @@ class OptionsGroup(object):
 
     """
     _section = None  # type: Section
+    """Section this option group belongs to."""
+
+    _is_plugin = False  # type: bool
+    """Flag indicating this option group belongs to a plugin."""
 
     def __init__(self, *args, **kwargs):
         if self._section is None:
             self._section = kwargs.pop('_section')  # type: Section
 
         self.set_basic_params(*args, **kwargs)
+        self.name = None
+
+    def _get_name(self, *args, **kwargs):
+        """
+        :rtype: str
+        """
+        return self.name
+
+    def __str__(self):
+        return self._get_name()
 
     def set_basic_params(self, *args, **kwargs):
         return self._section
@@ -81,7 +95,7 @@ class OptionsGroup(object):
 
         return ','.join(value_chunks).strip()
 
-    def _set(self, key, value, condition=True, cast=None, multi=False, on_top=False):
+    def _set(self, key, value, condition=True, cast=None, multi=False):
 
         if condition is True:
             condition = value is not None
@@ -101,6 +115,10 @@ class OptionsGroup(object):
                         pass
 
                     return
+
+            if self._is_plugin:
+                # Automatic plugin activate when option from it is used.
+                self._section.set_plugins_params(plugins=[self])
 
             if multi:
                 values = opts.setdefault(key, [])
@@ -140,20 +158,10 @@ class SectionBase(OptionsGroup):
                 continue
 
             group_attr_name = key.replace('basic_params_', '')
-            options_group = getattr(self, group_attr_name, None)  # type: Union[OptionsGroup, PluginBase]
+            options_group = getattr(self, group_attr_name, None)  # type: OptionsGroup
 
             if options_group is not None:
-                if 'plugin' in group_attr_name:
-                    # Automatic plugin activation.
-                    # Otherwise uWSGI in strict mode will complain
-                    # about unknown options (from plugin).
-                    options_group.activate(**value)
-
-                else:
-                    options_group.set_basic_params(**value)
-
-    def __str__(self):
-        return self.name
+                options_group.set_basic_params(**value)
 
     def _get_options(self):
         options = []
@@ -164,39 +172,3 @@ class SectionBase(OptionsGroup):
                 options.append((name, val_))
 
         return options
-
-
-class PluginBase(OptionsGroup):
-    """Plugin options."""
-
-    name = None
-
-    def __init__(self, *args, **kwargs):
-        self._active = False
-        super(PluginBase, self).__init__(*args, **kwargs)
-
-    def set_basic_params(self, plugin_dir=None, **kwargs):
-        """
-
-        :param str|unicode plugin_dir: directory to search for plugin
-
-        :param kwargs:
-        """
-        self._section.set_plugins_params(search_dirs=plugin_dir)
-
-        return self._section
-
-    def activate(self, **kwargs):
-        """Activates the given plugin putting its definition into section."""
-
-        if not self._active:
-            # Prevent successive activations.
-            self._section.set_plugins_params(plugins=self)
-            self._active = True
-
-        self.set_basic_params(**kwargs)
-
-        return self._section
-
-    def __str__(self):
-        return self.name

@@ -79,15 +79,9 @@ def test_section_plugins(assert_lines):
 
 def test_plugin_init(assert_lines):
     assert_lines([
-        'plugin = python33',
-
-    ], Section().plugin_python.activate(version=33))
-
-    # automatic activation
-    assert_lines([
         'plugin = python34',
 
-    ], Section(basic_params_plugin_python={'version': 34}))
+    ], Section(basic_params_python={'version': 34, 'python_home': '/here'}))
 
 
 def test_configuration(capsys, assert_lines):

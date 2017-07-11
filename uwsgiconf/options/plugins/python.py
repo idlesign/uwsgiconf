@@ -1,14 +1,16 @@
 import sys
 
-from ...base import PluginBase
+from ...base import OptionsGroup
 from ...exceptions import ConfigurationError
 
 
 AUTO = (1,)
 
 
-class PythonPlugin(PluginBase):
+class Python(OptionsGroup):
     """Python plugin options."""
+
+    _is_plugin = True
 
     def set_basic_params(self, version=AUTO, python_home=None, enable_threads=None, search_path=None,
                          python_binary=None, tracebacker_path=None,
@@ -42,7 +44,7 @@ class PythonPlugin(PluginBase):
                          There will likely be no error, just no execution of your thread code.
 
         """
-        self.name = self.get_name(version)
+        self._set_name(version)
 
         self._section.workers.set_thread_params(enable_threads=enable_threads)
         self._set('py-tracebacker', tracebacker_path)
@@ -50,9 +52,9 @@ class PythonPlugin(PluginBase):
         self._set('pyhome', python_home)
         self._set('pythonpath', search_path, multi=True)
 
-        return super(PythonPlugin, self).set_basic_params(plugin_dir=plugin_dir, **kwargs)
+        return super(Python, self).set_basic_params(plugin_dir=plugin_dir, **kwargs)
 
-    def get_name(self, version):
+    def _set_name(self, version=AUTO):
         """Returns plugin name."""
 
         name = 'python'
@@ -66,7 +68,15 @@ class PythonPlugin(PluginBase):
 
             name = '%s%s' % (name, version)
 
-        return name
+        self.name = name
+
+    def _get_name(self, *args, **kwargs):
+        name = self.name
+
+        if not name:
+            self._set_name()
+
+        return self.name
 
     def set_app_args(self, *args):
         """Sets ``sys.argv`` for python apps.
