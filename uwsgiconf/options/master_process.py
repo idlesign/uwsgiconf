@@ -1,4 +1,5 @@
 from ..base import OptionsGroup
+from .. utils import make_key_val_string
 from ..exceptions import ConfigurationError
 
 
@@ -122,7 +123,7 @@ class MasterProcess(OptionsGroup):
             If a command is taking longer it will be killed.
 
         """
-        rule = self._make_key_val_string(
+        rule = make_key_val_string(
             locals(),
             keys=['weekday', 'month', 'day', 'hour', 'minute', 'harakiri', 'legion', 'unique'],
             aliases={'weekday': 'week'},
@@ -236,7 +237,7 @@ class MasterProcess(OptionsGroup):
             before running the command.
 
         """
-        rule = self._make_key_val_string(
+        rule = make_key_val_string(
             locals(),
             keys=[
                 'command', 'broken_counter', 'pidfile', 'control', 'daemonize', 'touch_reload',

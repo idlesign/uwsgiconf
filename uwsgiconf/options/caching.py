@@ -1,4 +1,5 @@
 from ..base import OptionsGroup
+from ..utils import make_key_val_string
 
 
 class Caching(OptionsGroup):
@@ -165,7 +166,7 @@ class Caching(OptionsGroup):
             .. note:: ``expires`` argument will be ignored.
 
         """
-        value = self._make_key_val_string(
+        value = make_key_val_string(
             locals(),
             keys=[
                 'name', 'max_items', 'expires', 'store', 'store_sync_interval', 'store_delete',

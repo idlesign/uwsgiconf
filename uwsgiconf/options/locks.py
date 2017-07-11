@@ -4,7 +4,7 @@ from ..base import OptionsGroup
 class Locks(OptionsGroup):
     """Locks.
 
-    http://uwsgi.readthedocs.io/en/latest/Locks.html
+    * http://uwsgi.readthedocs.io/en/latest/Locks.html
 
     """
 
