@@ -23,7 +23,10 @@ def filter_locals(locals_dict, drop=None):
     :rtype: dict
     """
     drop = drop or []
-    drop.append('self')
+    drop.extend([
+        'self',
+        '__class__',  # py3
+    ])
     locals_dict = {k: v for k, v in locals_dict.items() if k not in drop}
     return locals_dict
 
