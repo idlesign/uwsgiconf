@@ -60,7 +60,7 @@ API
     grp_queue
     grp_spooler
     grp_workers
-    grp_plugin_python
+    grp_python
     formatters
 
 Presets

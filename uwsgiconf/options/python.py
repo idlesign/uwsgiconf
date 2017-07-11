@@ -1,7 +1,7 @@
 import sys
 
-from ...base import OptionsGroup
-from ...exceptions import ConfigurationError
+from ..base import OptionsGroup
+from ..exceptions import ConfigurationError
 
 
 AUTO = (1,)

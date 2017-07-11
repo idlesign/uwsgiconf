@@ -5,8 +5,7 @@ from .logging import Logging
 from .main_process import MainProcess
 from .master_process import MasterProcess
 from .networking import Networking
+from .python import Python
 from .queue import Queue
 from .spooler import Spooler
 from .workers import Workers
-
-from .plugins import *
