@@ -1,3 +1,4 @@
+from .alarms import Alarms
 from .applications import Applications
 from .caching import Caching
 from .locks import Locks

@@ -50,6 +50,7 @@ API
     :maxdepth: 3
 
     config
+    grp_alarms
     grp_applications
     grp_caching
     grp_locks

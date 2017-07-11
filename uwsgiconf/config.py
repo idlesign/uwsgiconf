@@ -39,6 +39,7 @@ class Section(SectionBase):
         )
 
     """
+    alarms = Options(Alarms)  # type: Alarms
     applications = Options(Applications)  # type: Applications
     caching = Options(Caching)  # type: Caching
     locks = Options(Locks)  # type: Locks
