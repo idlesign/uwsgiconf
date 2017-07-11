@@ -1,18 +1,10 @@
-from ..base import OptionsGroup
+from ..base import OptionsGroup, ParametrizedValue
 from ..utils import listify
 
 
-class Handler(object):
+class Handler(ParametrizedValue):
 
-    name = None
-
-    def __init__(self, *args):
-        self.args = args
-
-    def __str__(self):
-        args = [str(arg) for arg in self.args if arg is not None]
-        result = self.name + ':' + ' '.join(args)
-        return result.strip()
+    pass
 
 
 class HandlerMount(Handler):

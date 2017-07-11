@@ -1,30 +1,20 @@
-from ..base import OptionsGroup
+from ..base import OptionsGroup, ParametrizedValue
 from ..utils import listify
 
 
-class Logger(object):
+class Logger(ParametrizedValue):
 
-    plugin = None
+    args_joiner = ','
 
     def __init__(self, alias, *args):
         self.alias = alias or ''
-        self.args = args
-
-    def __str__(self):
-        chunks = [self.plugin]
-
-        args = [str(arg) for arg in self.args if arg is not None]
-
-        if args:
-            chunks.append(':%s' % ','.join(args))
-
-        return '%s %s' % (self.alias, ''.join(chunks))
+        super(Logger, self).__init__(*args)
 
 
 class LoggerFile(Logger):
     """Allows logging into files."""
 
-    plugin = 'file'
+    name = 'file'
 
     def __init__(self, alias, filepath):
         """
@@ -39,7 +29,7 @@ class LoggerFile(Logger):
 class LoggerSocket(Logger):
     """Allows logging into UNIX and UDP sockets."""
 
-    plugin = 'socket'
+    name = 'socket'
 
     def __init__(self, alias, addr_or_path):
         """
@@ -58,7 +48,7 @@ class LoggerSocket(Logger):
 class LoggerSyslog(Logger):
     """Allows logging into Unix standard syslog or a remote syslog."""
 
-    plugin = 'syslog'
+    name = 'syslog'
 
     def __init__(self, alias, app_name=None, facility=None, host=None):
         """
@@ -74,7 +64,7 @@ class LoggerSyslog(Logger):
         args = []
 
         if host:
-            self.plugin = 'rsyslog'
+            self.name = 'rsyslog'
             args.append(host)
 
         args.extend([app_name, facility])
@@ -89,7 +79,7 @@ class LoggerRedis(Logger):
 
     """
 
-    plugin = 'redislog'
+    name = 'redislog'
 
     def __init__(self, alias, host=None, command=None, prefix=None):
         """
@@ -116,7 +106,7 @@ class LoggerMongo(Logger):
 
     """
 
-    plugin = 'mongodblog'
+    name = 'mongodblog'
 
     def __init__(self, alias, host=None, collection=None, node=None):
         """
@@ -136,7 +126,7 @@ class LoggerMongo(Logger):
 class LoggerZeroMq(Logger):
     """Allows logging into ZeroMQ sockets."""
 
-    plugin = 'zeromq'
+    name = 'zeromq'
 
     def __init__(self, alias, connection_str):
         """
@@ -151,15 +141,9 @@ class LoggerZeroMq(Logger):
         super(LoggerZeroMq, self).__init__(alias, connection_str)
 
 
-class Encoder(object):
+class Encoder(ParametrizedValue):
 
-    name = None
-
-    def __init__(self, *args):
-        self.args = args
-
-    def __str__(self):
-        return '%s %s' % (self.name, self.args[0])
+    name_separator = ' '
 
 
 class EncoderPrefix(Encoder):

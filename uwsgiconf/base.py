@@ -4,7 +4,30 @@ from .utils import listify
 
 if False:  # pragma: nocover
     from .config import Section
-    from types import Union
+
+
+class ParametrizedValue(object):
+    """Represents parametrized option value."""
+
+    alias = None
+    name = None
+    args_joiner = ' '
+    name_separator = ':'
+
+    def __init__(self, *args):
+        self.args = args
+
+    def __str__(self):
+        args = [str(arg) for arg in self.args if arg is not None]
+
+        result = self.name + self.name_separator
+
+        result += self.args_joiner.join(args)
+
+        if self.alias:
+            result = '%s %s' % (self.alias, result)
+
+        return result.strip()
 
 
 class Options(object):
