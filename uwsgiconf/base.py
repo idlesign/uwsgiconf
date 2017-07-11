@@ -13,8 +13,9 @@ class ParametrizedValue(object):
     name = None
     args_joiner = ' '
     name_separator = ':'
+    requires_plugin = None
 
-    def __init__(self, *args):
+    def __init__(self, *args, **kwargs):
         self.args = args
 
     def __str__(self):
@@ -94,31 +95,12 @@ class OptionsGroup(object):
     def set_basic_params(self, *args, **kwargs):
         return self._section
 
-    def _make_key_val_string(self, locals_dict, keys=None, aliases=None, bool_keys=None, list_keys=None):
-        value_chunks = []
-
-        keys = keys or locals_dict.keys()
-        aliases = aliases or {}
-        bool_keys = bool_keys or []
-        list_keys = list_keys or []
-
-        for key in keys:
-            val = locals_dict[key]
-
-            if val is not None:
-
-                if key in bool_keys:
-                    val = 1
-
-                elif key in list_keys:
-
-                    val = ';'.join(listify(val))
-
-                value_chunks.append('%s=%s' % (aliases.get(key, key), val))
-
-        return ','.join(value_chunks).strip()
-
     def _set(self, key, value, condition=True, cast=None, multi=False):
+
+        def handle_plugin_required(val):
+            if isinstance(val, ParametrizedValue) and val.requires_plugin:
+                # Automatic plugin activation.
+                self._section.set_plugins_params(plugins=val.requires_plugin)
 
         if condition is True:
             condition = value is not None
@@ -140,18 +122,18 @@ class OptionsGroup(object):
                     return
 
             if self._is_plugin:
-                # Automatic plugin activate when option from it is used.
+                # Automatic plugin activation when option from it is used.
                 self._section.set_plugins_params(plugins=[self])
 
             if multi:
                 values = opts.setdefault(key, [])
 
-                if isinstance(value, list):
-                    values.extend(value)
-                else:
+                for value in listify(value):
+                    handle_plugin_required(value)
                     values.append(value)
 
             else:
+                handle_plugin_required(value)
                 opts[key] = value
 
 
