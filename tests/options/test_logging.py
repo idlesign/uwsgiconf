@@ -11,7 +11,7 @@ def test_logging_basics(assert_lines):
 
     ], logging.set_basic_params(
         no_requests=True,
-        template='%s --> %s' % (logging.Vars.REQ_METHOD, logging.Vars.REQ_URL)
+        template='%s --> %s' % (logging.vars.REQ_METHOD, logging.vars.REQ_URL)
     ))
 
     assert_lines([
@@ -106,5 +106,5 @@ def test_logging_add_logger_encoder(assert_lines):
         'log-encoder = format > ${msg} <:myfile',
 
     ], logging.add_logger_encoder([
-        enc_format('> %s <' % enc_format.Vars.MESSAGE),
+        enc_format('> %s <' % enc_format.vars.MESSAGE),
     ], logger=logging.cls_logger_file('myfile', '/home/here.log')))

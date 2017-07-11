@@ -21,7 +21,7 @@ class Logger(object):
         return '%s %s' % (self.alias, ''.join(chunks))
 
 
-class FileLogger(Logger):
+class LoggerFile(Logger):
     """Allows logging into files."""
 
     plugin = 'file'
@@ -33,10 +33,10 @@ class FileLogger(Logger):
         :param str|unicode filepath: File path.
 
         """
-        super(FileLogger, self).__init__(alias, filepath)
+        super(LoggerFile, self).__init__(alias, filepath)
 
 
-class SocketLogger(Logger):
+class LoggerSocket(Logger):
     """Allows logging into UNIX and UDP sockets."""
 
     plugin = 'socket'
@@ -52,10 +52,10 @@ class SocketLogger(Logger):
                 * 192.168.173.19:5050
 
         """
-        super(SocketLogger, self).__init__(alias, addr_or_path)
+        super(LoggerSocket, self).__init__(alias, addr_or_path)
 
 
-class SyslogLogger(Logger):
+class LoggerSyslog(Logger):
     """Allows logging into Unix standard syslog or a remote syslog."""
 
     plugin = 'syslog'
@@ -79,10 +79,10 @@ class SyslogLogger(Logger):
 
         args.extend([app_name, facility])
 
-        super(SyslogLogger, self).__init__(alias, *args)
+        super(LoggerSyslog, self).__init__(alias, *args)
 
 
-class RedisLogger(Logger):
+class LoggerRedis(Logger):
     """Allows logging into Redis.
 
     .. note:: Consider using ``dedicate_thread`` param.
@@ -106,10 +106,10 @@ class RedisLogger(Logger):
         :param str|unicode prefix: Default: <empty>
 
         """
-        super(RedisLogger, self).__init__(alias, host, command, prefix)
+        super(LoggerRedis, self).__init__(alias, host, command, prefix)
 
 
-class MongoLogger(Logger):
+class LoggerMongo(Logger):
     """Allows logging into Mongo DB.
 
     .. note:: Consider using ``dedicate_thread`` param.
@@ -130,10 +130,10 @@ class MongoLogger(Logger):
             sending logs Default: <server hostname>
 
         """
-        super(MongoLogger, self).__init__(alias, host, collection, node)
+        super(LoggerMongo, self).__init__(alias, host, collection, node)
 
 
-class ZeroMqLogger(Logger):
+class LoggerZeroMq(Logger):
     """Allows logging into ZeroMQ sockets."""
 
     plugin = 'zeromq'
@@ -148,7 +148,7 @@ class ZeroMqLogger(Logger):
                 * tcp://192.168.173.18:9191
 
         """
-        super(ZeroMqLogger, self).__init__(alias, connection_str)
+        super(LoggerZeroMq, self).__init__(alias, connection_str)
 
 
 class Encoder(object):
@@ -162,7 +162,7 @@ class Encoder(object):
         return '%s %s' % (self.name, self.args[0])
 
 
-class PrefixEncoder(Encoder):
+class EncoderPrefix(Encoder):
     """Add a raw prefix to each log msg."""
 
     name = 'prefix'
@@ -173,34 +173,34 @@ class PrefixEncoder(Encoder):
         :param str|unicode value: Value to be used as affix
 
         """
-        super(PrefixEncoder, self).__init__(value)
+        super(EncoderPrefix, self).__init__(value)
 
 
-class SuffixEncoder(PrefixEncoder):
+class EncoderSuffix(EncoderPrefix):
     """Add a raw suffix to each log msg"""
 
     name = 'suffix'
 
 
-class NewlineEncoder(Encoder):
+class EncoderNewline(Encoder):
     """Add a newline char to each log msg."""
 
     name = 'nl'
 
 
-class GzipEncoder(Encoder):
+class EncoderGzip(Encoder):
     """Compress each msg with gzip (requires zlib)."""
 
     name = 'gzip'
 
 
-class CompressEncoder(Encoder):
+class EncoderCompress(Encoder):
     """Compress each msg with zlib compress (requires zlib)."""
 
     name = 'compress'
 
 
-class FormatEncoder(Encoder):
+class EncoderFormat(Encoder):
     """Apply the specified format to each log msg."""
 
     name = 'format'
@@ -212,9 +212,9 @@ class FormatEncoder(Encoder):
             Available variables are listed in ``FormatEncoder.Vars``.
 
         """
-        super(FormatEncoder, self).__init__(template)
+        super(EncoderFormat, self).__init__(template)
 
-    class Vars(object):
+    class vars(object):
         """Variables available to use."""
 
         MESSAGE = '${msg}'
@@ -232,7 +232,7 @@ class FormatEncoder(Encoder):
         # todo consider adding ${strftime:xxx} - strftime using the xxx format
 
 
-class JsonEncoder(FormatEncoder):
+class EncoderJson(EncoderFormat):
     """Apply the specified format to each log msg with each variable json escaped."""
 
     name = 'json'
@@ -246,21 +246,21 @@ class Logging(OptionsGroup):
 
     """
 
-    cls_logger_file = FileLogger
-    cls_logger_socket = SocketLogger
-    cls_logger_syslog = SyslogLogger
-    cls_logger_redis = RedisLogger
-    cls_logger_mongo = MongoLogger
-    cls_logger_zeromq = ZeroMqLogger
+    cls_logger_file = LoggerFile
+    cls_logger_socket = LoggerSocket
+    cls_logger_syslog = LoggerSyslog
+    cls_logger_redis = LoggerRedis
+    cls_logger_mongo = LoggerMongo
+    cls_logger_zeromq = LoggerZeroMq
     # todo consider adding other loggers: crypto, graylog2, systemd
 
-    cls_encoder_prefix = PrefixEncoder
-    cls_encoder_suffix = SuffixEncoder
-    cls_encoder_newline = NewlineEncoder
-    cls_encoder_gzip = GzipEncoder
-    cls_encoder_compress = CompressEncoder
-    cls_encoder_format = FormatEncoder
-    cls_encoder_json = JsonEncoder
+    cls_encoder_prefix = EncoderPrefix
+    cls_encoder_suffix = EncoderSuffix
+    cls_encoder_newline = EncoderNewline
+    cls_encoder_gzip = EncoderGzip
+    cls_encoder_compress = EncoderCompress
+    cls_encoder_format = EncoderFormat
+    cls_encoder_json = EncoderJson
     # todo consider adding msgpack encoder
 
     def set_basic_params(
@@ -496,7 +496,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    class Vars(object):
+    class vars(object):
         """Variables available for custom log formatting."""
 
         # The following are taken blindly from the internal wsgi_request structure of the current request.

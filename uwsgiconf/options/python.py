@@ -12,9 +12,9 @@ class Python(OptionsGroup):
 
     _is_plugin = True
 
-    def set_basic_params(self, version=AUTO, python_home=None, enable_threads=None, search_path=None,
-                         python_binary=None, tracebacker_path=None,
-                         plugin_dir=None, **kwargs):
+    def set_basic_params(
+            self, version=AUTO, python_home=None, enable_threads=None, search_path=None,
+            python_binary=None, tracebacker_path=None, plugin_dir=None, **kwargs):
         """
 
         :param str|unicode|int version: Python version plugin supports.
@@ -52,7 +52,9 @@ class Python(OptionsGroup):
         self._set('pyhome', python_home)
         self._set('pythonpath', search_path, multi=True)
 
-        return super(Python, self).set_basic_params(plugin_dir=plugin_dir, **kwargs)
+        self._section.set_plugins_params(search_dirs=plugin_dir)
+
+        return self._section
 
     def _set_name(self, version=AUTO):
         """Returns plugin name."""

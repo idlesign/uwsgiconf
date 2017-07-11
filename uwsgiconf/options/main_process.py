@@ -15,7 +15,7 @@ class Handler(object):
         return result.strip()
 
 
-class MountHandler(Handler):
+class HandlerMount(Handler):
     """Mount or unmount filesystems.
 
     Examples:
@@ -50,10 +50,10 @@ class MountHandler(Handler):
             args = [mountpoint, flags]
             self.name = 'umount'
 
-        super(MountHandler, self).__init__(*args)
+        super(HandlerMount, self).__init__(*args)
 
 
-class ExecHandler(Handler):
+class HandlerExec(Handler):
     """Run the shell command.
 
     Command run under ``/bin/sh``.
@@ -68,10 +68,10 @@ class ExecHandler(Handler):
     name = 'exec'
 
     def __init__(self, command):
-        super(ExecHandler, self).__init__(command)
+        super(HandlerExec, self).__init__(command)
 
 
-class CallHandler(Handler):
+class HandlerCall(Handler):
     """Call functions in the current process address space."""
 
     name = 'call'
@@ -96,10 +96,10 @@ class CallHandler(Handler):
 
         self.name = name
 
-        super(CallHandler, self).__init__(target)
+        super(HandlerCall, self).__init__(target)
 
 
-class ChangeDirHandler(Handler):
+class HandlerChangeDir(Handler):
     """Changes a directory.
 
     Convenience handler, same as ``call:chdir <directory>``.
@@ -108,10 +108,10 @@ class ChangeDirHandler(Handler):
     name = 'cd'
 
     def __init__(self, target_dir):
-        super(ChangeDirHandler, self).__init__(target_dir)
+        super(HandlerChangeDir, self).__init__(target_dir)
 
 
-class ExitHandler(Handler):
+class HandlerExit(Handler):
     """Exits.
 
     Convenience handler, same as ``callint:exit [num]``.
@@ -120,10 +120,10 @@ class ExitHandler(Handler):
     name = 'exit'
 
     def __init__(self, status_code=None):
-        super(ExitHandler, self).__init__(status_code)
+        super(HandlerExit, self).__init__(status_code)
 
 
-class PrintHandler(Handler):
+class HandlerPrint(Handler):
     """Prints.
 
     Convenience handler, same as calling the ``uwsgi_log`` symbol.
@@ -132,10 +132,10 @@ class PrintHandler(Handler):
     name = 'print'
 
     def __init__(self, text=None):
-        super(PrintHandler, self).__init__(text)
+        super(HandlerPrint, self).__init__(text)
 
 
-class WriteHandler(Handler):
+class HandlerWrite(Handler):
     """Writes a string to the specified file/fifo.
 
     .. note:: Since 1.9.21
@@ -156,10 +156,10 @@ class WriteHandler(Handler):
         if fifo:
             self.name += 'fifo'
 
-        super(WriteHandler, self).__init__(target, text)
+        super(HandlerWrite, self).__init__(target, text)
 
 
-class UnlinkHandler(Handler):
+class HandlerUnlink(Handler):
     """Unlink the specified file.
 
     .. note:: Since 1.9.21
@@ -168,22 +168,22 @@ class UnlinkHandler(Handler):
     name = 'unlink'
 
     def __init__(self, target):
-        super(UnlinkHandler, self).__init__(target)
+        super(HandlerUnlink, self).__init__(target)
 
 
 class MainProcess(OptionsGroup):
     """Main process is the uWSGi process."""
 
-    cls_handler_mount = MountHandler
-    cls_handler_exec = ExecHandler
-    cls_handler_call = CallHandler
-    cls_handler_change_dir = ChangeDirHandler
-    cls_handler_exit = ExitHandler
-    cls_handler_print = PrintHandler
-    cls_handler_write = WriteHandler
-    cls_handler_unlink = UnlinkHandler
+    cls_handler_mount = HandlerMount
+    cls_handler_exec = HandlerExec
+    cls_handler_call = HandlerCall
+    cls_handler_change_dir = HandlerChangeDir
+    cls_handler_exit = HandlerExit
+    cls_handler_print = HandlerPrint
+    cls_handler_write = HandlerWrite
+    cls_handler_unlink = HandlerUnlink
 
-    class Phases:
+    class phases:
         """Phases available for hooking.
 
         Some of them may be **fatal** - a failing hook for them
@@ -410,7 +410,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def run_command_on_event(self, command, phase=Phases.ASAP):
+    def run_command_on_event(self, command, phase=phases.ASAP):
         """Run the given command on a given phase.
 
         :param str|unicode command:

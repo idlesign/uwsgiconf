@@ -6,7 +6,7 @@ from ..utils import listify
 class Networking(OptionsGroup):
     """Networking related stuff. Socket definition, binding and tuning."""
     
-    class Sockets(object):
+    class sockets(object):
         """Available socket types to use with ``.register_socket()``."""
     
         UWSGI = 'uwsgi'
@@ -44,7 +44,7 @@ class Networking(OptionsGroup):
         ZERO_MQ = 'zmq'
         """Introduce zeromq pub/sub pair."""
 
-    class Modes(object):
+    class modes(object):
         """Available socket modes to use with ``.register_socket()``."""
 
         SSL = '+ssl'
@@ -159,7 +159,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def register_socket(self, address='127.0.0.1:8000', type=Sockets.HTTP, mode=None, bound_workers=None):
+    def register_socket(self, address='127.0.0.1:8000', type=sockets.HTTP, mode=None, bound_workers=None):
         """Registers a socket.
 
         :param str address: Address to bind socket to.
@@ -169,9 +169,9 @@ class Networking(OptionsGroup):
                 * all interfaces - :9090
                 * ssl files - :9090,foobar.crt,foobar.key
 
-        :param str type: Socket type. See Networking.SOCK_*
+        :param str type: Socket type. See Networking.sockets
 
-        :param str mode: Socket mode. See Networking.MODE_*
+        :param str mode: Socket mode. See Networking.modes
 
         :param str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
@@ -185,30 +185,30 @@ class Networking(OptionsGroup):
         mode = mode or ''
 
         param_name = {
-            self.Sockets.UWSGI: {
-                self.Modes.SSL: 'suwsgi-socket',
-                self.Modes.PERSISTENT: 'puwsgi-socket',
+            self.sockets.UWSGI: {
+                self.modes.SSL: 'suwsgi-socket',
+                self.modes.PERSISTENT: 'puwsgi-socket',
 
             }.get(mode, 'uwsgi-socket'),
             # Default: Bind to the specified socket with default protocol (see `protocol/socket-protocol`)
             # socket-protocol = 0,uwsgi
             # socket-protocol = 3,uwsgidump
 
-            self.Sockets.HTTP: 'https-socket' if mode == self.Modes.SSL else 'http-socket',
+            self.sockets.HTTP: 'https-socket' if mode == self.modes.SSL else 'http-socket',
 
-            self.Sockets.HTTP11: 'http11-socket',
+            self.sockets.HTTP11: 'http11-socket',
 
-            self.Sockets.FASTCGI: 'fastcgi-nph-socket' if mode == self.Modes.NPH else 'fastcgi-socket',
+            self.sockets.FASTCGI: 'fastcgi-nph-socket' if mode == self.modes.NPH else 'fastcgi-socket',
 
-            self.Sockets.SCGI: 'scgi-nph-socket' if mode == self.Modes.NPH else 'scgi-socket',
+            self.sockets.SCGI: 'scgi-nph-socket' if mode == self.modes.NPH else 'scgi-socket',
 
-            self.Sockets.RAW: 'raw-socket',
+            self.sockets.RAW: 'raw-socket',
 
-            self.Sockets.SHARED: 'undeferred-shared-socket' if mode == self.Modes.UNDEFERRED else 'shared-socket',
+            self.sockets.SHARED: 'undeferred-shared-socket' if mode == self.modes.UNDEFERRED else 'shared-socket',
 
-            self.Sockets.UDP: 'upd',
+            self.sockets.UDP: 'upd',
 
-            self.Sockets.ZERO_MQ: 'zeromq-socket',
+            self.sockets.ZERO_MQ: 'zeromq-socket',
         }.get(type)
 
         if param_name is None:
