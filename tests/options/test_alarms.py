@@ -16,6 +16,11 @@ def test_alarms_registration(assert_lines):
 
     alarms = Section().alarms
     assert_lines([
+        'alarm = my log:',
+    ], alarms.register_alarm(alarms.cls_alarm_log('my')))
+
+    alarms = Section().alarms
+    assert_lines([
         'alarm = my cmd:some',
     ], alarms.register_alarm(alarms.cls_alarm_command('my', 'some')))
 
@@ -62,4 +67,47 @@ def test_alarms_on_log(assert_lines):
     assert_lines([
         'not-alarm-log = mycom other',
     ], alarms.alarm_on_log(alarm1, 'other', skip=True))
+
+
+def test_alarms_on_fd(assert_lines):
+
+    alarms = Section().alarms
+    alarm1 = alarms.cls_alarm_signal('mysig', 27)
+    alarm2 = alarms.cls_alarm_signal('some', 17)
+
+    assert_lines([
+        'alarm = mysig signal:27',
+        'alarm = some signal:17',
+        'alarm-fd = mysig $(CGROUP_OOM_FD):8 damn it!',
+        'alarm-fd = some $(CGROUP_OOM_FD):8 damn it!',
+    ], alarms.alarm_on_fd_ready([alarm1, alarm2], '$(CGROUP_OOM_FD)', 'damn it!', byte_count=8))
+
+
+def test_alarms_on_backlog(assert_lines):
+
+    alarms = Section().alarms
+    alarm1 = alarms.cls_alarm_signal('mysig', 27)
+    alarm2 = alarms.cls_alarm_signal('some', 17)
+
+    assert_lines([
+        'alarm = mysig signal:27',
+        'alarm = some signal:17',
+        'alarm-backlog = mysig',
+        'alarm-backlog = some',
+    ], alarms.alarm_on_backlog_full([alarm1, alarm2]))
+
+
+def test_alarms_on_segfault(assert_lines):
+
+    alarms = Section().alarms
+    alarm1 = alarms.cls_alarm_signal('mysig', 27)
+    alarm2 = alarms.cls_alarm_signal('some', 17)
+
+    assert_lines([
+        'alarm = mysig signal:27',
+        'alarm = some signal:17',
+        'alarm-segfault = mysig',
+        'alarm-segfault = some',
+    ], alarms.alarm_on_segfault([alarm1, alarm2]))
+
 

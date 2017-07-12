@@ -12,7 +12,7 @@ class Alarm(ParametrizedValue):
 
 
 class AlarmCommand(Alarm):
-    """Run a shell command, passing the log line to its stdin."""
+    """Run a shell command, passing info into its stdin."""
 
     name = 'cmd'
 
@@ -29,8 +29,17 @@ class AlarmSignal(Alarm):
         super(AlarmSignal, self).__init__(alias, sig_num)
 
 
+class AlarmLog(Alarm):
+    """Print line into log."""
+
+    name = 'log'
+
+    def __init__(self, alias):
+        super(AlarmLog, self).__init__(alias)
+
+
 class AlarmMule(Alarm):
-    """Send the log line to a mule waiting for messages."""
+    """Send info to a mule waiting for messages."""
 
     name = 'mule'
 
@@ -39,7 +48,7 @@ class AlarmMule(Alarm):
 
 
 class AlarmCurl(Alarm):
-    """Send the log line to a cURL-able URL."""
+    """Send info to a cURL-able URL."""
 
     name = 'curl'
     requires_plugin = 'alarm_curl'
@@ -60,7 +69,7 @@ class AlarmCurl(Alarm):
 
 
 class AlarmXmpp(Alarm):
-    """Send the log line via XMPP/jabber."""
+    """Send info via XMPP/jabber."""
 
     name = 'xmpp'
     requires_plugin = 'alarm_xmpp'
@@ -82,6 +91,7 @@ class Alarms(OptionsGroup):
 
     cls_alarm_command = AlarmCommand
     cls_alarm_signal = AlarmSignal
+    cls_alarm_log = AlarmLog
     cls_alarm_mule = AlarmMule
     cls_alarm_curl = AlarmCurl
     cls_alarm_xmpp = AlarmXmpp
@@ -143,5 +153,64 @@ class Alarms(OptionsGroup):
             matcher)
 
         self._set('not-alarm-log' if skip else 'alarm-log', value)
+
+        return self._section
+
+    def alarm_on_fd_ready(self, alarm, fd, message, byte_count=None):
+        """Triggers the alarm when the specified file descriptor is ready for read.
+
+        This is really useful for integration with the Linux eventfd() facility.
+        Pretty low-level and the basis of most of the alarm plugins.
+
+        * http://uwsgi-docs.readthedocs.io/en/latest/Changelog-1.9.7.html#alarm-fd
+
+        :param Alarm|list[Alarms] alarm: Alarm.
+
+        :param str|unicode fd: File descriptor.
+
+        :param str|unicode message: Message to send.
+
+        :param int byte_count: Files to read. Default: 1 byte.
+
+            .. note:: For ``eventfd`` set 8.
+
+        """
+        self.register_alarm(alarm)
+
+        value = fd
+
+        if byte_count:
+            value += ':%s' % byte_count
+
+        value += ' %s' % message
+
+        for alarm in listify(alarm):
+            self._set('alarm-fd', '%s %s' % (alarm.alias, value), multi=True)
+
+        return self._section
+
+    def alarm_on_backlog_full(self, alarm):
+        """Raise the specified alarm when the socket backlog queue is full.
+
+        :param Alarm|list[Alarms] alarm: Alarm.
+        """
+        self.register_alarm(alarm)
+
+        for alarm in listify(alarm):
+            self._set('alarm-backlog', alarm.alias, multi=True)
+
+        return self._section
+
+    def alarm_on_segfault(self, alarm):
+        """Raise the specified alarm when the segmentation fault handler is executed.
+
+        Sends a backtrace.
+
+        :param Alarm|list[Alarms] alarm: Alarm.
+        """
+        self.register_alarm(alarm)
+
+        for alarm in listify(alarm):
+            self._set('alarm-segfault', alarm.alias, multi=True)
 
         return self._section
