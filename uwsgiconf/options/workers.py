@@ -123,7 +123,8 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_thread_params(self, enable_threads=None, per_worker=None, stack_size=None, no_wait=None):
+    def set_thread_params(
+            self, enable_threads=None, count=None, count_offload=None, stack_size=None, no_wait=None):
         """Sets threads related params.
 
         :param bool enable_threads: Enable threads in the embedded languages.
@@ -131,12 +132,21 @@ class Workers(OptionsGroup):
             Threads will simply *not work* if this option is not enabled. There will likely be no error,
             just no execution of your thread code.
 
-        :param int per_worker: Run each worker in prethreaded mode with the specified number
+        :param int count: Run each worker in prethreaded mode with the specified number
             of threads per worker.
 
             .. warning:: Do not use with ``gevent``.
 
             .. note:: Enables threads automatically.
+
+        :param int count_offload: Set the number of threads (per-worker) to spawn
+            for offloading. Default: 0.
+
+            These threads run such tasks in a non-blocking/evented way allowing
+            for a huge amount of concurrency. Various components of the uWSGI stack
+            are offload-friendly.
+
+            * http://uwsgi-docs.readthedocs.io/en/latest/OffloadSubsystem.html
 
         :param int stack_size: Set threads stacksize.
 
@@ -145,10 +155,11 @@ class Workers(OptionsGroup):
         """
         self._set('enable-threads', enable_threads, cast=bool)
         self._set('no-threads-wait', no_wait, cast=bool)
-        self._set('threads', per_worker)
+        self._set('threads', count)
+        self._set('offload-threads', count_offload)
 
-        if per_worker:
-            self._section.print_out('Threads per worker: %s' % per_worker)
+        if count:
+            self._section.print_out('Threads per worker: %s' % count)
 
         self._set('threads-stacksize', stack_size)
 

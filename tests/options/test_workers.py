@@ -9,7 +9,7 @@ def test_workers_basics(assert_lines):
 
     assert_lines([
         'threads = 2',
-    ], Section().workers.set_thread_params(per_worker=2))
+    ], Section().workers.set_thread_params(count=2))
 
     assert_lines([
         'min-worker-lifetime = 10',

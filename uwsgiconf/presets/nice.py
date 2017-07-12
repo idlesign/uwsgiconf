@@ -30,7 +30,7 @@ class Section(_Section):
         else:
             self.workers.set_count_auto()
 
-        self.workers.set_thread_params(per_worker=threads)
+        self.workers.set_thread_params(count=threads)
         self.workers.set_mules_params(mules=mules)
         self.main_process.set_basic_params(vacuum=True)
         self.main_process.set_naming_params(autonaming=True)
