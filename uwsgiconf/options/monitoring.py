@@ -192,8 +192,6 @@ class PusherCarbon(Pusher):
     * http://uwsgi.readthedocs.io/en/latest/tutorials/GraphiteAndMetrics.html
 
     """
-    # todo decide how to handle other options: https://github.com/unbit/uwsgi/blob/master/plugins/carbon/carbon.c
-
     name = 'carbon'
     plugin = 'carbon'
 
@@ -202,6 +200,67 @@ class PusherCarbon(Pusher):
         :param str|unicode address:
         """
         super(PusherCarbon, self).__init__(address)
+
+    def set_basic_params(
+            self, id=None, root_node=None, interval=None, idle_avg_source=None,
+            use_metrics=None, no_workers=None):
+        """
+
+        :param str|unicode id: Set carbon id.
+
+        :param str|unicode root_node: Set carbon metrics root node. Default: uwsgi.
+
+        :param int interval: Set carbon push frequency in seconds. Default: 60.
+
+        :param bool no_workers: Disable generation of single worker metrics.
+
+        :param str|unicode idle_avg_source: Average values source during idle period (no requests).
+            Default: last.
+
+            Variants:
+                * last
+                * zero
+                * none
+
+        :param bool use_metrics: Don't compute all statistics, use metrics subsystem data
+            instead.
+
+            .. warning:: Key names will be different.
+
+        """
+        self._set('carbon-id', id)
+        self._set('carbon-root', root_node)
+        self._set('carbon-freq', interval)
+        self._set('carbon-idle-avg', idle_avg_source)
+        self._set('carbon-use-metrics', use_metrics, cast=bool)
+        self._set('carbon-no-workers', no_workers, cast=bool)
+
+        return self
+
+    def set_connection_params(
+            self, timeout=None, retries=None, retries_delay=None,
+            hostname_dots_replacer=None, hostname_as_address=None):
+        """Sets connection related parameters.
+
+        :param int timeout: Set carbon connection timeout in seconds. Default: 3.
+
+        :param int retries: Set maximum number of retries in case of connection errors. Default: 1.
+
+        :param int retries_delay: Set connection retry delay in seconds. Default: 7.
+
+        :param str|unicode hostname_dots_replacer: Set char to use as a replacement for
+            dots in hostname (dots are not replaced by default).
+
+        :param bool hostname_as_address: Allow using hostname as carbon server address. Default: disabled.
+
+        """
+        self._set('carbon-timeout', timeout)
+        self._set('carbon-max-retry', retries)
+        self._set('carbon-retry-delay', retries_delay)
+        self._set('carbon-hostname-dots', hostname_dots_replacer)
+        self._set('carbon-name-resolve', hostname_as_address, cast=bool)
+
+        return self
 
 
 class PusherZabbix(Pusher):

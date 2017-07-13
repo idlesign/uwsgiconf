@@ -112,11 +112,14 @@ def test_monitoring_pushers(assert_lines):
     ))
 
     monitoring = Section().monitoring
+    pusher = monitoring.pushers.carbon('127.0.0.1:2003')
+    pusher.set_basic_params(root_node='myroot')
+    pusher.set_connection_params(retries=5)
     assert_lines([
         'stats-push = carbon:127.0.0.1:2003',
 
     ], monitoring.register_stats_pusher(
-        monitoring.pushers.carbon('127.0.0.1:2003')
+        pusher
     ))
 
     monitoring = Section().monitoring
