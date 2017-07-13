@@ -1,4 +1,4 @@
-from .alarms import Alarm
+from .alarms import AlarmType
 from ..base import OptionsGroup, ParametrizedValue
 from ..utils import make_key_val_string, listify, filter_locals
 from ..exceptions import ConfigurationError
@@ -596,12 +596,12 @@ class Monitoring(OptionsGroup):
 
         :param int interval: Threshold check interval in seconds.
 
-        :param str|unicode|Alarm alarm: Alarm to trigger when threshold is reached.
+        :param str|unicode|AlarmType alarm: Alarm to trigger when threshold is reached.
 
         :param str|unicode alarm_message: Message to pass to alarm. If not set metrics name is passed.
 
         """
-        if alarm is not None and isinstance(alarm, Alarm):
+        if alarm is not None and isinstance(alarm, AlarmType):
             self._section.alarms.register_alarm(alarm)
             alarm = alarm.alias
 

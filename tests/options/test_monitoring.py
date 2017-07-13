@@ -36,7 +36,7 @@ def test_monitoring_metrics(assert_lines):
         'alarm = pinger cmd:ping 127.0.0.1',
         'metric-threshold = alarm=pinger,key=mycounter,value=2000',
     ], section.monitoring.set_metrics_threshold(
-        'mycounter', 2000, alarm=section.alarms.cls_alarm_command('pinger', 'ping 127.0.0.1')
+        'mycounter', 2000, alarm=section.alarms.alarm_types.command('pinger', 'ping 127.0.0.1')
     ))
 
 

@@ -4,14 +4,14 @@ from ..base import OptionsGroup, ParametrizedValue
 from ..utils import listify, filter_locals, make_key_val_string
 
 
-class Alarm(ParametrizedValue):
+class AlarmType(ParametrizedValue):
 
     def __init__(self, alias, *args, **kwargs):
         self.alias = alias or ''
-        super(Alarm, self).__init__(*args)
+        super(AlarmType, self).__init__(*args)
 
 
-class AlarmCommand(Alarm):
+class AlarmCommand(AlarmType):
     """Run a shell command, passing info into its stdin."""
 
     name = 'cmd'
@@ -20,7 +20,7 @@ class AlarmCommand(Alarm):
         super(AlarmCommand, self).__init__(alias, command)
 
 
-class AlarmSignal(Alarm):
+class AlarmSignal(AlarmType):
     """Raise an uWSGI signal."""
 
     name = 'signal'
@@ -29,7 +29,7 @@ class AlarmSignal(Alarm):
         super(AlarmSignal, self).__init__(alias, sig_num)
 
 
-class AlarmLog(Alarm):
+class AlarmLog(AlarmType):
     """Print line into log."""
 
     name = 'log'
@@ -38,7 +38,7 @@ class AlarmLog(Alarm):
         super(AlarmLog, self).__init__(alias)
 
 
-class AlarmMule(Alarm):
+class AlarmMule(AlarmType):
     """Send info to a mule waiting for messages."""
 
     name = 'mule'
@@ -47,7 +47,7 @@ class AlarmMule(Alarm):
         super(AlarmMule, self).__init__(alias, mule_id)
 
 
-class AlarmCurl(Alarm):
+class AlarmCurl(AlarmType):
     """Send info to a cURL-able URL."""
 
     name = 'curl'
@@ -68,7 +68,7 @@ class AlarmCurl(Alarm):
         super(AlarmCurl, self).__init__(alias, url, opts)
 
 
-class AlarmXmpp(Alarm):
+class AlarmXmpp(AlarmType):
     """Send info via XMPP/jabber."""
 
     name = 'xmpp'
@@ -89,12 +89,15 @@ class Alarms(OptionsGroup):
 
     """
 
-    cls_alarm_command = AlarmCommand
-    cls_alarm_signal = AlarmSignal
-    cls_alarm_log = AlarmLog
-    cls_alarm_mule = AlarmMule
-    cls_alarm_curl = AlarmCurl
-    cls_alarm_xmpp = AlarmXmpp
+    class alarm_types(object):
+        """Alarm types available for ``.register_alarm()``."""
+
+        command = AlarmCommand
+        signal = AlarmSignal
+        log = AlarmLog
+        mule = AlarmMule
+        curl = AlarmCurl
+        xmpp = AlarmXmpp
 
     def __init__(self, *args, **kwargs):
         self._alarms = []
@@ -126,7 +129,7 @@ class Alarms(OptionsGroup):
     def register_alarm(self, alarm):
         """Register (create) an alarm.
 
-        :param Alarm|list[Alarms] alarm: Alarm.
+        :param AlarmType|list[AlarmType] alarm: Alarm.
 
         """
         for alarm in listify(alarm):
@@ -139,7 +142,7 @@ class Alarms(OptionsGroup):
     def alarm_on_log(self, alarm, matcher, skip=False):
         """Raise (or skip) the specified alarm when a log line matches the specified regexp.
 
-        :param Alarm|list[Alarms] alarm: Alarm.
+        :param AlarmType|list[AlarmType] alarm: Alarm.
 
         :param str|unicode matcher: Regular expression to match log line.
 
@@ -164,7 +167,7 @@ class Alarms(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Changelog-1.9.7.html#alarm-fd
 
-        :param Alarm|list[Alarms] alarm: Alarm.
+        :param AlarmType|list[AlarmType] alarm: Alarm.
 
         :param str|unicode fd: File descriptor.
 
@@ -192,7 +195,7 @@ class Alarms(OptionsGroup):
     def alarm_on_backlog_full(self, alarm):
         """Raise the specified alarm when the socket backlog queue is full.
 
-        :param Alarm|list[Alarms] alarm: Alarm.
+        :param AlarmType|list[AlarmType] alarm: Alarm.
         """
         self.register_alarm(alarm)
 
@@ -206,7 +209,7 @@ class Alarms(OptionsGroup):
 
         Sends a backtrace.
 
-        :param Alarm|list[Alarms] alarm: Alarm.
+        :param AlarmType|list[AlarmType] alarm: Alarm.
         """
         self.register_alarm(alarm)
 

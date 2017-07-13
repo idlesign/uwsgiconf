@@ -17,29 +17,29 @@ def test_alarms_registration(assert_lines):
     alarms = Section().alarms
     assert_lines([
         'alarm = my log:',
-    ], alarms.register_alarm(alarms.cls_alarm_log('my')))
+    ], alarms.register_alarm(alarms.alarm_types.log('my')))
 
     alarms = Section().alarms
     assert_lines([
         'alarm = my cmd:some',
-    ], alarms.register_alarm(alarms.cls_alarm_command('my', 'some')))
+    ], alarms.register_alarm(alarms.alarm_types.command('my', 'some')))
 
     alarms = Section().alarms
     assert_lines([
         'alarm = mysig signal:17',
-    ], alarms.register_alarm(alarms.cls_alarm_signal('mysig', 17)))
+    ], alarms.register_alarm(alarms.alarm_types.signal('mysig', 17)))
 
     alarms = Section().alarms
     assert_lines([
         'alarm = tomule mule:2',
-    ], alarms.register_alarm(alarms.cls_alarm_mule('tomule', 2)))
+    ], alarms.register_alarm(alarms.alarm_types.mule('tomule', 2)))
 
     alarms = Section().alarms
     assert_lines([
         'plugin = alarm_curl',
         'alarm = test2 curl:http://192.168.173.6:9191/argh;auth_pass=foobar;auth_user=topogigio',
     ], alarms.register_alarm(
-        alarms.cls_alarm_curl(
+        alarms.alarm_types.curl(
             'test2', 'http://192.168.173.6:9191/argh',
             auth_user='topogigio', auth_pass='foobar')))
 
@@ -48,15 +48,15 @@ def test_alarms_registration(assert_lines):
         'plugin = alarm_xmpp',
         'alarm = jab xmpp:idle@some.com;12345;one@some.com,two@some.com',
     ], alarms.register_alarm(
-        alarms.cls_alarm_xmpp('jab', 'idle@some.com', '12345', ['one@some.com', 'two@some.com'])))
+        alarms.alarm_types.xmpp('jab', 'idle@some.com', '12345', ['one@some.com', 'two@some.com'])))
 
 
 def test_alarms_on_log(assert_lines):
 
     alarms = Section().alarms
 
-    alarm1 = alarms.cls_alarm_command('mycom', 'some')
-    alarm2 = alarms.cls_alarm_signal('mysig', 27)
+    alarm1 = alarms.alarm_types.command('mycom', 'some')
+    alarm2 = alarms.alarm_types.signal('mysig', 27)
 
     assert_lines([
         'alarm = mycom cmd:some',
@@ -72,8 +72,8 @@ def test_alarms_on_log(assert_lines):
 def test_alarms_on_fd(assert_lines):
 
     alarms = Section().alarms
-    alarm1 = alarms.cls_alarm_signal('mysig', 27)
-    alarm2 = alarms.cls_alarm_signal('some', 17)
+    alarm1 = alarms.alarm_types.signal('mysig', 27)
+    alarm2 = alarms.alarm_types.signal('some', 17)
 
     assert_lines([
         'alarm = mysig signal:27',
@@ -86,8 +86,8 @@ def test_alarms_on_fd(assert_lines):
 def test_alarms_on_backlog(assert_lines):
 
     alarms = Section().alarms
-    alarm1 = alarms.cls_alarm_signal('mysig', 27)
-    alarm2 = alarms.cls_alarm_signal('some', 17)
+    alarm1 = alarms.alarm_types.signal('mysig', 27)
+    alarm2 = alarms.alarm_types.signal('some', 17)
 
     assert_lines([
         'alarm = mysig signal:27',
@@ -100,8 +100,8 @@ def test_alarms_on_backlog(assert_lines):
 def test_alarms_on_segfault(assert_lines):
 
     alarms = Section().alarms
-    alarm1 = alarms.cls_alarm_signal('mysig', 27)
-    alarm2 = alarms.cls_alarm_signal('some', 17)
+    alarm1 = alarms.alarm_types.signal('mysig', 27)
+    alarm2 = alarms.alarm_types.signal('some', 17)
 
     assert_lines([
         'alarm = mysig signal:27',
