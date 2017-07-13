@@ -46,6 +46,7 @@ class Section(SectionBase):
     logging = Options(Logging)  # type: Logging
     main_process = Options(MainProcess)  # type: MainProcess
     master_process = Options(MasterProcess)  # type: MasterProcess
+    monitoring = Options(Monitoring)  # type: Monitoring
     networking = Options(Networking)  # type: Networking
     queue = Options(Queue)  # type: Queue
     spooler = Options(Spooler)  # type: Spooler
@@ -61,43 +62,43 @@ class Section(SectionBase):
 
         """
         VERSION = '%V'
-        '''uWSGI version number'''
+        """uWSGI version number"""
 
         FORMAT_ESCAPE = '%['
-        '''ANSI escape \\033. useful for printing colors'''
+        """ANSI escape \\033. useful for printing colors"""
 
         FORMAT_END = '%s[0m' % FORMAT_ESCAPE
 
         CONF_CURRENT_SECTION = '%x'
-        '''The current section identifier, eg. conf.ini:section.'''
+        """The current section identifier, eg. conf.ini:section."""
         CONF_CURRENT_SECTION_NTPL = '%x'
 
         CONF_NAME_ORIGINAL = '%o'
-        '''The original conf filename, as specified on the command line'''
+        """The original conf filename, as specified on the command line"""
         CONF_NAME_ORIGINAL_NTPL = '%O'
 
         TIMESTAMP_STARTUP_S = '%t'
-        '''Unix time s, gathered at instance startup.'''
+        """Unix time s, gathered at instance startup."""
         TIMESTAMP_STARTUP_MS = '%T'
-        '''Unix time ms, gathered at instance startup'''
+        """Unix time ms, gathered at instance startup"""
 
         DIR_VASSALS = '%v'
-        '''Vassals directory - pwd.'''
+        """Vassals directory - pwd."""
 
         HOST_NAME = '%h'
-        '''Host name.'''
+        """Host name."""
         CPU_CORES = '%k'
-        '''Detected CPU count.'''
+        """Detected CPU count."""
 
         USER_ID = '%u'
-        '''User ID.'''
+        """User ID."""
         USER_NAME = '%U'
-        '''User name.'''
+        """User name."""
 
         GROUP_ID = '%g'
-        '''Use group ID.'''
+        """Use group ID."""
         GROUP_NAME = '%G'
-        '''Use group name.'''
+        """Use group name."""
 
         @classmethod
         def get_descriptions(cls):

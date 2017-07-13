@@ -129,6 +129,7 @@ class ParametrizedValue(OptionsGroup):
     alias = None
     args_joiner = ' '
     name_separator = ':'
+    name_separator_strip = False
 
     def __init__(self, *args):
         self.args = args
@@ -145,7 +146,12 @@ class ParametrizedValue(OptionsGroup):
         if self.alias:
             result = '%s %s' % (self.alias, result)
 
-        return result.strip()
+        result = result.strip()
+
+        if self.name_separator_strip:
+            result = result.strip(self.name_separator)
+
+        return result
 
 
 class SectionBase(OptionsGroup):

@@ -57,6 +57,7 @@ API
     grp_logging
     grp_main_process
     grp_master_process
+    grp_monitoring
     grp_networking
     grp_queue
     grp_spooler

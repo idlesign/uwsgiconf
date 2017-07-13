@@ -5,6 +5,7 @@ from .locks import Locks
 from .logging import Logging
 from .main_process import MainProcess
 from .master_process import MasterProcess
+from .monitoring import Monitoring
 from .networking import Networking
 from .python import Python
 from .queue import Queue
