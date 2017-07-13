@@ -164,7 +164,13 @@ class HandlerUnlink(Handler):
 
 
 class MainProcess(OptionsGroup):
-    """Main process is the uWSGi process."""
+    """Main process is the uWSGI process.
+
+    .. warning:: Do not run uWSGI instances as root.
+        You can start your uWSGIs as root, but be sure to drop privileges
+        with the ``uid`` and ``gid`` options from ``set_owner_params``.
+
+    """
 
     cls_handler_mount = HandlerMount
     cls_handler_exec = HandlerExec
@@ -186,93 +192,93 @@ class MainProcess(OptionsGroup):
         # todo hook-touch: <file> <action>
 
         ASAP = 'asap'
-        '''As soon as possible. **Fatal**
+        """As soon as possible. **Fatal**
         
         Run directly after configuration file has been parsed, before anything else is done.
         
-        '''
+        """
 
         JAIL_PRE = 'pre-jail'
-        '''Before jailing. **Fatal** 
+        """Before jailing. **Fatal** 
         
         Run before any attempt to drop privileges or put the process in some form of jail.        
         
-        '''
+        """
 
         JAIL_IN = 'in-jail'
-        '''In jail after initialization. **Fatal** 
+        """In jail after initialization. **Fatal** 
 
         Run soon after jayling, but after post-jail. 
         If jailing requires fork(), the chidlren run this phase.
         
-        '''
+        """
 
         JAIL_POST = 'post-jail'
-        '''After jailing. **Fatal**
+        """After jailing. **Fatal**
         
         Run soon after any jailing, but before privileges drop. 
         If jailing requires fork(), the parent process run this phase.
         
-        '''
+        """
 
         PRIV_DROP_PRE = 'as-root'
-        '''Before privileges drop. **Fatal**
+        """Before privileges drop. **Fatal**
         
         Last chance to run something as root.
         
-        '''
+        """
 
         PRIV_DROP_POST = 'as-user'
-        '''After privileges drop. **Fatal**'''
+        """After privileges drop. **Fatal**"""
 
         MASTER_START = 'master-start'
-        '''When Master starts.'''
+        """When Master starts."""
 
         EMPEROR_START = 'emperor-start'
-        '''When Emperor starts.'''
+        """When Emperor starts."""
 
         EMPEROR_STOP = 'emperor-stop'
-        '''When Emperor sent a stop message.'''
+        """When Emperor sent a stop message."""
 
         EMPEROR_RELOAD = 'emperor-reload'
-        '''When Emperor sent a reload message.'''
+        """When Emperor sent a reload message."""
 
         EMPEROR_LOST = 'emperor-lost'
-        '''When Emperor connection is lost.'''
+        """When Emperor connection is lost."""
 
         EXIT = 'as-user-atexit'
-        '''Before app exit and reload.'''
+        """Before app exit and reload."""
 
         APP_LOAD_PRE = 'pre-app'
-        '''Before app loading. **Fatal**'''
+        """Before app loading. **Fatal**"""
 
         APP_LOAD_POST = 'post-app'
-        '''After app loading. **Fatal**'''
+        """After app loading. **Fatal**"""
 
         VASSAL_ON_DEMAND_IN = 'as-on-demand-vassal'
-        '''Whenever a vassal enters on-demand mode.'''
+        """Whenever a vassal enters on-demand mode."""
 
         VASSAL_CONFIG_CHANGE_POST = 'as-on-config-vassal'
-        '''Whenever the emperor detects a config change for an on-demand vassal.'''
+        """Whenever the emperor detects a config change for an on-demand vassal."""
 
         VASSAL_START_PRE = 'as-emperor-before-vassal'
-        '''Before the new vassal is spawned.'''
+        """Before the new vassal is spawned."""
 
         VASSAL_PRIV_DRP_PRE = 'as-vassal-before-drop'
-        '''In vassal, before dropping its privileges.'''
+        """In vassal, before dropping its privileges."""
 
         VASSAL_SET_NAMESPACE = 'as-emperor-setns'
-        '''In the emperor entering vassal namespace.'''
+        """In the emperor entering vassal namespace."""
 
         VASSAL_START_IN = 'as-vassal'
-        '''In the vassal before executing the uwsgi binary. **Fatal** 
+        """In the vassal before executing the uwsgi binary. **Fatal** 
         
         In vassal on start just before calling exec() directly in the new namespace.
         
-        '''
+        """
 
         VASSAL_START_POST = 'as-emperor'
-        '''In the emperor soon after a vassal has been spawn.
+        """In the emperor soon after a vassal has been spawn.
          
         Setting 4 env vars:
             * UWSGI_VASSAL_CONFIG 
@@ -280,41 +286,41 @@ class MainProcess(OptionsGroup):
             * UWSGI_VASSAL_UID 
             * UWSGI_VASSAL_GID
 
-        '''
+        """
 
         GATEWAY_START_IN_EACH = 'as-gateway'
-        '''In each gateway on start.'''
+        """In each gateway on start."""
 
         MULE_START_IN_EACH = 'as-mule'
-        '''In each mule on start.'''
+        """In each mule on start."""
 
         WORKER_ACCEPTING_PRE_EACH = 'accepting'
-        '''Before the each worker starts accepting requests. 
+        """Before the each worker starts accepting requests. 
         
         .. note:: Since 1.9.21
         
-        '''
+        """
 
         WORKER_ACCEPTING_PRE_FIRST = 'accepting1'
-        '''Before the first worker starts accepting requests.
+        """Before the first worker starts accepting requests.
         
         .. note:: Since 1.9.21
         
-        '''
+        """
 
         WORKER_ACCEPTING_PRE_EACH_ONCE = 'accepting-once'
-        '''Before the each worker starts accepting requests, one time per instance. 
+        """Before the each worker starts accepting requests, one time per instance. 
         
         .. note:: Since 1.9.21
         
-        '''
+        """
 
         WORKER_ACCEPTING_PRE_FIRST_ONCE = 'accepting1-once'
-        '''Before the first worker starts accepting requests, one time per instance.
+        """Before the first worker starts accepting requests, one time per instance.
         
         .. note:: Since 1.9.21
         
-        '''
+        """
 
     def set_basic_params(
             self, touch_reload=None, priority=None, vacuum=None, binary_path=None, honour_stdin=None):
@@ -331,9 +337,9 @@ class MainProcess(OptionsGroup):
             If you do not have uWSGI in the system path you can force its path with this option
             to permit the reloading system and the Emperor to easily find the binary to execute.
 
-        :param bool honour_stdin: do not remap stdin to /dev/null.
-            By default, stdin is remapped to /dev/null on uWSGI startup.
-            If you need a valid stdin (for debugging, piping and so on) use this option
+        :param bool honour_stdin: Do not remap stdin to ``/dev/null``.
+            By default, ``stdin`` is remapped to ``/dev/null`` on uWSGI startup.
+            If you need a valid stdin (for debugging, piping and so on) use this option.
 
         """
         self._set('touch-reload', touch_reload, multi=True)

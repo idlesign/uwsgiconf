@@ -209,16 +209,16 @@ class EncoderFormat(Encoder):
         """Variables available to use."""
 
         MESSAGE = '${msg}'
-        '''Raw log message (newline stripped).'''
+        """Raw log message (newline stripped)."""
 
         MESSAGE_NEWLINE = '${msgnl}'
-        '''Raw log message (with newline).'''
+        """Raw log message (with newline)."""
 
         TIME = '${unix}'
-        '''Current unix time.'''
+        """Current unix time."""
 
         TIME_MS = '${micros}'
-        '''Current unix time in microseconds.'''
+        """Current unix time in microseconds."""
 
         # todo consider adding ${strftime:xxx} - strftime using the xxx format
 
@@ -493,140 +493,140 @@ class Logging(OptionsGroup):
         # The following are taken blindly from the internal wsgi_request structure of the current request.
 
         REQ_URL = '%(uri)'
-        '''REQUEST_URI from ``wsgi_request`` of the current request.'''
+        """REQUEST_URI from ``wsgi_request`` of the current request."""
 
         REQ_METHOD = '%(method)'
-        '''REQUEST_METHOD from ``wsgi_request`` of the current request.'''
+        """REQUEST_METHOD from ``wsgi_request`` of the current request."""
 
         REQ_REMOTE_USER = '%(user)'
-        '''REMOTE_USER from ``wsgi_request`` of the current request.'''
+        """REMOTE_USER from ``wsgi_request`` of the current request."""
 
         REQ_REMOTE_ADDR = '%(addr)'
-        '''REMOTE_ADDR from ``wsgi_request`` of the current request.'''
+        """REMOTE_ADDR from ``wsgi_request`` of the current request."""
 
         REQ_HTTP_HOST = '%(host)'
-        '''HTTP_HOST from ``wsgi_request`` of the current request.'''
+        """HTTP_HOST from ``wsgi_request`` of the current request."""
 
         REQ_SERVER_PROTOCOL = '%(proto)'
-        '''SERVER_PROTOCOL from ``wsgi_request`` of the current request.'''
+        """SERVER_PROTOCOL from ``wsgi_request`` of the current request."""
 
         REQ_USER_AGENT = '%(uagent)'
-        '''HTTP_USER_AGENT from ``wsgi_request`` of the current request.'''
+        """HTTP_USER_AGENT from ``wsgi_request`` of the current request."""
 
         REQ_REFERER = '%(referer)'
-        '''HTTP_REFERER from ``wsgi_request`` of the current request.'''
+        """HTTP_REFERER from ``wsgi_request`` of the current request."""
 
         # The following are simple functions called for generating the logvar value.
 
         RESP_STATUS = '%(status)'
-        '''HTTP response status code.'''
+        """HTTP response status code."""
 
         RESP_TIME_US = '%(micros)'
-        '''Response time in microseconds.'''
+        """Response time in microseconds."""
 
         RESP_TIME_MS = '%(msecs)'
-        '''Response time in milliseconds.'''
+        """Response time in milliseconds."""
 
         REQ_START_TS = '%(time)'
-        '''Timestamp of the start of the request.'''
+        """Timestamp of the start of the request."""
 
         RESP_START_CTIME = '%(ctime)'
-        '''Ctime of the start of the request.'''
+        """Ctime of the start of the request."""
 
         TIME_UNIX = '%(epoch)'
-        '''The current time in Unix format.'''
+        """The current time in Unix format."""
 
         RESP_SIZE = '%(size)'
-        '''Response body size + response headers size.'''
+        """Response body size + response headers size."""
 
         REQ_TIME_HUMAN = '%(ltime)'
-        '''Human-formatted (Apache style) request time.'''
+        """Human-formatted (Apache style) request time."""
 
         REQ_TIME_FORMATTED = '%(ftime)'
-        '''Request time formatted with ``date_format``.'''
+        """Request time formatted with ``date_format``."""
 
         RESP_SIZE_HEADER = '%(hsize)'
-        '''Response headers size.'''
+        """Response headers size."""
 
         RESP_SIZE_BODY = '%(rsize)'
-        '''Response body size.'''
+        """Response body size."""
 
         REQ_SIZE_BODY = '%(cl)'
-        '''Request content body size.'''
+        """Request content body size."""
 
         WORKER_PID = '%(pid)'
-        '''pid of the worker handling the request.'''
+        """pid of the worker handling the request."""
 
         WORKER_ID = '%(wid)'
-        '''id of the worker handling the request.'''
+        """id of the worker handling the request."""
 
         ASYNC_SWITCHES = '%(switches)'
-        '''Number of async switches.'''
+        """Number of async switches."""
 
         REQ_COUNT_VARS_CGI = '%(vars)'
-        '''Number of CGI vars in the request.'''
+        """Number of CGI vars in the request."""
 
         RESP_COUNT_HEADERS = '%(headers)'
-        '''Number of generated response headers.'''
+        """Number of generated response headers."""
 
         CORE = '%(core)'
-        '''The core running the request.'''
+        """The core running the request."""
 
         MEM_VSZ = '%(vsz)'
-        '''Address space/virtual memory usage (in bytes).'''
+        """Address space/virtual memory usage (in bytes)."""
 
         MEM_RSS = '%(rss)'
-        '''RSS memory usage (in bytes).'''
+        """RSS memory usage (in bytes)."""
 
         MEM_VSZ_MB = '%(vszM)'
-        '''Address space/virtual memory usage (in megabytes).'''
+        """Address space/virtual memory usage (in megabytes)."""
 
         MEM_RSS_MV = '%(rssM)'
-        '''RSS memory usage (in megabytes).'''
+        """RSS memory usage (in megabytes)."""
 
         SIZE_PACKET_UWSGI = '%(pktsize)'
-        '''Size of the internal request uwsgi packet.'''
+        """Size of the internal request uwsgi packet."""
 
         MOD1 = '%(modifier1)'
-        '''modifier1 of the request.'''
+        """modifier1 of the request."""
 
         MOD2 = '%(modifier2)'
-        '''modifier2 of the request.'''
+        """modifier2 of the request."""
 
         REQ_COUNT_ERR_READ = '%(rerr)'
-        '''Number of read errors for the request.
+        """Number of read errors for the request.
     
         .. note:: since 1.9.21
     
-        '''
+        """
 
         REQ_COUNT_ERR_WRITE = '%(werr)'
-        '''Number of write errors for the request.
+        """Number of write errors for the request.
     
         .. note:: since 1.9.21
     
-        '''
+        """
 
         REQ_COUNT_ERR = '%(ioerr)'
-        '''Number of write and read errors for the request.
+        """Number of write and read errors for the request.
     
         .. note:: since 1.9.21
     
-        '''
+        """
 
         REQ_START_UNIX_US = '%(tmsecs)'
-        '''Timestamp of the start of the request in milliseconds since the epoch.
+        """Timestamp of the start of the request in milliseconds since the epoch.
     
         .. note:: since 1.9.21
     
-        '''
+        """
 
         REQ_START_UNIX_MS = '%(tmicros)'
-        '''Timestamp of the start of the request in microseconds since the epoch.
+        """Timestamp of the start of the request in microseconds since the epoch.
     
         .. note:: since 1.9.21
     
-        '''
+        """
 
         # todo %(metric.XXX) - access the XXX metric value (see The Metrics subsystem)
         # todo %(var.XXX)

@@ -34,11 +34,13 @@ class Workers(OptionsGroup):
             Set the number of workers for preforking mode.
             This is the base for easy and safe concurrency in your app.
             More workers you add, more concurrent requests you can manage.
+
             Each worker corresponds to a system process, so it consumes memory,
             choose carefully the right number. You can easily drop your system
             to its knees by setting a too high value.
-            Setting ``workers`` to a ridiculously high number will *not*
-            magically make your application web scale -- quite the contrary.
+
+            Setting ``workers`` to a ridiculously high number will **not**
+            magically make your application web scale - quite the contrary.
 
         :param str|list touch_reload: Trigger reload of (and only) workers
             if the specified file is modified/touched.
