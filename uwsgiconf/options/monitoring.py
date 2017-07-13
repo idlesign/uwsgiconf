@@ -17,7 +17,7 @@ class Metric(ParametrizedValue):
 
         :param str|unicode name: Metric name.
 
-            ..note:: Only numbers, letters, underscores, dashes and dots.
+            .. note:: Only numbers, letters, underscores, dashes and dots.
 
         :param str|unicode alias_for: If set metric will be a simple alias for the specified one.
 
@@ -542,7 +542,7 @@ class Monitoring(OptionsGroup):
 
             * ``system`` 10 - namespace for system metrics, like loadavg or free memory.
 
-        :param metric:
+        :param Metric|list[Metric] metric: Metric object.
 
         """
         for metric in listify(metric):
