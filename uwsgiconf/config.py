@@ -13,20 +13,16 @@ from .utils import listify
 class Section(SectionBase):
     """Configuration section.
 
-    Options within configuration section are gathered into groups such as:
-        * applications
-        * locks
-        * main_process
+    Options within configuration section are gathered into groups:
+
+        * alarms
+        * caching
         * master_process
-        * networking
-        * workers
+        * etc.
 
-    Options offered by plugins are prefixed with `plugin_`:
-
-        * plugin_python
-
-    Usually in group objects methods setting parameters are named `set_***_params`.
-    Methods ending with `_params` usually return section object to allow chaining.
+    Next to all public methods of groups are for setting configuration parameters.
+    Such methods return section object to allow chaining.
+    Usually such methods setting parameters are named `set_***_params`.
 
     You can pass options group basic parameters
     not only into `set_basic_params` method by also into section initializer
@@ -40,19 +36,43 @@ class Section(SectionBase):
 
     """
     alarms = Options(Alarms)  # type: Alarms
+    """Alarms."""
+
     applications = Options(Applications)  # type: Applications
+    """Applications."""
+
     caching = Options(Caching)  # type: Caching
+    """Caching."""
+
     locks = Options(Locks)  # type: Locks
+    """Locks."""
+
     logging = Options(Logging)  # type: Logging
+    """Logging."""
+
     main_process = Options(MainProcess)  # type: MainProcess
+    """Main process."""
+
     master_process = Options(MasterProcess)  # type: MasterProcess
+    """Master process."""
+
     monitoring = Options(Monitoring)  # type: Monitoring
+    """Monitoring."""
+
     networking = Options(Networking)  # type: Networking
+    """Networking."""
+
     queue = Options(Queue)  # type: Queue
+    """Queue."""
+
     spooler = Options(Spooler)  # type: Spooler
+    """Spooler."""
+
     workers = Options(Workers)  # type: Workers
+    """Workers."""
 
     python = Options(Python)  # type: Python
+    """Python."""
 
     class Vars(object):
         """The following variables also known as magic variables
