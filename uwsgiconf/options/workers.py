@@ -23,7 +23,7 @@ class MuleFarm(object):
 class Workers(OptionsGroup):
     """Workers aka [working] processes."""
 
-    cls_mule_farm = MuleFarm
+    mule_farm = MuleFarm
 
     def set_basic_params(
             self, count=None, touch_reload=None, touch_chain_reload=None, zombie_reaper=None,

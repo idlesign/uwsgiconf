@@ -41,8 +41,8 @@ def test_mules(assert_lines):
         'mules = 5',
 
     ], section.workers.set_mules_params(farms=[
-        section.workers.cls_mule_farm('first', 2),
-        section.workers.cls_mule_farm('second', 3),
+        section.workers.mule_farm('first', 2),
+        section.workers.mule_farm('second', 3),
     ]))
 
     section = Section()
@@ -52,8 +52,8 @@ def test_mules(assert_lines):
         'mules = 4',
 
     ], section.workers.set_mules_params(farms=[
-        section.workers.cls_mule_farm('first', [1]),
-        section.workers.cls_mule_farm('second', [2,3,4]),
+        section.workers.mule_farm('first', [1]),
+        section.workers.mule_farm('second', [2, 3, 4]),
     ]))
 
     assert_lines([
