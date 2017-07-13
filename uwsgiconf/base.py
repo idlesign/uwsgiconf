@@ -6,31 +6,6 @@ if False:  # pragma: nocover
     from .config import Section
 
 
-class ParametrizedValue(object):
-    """Represents parametrized option value."""
-
-    alias = None
-    name = None
-    args_joiner = ' '
-    name_separator = ':'
-    requires_plugin = None
-
-    def __init__(self, *args, **kwargs):
-        self.args = args
-
-    def __str__(self):
-        args = [str(arg) for arg in self.args if arg is not None]
-
-        result = self.name + self.name_separator
-
-        result += self.args_joiner.join(args)
-
-        if self.alias:
-            result = '%s %s' % (self.alias, result)
-
-        return result.strip()
-
-
 class Options(object):
     """Options descriptor. Allows option."""
 
@@ -73,15 +48,17 @@ class OptionsGroup(object):
     _section = None  # type: Section
     """Section this option group belongs to."""
 
-    _is_plugin = False  # type: bool
-    """Flag indicating this option group belongs to a plugin."""
+    plugin = False  # type: bool|str|unicode
+    """Indication this option group belongs to a plugin."""
+
+    name = None
+    """Name to represent the group."""
 
     def __init__(self, *args, **kwargs):
         if self._section is None:
-            self._section = kwargs.pop('_section')  # type: Section
+            self._section = kwargs.pop('_section', None)  # type: Section
 
         self.set_basic_params(*args, **kwargs)
-        self.name = None
 
     def _get_name(self, *args, **kwargs):
         """
@@ -98,9 +75,14 @@ class OptionsGroup(object):
     def _set(self, key, value, condition=True, cast=None, multi=False):
 
         def handle_plugin_required(val):
-            if isinstance(val, ParametrizedValue) and val.requires_plugin:
-                # Automatic plugin activation.
-                self._section.set_plugins_params(plugins=val.requires_plugin)
+
+            if isinstance(val, ParametrizedValue):
+                if val.plugin:
+                    # Automatic plugin activation.
+                    self._section.set_plugins_params(plugins=val.plugin)
+
+                if val._opts:
+                    opts.update(val._opts)
 
         if condition is True:
             condition = value is not None
@@ -121,20 +103,49 @@ class OptionsGroup(object):
 
                     return
 
-            if self._is_plugin:
+            if self.plugin is True:
                 # Automatic plugin activation when option from it is used.
                 self._section.set_plugins_params(plugins=[self])
 
             if multi:
-                values = opts.setdefault(key, [])
+                values = []
 
+                # First activate plugin if required.
                 for value in listify(value):
                     handle_plugin_required(value)
                     values.append(value)
 
+                # Second: list in new option.
+                opts.setdefault(key, []).extend(values)
+
             else:
                 handle_plugin_required(value)
                 opts[key] = value
+
+
+class ParametrizedValue(OptionsGroup):
+    """Represents parametrized option value."""
+
+    alias = None
+    args_joiner = ' '
+    name_separator = ':'
+
+    def __init__(self, *args):
+        self.args = args
+        self._opts = OrderedDict()
+        super(ParametrizedValue, self).__init__(_section=self)
+
+    def __str__(self):
+        args = [str(arg) for arg in self.args if arg is not None]
+
+        result = self._get_name() + self.name_separator
+
+        result += self.args_joiner.join(args)
+
+        if self.alias:
+            result = '%s %s' % (self.alias, result)
+
+        return result.strip()
 
 
 class SectionBase(OptionsGroup):
@@ -148,7 +159,7 @@ class SectionBase(OptionsGroup):
         self._section = self
         self._options_objects = OrderedDict()
         self._opts = OrderedDict()
-        '''Main options container.'''
+        """Main options container."""
 
         super(SectionBase, self).__init__(**kwargs)
 

@@ -49,11 +49,13 @@ def make_key_val_string(
 
     :param list list_keys: Keys expecting lists.
 
+    :param str|unicode items_separator: String to use as items (chunks) separator.
+
     :rtype: str|unicode
     """
     value_chunks = []
 
-    keys = keys or sorted(locals_dict.keys())
+    keys = keys or sorted(filter_locals(locals_dict).keys())
     aliases = aliases or {}
     bool_keys = bool_keys or []
     list_keys = list_keys or []

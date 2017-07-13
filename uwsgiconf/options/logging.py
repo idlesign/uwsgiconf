@@ -15,7 +15,7 @@ class LoggerFile(Logger):
     """Allows logging into files."""
 
     name = 'file'
-    requires_plugin = 'logfile'
+    plugin = 'logfile'
 
     def __init__(self, alias, filepath):
         """
@@ -31,7 +31,7 @@ class LoggerSocket(Logger):
     """Allows logging into UNIX and UDP sockets."""
 
     name = 'socket'
-    requires_plugin = 'logsocket'
+    plugin = 'logsocket'
 
     def __init__(self, alias, addr_or_path):
         """
@@ -51,7 +51,7 @@ class LoggerSyslog(Logger):
     """Allows logging into Unix standard syslog or a remote syslog."""
 
     name = 'syslog'
-    requires_plugin = 'syslog'
+    plugin = 'syslog'
 
     def __init__(self, alias, app_name=None, facility=None, host=None):
         """
@@ -84,7 +84,7 @@ class LoggerRedis(Logger):
     """
 
     name = 'redislog'
-    requires_plugin = 'redislog'
+    plugin = 'redislog'
 
     def __init__(self, alias, host=None, command=None, prefix=None):
         """
@@ -112,7 +112,7 @@ class LoggerMongo(Logger):
     """
 
     name = 'mongodblog'
-    requires_plugin = 'mongodblog'
+    plugin = 'mongodblog'
 
     def __init__(self, alias, host=None, collection=None, node=None):
         """
@@ -133,7 +133,7 @@ class LoggerZeroMq(Logger):
     """Allows logging into ZeroMQ sockets."""
 
     name = 'zeromq'
-    requires_plugin = 'logzmq'
+    plugin = 'logzmq'
 
     def __init__(self, alias, connection_str):
         """

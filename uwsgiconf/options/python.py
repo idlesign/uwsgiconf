@@ -8,9 +8,15 @@ AUTO = (1,)
 
 
 class Python(OptionsGroup):
-    """Python plugin options."""
+    """Python plugin options.
 
-    _is_plugin = True
+    .. note:: By default the plugin does not initialize the GIL.
+        This means your app-generated threads will not run.
+        If you need threads, remember to enable them with ``enable_threads``.
+
+    """
+
+    plugin = True
 
     def set_basic_params(
             self, version=AUTO, python_home=None, enable_threads=None, search_path=None,

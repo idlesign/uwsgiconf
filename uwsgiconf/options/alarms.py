@@ -51,7 +51,7 @@ class AlarmCurl(Alarm):
     """Send info to a cURL-able URL."""
 
     name = 'curl'
-    requires_plugin = 'alarm_curl'
+    plugin = 'alarm_curl'
     args_joiner = ';'
 
     def __init__(
@@ -72,7 +72,7 @@ class AlarmXmpp(Alarm):
     """Send info via XMPP/jabber."""
 
     name = 'xmpp'
-    requires_plugin = 'alarm_xmpp'
+    plugin = 'alarm_xmpp'
     args_joiner = ';'
 
     def __init__(self, alias, jid, password, recipients):
