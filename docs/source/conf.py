@@ -65,6 +65,8 @@ if MODULES_TO_MOCK:
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc']
 
+autodoc_member_order = 'bysource'
+
 # Instruct autoclass directive to document both class and __init__ docstrings.
 autoclass_content = 'both'
 

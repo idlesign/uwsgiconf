@@ -36,43 +36,43 @@ class Section(SectionBase):
 
     """
     alarms = Options(Alarms)  # type: Alarms
-    """Alarms."""
+    """Alarms options group."""
 
     applications = Options(Applications)  # type: Applications
-    """Applications."""
+    """Applications options group."""
 
     caching = Options(Caching)  # type: Caching
-    """Caching."""
+    """Caching options group."""
 
     locks = Options(Locks)  # type: Locks
-    """Locks."""
+    """Locks options group."""
 
     logging = Options(Logging)  # type: Logging
-    """Logging."""
+    """Logging options group."""
 
     main_process = Options(MainProcess)  # type: MainProcess
-    """Main process."""
+    """Main process options group."""
 
     master_process = Options(MasterProcess)  # type: MasterProcess
-    """Master process."""
+    """Master process options group."""
 
     monitoring = Options(Monitoring)  # type: Monitoring
-    """Monitoring."""
+    """Monitoring options group."""
 
     networking = Options(Networking)  # type: Networking
-    """Networking."""
+    """Networking options group."""
 
     queue = Options(Queue)  # type: Queue
-    """Queue."""
+    """Queue options group."""
 
     spooler = Options(Spooler)  # type: Spooler
-    """Spooler."""
+    """Spooler options group."""
 
     workers = Options(Workers)  # type: Workers
-    """Workers."""
+    """Workers options group."""
 
     python = Options(Python)  # type: Python
-    """Python."""
+    """Python options group."""
 
     class Vars(object):
         """The following variables also known as magic variables
