@@ -48,19 +48,19 @@ def test_main_process_hooks(assert_lines):
     prc = section.main_process
     asap = prc.phases.ASAP
 
-    prc.set_hook(asap, prc.cls_handler_mount('/proc', 'proc', 'none'))
-    prc.set_hook(asap, prc.cls_handler_mount('/proc', flags=['rec', 'detach']))
-    prc.set_hook(asap, prc.cls_handler_exec('cat /proc/self/mounts'))
-    prc.set_hook(asap, prc.cls_handler_call('uwsgi_log application has been loaded'))
-    prc.set_hook(asap, prc.cls_handler_call('putenv PATH=bin:$(PATH)', arg_int=True))
-    prc.set_hook(asap, prc.cls_handler_call('some', honour_exit_status=True))
-    prc.set_hook(asap, prc.cls_handler_change_dir('/here'))
-    prc.set_hook(asap, prc.cls_handler_exit())
-    prc.set_hook(prc.phases.APP_LOAD_PRE, prc.cls_handler_exit(10))
-    prc.set_hook(asap, prc.cls_handler_print('bingo-bongo'))
-    prc.set_hook(asap, prc.cls_handler_write('/here/a.txt', 'sometext'))
-    prc.set_hook(asap, prc.cls_handler_write('/here/b', '10', fifo=True))
-    prc.set_hook(asap, prc.cls_handler_unlink('/here/d'))
+    prc.set_hook(asap, prc.handlers.mount('/proc', 'proc', 'none'))
+    prc.set_hook(asap, prc.handlers.mount('/proc', flags=['rec', 'detach']))
+    prc.set_hook(asap, prc.handlers.execute('cat /proc/self/mounts'))
+    prc.set_hook(asap, prc.handlers.call('uwsgi_log application has been loaded'))
+    prc.set_hook(asap, prc.handlers.call('putenv PATH=bin:$(PATH)', arg_int=True))
+    prc.set_hook(asap, prc.handlers.call('some', honour_exit_status=True))
+    prc.set_hook(asap, prc.handlers.change_dir('/here'))
+    prc.set_hook(asap, prc.handlers.exit())
+    prc.set_hook(prc.phases.APP_LOAD_PRE, prc.handlers.exit(10))
+    prc.set_hook(asap, prc.handlers.printout('bingo-bongo'))
+    prc.set_hook(asap, prc.handlers.write('/here/a.txt', 'sometext'))
+    prc.set_hook(asap, prc.handlers.write('/here/b', '10', fifo=True))
+    prc.set_hook(asap, prc.handlers.unlink('/here/d'))
 
     assert_lines([
         'hook-asap = mount:proc none /proc',

@@ -237,22 +237,28 @@ class Logging(OptionsGroup):
 
     """
 
-    cls_logger_file = LoggerFile
-    cls_logger_socket = LoggerSocket
-    cls_logger_syslog = LoggerSyslog
-    cls_logger_redis = LoggerRedis
-    cls_logger_mongo = LoggerMongo
-    cls_logger_zeromq = LoggerZeroMq
-    # todo consider adding other loggers: crypto, graylog2, systemd
+    class loggers(object):
+        """Loggers available for ``add_logger()``."""
 
-    cls_encoder_prefix = EncoderPrefix
-    cls_encoder_suffix = EncoderSuffix
-    cls_encoder_newline = EncoderNewline
-    cls_encoder_gzip = EncoderGzip
-    cls_encoder_compress = EncoderCompress
-    cls_encoder_format = EncoderFormat
-    cls_encoder_json = EncoderJson
-    # todo consider adding msgpack encoder
+        file = LoggerFile
+        socket = LoggerSocket
+        syslog = LoggerSyslog
+        redis = LoggerRedis
+        mongo = LoggerMongo
+        zeromq = LoggerZeroMq
+        # todo consider adding other loggers: crypto, graylog2, systemd
+
+    class encoders(object):
+        """Loggers available for ``add_logger_encoder()``."""
+
+        prefix = EncoderPrefix
+        suffix = EncoderSuffix
+        newline = EncoderNewline
+        gzip = EncoderGzip
+        compress = EncoderCompress
+        format = EncoderFormat
+        json = EncoderJson
+        # todo consider adding msgpack encoder
 
     def set_basic_params(
             self, no_requests=None, template=None, memory_report=None, prefix=None, prefix_date=None,

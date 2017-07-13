@@ -53,37 +53,37 @@ def test_logging_add_logger(assert_lines):
     logging = Section().logging
     assert_lines([
         'worker-logger = my file:/home/here.log',
-    ], logging.add_logger(logging.cls_logger_file('my', '/home/here.log'), for_single_worker=True))
+    ], logging.add_logger(logging.loggers.file('my', '/home/here.log'), for_single_worker=True))
 
     logging = Section().logging
     assert_lines([
         'logger = my socket:/home/here.sock',
-    ], logging.add_logger(logging.cls_logger_socket('my', '/home/here.sock')))
+    ], logging.add_logger(logging.loggers.socket('my', '/home/here.sock')))
 
     logging = Section().logging
     assert_lines([
         'logger = my syslog:myapp',
-    ], logging.add_logger(logging.cls_logger_syslog('my', 'myapp')))
+    ], logging.add_logger(logging.loggers.syslog('my', 'myapp')))
 
     logging = Section().logging
     assert_lines([
         'logger = my rsyslog:127.0.0.1:1111,myapp',
-    ], logging.add_logger(logging.cls_logger_syslog('my', 'myapp', host='127.0.0.1:1111')))
+    ], logging.add_logger(logging.loggers.syslog('my', 'myapp', host='127.0.0.1:1111')))
 
     logging = Section().logging
     assert_lines([
         'logger = my redislog',
-    ], logging.add_logger(logging.cls_logger_redis('my')))
+    ], logging.add_logger(logging.loggers.redis('my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my mongodblog',
-    ], logging.add_logger(logging.cls_logger_mongo('my')))
+    ], logging.add_logger(logging.loggers.mongo('my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my zeromq:tcp://192.168.173.18:9191',
-    ], logging.add_logger(logging.cls_logger_zeromq('my', 'tcp://192.168.173.18:9191')))
+    ], logging.add_logger(logging.loggers.zeromq('my', 'tcp://192.168.173.18:9191')))
 
 
 def test_logging_add_logger_encoder(assert_lines):
@@ -95,16 +95,16 @@ def test_logging_add_logger_encoder(assert_lines):
         'worker-log-encoder = suffix <--',
 
     ], logging.add_logger_encoder([
-        logging.cls_encoder_prefix('-->'),
-        logging.cls_encoder_suffix('<--'),
+        logging.encoders.prefix('-->'),
+        logging.encoders.suffix('<--'),
     ], for_single_worker=True))
 
     logging = Section().logging
-    enc_format = logging.cls_encoder_format
+    enc_format = logging.encoders.format
 
     assert_lines([
         'log-encoder = format > ${msg} <:myfile',
 
     ], logging.add_logger_encoder([
         enc_format('> %s <' % enc_format.vars.MESSAGE),
-    ], logger=logging.cls_logger_file('myfile', '/home/here.log')))
+    ], logger=logging.loggers.file('myfile', '/home/here.log')))

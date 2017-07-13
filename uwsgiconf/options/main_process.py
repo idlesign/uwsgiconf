@@ -45,7 +45,7 @@ class HandlerMount(Handler):
         super(HandlerMount, self).__init__(*args)
 
 
-class HandlerExec(Handler):
+class HandlerExecute(Handler):
     """Run the shell command.
 
     Command run under ``/bin/sh``.
@@ -60,7 +60,7 @@ class HandlerExec(Handler):
     name = 'exec'
 
     def __init__(self, command):
-        super(HandlerExec, self).__init__(command)
+        super(HandlerExecute, self).__init__(command)
 
 
 class HandlerCall(Handler):
@@ -115,7 +115,7 @@ class HandlerExit(Handler):
         super(HandlerExit, self).__init__(status_code)
 
 
-class HandlerPrint(Handler):
+class HandlerPrintout(Handler):
     """Prints.
 
     Convenience handler, same as calling the ``uwsgi_log`` symbol.
@@ -124,7 +124,7 @@ class HandlerPrint(Handler):
     name = 'print'
 
     def __init__(self, text=None):
-        super(HandlerPrint, self).__init__(text)
+        super(HandlerPrintout, self).__init__(text)
 
 
 class HandlerWrite(Handler):
@@ -172,14 +172,17 @@ class MainProcess(OptionsGroup):
 
     """
 
-    cls_handler_mount = HandlerMount
-    cls_handler_exec = HandlerExec
-    cls_handler_call = HandlerCall
-    cls_handler_change_dir = HandlerChangeDir
-    cls_handler_exit = HandlerExit
-    cls_handler_print = HandlerPrint
-    cls_handler_write = HandlerWrite
-    cls_handler_unlink = HandlerUnlink
+    class handlers(object):
+        """Handlers available for ``set_hook()``."""
+
+        mount = HandlerMount
+        execute = HandlerExecute
+        call = HandlerCall
+        change_dir = HandlerChangeDir
+        exit = HandlerExit
+        printout = HandlerPrintout
+        write = HandlerWrite
+        unlink = HandlerUnlink
 
     class phases:
         """Phases available for hooking.
