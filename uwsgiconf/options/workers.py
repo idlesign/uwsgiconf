@@ -119,7 +119,7 @@ class Workers(OptionsGroup):
 
         :param int count:
         """
-        count = count or self._section.Vars.CPU_CORES
+        count = count or self._section.vars.CPU_CORES
 
         self._set('workers', count)
 

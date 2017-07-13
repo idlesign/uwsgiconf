@@ -57,8 +57,8 @@ def format_print_text(text, color_fg=None, color_bg=None):
     mod = ';'.join([color_fg, color_bg])
 
     text = '%(esc)s[%(mod)sm%(value)s%(end)s' % {
-        'esc': Section.Vars.FORMAT_ESCAPE,
-        'end': Section.Vars.FORMAT_END,
+        'esc': Section.vars.FORMAT_ESCAPE,
+        'end': Section.vars.FORMAT_END,
         'mod': mod,
         'value': text,
     }

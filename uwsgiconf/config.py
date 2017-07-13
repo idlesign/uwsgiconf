@@ -74,7 +74,7 @@ class Section(SectionBase):
     python = Options(Python)  # type: Python
     """Python options group."""
 
-    class Vars(object):
+    class vars(object):
         """The following variables also known as magic variables
         could be used as option values where appropriate.
 
@@ -261,7 +261,7 @@ class Section(SectionBase):
 
         print_out('===== variables =====')
 
-        for var, hint in self.Vars.get_descriptions().items():
+        for var, hint in self.vars.get_descriptions().items():
             print_out('    %' + var + ' = ' + var + ' = ' + hint.replace('%', '%%'))
 
         print_out('=====================')
