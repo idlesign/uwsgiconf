@@ -44,6 +44,9 @@ class Section(SectionBase):
     caching = Options(Caching)  # type: Caching
     """Caching options group."""
 
+    empire = Options(Empire)  # type: Empire
+    """Emperor and vassals options group."""
+
     locks = Options(Locks)  # type: Locks
     """Locks options group."""
 
