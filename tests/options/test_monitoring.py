@@ -138,7 +138,7 @@ def test_monitoring_pushers(assert_lines):
         'stats-push = mongodb:collection=mycol,freq=10',
 
     ], monitoring.register_stats_pusher(
-        monitoring.pushers.mongo(collection='mycol', interval=10)
+        monitoring.pushers.mongo(collection='mycol', push_interval=10)
     ))
 
     monitoring = Section().monitoring
@@ -146,5 +146,5 @@ def test_monitoring_pushers(assert_lines):
         'stats-push = file:path=/here/a.json,freq=15',
 
     ], monitoring.register_stats_pusher(
-        monitoring.pushers.file('/here/a.json', interval=15)
+        monitoring.pushers.file('/here/a.json', push_interval=15)
     ))
