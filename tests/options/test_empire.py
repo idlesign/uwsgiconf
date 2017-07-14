@@ -5,7 +5,7 @@ def test_empire_basics(assert_lines):
 
     assert_lines([
         'emperor = /myvassals',
-    ], Section().empire.set_basic_params(vassals_home='/myvassals'))
+    ], Section().empire.set_emperor_params(vassals_home='/myvassals'))
 
     assert_lines([
         'imperial-monitor-list = true',

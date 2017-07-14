@@ -11,7 +11,7 @@ class Empire(OptionsGroup):
 
     """
 
-    def set_basic_params(
+    def set_emperor_params(
             self, vassals_home=None, name=None, scan_interval=None, pid_file=None, spawn_asap=None,
             stats_address=None, trigger_socket=None, links_no_follow=None):
         """
