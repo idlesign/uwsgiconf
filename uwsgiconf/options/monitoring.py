@@ -12,7 +12,7 @@ class Metric(ParametrizedValue):
 
     def __init__(
             self, name, oid=None, alias_for=None, collector=None,
-            initial_value=None, interval=None, reset_after_push=None):
+            initial_value=None, collect_interval=None, reset_after_push=None):
         """
 
         :param str|unicode name: Metric name.
@@ -31,7 +31,7 @@ class Metric(ParametrizedValue):
 
         :param int initial_value: Set the metric to a specific value on startup.
 
-        :param int interval:
+        :param int collect_interval:
 
         :param bool reset_after_push: Reset the metric to zero (or the configured initial_value)
             after it's been pushed.
@@ -54,7 +54,7 @@ class Metric(ParametrizedValue):
 
         value = make_key_val_string(
             filter_locals(locals(), drop=['name']),
-            aliases={'interval': 'freq', 'type_str': 'type', 'alias_for': 'alias'}
+            aliases={'collect_interval': 'freq', 'type_str': 'type', 'alias_for': 'alias'}
         )
 
         super(Metric, self).__init__(value)
@@ -147,13 +147,13 @@ class PusherRrdtool(Pusher):
         """
         super(PusherRrdtool, self).__init__(target_dir)
 
-    def set_basic_params(self, library=None, interval=None):
+    def set_basic_params(self, library=None, push_interval=None):
         """
         :param str|unicode library: Set the name of rrd library. Default: librrd.so.
 
-        :param int interval: Set collect frequency.
+        :param int push_interval: Set push frequency.
         """
-        self._set('rrdtool-freq', interval)
+        self._set('rrdtool-freq', push_interval)
         self._set('rrdtool-lib', library)
 
         return self
@@ -202,7 +202,7 @@ class PusherCarbon(Pusher):
         super(PusherCarbon, self).__init__(address)
 
     def set_basic_params(
-            self, id=None, root_node=None, interval=None, idle_avg_source=None,
+            self, id=None, root_node=None, push_interval=None, idle_avg_source=None,
             use_metrics=None, no_workers=None):
         """
 
@@ -210,7 +210,7 @@ class PusherCarbon(Pusher):
 
         :param str|unicode root_node: Set carbon metrics root node. Default: uwsgi.
 
-        :param int interval: Set carbon push frequency in seconds. Default: 60.
+        :param int push_interval: Set carbon push frequency in seconds. Default: 60.
 
         :param bool no_workers: Disable generation of single worker metrics.
 
@@ -230,7 +230,7 @@ class PusherCarbon(Pusher):
         """
         self._set('carbon-id', id)
         self._set('carbon-root', root_node)
-        self._set('carbon-freq', interval)
+        self._set('carbon-freq', push_interval)
         self._set('carbon-idle-avg', idle_avg_source)
         self._set('carbon-use-metrics', use_metrics, cast=bool)
         self._set('carbon-no-workers', no_workers, cast=bool)
@@ -293,15 +293,15 @@ class PusherMongo(Pusher):
     name = 'mongodb'
     plugin = 'stats_pusher_mongodb'
 
-    def __init__(self, address=None, collection=None, interval=None):
+    def __init__(self, address=None, collection=None, push_interval=None):
         """
         :param str|unicode address: Default: 127.0.0.1:27017
 
         :param str|unicode collection: MongoDB colection to write into. Default: uwsgi.statistics
 
-        :param int interval: Write interval in seconds.
+        :param int push_interval: Write interval in seconds.
         """
-        value = make_key_val_string(locals(), aliases={'interval': 'freq'})
+        value = make_key_val_string(locals(), aliases={'push_interval': 'freq'})
 
         super(PusherMongo, self).__init__(value)
 
@@ -315,15 +315,15 @@ class PusherFile(Pusher):
     name = 'file'
     plugin = 'stats_pusher_file'
 
-    def __init__(self, fpath=None, separator=None, interval=None):
+    def __init__(self, fpath=None, separator=None, push_interval=None):
         """
         :param str|unicode fpath: File path. Default: uwsgi.stats
 
         :param str|unicode separator: New entry separator. Default: \n\n
 
-        :param int interval: Write interval in seconds.
+        :param int push_interval: Write interval in seconds.
         """
-        value = make_key_val_string(locals(), aliases={'fpath': 'path', 'interval': 'freq'})
+        value = make_key_val_string(locals(), aliases={'fpath': 'path', 'push_interval': 'freq'})
 
         super(PusherFile, self).__init__(value)
 
@@ -585,7 +585,7 @@ class Monitoring(OptionsGroup):
 
         return self._section
 
-    def set_metrics_threshold(self, name, value, interval=None, reset_to=None, alarm=None, alarm_message=None):
+    def set_metrics_threshold(self, name, value, check_interval=None, reset_to=None, alarm=None, alarm_message=None):
         """Sets metric threshold parameters.
 
         :param str|unicode name: Metric name.
@@ -594,7 +594,7 @@ class Monitoring(OptionsGroup):
 
         :param int reset_to: Reset value to when threshold is reached.
 
-        :param int interval: Threshold check interval in seconds.
+        :param int check_interval: Threshold check interval in seconds.
 
         :param str|unicode|AlarmType alarm: Alarm to trigger when threshold is reached.
 
@@ -610,7 +610,7 @@ class Monitoring(OptionsGroup):
             aliases={
                 'name': 'key',
                 'reset_to': 'reset',
-                'interval': 'rate',
+                'check_interval': 'rate',
                 'alarm_message': 'msg',
             },
         )
@@ -621,7 +621,7 @@ class Monitoring(OptionsGroup):
 
     def set_stats_params(
             self, address=None, enable_http=None,
-            minify=None, no_cores=None, no_metrics=None, pusher_interval=None):
+            minify=None, no_cores=None, no_metrics=None, push_interval=None):
         """Enables stats server on the specified address.
 
         * http://uwsgi.readthedocs.io/en/latest/StatsServer.html
@@ -642,7 +642,7 @@ class Monitoring(OptionsGroup):
 
         :param bool no_metrics: Do not include metrics in stats output.
 
-        :param int pusher_interval: Set the default frequency of stats pushers in seconds/
+        :param int push_interval: Set the default frequency of stats pushers in seconds/
 
         """
         self._set('stats-server', address)
@@ -650,7 +650,7 @@ class Monitoring(OptionsGroup):
         self._set('stats-minified', minify, cast=bool)
         self._set('stats-no-cores', no_cores, cast=bool)
         self._set('stats-no-metrics', no_metrics, cast=bool)
-        self._set('stats-pusher-default-freq', pusher_interval)
+        self._set('stats-pusher-default-freq', push_interval)
 
         return self._section
 
