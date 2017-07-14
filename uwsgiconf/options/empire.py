@@ -93,7 +93,7 @@ class Empire(OptionsGroup):
         """Throttling options.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#throttling
-        * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html?#loyalty
+        * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#loyalty
 
         :param int level: Set throttling level (in milliseconds) for bad behaving vassals. Default: 1000.
 
