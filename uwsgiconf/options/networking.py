@@ -6,11 +6,14 @@ from ..utils import listify
 class Networking(OptionsGroup):
     """Networking related stuff. Socket definition, binding and tuning."""
     
-    class sockets(object):
+    class socket_types(object):
         """Available socket types to use with ``.register_socket()``."""
     
+        DEFAULT = 'default'
+        """Bind using default protocol. See ``default_protocol`` option."""
+
         UWSGI = 'uwsgi'
-    
+
         HTTP = 'http'
         """Bind to the specified socket using HTTP"""
     
@@ -65,7 +68,7 @@ class Networking(OptionsGroup):
         self._workers_binding = {}
         self._current_socket_idx = 0
 
-    def set_basic_params(self, queue_size=None, freebind=None):
+    def set_basic_params(self, queue_size=None, freebind=None, default_socket_type=None):
         """
 
         :param int queue_size: Every socket has an associated queue where request will be put waiting
@@ -79,9 +82,13 @@ class Networking(OptionsGroup):
 
             .. note:: Linux only.
 
+        :param str|unicode default_socket_type: Force the socket type as default.
+            See ``.socket_types``.
+
         """
         self._set('listen', queue_size)
         self._set('freebind', freebind, cast=bool)
+        self._set('socket-protocol', default_socket_type)
 
         return self._section
 
@@ -159,7 +166,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def register_socket(self, address='127.0.0.1:8000', type=sockets.HTTP, mode=None, bound_workers=None):
+    def register_socket(self, address='127.0.0.1:8000', type=socket_types.HTTP, mode=None, bound_workers=None):
         """Registers a socket.
 
         :param str address: Address to bind socket to.
@@ -185,7 +192,7 @@ class Networking(OptionsGroup):
         mode = mode or ''
 
         param_name = {
-            self.sockets.UWSGI: {
+            self.socket_types.UWSGI: {
                 self.modes.SSL: 'suwsgi-socket',
                 self.modes.PERSISTENT: 'puwsgi-socket',
 
@@ -194,21 +201,24 @@ class Networking(OptionsGroup):
             # socket-protocol = 0,uwsgi
             # socket-protocol = 3,uwsgidump
 
-            self.sockets.HTTP: 'https-socket' if mode == self.modes.SSL else 'http-socket',
+            self.socket_types.HTTP: 'https-socket' if mode == self.modes.SSL else 'http-socket',
 
-            self.sockets.HTTP11: 'http11-socket',
+            self.socket_types.HTTP11: 'http11-socket',
 
-            self.sockets.FASTCGI: 'fastcgi-nph-socket' if mode == self.modes.NPH else 'fastcgi-socket',
+            self.socket_types.FASTCGI: 'fastcgi-nph-socket' if mode == self.modes.NPH else 'fastcgi-socket',
 
-            self.sockets.SCGI: 'scgi-nph-socket' if mode == self.modes.NPH else 'scgi-socket',
+            self.socket_types.SCGI: 'scgi-nph-socket' if mode == self.modes.NPH else 'scgi-socket',
 
-            self.sockets.RAW: 'raw-socket',
+            self.socket_types.RAW: 'raw-socket',
 
-            self.sockets.SHARED: 'undeferred-shared-socket' if mode == self.modes.UNDEFERRED else 'shared-socket',
+            self.socket_types.SHARED: 'undeferred-shared-socket' if mode == self.modes.UNDEFERRED else 'shared-socket',
 
-            self.sockets.UDP: 'upd',
+            self.socket_types.UDP: 'upd',
 
-            self.sockets.ZERO_MQ: 'zeromq-socket',
+            self.socket_types.ZERO_MQ: 'zeromq-socket',
+
+            self.socket_types.DEFAULT: 'socket',
+
         }.get(type)
 
         if param_name is None:
