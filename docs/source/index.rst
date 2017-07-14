@@ -53,6 +53,7 @@ API
     grp_alarms
     grp_applications
     grp_caching
+    grp_empire
     grp_locks
     grp_logging
     grp_main_process
