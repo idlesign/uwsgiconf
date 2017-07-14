@@ -66,3 +66,24 @@ def test_mules(assert_lines):
     ]))
 
 
+def test_zergs(assert_lines):
+
+    assert_lines([
+        'zerg-server = /here',
+    ], Section().workers.set_zerg_server_params('/here'))
+
+    assert_lines([
+        'zergpool = /here:127.0.0.1:3031,127.0.0.1:3032',
+    ], Section().workers.set_zerg_server_params(
+        '/here', clients_socket_pool=['127.0.0.1:3031', '127.0.0.1:3032']))
+
+    assert_lines([
+        'zerg = /here',
+        'zerg = /there',
+        'zerg-fallback = true',
+        'socket = /here',
+        'socket = /there',
+
+    ], Section().workers.set_zerg_client_params(
+        ['/here', '/there'], use_fallback_socket=True
+    ))

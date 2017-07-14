@@ -1,4 +1,5 @@
 from ..base import OptionsGroup
+from ..utils import listify
 
 
 class MuleFarm(object):
@@ -348,3 +349,55 @@ class Workers(OptionsGroup):
         self._set('harakiri-no-arh', disable_for_arh)
 
         return self._section
+
+    def set_zerg_server_params(self, socket, clients_socket_pool=None):
+        """Zerg mode. Zerg server params.
+
+        When your site load is variable, it would be nice to be able to add
+        workers dynamically. Enabling Zerg mode you can allow zerg clients to attach
+        to your already running server and help it in the work.
+
+        * http://uwsgi-docs.readthedocs.io/en/latest/Zerg.html
+
+        :param str|unicode socket: Unix socket to bind server to.
+
+            Examples:
+                * unix socket - ``/var/run/mutalisk``
+                * Linux abstract namespace - ``@nydus``
+
+        :param str|unicode|list[str|unicode] clients_socket_pool: This enables Zerg Pools.
+
+            .. note:: Expects master process.
+
+            Accepts sockets that will be mapped to Zerg socket.
+
+            * http://uwsgi-docs.readthedocs.io/en/latest/Zerg.html#zerg-pools
+
+        """
+        if clients_socket_pool:
+            self._set('zergpool', '%s:%s' % (socket, ','.join(listify(clients_socket_pool))), multi=True)
+
+        else:
+            self._set('zerg-server', socket)
+
+        return self._section
+
+    def set_zerg_client_params(self, server_sockets, use_fallback_socket=None):
+        """Zerg mode. Zergs params.
+
+        :param str|unicode|list[str|unicode] server_sockets: Attaches zerg to a zerg server.
+
+        :param bool use_fallback_socket: Fallback to normal sockets if the zerg server is not available
+
+        """
+        self._set('zerg', server_sockets, multi=True)
+
+        if use_fallback_socket is not None:
+            self._set('zerg-fallback', use_fallback_socket, cast=bool)
+
+            for socket in listify(server_sockets):
+                self._section.networking.register_socket(socket, type=self._section.networking.socket_types.DEFAULT)
+
+
+        return self._section
+
