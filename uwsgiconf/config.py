@@ -217,7 +217,7 @@ class Section(SectionBase):
 
         return self
 
-    def print_out(self, value, indent=None, format_options=None, immediate=False):
+    def print_out(self, value, indent=None, format_options=None, asap=False):
         """Prints out the given value.
 
         :param value:
@@ -226,7 +226,7 @@ class Section(SectionBase):
 
         :param dict|str|unicode format_options: text color
 
-        :param bool immediate: Print as soon as possible.
+        :param bool asap: Print as soon as possible.
 
         """
         if indent is None:
@@ -244,7 +244,7 @@ class Section(SectionBase):
 
             text = format_print_text(text, **format_options)
 
-        command = 'iprint' if immediate else 'print'
+        command = 'iprint' if asap else 'print'
         self._set(command, text, multi=True)
 
         return self
@@ -309,7 +309,7 @@ class Section(SectionBase):
 
         return self
 
-    def env(self, key, value=None, unset=False, immediate=False):
+    def env(self, key, value=None, unset=False, asap=False):
         """Processes (sets/unsets) environment variable.
 
         If is not given in `set` mode value will be taken from current env.
@@ -320,7 +320,7 @@ class Section(SectionBase):
 
         :param bool unset: Whether to unset this variable.
 
-        :param bool immediate: If True env variable will be set as soon as possible.
+        :param bool asap: If True env variable will be set as soon as possible.
 
         """
         if unset:
@@ -329,7 +329,7 @@ class Section(SectionBase):
             if value is None:
                 value = os.environ.get(key)
 
-            self._set('%senv' % ('i' if immediate else ''), '%s=%s' % (key, value), multi=True)
+            self._set('%senv' % ('i' if asap else ''), '%s=%s' % (key, value), multi=True)
 
         return self
 
