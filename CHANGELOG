@@ -1,8 +1,13 @@
 uwsgiconf changelog
 ===================
 
+
+Unreleased
+----------
+* First public release.
+
+
 v0.1.0
 ------
 + Basic functionality.
-
 
