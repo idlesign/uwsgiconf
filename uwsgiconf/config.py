@@ -19,21 +19,24 @@ class Section(OptionsGroup):
         * alarms
         * caching
         * master_process
+        * workers
         * etc.
 
     Next to all public methods of groups are for setting configuration parameters.
     Such methods return section object to allow chaining.
-    Usually such methods setting parameters are named `set_***_params`.
 
-    You can pass options group basic parameters
-    not only into `set_basic_params` method but also into section initializer
-    using `params_` prefixed group name:
+    You can pass options group basic parameters into (the following are all the same):
 
-    .. code-block:: python
-        Section(
-            params_workers=dict(count=3, zombie_reaper=True),
-            params_master_process=dict(enable=True),
-        )
+        * ``set_basic_params()`` as in ``section.workers.set_basic_params(count=3)``
+
+        * ``__call__`` as in ``section.workers(count=3)``
+
+        * section initializer using `params_` prefixed group name:
+
+            .. code-block:: python
+                Section(
+                    params_workers=dict(count=3),
+                )
 
     """
     alarms = Options(Alarms)  # type: Alarms

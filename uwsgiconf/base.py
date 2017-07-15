@@ -75,7 +75,22 @@ class OptionsGroup(object):
     def __str__(self):
         return self._get_name()
 
+    def __call__(self, *args, **kwargs):
+        """The call is translated into ``set_basic_params``` call.
+
+        This approach is much more convenient yet IDE most probably won't
+        give you a hint on what arguments are accepted.
+
+        :param args:
+        :param kwargs:
+        :rtype: Section
+        """
+        return self.set_basic_params(*args, **kwargs)
+
     def set_basic_params(self, *args, **kwargs):
+        """
+        :rtype: Section
+        """
         return self._section
 
     def _set(self, key, value, condition=True, cast=None, multi=False):

@@ -29,6 +29,9 @@ def test_section_basics(ini, assert_lines):
 
     assert_lines('plugins-list = true', Section().print_plugins())
 
+    # __call__ -> set_basic_params
+    assert_lines('workers = 10', Section().workers(count=10))
+
     # bogus basic params handling. test for no error
     Section(
         params_networking=None,
