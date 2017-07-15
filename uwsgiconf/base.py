@@ -24,7 +24,13 @@ class Options(object):
         """
         key = self.opt_type.__name__
 
-        options_obj = section._options_objects.get(key)
+        try:
+            options_obj = section._options_objects.get(key)
+
+        except AttributeError:
+            # Allow easy access to option group static params:
+            # Section.networking.socket_types.DEFAULT
+            return self.opt_type
 
         if not options_obj:
             options_obj = self.opt_type(_section=section)
