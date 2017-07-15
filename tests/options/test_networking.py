@@ -25,10 +25,12 @@ def test_networking_basics(assert_lines):
     assert_lines([
         'http-socket = :8080',
         'map-socket = 0:1',
-    ], Section().networking.register_socket(address=':8080', bound_workers=1))
+    ], Section().networking.register_socket(
+        address=':8080', type=Section.networking.socket_types.HTTP,
+        bound_workers=1))
 
     assert_lines([
-        'http-socket = :8000',
+        'socket = :8000',
         'map-socket = 0:2,3',
     ], Section().networking.register_socket(address=':8000', bound_workers=[2, 3]))
 
@@ -40,9 +42,9 @@ def test_networking_basics(assert_lines):
 
     # batch socket registration
     assert_lines([
-        'http-socket = :8001',
-        'http-socket = :8002',
-        'http-socket = :8003',
+        'socket = :8001',
+        'socket = :8002',
+        'socket = :8003',
 
     ], Section().networking.register_sockets(
         dict(address=':8001'),

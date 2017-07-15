@@ -166,7 +166,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def register_socket(self, address='127.0.0.1:8000', type=socket_types.HTTP, mode=None, bound_workers=None):
+    def register_socket(self, address, type=socket_types.DEFAULT, mode=None, bound_workers=None):
         """Registers a socket.
 
         :param str address: Address to bind socket to.
