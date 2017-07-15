@@ -1,2 +1,3 @@
 [run]
 source = uwsgiconf/
+omit = uwsgiconf/cli.py
