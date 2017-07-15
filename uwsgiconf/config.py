@@ -1,4 +1,5 @@
 import os
+from copy import deepcopy
 from datetime import datetime
 from collections import OrderedDict
 from functools import partial
@@ -349,6 +350,23 @@ class Section(SectionBase):
 
         return self
 
+    @classmethod
+    def derive_from(cls, section, name=None):
+        """Creates a new section based on the given.
+
+        :param Section section: Section to derive from,
+
+        :param str|unicode name: New section name.
+
+        :rtype: Section
+        """
+        new_section = deepcopy(section)
+
+        if name:
+            new_section.name = name
+
+        return new_section
+
 
 class Configuration(object):
     """
@@ -357,7 +375,7 @@ class Configuration(object):
 
     """
 
-    def __init__(self, sections=None, autoinclude_sections=True):
+    def __init__(self, sections=None, autoinclude_sections=False):
         """
 
         :param list[Section] sections: If not provided, empty section

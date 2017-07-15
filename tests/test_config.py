@@ -65,6 +65,34 @@ def test_section_include(assert_lines):
     assert_lines('ini = :here', Section().include(Section(name='here')))
 
 
+def test_section_derive_from(assert_lines):
+    sec_base = Section(name='mine').workers.set_basic_params(count=3)
+
+    assert_lines([
+        '[mine]',
+        'workers = 3',
+    ], sec_base)
+
+    sec1 = (
+        Section.derive_from(sec_base).
+            workers.set_basic_params(count=4).master_process.set_basic_params(enabled=True))
+
+    sec2 = (
+        Section.derive_from(sec_base, name='other').
+            workers.set_thread_params(enable_threads=True))
+
+    assert_lines([
+        '[mine]',
+        'workers = 4',
+    ], sec1)
+
+    assert_lines([
+        '[other]',
+        'workers = 3',
+        'enable-threads = true',
+    ], sec2)
+
+
 def test_section_plugins(assert_lines):
 
     assert_lines([
@@ -107,7 +135,6 @@ def test_configuration(capsys, assert_lines):
 
     s2.name = 'another'
 
+    assert 'ini = :another' in Configuration([s1, s2], autoinclude_sections=True).format()
+
     assert Configuration([s1, s2]).print_ini()
-
-
-
