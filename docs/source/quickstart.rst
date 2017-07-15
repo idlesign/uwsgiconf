@@ -40,7 +40,9 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
         wsgi_module='myapp.wsgi',
 
     ).networking.register_socket(
-        address='127.0.0.1:8000'
+        # Make app available at http://127.0.0.1:8000
+        address='127.0.0.1:8000',
+        type=PythonSection.networking.socket_types.HTTP,
 
     ).as_configuration().print_ini()
 
