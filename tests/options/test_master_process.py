@@ -8,7 +8,7 @@ def test_master_process_basics(assert_lines):
 
     assert_lines([
         'master = true',
-    ], Section().master_process.set_basic_params(enabled=True))
+    ], Section().master_process.set_basic_params(enable=True))
 
     assert_lines([
         'reload-mercy = 10',

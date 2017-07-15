@@ -127,10 +127,10 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_thread_params(
-            self, enable_threads=None, count=None, count_offload=None, stack_size=None, no_wait=None):
+            self, enable=None, count=None, count_offload=None, stack_size=None, no_wait=None):
         """Sets threads related params.
 
-        :param bool enable_threads: Enable threads in the embedded languages.
+        :param bool enable: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
             Threads will simply *not work* if this option is not enabled. There will likely be no error,
             just no execution of your thread code.
@@ -156,7 +156,7 @@ class Workers(OptionsGroup):
         :param bool no_wait: Do not wait for threads cancellation on quit/reload.
 
         """
-        self._set('enable-threads', enable_threads, cast=bool)
+        self._set('enable-threads', enable, cast=bool)
         self._set('no-threads-wait', no_wait, cast=bool)
         self._set('threads', count)
         self._set('offload-threads', count_offload)

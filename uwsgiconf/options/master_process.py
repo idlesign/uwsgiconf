@@ -15,11 +15,11 @@ class MasterProcess(OptionsGroup):
     """
 
     def set_basic_params(
-            self, enabled=None, name=None, no_orphans=None, as_root=None,
+            self, enable=None, name=None, no_orphans=None, as_root=None,
             subproc_check_interval=None):
         """
 
-        :param bool enabled: Enable uWSGI master process.
+        :param bool enable: Enable uWSGI master process.
 
         :param str|unicode master_enabled: Set master process name to given value.
 
@@ -33,7 +33,7 @@ class MasterProcess(OptionsGroup):
             .. warning:: You can increase this time if you need to, but it's DISCOURAGED.
 
         """
-        self._set('master', enabled, cast=bool)
+        self._set('master', enable, cast=bool)
         self._set('procname-master', name)
         self._set('no-orphans', no_orphans)
         self._set('master-as-root', as_root)

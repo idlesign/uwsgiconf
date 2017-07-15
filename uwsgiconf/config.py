@@ -32,7 +32,7 @@ class Section(SectionBase):
     .. code-block:: python
         Section(
             params_workers=dict(count=3, zombie_reaper=True),
-            params_master_process=dict(enabled=True),
+            params_master_process=dict(enable=True),
         )
 
     """

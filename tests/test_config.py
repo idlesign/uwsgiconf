@@ -75,11 +75,11 @@ def test_section_derive_from(assert_lines):
 
     sec1 = (
         Section.derive_from(sec_base).
-            workers.set_basic_params(count=4).master_process.set_basic_params(enabled=True))
+            workers.set_basic_params(count=4).master_process.set_basic_params(enable=True))
 
     sec2 = (
         Section.derive_from(sec_base, name='other').
-            workers.set_thread_params(enable_threads=True))
+            workers.set_thread_params(enable=True))
 
     assert_lines([
         '[mine]',

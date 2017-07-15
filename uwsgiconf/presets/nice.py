@@ -34,7 +34,7 @@ class Section(_Section):
         self.workers.set_mules_params(mules=mules)
         self.main_process.set_basic_params(vacuum=True)
         self.main_process.set_naming_params(autonaming=True)
-        self.master_process.set_basic_params(enabled=True)
+        self.master_process.set_basic_params(enable=True)
         self.locks.set_basic_params(thunder_lock=True)
 
 
