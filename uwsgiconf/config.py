@@ -4,14 +4,14 @@ from datetime import datetime
 from collections import OrderedDict
 from functools import partial
 
-from .base import SectionBase, Options
+from .base import Options, OptionsGroup
 from .options import *
 from .formatters import IniFormatter, format_print_text
 from .exceptions import ConfigurationError
 from .utils import listify
 
 
-class Section(SectionBase):
+class Section(OptionsGroup):
     """Configuration section.
 
     Options within configuration section are gathered into groups:
@@ -168,7 +168,7 @@ class Section(SectionBase):
 
             return OrderedDict(descriptions)
 
-    def __init__(self, strict_config=None, name=None, style_prints=False, **kwargs):
+    def __init__(self, name=None, strict_config=None, style_prints=False, **kwargs):
         """
 
         :param bool strict_config: Enable strict configuration parsing.
@@ -186,7 +186,16 @@ class Section(SectionBase):
         self._style_prints = style_prints
         self._plugins = []
 
-        super(Section, self).__init__(name=name or 'uwsgi', strict_config=strict_config, **kwargs)
+        self._section = self
+        self._options_objects = OrderedDict()
+        self._opts = OrderedDict()
+
+        self.name = name or 'uwsgi'
+
+        super(Section, self).__init__(**kwargs)
+
+        self._set_basic_params_from_dict(kwargs)
+        self.set_basic_params(strict_config=strict_config)
 
     def set_basic_params(self, strict_config=None, **kwargs):
 
@@ -366,6 +375,28 @@ class Section(SectionBase):
             new_section.name = name
 
         return new_section
+
+    def _set_basic_params_from_dict(self, src_dict):
+
+        for key, value in src_dict.items():
+            if not key.startswith('params_') or not value:
+                continue
+
+            group_attr_name = key.replace('params_', '')
+            options_group = getattr(self, group_attr_name, None)  # type: OptionsGroup
+
+            if options_group is not None:
+                options_group.set_basic_params(**value)
+
+    def _get_options(self):
+        options = []
+
+        for name, val in self._section._opts.items():
+
+            for val_ in listify(val):
+                options.append((name, val_))
+
+        return options
 
 
 class Configuration(object):
