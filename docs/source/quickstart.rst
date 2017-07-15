@@ -31,7 +31,7 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
         # Reload uWSGI when this file is updated.
         touch_reload=__file__,
 
-        basic_params_python=dict(
+        python_params=dict(
             python_home='/home/idle/venv/',
             search_path='/home/idle/apps/',
         ),

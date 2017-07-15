@@ -176,10 +176,10 @@ class SectionBase(OptionsGroup):
     def _set_basic_params_from_dict(self, src_dict):
 
         for key, value in src_dict.items():
-            if not key.startswith('basic_params_') or not value:
+            if not key.startswith('params_') or not value:
                 continue
 
-            group_attr_name = key.replace('basic_params_', '')
+            group_attr_name = key.replace('params_', '')
             options_group = getattr(self, group_attr_name, None)  # type: OptionsGroup
 
             if options_group is not None:

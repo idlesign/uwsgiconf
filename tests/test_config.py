@@ -31,8 +31,8 @@ def test_section_basics(ini, assert_lines):
 
     # bogus basic params handling. test for no error
     Section(
-        basic_params_networking=None,
-        basic_params_nonexistent={'a': 'b'},
+        params_networking=None,
+        params_nonexistent={'a': 'b'},
         dummy_key=1,
     )
 
@@ -81,7 +81,7 @@ def test_plugin_init(assert_lines):
     assert_lines([
         'plugin = python34',
 
-    ], Section(basic_params_python={'version': 34, 'python_home': '/here'}))
+    ], Section(params_python={'version': 34, 'python_home': '/here'}))
 
 
 def test_configuration(capsys, assert_lines):
@@ -90,7 +90,7 @@ def test_configuration(capsys, assert_lines):
     assert_lines([
         'workers = 33',
 
-    ], Section(basic_params_workers=dict(count=33)))
+    ], Section(params_workers=dict(count=33)))
 
     s1 = Section()
     s2 = 'some'

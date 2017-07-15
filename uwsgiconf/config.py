@@ -25,13 +25,13 @@ class Section(SectionBase):
     Usually such methods setting parameters are named `set_***_params`.
 
     You can pass options group basic parameters
-    not only into `set_basic_params` method by also into section initializer
-    using `basic_params_` prefixed group name:
+    not only into `set_basic_params` method but also into section initializer
+    using `params_` prefixed group name:
 
     .. code-block:: python
         Section(
-            basic_params_workers=dict(count=3, zombie_reaper=True),
-            basic_params_master_process=dict(enabled=True),
+            params_workers=dict(count=3, zombie_reaper=True),
+            params_master_process=dict(enabled=True),
         )
 
     """
