@@ -48,6 +48,9 @@ class Section(OptionsGroup):
     caching = Options(Caching)  # type: Caching
     """Caching options group."""
 
+    cheapening = Options(Cheapening)  # type: Cheapening
+    """Cheapening options group."""
+
     empire = Options(Empire)  # type: Empire
     """Emperor and vassals options group."""
 

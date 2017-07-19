@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Cheapening options group described.
+
+
 v0.1.1
 ------
 * First public release.

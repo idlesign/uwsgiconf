@@ -87,3 +87,40 @@ def test_zergs(assert_lines):
     ], Section().workers.set_zerg_client_params(
         ['/here', '/there'], use_fallback_socket=True
     ))
+
+
+def test_cheapening(assert_lines):
+
+    assert_lines([
+        'cheaper-algo = manual',
+    ], Section().cheapening.set_basic_params(cheaper_algorithm=Section.cheapening.algorithms.MANUAL))
+
+    assert_lines([
+        'cheaper-overload = 20',
+    ], Section().cheapening.set_algo_spare_params(check_interval_overload=20))
+
+    assert_lines([
+        'cheaper-idle = 10',
+    ], Section().cheapening.set_algo_spare2_params(check_interval_idle=10))
+
+    assert_lines([
+        'cheaper-overload = 30',
+    ], Section().cheapening.set_algo_backlog_params(check_num_overload=30))
+
+    assert_lines([
+        'plugin = cheaper_busyness',
+        'cheaper-busyness-max = 25',
+    ], Section().cheapening.set_algo_busyness_params(busy_max=25))
+
+    assert_lines([
+        'plugin = cheaper_busyness',
+        'cheaper-busyness-backlog-step = 3',
+    ], Section().cheapening.set_algo_busyness_emergency_params(workers_step=3))
+
+    assert_lines([
+        'cheaper-rss-limit-soft = 1024',
+    ], Section().cheapening.set_memory_limits(rss_soft=1024))
+
+    assert_lines([
+        'cheaper-algo-list = true',
+    ], Section().cheapening.print_alorithms())

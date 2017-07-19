@@ -11,4 +11,4 @@ from .networking import Networking
 from .python import Python
 from .queue import Queue
 from .spooler import Spooler
-from .workers import Workers
+from .workers import Workers, Cheapening
