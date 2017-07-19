@@ -6,7 +6,7 @@ Strategies
 
 Two main strategies to use **uwsgiconf**:
 
-1. **Static:** create configuration .py and compile in on demand into classic uWSGI .ini.
+1. **Static:** create configuration .py and compile it on demand into classic uWSGI .ini using provided methods.
 2. **Dynamic:** create configuration .py, make it executable and give it directly to uWSGI
 
   .. code-block:: bash
