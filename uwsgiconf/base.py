@@ -93,14 +93,17 @@ class OptionsGroup(object):
         """
         return self._section
 
-    def _set(self, key, value, condition=True, cast=None, multi=False):
+    def _set(self, key, value, condition=True, cast=None, multi=False, plugin=None):
+
+        def set_plugin(plugin):
+            self._section.set_plugins_params(plugins=plugin)
 
         def handle_plugin_required(val):
 
             if isinstance(val, ParametrizedValue):
                 if val.plugin:
                     # Automatic plugin activation.
-                    self._section.set_plugins_params(plugins=val.plugin)
+                    set_plugin(val.plugin)
 
                 if val._opts:
                     opts.update(val._opts)
@@ -126,7 +129,10 @@ class OptionsGroup(object):
 
             if self.plugin is True:
                 # Automatic plugin activation when option from it is used.
-                self._section.set_plugins_params(plugins=[self])
+                set_plugin(self)
+
+            if plugin:
+                set_plugin(plugin)
 
             if multi:
                 values = []
