@@ -28,7 +28,7 @@ Description
 
 *Configure uWSGI from your Python code*
 
-If you think you known uWSGI you're probably wrong. It is always more than you think it is.
+If you think you know uWSGI you're probably wrong. It is always more than you think it is.
 There are so many subsystems and options_ (800+) it is difficult to even try to wrap your mind around.
 
 .. _options: http://uwsgi-docs.readthedocs.io/en/latest/Options.html
@@ -51,7 +51,7 @@ Strategies
 
 Two main strategies to use **uwsgiconf**:
 
-1. **Static:** create configuration .py and compile in on demand into classic uWSGI .ini.
+1. **Static:** create configuration .py and compile it on demand into classic uWSGI .ini using provided methods.
 2. **Dynamic:** create configuration .py, make it executable and give it directly to uWSGI
 
   .. code-block:: bash
