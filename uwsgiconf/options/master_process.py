@@ -16,7 +16,7 @@ class MasterProcess(OptionsGroup):
 
     def set_basic_params(
             self, enable=None, name=None, no_orphans=None, as_root=None,
-            subproc_check_interval=None):
+            subproc_check_interval=None, fifo_file=None):
         """
 
         :param bool enable: Enable uWSGI master process.
@@ -32,12 +32,24 @@ class MasterProcess(OptionsGroup):
 
             .. warning:: You can increase this time if you need to, but it's DISCOURAGED.
 
+        :param str|unicode fifo_file: Enables the master FIFO.
+
+            Instead of signals, you can tell the master to create a UNIX named pipe (FIFO)
+            that you may use to issue commands to the master.
+
+            Up to 10 different FIFO files supported. By default the first specified is bound (mapped as '0').
+
+            * http://uwsgi.readthedocs.io/en/latest/MasterFIFO.html#the-master-fifo
+
+            .. note:: Since 1.9.17
+
         """
         self._set('master', enable, cast=bool)
         self._set('procname-master', name)
         self._set('no-orphans', no_orphans)
         self._set('master-as-root', as_root)
         self._set('check-interval', subproc_check_interval)
+        self._set('master-fifo', fifo_file, multi=True)
 
         return self._section
 
