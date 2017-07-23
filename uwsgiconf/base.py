@@ -135,7 +135,7 @@ class OptionsGroup(object):
                 set_plugin(plugin)
 
             if isinstance(value, tuple):  # Tuple - expect ParametrizedValue.
-                map(handle_plugin_required, value)
+                list(map(handle_plugin_required, value))
                 value = ' '.join(map(str, value))
 
             if multi:
