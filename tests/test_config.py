@@ -9,7 +9,7 @@ def test_section_basics(ini, assert_lines):
 
     my_section = Section()
 
-    assert_lines('automatically generated', my_section)
+    assert_lines('automatically generated', my_section, stamp=True)
 
     my_section.set_basic_params(strict_config=True)
 

@@ -61,6 +61,7 @@ API
     grp_monitoring
     grp_networking
     grp_queue
+    grp_routing
     grp_spooler
     grp_workers
     grp_python

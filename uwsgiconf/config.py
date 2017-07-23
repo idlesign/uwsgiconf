@@ -75,6 +75,9 @@ class Section(OptionsGroup):
     queue = Options(Queue)  # type: Queue
     """Queue options group."""
 
+    routing = Options(Routing)  # type: Routing
+    """Routing related options group."""
+
     spooler = Options(Spooler)  # type: Spooler
     """Spooler options group."""
 

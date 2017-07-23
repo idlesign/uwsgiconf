@@ -4,8 +4,8 @@ import pytest
 @pytest.fixture(scope='session')
 def ini():
 
-    def wrapped(section):
-        return section.as_configuration().format()
+    def wrapped(section, stamp):
+        return section.as_configuration().format(stamp=stamp)
 
     return wrapped
 
@@ -13,8 +13,8 @@ def ini():
 @pytest.fixture(scope='session')
 def assert_lines(ini):
 
-    def wrapped(lines, source, assert_in=True):
-        source = ini(source)
+    def wrapped(lines, source, assert_in=True, stamp=False):
+        source = ini(source, stamp)
 
         if not isinstance(lines, list):
             lines = [lines]

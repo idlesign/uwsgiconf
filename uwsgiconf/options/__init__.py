@@ -10,5 +10,6 @@ from .monitoring import Monitoring
 from .networking import Networking
 from .python import Python
 from .queue import Queue
+from .routing import Routing
 from .spooler import Spooler
 from .workers import Workers, Cheapening
