@@ -73,16 +73,10 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
 
 
     PythonSection(
-        # Reload uWSGI when this file is updated.
+        # Reload uWSGI when this file is touched/updated.
         touch_reload=__file__,
-
-        params_python=dict(
-            python_home='/home/idle/venv/',
-            search_path='/home/idle/apps/',
-        ),
-
-        # Load wsgi.py module from myapp package.
-        wsgi_module='myapp.wsgi',
+        # Load wsgi.py module containing WSGI application.
+        wsgi_module='/home/idle/myapp/wsgi.py',
 
     ).networking.register_socket(
         # Make app available at http://127.0.0.1:8000

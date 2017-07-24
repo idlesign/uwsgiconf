@@ -32,6 +32,7 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
         touch_reload=__file__,
 
         python_params=dict(
+            # We'll run our app using virtualenv.
             python_home='/home/idle/venv/',
             search_path='/home/idle/apps/',
         ),
