@@ -54,7 +54,7 @@ class Applications(OptionsGroup):
             * .mount('the_app3', 'app3.py')
             * .mount('/pinax/here', '/var/www/pinax/deploy/pinax.wsgi')
 
-        http://uwsgi-docs.readthedocs.io/en/latest/Nginx.html?highlight=mount#hosting-multiple-apps-in-the-same-process-aka-managing-script-name-and-path-info
+        * http://uwsgi-docs.readthedocs.io/en/latest/Nginx.html#hosting-multiple-apps-in-the-same-process-aka-managing-script-name-and-path-info
 
         :param str|unicode mountpoint: Host name, URL part, etc.
 
