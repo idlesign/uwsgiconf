@@ -41,7 +41,7 @@ def test_routing_rules(assert_lines):
 
     ], Section().routing.register_route(
         rule(
-            rule.actions.change_dir('/here'),
+            rule.actions.dir_change('/here'),
             ~rule.subjects.custom(rule.vars.request('PATH_INFO')).eq('/bad'))
     ))
 
@@ -285,7 +285,7 @@ def test_routing_actions(assert_lines):
         'route-run = chdir:/here',
 
     ], Section().routing.register_route([
-        rule(rule.actions.change_dir('/here'), subject=None),
+        rule(rule.actions.dir_change('/here'), subject=None),
     ]))
 
     assert_lines([
@@ -329,7 +329,7 @@ def test_routing_actions(assert_lines):
 
     assert_lines(
         'route-run = seturi:http://there',
-        Section().routing.register_route(rule(rule.actions.set_var_requet_uri('http://there'), subject=None))
+        Section().routing.register_route(rule(rule.actions.set_var_request_uri('http://there'), subject=None))
     )
 
     assert_lines(

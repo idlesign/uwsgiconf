@@ -14,9 +14,655 @@ class Var(object):
         return self.tpl % self._name
 
 
-class Action(ParametrizedValue):
+class RouteAction(ParametrizedValue):
 
     pass
+
+
+class ActionFlush(RouteAction):
+    """Send the current contents of the transformation buffer
+    to the client (without clearing the buffer).
+
+    * http://uwsgi.readthedocs.io/en/latest/Transformations.html#flushing-magic
+
+    """
+    name = 'flush'
+
+    def __init__(self):
+        super(ActionFlush, self).__init__()
+
+
+class ActionGzip(RouteAction):
+    """Encodes the response buffer to gzip."""
+
+    name = 'gzip'
+    plugin = 'transformation_gzip'
+
+    def __init__(self):
+        super(ActionGzip, self).__init__()
+
+
+class ActionToFile(RouteAction):
+    """Used for caching a response buffer into a static file."""
+
+    name = 'tofile'
+    plugin = 'transformation_tofile'
+
+    def __init__(self, filename, mode=None):
+        arg = make_key_val_string(locals())
+        super(ActionToFile, self).__init__(arg)
+
+
+class ActionUpper(RouteAction):
+    """Transforms each character in uppercase.
+
+    Mainly as an example of transformation plugin.
+
+    """
+    name = 'toupper'
+    plugin = 'transformation_toupper'
+
+    def __init__(self):
+        super(ActionUpper, self).__init__()
+
+
+class ActionChunked(RouteAction):
+    """Encodes the output in HTTP chunked."""
+
+    name = 'chunked'
+
+    def __init__(self):
+        super(ActionChunked, self).__init__()
+
+
+class ActionTemplate(RouteAction):
+    """Allows using a template file to expose everything
+    from internal routing system into it.
+
+    * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.19.html#the-template-transformation
+
+    """
+    name = 'template'
+
+    def __init__(self):
+        super(ActionTemplate, self).__init__()
+
+
+class ActionFixContentLen(RouteAction):
+    """Fixes Content-length header."""
+
+    name = 'fixcl'
+
+    def __init__(self, add_header=False):
+        """
+        :param bool add_header: Force header add instead of plain fix of existing header.
+        """
+        if add_header:
+            self.name = 'forcexcl'
+
+        super(ActionFixContentLen, self).__init__()
+
+
+class ActionDoContinue(RouteAction):
+    """Stop scanning the internal routing table
+    and continue to the selected request handler.
+
+    """
+    name = 'continue'
+
+    def __init__(self):
+        super(ActionDoContinue, self).__init__()
+
+
+class ActionDoBreak(RouteAction):
+    """Stop scanning the internal routing table and close the request."""
+
+    name = 'break'
+
+    def __init__(self, code, return_body=False):
+        """
+        :param int code: HTTP code
+
+        :param return_body: Uses uWSGI's built-in status code and returns
+            both status code and message body.
+
+        """
+        if return_body:
+            self.name = 'return'
+
+        super(ActionDoBreak, self).__init__(code)
+
+
+class ActionLog(RouteAction):
+    """Print the specified message in the logs or
+    do not log a request is ``message`` is ``None``.
+
+    """
+    name = 'log'
+
+    def __init__(self, message):
+        """
+
+        :param str|unicode|None message: Message to add into log.
+            If ``None`` logging will be disabled for this request.
+
+        """
+        if message is None:
+            self.name = 'donotlog'
+
+        super(ActionLog, self).__init__(message)
+
+
+class ActionOffloadOff(RouteAction):
+    """Do not use offloading."""
+
+    name = 'donotoffload'
+
+    def __init__(self):
+        super(ActionOffloadOff, self).__init__()
+
+
+class ActionAddVarLog(RouteAction):
+    """Add the specified logvar."""
+
+    name = 'logvar'
+
+    def __init__(self, name, val):
+        """
+        :param str|unicode name: Variable name.
+
+        :param val: Variable value.
+        """
+        super(ActionAddVarLog, self).__init__(name, val)
+
+
+class ActionDoGoto(RouteAction):
+    """Make a forward jump to the specified label or rule position."""
+
+    name = 'goto'
+
+    def __init__(self, where):
+        """
+        :param str|unicode|int where: Rule number of label to go to.
+        """
+        super(ActionDoGoto, self).__init__(where)
+
+
+class ActionAddVarCgi(RouteAction):
+    """Add the specified CGI (environment) variable to the request."""
+
+    name = 'addvar'
+
+    def __init__(self, name, val):
+        """
+        :param str|unicode name: Variable name.
+
+        :param val: Variable value.
+        """
+        super(ActionAddVarCgi, self).__init__(name, val)
+
+
+class ActionHeaderAdd(RouteAction):
+    """Add the specified HTTP header to the response."""
+
+    name = 'addheader'
+
+    def __init__(self, name, val):
+        """
+        :param str|unicode name: Header name.
+
+        :param val: Header value.
+        """
+        name += ':'
+
+        super(ActionHeaderAdd, self).__init__(name, val)
+
+
+class ActionHeaderRemove(RouteAction):
+    """Remove the specified HTTP header from the response."""
+
+    name = 'delheader'
+
+    def __init__(self, name):
+        """
+        :param str|unicode name: Header name.
+        """
+        super(ActionHeaderRemove, self).__init__(name)
+
+
+class ActionHeadersOff(RouteAction):
+    """Disable headers."""
+
+    name = 'disableheaders'
+
+    def __init__(self):
+        super(ActionHeadersOff, self).__init__()
+
+
+class ActionHeadersReset(RouteAction):
+    """Clear the response headers, setting a new HTTP status code,
+    useful for resetting a response.
+
+    """
+    name = 'clearheaders'
+
+    def __init__(self, code):
+        """
+        :param int code: HTTP code.
+        """
+        super(ActionHeadersReset, self).__init__(code)
+
+
+class ActionSignal(RouteAction):
+    """Raise the specified uwsgi signal."""
+
+    name = 'signal'
+
+    def __init__(self, num):
+        """
+        :param int num: Signal number.
+        """
+        super(ActionSignal, self).__init__(num)
+
+
+class ActionSend(RouteAction):
+    """Extremely advanced (and dangerous) function allowing you
+    to add raw data to the response.
+
+    """
+    name = 'send'
+
+    def __init__(self, data, crnl=False):
+        """
+        :param data: Data to add to response.
+        :param bool crnl: Add carriage return and new line.
+        """
+        if crnl:
+            self.name = 'send-crnl'
+        super(ActionSend, self).__init__(data)
+
+
+class ActionRedirect(RouteAction):
+    """Return a HTTP 301/302 Redirect to the specified URL."""
+
+    name = 'redirect-302'
+    plugin = 'router_redirect'
+
+    def __init__(self, url, permanent=False):
+        """
+        :param str| unicode url: URL to redirect to.
+        :param bool permanent: If ``True`` use 301, otherwise 302.
+        """
+        if permanent:
+            self.name = 'redirect-301'
+
+        super(ActionRedirect, self).__init__(url)
+
+
+class ActionRewrite(RouteAction):
+    """A rewriting engine inspired by Apache mod_rewrite.
+
+    Rebuild PATH_INFO and QUERY_STRING according to the specified rules
+    before the request is dispatched to the request handler.
+
+    """
+    name = 'rewrite'
+    plugin = 'router_rewrite'
+
+    def __init__(self, rule, do_continue=False):
+        """
+        :param str|unicode rule: A rewrite rule.
+
+        :param bool do_continue: Stop request processing
+            and continue to the selected request handler.
+
+        """
+        if do_continue:
+            self.name = 'rewrite-last'
+
+        super(ActionRewrite, self).__init__(rule)
+
+
+class ActionRouteUwsgi(RouteAction):
+    """Rewrite the modifier1, modifier2 and optionally UWSGI_APPID values of a request
+    or route the request to an external uwsgi server.
+
+    """
+    name = 'uwsgi'
+    plugin = 'router_uwsgi'
+    args_joiner = ','
+
+    def __init__(self, external_address='', mod1='', mod2='', app=''):
+        """
+        :param str|unicode external_address: External uWSGI server address (host:port).
+        :param str|unicode mod1: Set modifier 1.
+        :param str|unicode mod2: Set modifier 2.
+        :param str|unicode app: Set ``UWSGI_APPID``.
+        """
+        super(ActionRouteUwsgi, self).__init__(external_address, mod1, mod2, app)
+
+
+class ActionRouteExternal(RouteAction):
+    """Route the request to an external HTTP server."""
+
+    name = 'http'
+    plugin = 'router_http'
+    args_joiner = ','
+
+    def __init__(self, address, host_header=None):
+        """
+        :param str|unicode address: External HTTP address (host:port)
+
+        :param str|unicode host_header: HOST header value.
+        """
+        super(ActionRouteExternal, self).__init__(address, host_header)
+
+
+class ActionAlarm(RouteAction):
+    """Triggers an alarm.
+
+    * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#the-alarm-routing-action
+
+    """
+    name = 'alarm'
+
+    def __init__(self, name, message):
+        """
+        :param str|unicode name: Alarm name
+
+        :param str|unicode message: Message to pass into alarm.
+        """
+        super(ActionAlarm, self).__init__(name, message)
+
+
+class ActionServeStatic(RouteAction):
+    """Serve a static file from the specified physical path."""
+
+    name = 'static'
+    plugin = 'router_static'
+
+    def __init__(self, fpath):
+        """
+        :param str|unicode fpath: Static file path.
+        """
+        super(ActionServeStatic, self).__init__(fpath)
+
+
+class ActionAuthBasic(RouteAction):
+    """Use Basic HTTP Auth."""
+
+    name = 'basicauth'
+    plugin = 'router_basicauth'
+    args_joiner = ','
+
+    def __init__(self, realm, user=None, password=None, do_next=False):
+        """
+        :param str|unicode realm:
+
+        :param str|unicode user:
+
+        :param str|unicode password: Password or htpasswd-like file.
+
+        :param bool do_next: Allow next rule.
+        """
+        if do_next:
+            self.name = 'basicauth-next'
+
+        user_password = []
+
+        if user:
+            user += ':'
+            user_password.append(user)
+
+        if password:
+            user_password.append(password)
+
+        super(ActionAuthBasic, self).__init__(realm, ''.join(user_password) if user_password else None)
+
+
+class AuthLdap(RouteAction):
+    """Use Basic HTTP Auth."""
+
+    name = 'ldapauth'
+    plugin = 'ldap'
+    args_joiner = ','
+
+    def __init__(
+            self, realm, address, base_dn=None, bind_dn=None, bind_password=None,
+            filter=None, login_attr=None, log_level=None,
+            do_next=False):
+        """
+
+        :param str|unicode realm:
+
+        :param str|unicode address: LDAP server URI
+
+        :param str|unicode base_dn: Base DN used when searching for users.
+
+        :param str|unicode bind_dn: DN used for binding.
+            Required if the LDAP server does not allow anonymous searches.
+
+        :param str|unicode bind_password: Password for the ``bind_dn`` user.
+
+        :param str|unicode filter: Filter used when searching for users. Default: ``(objectClass=*)``
+
+        :param str|unicode login_attr: LDAP attribute that holds user login. Default: ``uid``.
+
+        :param str|unicode log_level: Log level.
+
+            Supported values:
+                * 0 - don't log any binds
+                * 1 - log authentication errors,
+                * 2 - log both successful and failed binds
+
+        :param bool do_next: Allow next rule.
+        """
+        arg = make_key_val_string(
+            filter_locals(locals(), drop=['realm', 'do_next']),
+            aliases={
+                'address': 'url',
+                'base_dn': 'basedn',
+                'bind_dn': 'binddn',
+                'bind_password': 'bindpw',
+                'login_attr': 'attr',
+                'log_level': 'loglevel',
+            },
+            items_separator=';'
+        )
+
+        if do_next:
+            self.name = 'ldapauth-next'
+
+        super(AuthLdap, self).__init__(realm, arg)
+
+
+class ActionSetHarakiri(RouteAction):
+    """Set harakiri timeout for the current request."""
+
+    name = 'harakiri'
+
+    def __init__(self, timeout):
+        """
+        :param int timeout:
+        """
+        super(ActionSetHarakiri, self).__init__(timeout)
+
+
+class ActionDirChange(RouteAction):
+    """Changes a directory."""
+
+    name = 'chdir'
+
+    def __init__(self, dir):
+        """
+        :param str|unicode dir: Directory to change into.
+        """
+        super(ActionDirChange, self).__init__(dir)
+
+
+class ActionSetVarUwsgiAppid(RouteAction):
+    """Set UWSGI_APPID"""
+
+    name = 'setapp'
+
+    def __init__(self, app):
+        """
+        :param str|unicode app: Application ID.
+        """
+        super(ActionSetVarUwsgiAppid, self).__init__(app)
+
+
+class ActionSetVarRemoteUser(RouteAction):
+    """Set REMOTE_USER"""
+
+    name = 'setuser'
+
+    def __init__(self, user):
+        """
+        :param str|unicode user: Username.
+        """
+        super(ActionSetVarRemoteUser, self).__init__(user)
+
+
+class ActionSetVarUwsgiHome(RouteAction):
+    """Set UWSGI_HOME"""
+
+    name = 'sethome'
+
+    def __init__(self, dir):
+        """
+        :param str|unicode dir: Directory to make a new home.
+        """
+        super(ActionSetVarUwsgiHome, self).__init__(dir)
+
+
+class ActionSetVarUwsgiScheme(RouteAction):
+    """Set UWSGI_SCHEME.
+
+    * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#configuring-dynamic-apps-with-internal-routing
+
+    """
+    name = 'setscheme'
+
+    def __init__(self, value):
+        """
+        :param str|unicode value:
+        """
+        super(ActionSetVarUwsgiScheme, self).__init__(value)
+
+
+class ActionSetVarScriptName(RouteAction):
+    """Set SCRIPT_NAME"""
+
+    name = 'setscriptname'
+
+    def __init__(self, name):
+        """
+        :param str|unicode name: Script name
+        """
+        super(ActionSetVarScriptName, self).__init__(name)
+
+
+class ActionSetVarRequestMethod(RouteAction):
+    """Set REQUEST_METHOD"""
+
+    name = 'setmethod'
+
+    def __init__(self, name):
+        """
+        :param str|unicode name: Method name.
+        """
+        super(ActionSetVarRequestMethod, self).__init__(name)
+
+
+class ActionSetVarRequestUri(RouteAction):
+    """Set REQUEST_URI"""
+
+    name = 'seturi'
+
+    def __init__(self, value):
+        """
+        :param str|unicode value: URI
+        """
+        super(ActionSetVarRequestUri, self).__init__(value)
+
+
+class ActionSetVarRemoteAddr(RouteAction):
+    """Set REMOTE_ADDR"""
+
+    name = 'setremoteaddr'
+
+    def __init__(self, value):
+        """
+        :param str|unicode value: Address.
+        """
+        super(ActionSetVarRemoteAddr, self).__init__(value)
+
+
+class ActionSetVarPathInfo(RouteAction):
+    """Set PATH_INFO"""
+
+    name = 'setpathinfo'
+
+    def __init__(self, value):
+        """
+        :param str|unicode value: New info.
+        """
+        super(ActionSetVarPathInfo, self).__init__(value)
+
+
+class ActionSetVarDocumentRoot(RouteAction):
+    """Set DOCUMENT_ROOT"""
+
+    name = 'setdocroot'
+
+    def __init__(self, value):
+        """
+        :param str|unicode value:
+        """
+        super(ActionSetVarDocumentRoot, self).__init__(value)
+
+
+class ActionSetUwsgiProcessName(RouteAction):
+    """Set uWSGI process name."""
+
+    name = 'setprocname'
+
+    def __init__(self, name):
+        """
+        :param str|unicode name: New process name.
+        """
+        super(ActionSetUwsgiProcessName, self).__init__(name)
+
+
+class ActionFixVarPathInfo(RouteAction):
+    """Fixes PATH_INFO taking into account script name.
+
+    This action allows you to set SCRIPT_NAME in nginx without bothering
+    to rewrite the PATH_INFO (something nginx cannot afford).
+
+    * http://uwsgi.readthedocs.io/en/latest/Changelog-2.0.11.html#fixpathinfo-routing-action
+
+    """
+    name = 'fixpathinfo'
+
+    def __init__(self):
+        super(ActionFixVarPathInfo, self).__init__()
+
+
+class ActionSetScriptFile(RouteAction):
+    """Set script file.
+
+    * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#configuring-dynamic-apps-with-internal-routing
+
+    """
+    name = 'setfile'
+
+    def __init__(self, fpath):
+        """
+        :param str|unicode fpath: File path.
+        """
+        super(ActionSetScriptFile, self).__init__(fpath)
 
 
 class SubjectBuiltin(object):
@@ -296,82 +942,13 @@ class RouteRule(object):
         * http://uwsgi.readthedocs.io/en/latest/Transformations.html
 
         """
-        class flush(Action):
-            """Send the current contents of the transformation buffer
-            to the client (without clearing the buffer).
-
-            * http://uwsgi.readthedocs.io/en/latest/Transformations.html#flushing-magic
-
-            """
-            name = 'flush'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class gzip(Action):
-            """Encodes the response buffer to gzip."""
-
-            name = 'gzip'
-            plugin = 'transformation_gzip'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class to_file(Action):
-            """Used for caching a response buffer into a static file."""
-
-            name = 'tofile'
-            plugin = 'transformation_tofile'
-
-            def __init__(self, filename, mode=None):
-                arg = make_key_val_string(locals())
-                super(Action, self).__init__(arg)
-
-        class upper(Action):
-            """Transforms each character in uppercase.
-
-            Mainly as an example of transformation plugin.
-
-            """
-            name = 'toupper'
-            plugin = 'transformation_toupper'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class chunked(Action):
-            """Encodes the output in HTTP chunked."""
-
-            name = 'chunked'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class template(Action):
-            """Allows using a template file to expose everything
-            from internal routing system into it.
-
-            * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.19.html#the-template-transformation
-
-            """
-            name = 'template'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class fix_content_len(Action):
-            """Fixes Content-length header."""
-
-            name = 'fixcl'
-
-            def __init__(self, add_header=False):
-                """
-                :param bool add_header: Force header add instead of plain fix of existing header.
-                """
-                if add_header:
-                    self.name = 'forcexcl'
-
-                super(Action, self).__init__()
+        chunked = ActionChunked
+        fix_content_len = ActionFixContentLen
+        flush = ActionFlush
+        gzip = ActionGzip
+        template = ActionTemplate
+        to_file = ActionToFile
+        upper = ActionUpper
 
         # todo Consider adding the following and some others from sources (incl. plugins):
         # xslt, cachestore, memcachedstore, redisstore, rpc, lua
@@ -387,531 +964,42 @@ class RouteRule(object):
             * ``GOTO x`` - go to rule ``x``
 
         """
-        class do_continue(Action):
-            """Stop scanning the internal routing table
-            and continue to the selected request handler.
-
-            """
-            name = 'continue'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class do_break(Action):
-            """Stop scanning the internal routing table and close the request."""
-
-            name = 'break'
-
-            def __init__(self, code, return_body=False):
-                """
-                :param int code: HTTP code
-
-                :param return_body: Uses uWSGI's built-in status code and returns
-                    both status code and message body.
-
-                """
-                if return_body:
-                    self.name = 'return'
-
-                super(Action, self).__init__(code)
-
-        class log(Action):
-            """Print the specified message in the logs or
-            do not log a request is ``message`` is ``None``.
-
-            """
-            name = 'log'
-
-            def __init__(self, message):
-                """
-
-                :param str|unicode|None message: Message to add into log.
-                    If ``None`` logging will be disabled for this request.
-
-                """
-                if message is None:
-                    self.name = 'donotlog'
-
-                super(Action, self).__init__(message)
-
-        class offload_off(Action):
-            """Do not use offloading."""
-
-            name = 'donotoffload'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class add_var_log(Action):
-            """Add the specified logvar."""
-
-            name = 'logvar'
-
-            def __init__(self, name, val):
-                """
-                :param str|unicode name: Variable name.
-
-                :param val: Variable value.
-                """
-                super(Action, self).__init__(name, val)
-
-        class do_goto(Action):
-            """Make a forward jump to the specified label or rule position."""
-
-            name = 'goto'
-
-            def __init__(self, where):
-                """
-                :param str|unicode|int where: Rule number of label to go to.
-                """
-                super(Action, self).__init__(where)
-
-        class add_var_cgi(Action):
-            """Add the specified CGI (environment) variable to the request."""
-
-            name = 'addvar'
-
-            def __init__(self, name, val):
-                """
-                :param str|unicode name: Variable name.
-
-                :param val: Variable value.
-                """
-                super(Action, self).__init__(name, val)
-
-        class header_add(Action):
-            """Add the specified HTTP header to the response."""
-
-            name = 'addheader'
-
-            def __init__(self, name, val):
-                """
-                :param str|unicode name: Header name.
-
-                :param val: Header value.
-                """
-                name += ':'
-
-                super(Action, self).__init__(name, val)
-
-        class header_remove(Action):
-            """Remove the specified HTTP header from the response."""
-
-            name = 'delheader'
-
-            def __init__(self, name):
-                """
-                :param str|unicode name: Header name.
-                """
-                super(Action, self).__init__(name)
-
-        class headers_off(Action):
-            """Disable headers."""
-
-            name = 'disableheaders'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class headers_reset(Action):
-            """Clear the response headers, setting a new HTTP status code,
-            useful for resetting a response.
-
-            """
-            name = 'clearheaders'
-
-            def __init__(self, code):
-                """
-                :param int code: HTTP code.
-                """
-                super(Action, self).__init__(code)
-
-        class signal(Action):
-            """Raise the specified uwsgi signal."""
-
-            name = 'signal'
-
-            def __init__(self, num):
-                """
-                :param int num: Signal number.
-                """
-                super(Action, self).__init__(num)
-
-        class send(Action):
-            """Extremely advanced (and dangerous) function allowing you
-            to add raw data to the response.
-
-            """
-            name = 'send'
-
-            def __init__(self, data, crnl=False):
-                """
-                :param data: Data to add to response.
-                :param bool crnl: Add carriage return and new line.
-                """
-                if crnl:
-                    self.name = 'send-crnl'
-                super(Action, self).__init__(data)
-
-        class redirect(Action):
-            """Return a HTTP 301/302 Redirect to the specified URL."""
-
-            name = 'redirect-302'
-            plugin = 'router_redirect'
-
-            def __init__(self, url, permanent=False):
-                """
-                :param str| unicode url: URL to redirect to.
-                :param bool permanent: If ``True`` use 301, otherwise 302.
-                """
-                if permanent:
-                    self.name = 'redirect-301'
-
-                super(Action, self).__init__(url)
-
-        class rewrite(Action):
-            """A rewriting engine inspired by Apache mod_rewrite.
-
-            Rebuild PATH_INFO and QUERY_STRING according to the specified rules
-            before the request is dispatched to the request handler.
-
-            """
-            name = 'rewrite'
-            plugin = 'router_rewrite'
-
-            def __init__(self, rule, do_continue=False):
-                """
-                :param str|unicode rule: A rewrite rule.
-
-                :param bool do_continue: Stop request processing
-                    and continue to the selected request handler.
-
-                """
-                if do_continue:
-                    self.name = 'rewrite-last'
-
-                super(Action, self).__init__(rule)
-
-        class route_uwsgi(Action):
-            """Rewrite the modifier1, modifier2 and optionally UWSGI_APPID values of a request
-            or route the request to an external uwsgi server.
-
-            """
-            name = 'uwsgi'
-            plugin = 'router_uwsgi'
-            args_joiner = ','
-
-            def __init__(self, external_address='', mod1='', mod2='', app=''):
-                """
-                :param str|unicode external_address: External uWSGI server address (host:port).
-                :param str|unicode mod1: Set modifier 1.
-                :param str|unicode mod2: Set modifier 2.
-                :param str|unicode app: Set ``UWSGI_APPID``.
-                """
-                super(Action, self).__init__(external_address, mod1, mod2, app)
-
-        class route_external(Action):
-            """Route the request to an external HTTP server."""
-
-            name = 'http'
-            plugin = 'router_http'
-            args_joiner = ','
-
-            def __init__(self, address, host_header=None):
-                """
-                :param str|unicode address: External HTTP address (host:port)
-
-                :param str|unicode host_header: HOST header value.
-                """
-                super(Action, self).__init__(address, host_header)
-
-        class alarm(Action):
-            """Triggers an alarm.
-
-            * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#the-alarm-routing-action
-
-            """
-            name = 'alarm'
-
-            def __init__(self, name, message):
-                """
-                :param str|unicode name: Alarm name
-
-                :param str|unicode message: Message to pass into alarm.
-                """
-                super(Action, self).__init__(name, message)
-
-        class serve_static(Action):
-            """Serve a static file from the specified physical path."""
-
-            name = 'static'
-            plugin = 'router_static'
-
-            def __init__(self, fpath):
-                """
-                :param str|unicode fpath: Static file path.
-                """
-                super(Action, self).__init__(fpath)
-
-        class auth_basic(Action):
-            """Use Basic HTTP Auth."""
-
-            name = 'basicauth'
-            plugin = 'router_basicauth'
-            args_joiner = ','
-
-            def __init__(self, realm, user=None, password=None, do_next=False):
-                """
-                :param str|unicode realm:
-
-                :param str|unicode user:
-
-                :param str|unicode password: Password or htpasswd-like file.
-
-                :param bool do_next: Allow next rule.
-                """
-                if do_next:
-                    self.name = 'basicauth-next'
-
-                user_password = []
-
-                if user:
-                    user += ':'
-                    user_password.append(user)
-
-                if password:
-                    user_password.append(password)
-
-                super(Action, self).__init__(realm, ''.join(user_password) if user_password else None)
-
-        class auth_ldap(Action):
-            """Use Basic HTTP Auth."""
-
-            name = 'ldapauth'
-            plugin = 'ldap'
-            args_joiner = ','
-
-            def __init__(
-                    self, realm, address, base_dn=None, bind_dn=None, bind_password=None,
-                    filter=None, login_attr=None, log_level=None,
-                    do_next=False):
-                """
-
-                :param str|unicode realm:
-
-                :param str|unicode address: LDAP server URI
-
-                :param str|unicode base_dn: Base DN used when searching for users.
-
-                :param str|unicode bind_dn: DN used for binding.
-                    Required if the LDAP server does not allow anonymous searches.
-
-                :param str|unicode bind_password: Password for the ``bind_dn`` user.
-
-                :param str|unicode filter: Filter used when searching for users. Default: ``(objectClass=*)``
-
-                :param str|unicode login_attr: LDAP attribute that holds user login. Default: ``uid``.
-
-                :param str|unicode log_level: Log level.
-
-                    Supported values:
-                        * 0 - don't log any binds
-                        * 1 - log authentication errors,
-                        * 2 - log both successful and failed binds
-
-                :param bool do_next: Allow next rule.
-                """
-                arg = make_key_val_string(
-                    filter_locals(locals(), drop=['realm', 'do_next']),
-                    aliases={
-                        'address': 'url',
-                        'base_dn': 'basedn',
-                        'bind_dn': 'binddn',
-                        'bind_password': 'bindpw',
-                        'login_attr': 'attr',
-                        'log_level': 'loglevel',
-                    },
-                    items_separator=';'
-                )
-
-                if do_next:
-                    self.name = 'ldapauth-next'
-
-                super(Action, self).__init__(realm, arg)
-
-        class set_harakiri(Action):
-            """Set harakiri timeout for the current request."""
-
-            name = 'harakiri'
-
-            def __init__(self, timeout):
-                """
-                :param int timeout:
-                """
-                super(Action, self).__init__(timeout)
-
-        class change_dir(Action):
-            """Changes a directory."""
-
-            name = 'chdir'
-
-            def __init__(self, dir):
-                """
-                :param str|unicode dir: Directory to change into.
-                """
-                super(Action, self).__init__(dir)
-
-        class set_var_uwsgi_appid(Action):
-            """Set UWSGI_APPID"""
-
-            name = 'setapp'
-
-            def __init__(self, app):
-                """
-                :param str|unicode app: Application ID.
-                """
-                super(Action, self).__init__(app)
-
-        class set_var_remote_user(Action):
-            """Set REMOTE_USER"""
-
-            name = 'setuser'
-
-            def __init__(self, user):
-                """
-                :param str|unicode user: Username.
-                """
-                super(Action, self).__init__(user)
-
-        class set_var_uwsgi_home(Action):
-            """Set UWSGI_HOME"""
-
-            name = 'sethome'
-
-            def __init__(self, dir):
-                """
-                :param str|unicode dir: Directory to make a new home.
-                """
-                super(Action, self).__init__(dir)
-
-        class set_var_uwsgi_scheme(Action):
-            """Set UWSGI_SCHEME.
-
-            * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#configuring-dynamic-apps-with-internal-routing
-
-            """
-            name = 'setscheme'
-
-            def __init__(self, value):
-                """
-                :param str|unicode value:
-                """
-                super(Action, self).__init__(value)
-
-        class set_var_script_name(Action):
-            """Set SCRIPT_NAME"""
-
-            name = 'setscriptname'
-
-            def __init__(self, name):
-                """
-                :param str|unicode name: Script name
-                """
-                super(Action, self).__init__(name)
-
-        class set_var_request_method(Action):
-            """Set REQUEST_METHOD"""
-
-            name = 'setmethod'
-
-            def __init__(self, name):
-                """
-                :param str|unicode name: Method name.
-                """
-                super(Action, self).__init__(name)
-
-        class set_var_requet_uri(Action):
-            """Set REQUEST_URI"""
-
-            name = 'seturi'
-
-            def __init__(self, value):
-                """
-                :param str|unicode value: URI
-                """
-                super(Action, self).__init__(value)
-
-        class set_var_remote_addr(Action):
-            """Set REMOTE_ADDR"""
-
-            name = 'setremoteaddr'
-
-            def __init__(self, value):
-                """
-                :param str|unicode value: Address.
-                """
-                super(Action, self).__init__(value)
-
-        class set_var_path_info(Action):
-            """Set PATH_INFO"""
-
-            name = 'setpathinfo'
-
-            def __init__(self, value):
-                """
-                :param str|unicode value: New info.
-                """
-                super(Action, self).__init__(value)
-
-        class set_var_document_root(Action):
-            """Set DOCUMENT_ROOT"""
-
-            name = 'setdocroot'
-
-            def __init__(self, value):
-                """
-                :param str|unicode value:
-                """
-                super(Action, self).__init__(value)
-
-        class set_uwsgi_process_name(Action):
-            """Set uWSGI process name."""
-
-            name = 'setprocname'
-
-            def __init__(self, name):
-                """
-                :param str|unicode name: New process name.
-                """
-                super(Action, self).__init__(name)
-
-        class fix_var_path_info(Action):
-            """Fixes PATH_INFO taking into account script name.
-
-            This action allows you to set SCRIPT_NAME in nginx without bothering
-            to rewrite the PATH_INFO (something nginx cannot afford).
-
-            * http://uwsgi.readthedocs.io/en/latest/Changelog-2.0.11.html#fixpathinfo-routing-action
-
-            """
-            name = 'fixpathinfo'
-
-            def __init__(self):
-                super(Action, self).__init__()
-
-        class set_script_file(Action):
-            """Set script file.
-
-            * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#configuring-dynamic-apps-with-internal-routing
-
-            """
-            name = 'setfile'
-
-            def __init__(self, fpath):
-                """
-                :param str|unicode fpath: File path.
-                """
-                super(Action, self).__init__(fpath)
+        add_var_cgi = ActionAddVarCgi
+        add_var_log = ActionAddVarLog
+        alarm = ActionAlarm
+        auth_basic = ActionAuthBasic
+        auth_ldap = AuthLdap
+        dir_change = ActionDirChange
+        do_break = ActionDoBreak
+        do_continue = ActionDoContinue
+        do_goto = ActionDoGoto
+        fix_var_path_info = ActionFixVarPathInfo
+        header_add = ActionHeaderAdd
+        header_remove = ActionHeaderRemove
+        headers_off = ActionHeadersOff
+        headers_reset = ActionHeadersReset
+        log = ActionLog
+        offload_off = ActionOffloadOff
+        redirect = ActionRedirect
+        rewrite = ActionRewrite
+        route_external = ActionRouteExternal
+        route_uwsgi = ActionRouteUwsgi
+        send = ActionSend
+        serve_static = ActionServeStatic
+        set_harakiri = ActionSetHarakiri
+        set_script_file = ActionSetScriptFile
+        set_uwsgi_process_name = ActionSetUwsgiProcessName
+        set_var_document_root = ActionSetVarDocumentRoot
+        set_var_path_info = ActionSetVarPathInfo
+        set_var_remote_addr = ActionSetVarRemoteAddr
+        set_var_remote_user = ActionSetVarRemoteUser
+        set_var_request_method = ActionSetVarRequestMethod
+        set_var_request_uri = ActionSetVarRequestUri
+        set_var_script_name = ActionSetVarScriptName
+        set_var_uwsgi_appid = ActionSetVarUwsgiAppid
+        set_var_uwsgi_home = ActionSetVarUwsgiHome
+        set_var_uwsgi_scheme = ActionSetVarUwsgiScheme
+        signal = ActionSignal
 
         # todo Consider adding the following and some others from sources (incl. plugins):
         # cachestore, cacheset, memcached,
@@ -928,7 +1016,7 @@ class RouteRule(object):
 
     def __init__(self, action, subject=subjects.PATH_INFO('(.*)'), stage=stages.REQUEST):
         """
-        :param Action action: Action (or transformation) to perfrom.
+        :param RouteAction action: Action (or transformation) to perfrom.
             See ``.actions`` and ``.transforms``.
 
         :param SubjectCustom|SubjectBuiltin subject: Subject to verify before action is performed.
