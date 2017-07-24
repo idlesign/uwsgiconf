@@ -483,23 +483,23 @@ class Monitoring(OptionsGroup):
         User metrics must inherit from one of those.
 
         """
-        counter = MetricTypeCounter
-        gauge = MetricTypeGauge
         absolute = MetricTypeAbsolute
         alias = MetricTypeAlias
+        counter = MetricTypeCounter
+        gauge = MetricTypeGauge
 
     class collectors(object):
         """Metric collection and accumulation means."""
 
-        manual = CollectorManual
-        pointer = CollectorPointer
-        file = CollectorFile
-        function = CollectorFunction
-        sum = CollectorSum
-        avg = CollectorAvg
         accumulator = CollectorAccumulator
         adder = CollectorAdder
+        avg = CollectorAvg
+        file = CollectorFile
+        function = CollectorFunction
+        manual = CollectorManual
         multiplier = CollectorMultiplier
+        pointer = CollectorPointer
+        sum = CollectorSum
 
     class pushers(object):
         """Means to deliver metrics to various remotes or locals.
@@ -507,13 +507,13 @@ class Monitoring(OptionsGroup):
         These are available for ``.register_stats_pusher()``.
 
         """
-        socket = PusherSocket
-        rrdtool = PusherRrdtool
-        statsd = PusherStatsd
         carbon = PusherCarbon
-        zabbix = PusherZabbix
-        mongo = PusherMongo
         file = PusherFile
+        mongo = PusherMongo
+        rrdtool = PusherRrdtool
+        socket = PusherSocket
+        statsd = PusherStatsd
+        zabbix = PusherZabbix
 
     def register_metric(self, metric):
         """

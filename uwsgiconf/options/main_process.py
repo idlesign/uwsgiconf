@@ -235,22 +235,19 @@ class MainProcess(OptionsGroup):
     class actions(object):
         """Actions available for ``.set_hook()``."""
 
-        dir_change = ActionDirChange
-        dir_create = ActionDirCreate
-        file_create = ActionFileCreate
-        file_write = ActionFileWrite
-        unlink = ActionUnlink
-        fifo_write = ActionFifoWrite
-        mount = ActionMount
-        execute = ActionExecute
-
-        set_host_name = ActionSetHostName
         alarm = ActionAlarm
         call = ActionCall
-
-        # Mainly for testing,
+        dir_change = ActionDirChange
+        dir_create = ActionDirCreate
+        execute = ActionExecute
         exit = ActionExit
+        fifo_write = ActionFifoWrite
+        file_create = ActionFileCreate
+        file_write = ActionFileWrite
+        mount = ActionMount
         printout = ActionPrintout
+        set_host_name = ActionSetHostName
+        unlink = ActionUnlink
 
         # todo consider adding:
         # putenv, chmod/sticky, chown/chown2, rpc/retryrpc, unix_signal

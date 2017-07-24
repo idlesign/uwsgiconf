@@ -93,10 +93,10 @@ class Alarms(OptionsGroup):
         """Alarm types available for ``.register_alarm()``."""
 
         command = AlarmCommand
-        signal = AlarmSignal
+        curl = AlarmCurl
         log = AlarmLog
         mule = AlarmMule
-        curl = AlarmCurl
+        signal = AlarmSignal
         xmpp = AlarmXmpp
 
     def __init__(self, *args, **kwargs):
