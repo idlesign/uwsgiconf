@@ -93,6 +93,7 @@ class Workers(OptionsGroup):
         self.set_count_auto(count)
 
         self._set('touch-workers-reload', touch_reload, multi=True)
+        self._set('touch-chain-reload', touch_chain_reload, multi=True)
 
         self._set('reaper', zombie_reaper, cast=bool)
 
