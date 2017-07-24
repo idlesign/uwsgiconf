@@ -40,6 +40,10 @@ def test_main_process_basics(assert_lines):
         'touch-exec = myfile.txt date',
     ], Section().main_process.run_command_on_touch('date', 'myfile.txt'))
 
+    assert_lines([
+        'skip-atexit = true',
+    ], Section().main_process.set_on_exit_params(skip_hooks=True))
+
 
 def test_main_process_hooks(assert_lines):
 
@@ -48,19 +52,23 @@ def test_main_process_hooks(assert_lines):
     prc = section.main_process
     asap = prc.phases.ASAP
 
-    prc.set_hook(asap, prc.handlers.mount('/proc', 'proc', 'none'))
-    prc.set_hook(asap, prc.handlers.mount('/proc', flags=['rec', 'detach']))
-    prc.set_hook(asap, prc.handlers.execute('cat /proc/self/mounts'))
-    prc.set_hook(asap, prc.handlers.call('uwsgi_log application has been loaded'))
-    prc.set_hook(asap, prc.handlers.call('putenv PATH=bin:$(PATH)', arg_int=True))
-    prc.set_hook(asap, prc.handlers.call('some', honour_exit_status=True))
-    prc.set_hook(asap, prc.handlers.change_dir('/here'))
-    prc.set_hook(asap, prc.handlers.exit())
-    prc.set_hook(prc.phases.APP_LOAD_PRE, prc.handlers.exit(10))
-    prc.set_hook(asap, prc.handlers.printout('bingo-bongo'))
-    prc.set_hook(asap, prc.handlers.write('/here/a.txt', 'sometext'))
-    prc.set_hook(asap, prc.handlers.write('/here/b', '10', fifo=True))
-    prc.set_hook(asap, prc.handlers.unlink('/here/d'))
+    prc.set_hook(asap, prc.actions.mount('/proc', 'proc', 'none'))
+    prc.set_hook(asap, prc.actions.mount('/proc', flags=['rec', 'detach']))
+    prc.set_hook(asap, prc.actions.execute('cat /proc/self/mounts'))
+    prc.set_hook(asap, prc.actions.call('uwsgi_log application has been loaded'))
+    prc.set_hook(asap, prc.actions.call('putenv PATH=bin:$(PATH)', arg_int=True))
+    prc.set_hook(asap, prc.actions.call('some', honour_exit_status=True))
+    prc.set_hook(asap, prc.actions.dir_change('/here'))
+    prc.set_hook(asap, prc.actions.exit())
+    prc.set_hook(prc.phases.APP_LOAD_PRE, prc.actions.exit(10))
+    prc.set_hook(asap, prc.actions.printout('bingo-bongo'))
+    prc.set_hook(asap, prc.actions.file_write('/here/a.txt', 'sometext', append=True, newline=True))
+    prc.set_hook(asap, prc.actions.fifo_write('/here/b', '10', wait=True))
+    prc.set_hook(asap, prc.actions.unlink('/here/d'))
+    prc.set_hook(asap, prc.actions.alarm('myal', 'bang'))
+    prc.set_hook(asap, prc.actions.set_host_name('newname'))
+    prc.set_hook(asap, prc.actions.file_create('/here/a.txt'))
+    prc.set_hook(asap, prc.actions.dir_create('/here/there'))
 
     assert_lines([
         'hook-asap = mount:proc none /proc',
@@ -73,7 +81,19 @@ def test_main_process_hooks(assert_lines):
         'hook-asap = cd:/here',
         'hook-asap = exit:',
         'hook-pre-app = exit:10',
-        'hook-asap = write:/here/a.txt sometext',
-        'hook-asap = writefifo:/here/b 10',
+        'hook-asap = appendn:/here/a.txt sometext',
+        'hook-asap = spinningfifo:/here/b 10',
         'hook-asap = unlink:/here/d',
+        'hook-asap = alarm:myal bang',
+        'hook-asap = hostname:newname',
+        'hook-asap = create:/here/a.txt',
+        'hook-asap = mkdir:/here/there',
     ], section)
+
+    assert_lines([
+        'hook-touch = /that do',
+    ], Section().main_process.set_hook_touch('/that', 'do'))
+
+    assert_lines([
+        'after-request-hook = cfunc',
+    ], Section().main_process.set_hook_after_request('cfunc'))

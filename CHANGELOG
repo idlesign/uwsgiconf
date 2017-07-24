@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ A bunch of new actions for hooks described.
+
+
 v0.2.0
 ------
 + Internal routing options group partially described.

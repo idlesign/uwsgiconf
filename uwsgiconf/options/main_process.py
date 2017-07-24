@@ -2,12 +2,12 @@ from ..base import OptionsGroup, ParametrizedValue
 from ..utils import listify
 
 
-class Handler(ParametrizedValue):
+class HookAction(ParametrizedValue):
 
     pass
 
 
-class HandlerMount(Handler):
+class ActionMount(HookAction):
     """Mount or unmount filesystems.
 
     Examples:
@@ -42,10 +42,10 @@ class HandlerMount(Handler):
             args = [mountpoint, flags]
             self.name = 'umount'
 
-        super(HandlerMount, self).__init__(*args)
+        super(ActionMount, self).__init__(*args)
 
 
-class HandlerExecute(Handler):
+class ActionExecute(HookAction):
     """Run the shell command.
 
     Command run under ``/bin/sh``.
@@ -59,11 +59,12 @@ class HandlerExecute(Handler):
 
     name = 'exec'
 
+    # todo consider adding safeexec
     def __init__(self, command):
-        super(HandlerExecute, self).__init__(command)
+        super(ActionExecute, self).__init__(command)
 
 
-class HandlerCall(Handler):
+class ActionCall(HookAction):
     """Call functions in the current process address space."""
 
     name = 'call'
@@ -88,70 +89,129 @@ class HandlerCall(Handler):
 
         self.name = name
 
-        super(HandlerCall, self).__init__(target)
+        super(ActionCall, self).__init__(target)
 
 
-class HandlerChangeDir(Handler):
+class ActionDirChange(HookAction):
     """Changes a directory.
 
-    Convenience handler, same as ``call:chdir <directory>``.
+    Convenience action, same as ``call:chdir <directory>``.
 
     """
     name = 'cd'
 
     def __init__(self, target_dir):
-        super(HandlerChangeDir, self).__init__(target_dir)
+        super(ActionDirChange, self).__init__(target_dir)
 
 
-class HandlerExit(Handler):
+class ActionDirCreate(HookAction):
+    """Creates a directory with 0777."""
+
+    name = 'mkdir'
+
+    def __init__(self, target_dir):
+        super(ActionDirCreate, self).__init__(target_dir)
+
+
+class ActionFileCreate(HookAction):
+    """Creates a directory with 0666."""
+
+    name = 'create'
+
+    def __init__(self, fpath):
+        super(ActionFileCreate, self).__init__(fpath)
+
+
+class ActionExit(HookAction):
     """Exits.
 
-    Convenience handler, same as ``callint:exit [num]``.
+    Convenience action, same as ``callint:exit [num]``.
 
     """
     name = 'exit'
 
     def __init__(self, status_code=None):
-        super(HandlerExit, self).__init__(status_code)
+        super(ActionExit, self).__init__(status_code)
 
 
-class HandlerPrintout(Handler):
+class ActionPrintout(HookAction):
     """Prints.
 
-    Convenience handler, same as calling the ``uwsgi_log`` symbol.
+    Convenience action, same as calling the ``uwsgi_log`` symbol.
 
     """
     name = 'print'
 
     def __init__(self, text=None):
-        super(HandlerPrintout, self).__init__(text)
+        super(ActionPrintout, self).__init__(text)
 
 
-class HandlerWrite(Handler):
-    """Writes a string to the specified file/fifo.
+class ActionSetHostName(HookAction):
+    """Sets a host name."""
+
+    name = 'hostname'
+
+    def __init__(self, name):
+        super(ActionSetHostName, self).__init__(name)
+
+
+class ActionAlarm(HookAction):
+    """Issues an alarm. See ``.alarms`` options group."""
+
+    name = 'alarm'
+
+    def __init__(self, alarm, message):
+        super(ActionAlarm, self).__init__(alarm, message)
+
+
+class ActionFileWrite(HookAction):
+    """Writes a string to the specified file.
+
+    If file doesn't exist it will be created.
 
     .. note:: Since 1.9.21
 
     """
     name = 'write'
 
-    def __init__(self, target, text, fifo=False):
+    def __init__(self, target, text, append=False, newline=False):
         """
 
         :param str|unicode target: File to write to.
 
         :param str|unicode text: Text to write into file.
 
-        :param bool fifo: Write to FIFO.
+        :param bool append: Append text instead of rewrite.
+
+        :param bool newline: Add a newline at the end.
+
         """
+        if append:
+            self.name = 'append'
 
-        if fifo:
-            self.name += 'fifo'
+        if newline:
+            self.name += 'n'
 
-        super(HandlerWrite, self).__init__(target, text)
+        super(ActionFileWrite, self).__init__(target, text)
 
 
-class HandlerUnlink(Handler):
+class ActionFifoWrite(HookAction):
+    """Writes a string to the specified FIFO (see ``fifo_file`` from ``master_process`` params)."""
+
+    name = 'writefifo'
+
+    def __init__(self, target, text, wait=False):
+        """
+        :param bool wait: Wait until FIFO is available.
+
+        """
+        if wait:
+            self.name = 'spinningfifo'
+
+        super(ActionFifoWrite, self).__init__(target, text)
+
+
+class ActionUnlink(HookAction):
     """Unlink the specified file.
 
     .. note:: Since 1.9.21
@@ -160,7 +220,7 @@ class HandlerUnlink(Handler):
     name = 'unlink'
 
     def __init__(self, target):
-        super(HandlerUnlink, self).__init__(target)
+        super(ActionUnlink, self).__init__(target)
 
 
 class MainProcess(OptionsGroup):
@@ -172,27 +232,37 @@ class MainProcess(OptionsGroup):
 
     """
 
-    class handlers(object):
-        """Handlers available for ``set_hook()``."""
+    class actions(object):
+        """Actions available for ``.set_hook()``."""
 
-        mount = HandlerMount
-        execute = HandlerExecute
-        call = HandlerCall
-        change_dir = HandlerChangeDir
-        exit = HandlerExit
-        printout = HandlerPrintout
-        write = HandlerWrite
-        unlink = HandlerUnlink
+        dir_change = ActionDirChange
+        dir_create = ActionDirCreate
+        file_create = ActionFileCreate
+        file_write = ActionFileWrite
+        unlink = ActionUnlink
+        fifo_write = ActionFifoWrite
+        mount = ActionMount
+        execute = ActionExecute
+
+        set_host_name = ActionSetHostName
+        alarm = ActionAlarm
+        call = ActionCall
+
+        # Mainly for testing,
+        exit = ActionExit
+        printout = ActionPrintout
+
+        # todo consider adding:
+        # putenv, chmod/sticky, chown/chown2, rpc/retryrpc, unix_signal
+        # wait_for_fs/wait_for_file/wait_for_dir, wait_for_socket
 
     class phases:
-        """Phases available for hooking.
+        """Phases available for hooking using ``.set_hook()``.
 
         Some of them may be **fatal** - a failing hook for them
         will mean failing of the whole uWSGI instance (generally calling exit(1)).
 
         """
-
-        # todo hook-touch: <file> <action>
 
         ASAP = 'asap'
         """As soon as possible. **Fatal**
@@ -399,15 +469,58 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_hook(self, phase, handler):
-        """Allows setting hooks (attaching handlers) for various uWSGI phases.
+    def set_hook(self, phase, action):
+        """Allows setting hooks (attaching actions) for various uWSGI phases.
 
-        :param str|unicode phase: See constants in ``Phases`` class.
+        :param str|unicode phase: See constants in ``.phases``.
 
-        :param str|unicode|list|Handler|list[Handler] handler:
+        :param str|unicode|list|HookAction|list[HookAction] action:
 
         """
-        self._set('hook-%s' % phase, handler, multi=True)
+        self._set('hook-%s' % phase, action, multi=True)
+
+        return self._section
+
+    def set_hook_touch(self, fpath, action):
+        """Allows running certain action when the specified file is touched.
+
+        :param str|unicode fpath: File path.
+
+        :param str|unicode|list|HookAction|list[HookAction] action:
+
+        """
+        self._set('hook-touch', '%s %s' % (fpath, action), multi=True)
+
+        return self._section
+
+    def set_hook_after_request(self, func):
+        """Run the specified function/symbol (C level) after each request.
+
+        :param str|unicode func:
+
+        """
+        self._set('after-request-hook', func, multi=True)
+
+        return self._section
+
+    def set_on_exit_params(self, skip_hooks=None, skip_teardown=None):
+        """Set params related to process exit procedure.
+
+        :param bool skip_hooks: Skip ``EXIT`` phase hook.
+
+            .. note:: Ignored by the master.
+
+        :param bool skip_teardown: Allows skipping teardown (finalization) processes for some plugins.
+
+            .. note:: Ignored by the master.
+
+            Supported by:
+                * Perl
+                * Python
+
+        """
+        self._set('skip-atexit', skip_hooks, cast=bool)
+        self._set('skip-atexit-teardown', skip_teardown, cast=bool)
 
         return self._section
 
