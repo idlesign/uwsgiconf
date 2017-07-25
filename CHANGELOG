@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.3.0
+------
 + Statics options group partially described.
 + A bunch of new actions for hooks described.
 
