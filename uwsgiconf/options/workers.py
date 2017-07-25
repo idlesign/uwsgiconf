@@ -152,6 +152,8 @@ class Workers(OptionsGroup):
             for a huge amount of concurrency. Various components of the uWSGI stack
             are offload-friendly.
 
+            .. note:: Try to set it to the number of CPU cores to take advantage of SMP.
+
             * http://uwsgi-docs.readthedocs.io/en/latest/OffloadSubsystem.html
 
         :param int stack_size: Set threads stacksize.
