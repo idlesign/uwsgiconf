@@ -70,9 +70,13 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_.
         Section().
             master_process.set_basic_params(enable=True).
             workers.set_basic_params(count=1).
-            python.set_wsgi_params(module='werkzeug.testapp:test_app').
-            logging.set_basic_params(no_requests=True))
-
+            logging.set_basic_params(no_requests=True).
+            python.set_wsgi_params(module='werkzeug.testapp:test_app'))
+            
+    # NOTE. There is a shortcut for ``set_basic_params`` methods:
+    # Instead of `master_process.set_basic_params(enable=True)`
+    # you can say plain `master_process(enable=True)`, yet
+    # in than case you won't get any arg hints from you IDE.
 
     # Now we add two sections based on common parameters into our configuration:
     Configuration([
