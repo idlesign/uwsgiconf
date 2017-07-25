@@ -12,4 +12,5 @@ from .python import Python
 from .queue import Queue
 from .routing import Routing
 from .spooler import Spooler
+from .statics import Statics
 from .workers import Workers, Cheapening

@@ -63,6 +63,7 @@ API
     grp_queue
     grp_routing
     grp_spooler
+    grp_statics
     grp_workers
     grp_python
     formatters

@@ -81,6 +81,9 @@ class Section(OptionsGroup):
     spooler = Options(Spooler)  # type: Spooler
     """Spooler options group."""
 
+    statics = Options(Statics)  # type: Statics
+    """Static file serving options group."""
+
     workers = Options(Workers)  # type: Workers
     """Workers options group."""
 
