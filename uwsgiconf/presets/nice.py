@@ -22,6 +22,9 @@ class Section(_Section):
         """
         super(Section, self).__init__(strict_config=True, name=name, **kwargs)
 
+        # Fix possible problems with non-ASCII.
+        self.env('LANG', 'en_US.UTF-8')
+
         if touch_reload:
             self.main_process.set_basic_params(touch_reload=touch_reload)
 
