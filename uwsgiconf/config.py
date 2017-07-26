@@ -495,14 +495,13 @@ class Configuration(object):
 
         """
         if filepath is None:
-            target_file = NamedTemporaryFile(prefix='uwsgicfg_', suffix='.ini', delete=False)
-            filepath = target_file.name
+            with NamedTemporaryFile(prefix='uwsgicfg_', suffix='.ini', delete=False) as f:
+                filepath = f.name
 
         else:
             filepath = os.path.abspath(filepath)
-            target_file = open(filepath, 'w')
 
-        with target_file as target_file:
+        with open(filepath, 'w') as target_file:
             target_file.write(self.format())
             target_file.flush()
 
