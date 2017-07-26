@@ -236,3 +236,113 @@ class Networking(OptionsGroup):
             self._current_socket_idx += 1
 
         return self._section
+
+    def set_ssl_params(
+            self, verbose_errors=None,
+            sessions_cache=None, sessions_timeout=None, session_context=None,
+            raw_options=None, dir_tmp=None, client_cert_var=None):
+        """
+
+        :param bool verbose_errors: Be verbose about SSL errors.
+
+        :param str|unicode|bool sessions_cache: Use uWSGI cache for ssl sessions storage.
+
+            Accepts either bool or cache name string.
+
+            * http://uwsgi.readthedocs.io/en/latest/SSLScaling.html
+
+            .. warning:: Please be sure to configure cache before setting this.
+
+        :param int sessions_timeout: Set SSL sessions timeout in seconds. Default: 300.
+
+        :param str|unicode session_context: Session context identifying string. Can be set to static shared value
+            to avoid session rejection.
+
+            Default: a value built from the HTTP server address.
+
+            * http://uwsgi.readthedocs.io/en/latest/SSLScaling.html#setup-2-synchronize-caches-of-different-https-routers
+
+        :param int|list[int] raw_options: Set a raw ssl option by its numeric value.
+
+        :param str|unicode dir_tmp: Store ssl-related temp files (e.g. pem data) in the specified directory.
+
+        :param str|unicode client_cert_var: Export uWSGI variable ``HTTPS_CC`` containing the raw client certificate.
+
+        """
+        self._set('ssl-verbose', verbose_errors, cast=bool)
+        self._set('ssl-sessions-use-cache', sessions_cache, cast=bool if isinstance(sessions_cache, bool) else None)
+        self._set('ssl-sessions-timeout', sessions_timeout)
+
+        for option in listify(raw_options):
+            self._set('ssl-option', option, multi=True)
+
+        self._set('ssl-tmp-dir', dir_tmp)
+
+        self._set('https-session-context', session_context, plugin='http')
+        self._set('https-export-cert', client_cert_var, plugin='http')
+
+        return self._section
+
+    def set_sni_params(self, name, cert, key, ciphers=None, client_ca=None, wildcard=False):
+        """Allows setting Server Name Identification (virtual hosting for SSL nodes) params.
+
+        * http://uwsgi.readthedocs.io/en/latest/SNI.html
+
+        :param str|unicode name: Node/server/host name.
+
+        :param str|unicode cert: Certificate file.
+
+        :param str|unicode key: Private key file.
+
+        :param str|unicode ciphers: Ciphers [alias] string.
+
+            Example:
+                * DEFAULT
+                * HIGH
+                * DHE, EDH
+
+            * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
+
+        :param str|unicode client_ca: Client CA file for client-based auth.
+
+        :param bool wildcard: Allow regular expressions in ``name`` (used for wildcard certificates).
+
+        """
+        command = 'sni'
+
+        if wildcard:
+            command += '-regexp'
+
+        args = [item for item in (cert, key, ciphers, client_ca) if item is not None]
+
+        self._set(command, '%s %s' % (name, ','.join(args)))
+
+        return self._section
+
+    def set_sni_dir_params(self, dir, ciphers=None):
+        """Enable checking for cert/key/client_ca file in the specified directory
+        and create a sni/ssl context on demand.
+
+        Expected filenames:
+            * <sni-name>.crt
+            * <sni-name>.key
+            * <sni-name>.ca - this file is optional
+
+        * http://uwsgi.readthedocs.io/en/latest/SNI.html#massive-sni-hosting
+
+        :param str|unicode dir:
+
+        :param str|unicode ciphers: Ciphers [alias] string.
+
+            Example:
+                * DEFAULT
+                * HIGH
+                * DHE, EDH
+
+            * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
+
+        """
+        self._set('sni-dir', dir)
+        self._set('sni-dir-ciphers', ciphers)
+
+        return self._section

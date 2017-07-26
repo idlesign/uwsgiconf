@@ -51,3 +51,27 @@ def test_networking_basics(assert_lines):
         dict(address=':8002'),
         dict(address=':8003'),
     ))
+
+    assert_lines([
+        'plugin = http',
+        'https-export-cert = MYVAR',
+
+    ], Section().networking.set_ssl_params(client_cert_var='MYVAR'))
+
+
+def test_networking_sni(assert_lines):
+
+    assert_lines([
+        'sni-regexp = *.pythonz.net /here/my.crt,/here/my.key,HIGH,/there/my.ca',
+
+    ], Section().networking.set_sni_params(
+        '*.pythonz.net', cert='/here/my.crt', key='/here/my.key',
+        client_ca='/there/my.ca', ciphers='HIGH',
+        wildcard=True)
+    )
+
+    assert_lines([
+        'sni-dir = /certs/',
+        'sni-dir-ciphers = MEDIUM',
+
+    ], Section().networking.set_sni_dir_params('/certs/', ciphers='MEDIUM'))
