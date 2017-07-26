@@ -3,6 +3,7 @@ from copy import deepcopy
 from datetime import datetime
 from collections import OrderedDict
 from functools import partial
+from tempfile import NamedTemporaryFile
 
 from .base import Options, OptionsGroup
 from .options import *
@@ -481,3 +482,28 @@ class Configuration(object):
         :rtype: str|unicode
         """
         return self.format(do_print=True)
+
+    def tofile(self, filepath=None):
+        """Saves configuration into a file and returns its path.
+
+        Convenience method.
+
+        :param str|unicode filepath: Filepath to save configuration into.
+            If not provided a temporary file will be automatically generated.
+
+        :rtype: str|unicode
+
+        """
+        if filepath is None:
+            target_file = NamedTemporaryFile(prefix='uwsgicfg_', suffix='.ini', delete=False)
+            filepath = target_file.name
+
+        else:
+            filepath = os.path.abspath(filepath)
+            target_file = open(filepath, 'w')
+
+        with target_file as target_file:
+            target_file.write(self.format())
+            target_file.flush()
+
+        return filepath

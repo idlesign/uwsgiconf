@@ -1,5 +1,6 @@
-import pytest
 import os
+from tempfile import NamedTemporaryFile
+import pytest
 
 from uwsgiconf import Section, Configuration
 from uwsgiconf.exceptions import ConfigurationError
@@ -122,6 +123,12 @@ def test_configuration(capsys, assert_lines):
         'workers = 33',
 
     ], Section(params_workers=dict(count=33)))
+
+    assert Section().as_configuration().tofile()
+
+    fpath = NamedTemporaryFile(delete=False).name
+
+    assert fpath == Section().as_configuration().tofile(fpath)
 
     s1 = Section()
     s2 = 'some'
