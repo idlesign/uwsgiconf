@@ -7,8 +7,9 @@ Trick demo. It shows how to use one file both for uWSGI configuration and applic
 
         uwsgi --ini=exec://<path-to-this-file>
 
+* Python 3 is expected.
+
 """
-from __future__ import unicode_literals
 
 
 def application(env, start_response):
