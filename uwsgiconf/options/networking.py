@@ -131,9 +131,9 @@ class Networking(OptionsGroup):
             would otherwise have no access to the uWSGI socket. When used without a parameter,
             the permissions will be set to 666. Otherwise the specified chmod value will be used.
 
-        :param str owner: Chown UNIX sockets.
+        :param str|unicode owner: Chown UNIX sockets.
 
-        :param str umask: Set UNIX socket umask.
+        :param str|unicode umask: Set UNIX socket umask.
 
         """
         self._set('abstract-socket', abstract, cast=bool)
@@ -169,18 +169,18 @@ class Networking(OptionsGroup):
     def register_socket(self, address, type=socket_types.DEFAULT, mode=None, bound_workers=None):
         """Registers a socket.
 
-        :param str address: Address to bind socket to.
+        :param str|unicode address: Address to bind socket to.
             Examples:
                 * socket file - /tmp/uwsgi.sock
                 * all interfaces - 0.0.0.0:8080
                 * all interfaces - :9090
                 * ssl files - :9090,foobar.crt,foobar.key
 
-        :param str type: Socket type. See Networking.sockets
+        :param str|unicode type: Socket type. See Networking.sockets
 
-        :param str mode: Socket mode. See Networking.modes
+        :param str|unicode mode: Socket mode. See Networking.modes
 
-        :param str|int|list bound_workers: Map socket to specific workers.
+        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
