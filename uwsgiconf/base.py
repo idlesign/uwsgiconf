@@ -55,6 +55,12 @@ class OptionKey(object):
     def __str__(self):
         return self.key
 
+    def __eq__(self, obj):
+        return self.key == obj
+
+    def __hash__(self):
+        return hash(self.key)
+
 
 class OptionsGroup(object):
     """Introduces group of options.

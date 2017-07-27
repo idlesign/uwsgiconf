@@ -6,7 +6,7 @@ from uwsgiconf import Section, Configuration
 from uwsgiconf.exceptions import ConfigurationError
 
 
-def test_section_basics(ini, assert_lines):
+def test_section_basics(assert_lines):
 
     my_section = Section()
 
