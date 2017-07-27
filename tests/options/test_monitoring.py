@@ -92,8 +92,7 @@ def test_monitoring_pushers(assert_lines):
     ))
 
     monitoring = Section().monitoring
-    pusher = monitoring.pushers.rrdtool('/here')
-    pusher.set_basic_params('libmyrdd.so')
+    pusher = monitoring.pushers.rrdtool('/here', library='libmyrdd.so')
     assert_lines([
         'stats-push = rrdtool:/here',
         'rrdtool-lib = libmyrdd.so',
@@ -101,8 +100,7 @@ def test_monitoring_pushers(assert_lines):
     ], monitoring.register_stats_pusher(pusher))
 
     monitoring = Section().monitoring
-    pusher = monitoring.pushers.statsd('127.0.0.1:8125', 'myinstance')
-    pusher.set_basic_params(no_workers=True)
+    pusher = monitoring.pushers.statsd('127.0.0.1:8125', 'myinstance', no_workers=True)
     assert_lines([
         'stats-push = statsd:127.0.0.1:8125,myinstance',
         'statsd-no-workers = true',
@@ -124,8 +122,7 @@ def test_monitoring_pushers(assert_lines):
     ))
 
     monitoring = Section().monitoring
-    pusher = monitoring.pushers.zabbix('127.0.0.1:10051')
-    pusher.set_basic_params('/put/here')
+    pusher = monitoring.pushers.zabbix('127.0.0.1:10051', template='/put/here')
     assert_lines([
         'stats-push = zabbix:127.0.0.1:10051',
         'zabbix-template = /put/here',

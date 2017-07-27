@@ -141,22 +141,19 @@ class PusherRrdtool(Pusher):
     name = 'rrdtool'
     plugin = 'rrdtool'
 
-    def __init__(self, target_dir):
+    def __init__(self, target_dir, library=None, push_interval=None):
         """
         :param str|unicode target_dir: Directory to store rrd files into.
-        """
-        super(PusherRrdtool, self).__init__(target_dir)
 
-    def set_basic_params(self, library=None, push_interval=None):
-        """
         :param str|unicode library: Set the name of rrd library. Default: librrd.so.
 
         :param int push_interval: Set push frequency.
+
         """
+        super(PusherRrdtool, self).__init__(target_dir)
+
         self._set('rrdtool-freq', push_interval)
         self._set('rrdtool-lib', library)
-
-        return self
 
 
 class PusherStatsd(Pusher):
@@ -165,24 +162,20 @@ class PusherStatsd(Pusher):
     name = 'statsd'
     plugin = 'stats_pusher_statsd'
 
-    def __init__(self, address, prefix=None):
+    def __init__(self, address, prefix=None, no_workers=None, all_gauges=None):
         """
         :param str|unicode address:
 
         :param str|unicode prefix: Arbitrary prefix to differentiate sender.
-        """
-        super(PusherStatsd, self).__init__(address, prefix)
 
-    def set_basic_params(self, no_workers=None, all_gauges=None):
-        """
         :param bool no_workers: Disable generation of single worker metrics.
 
         :param bool all_gauges: Push all metrics to statsd as gauges.
         """
+        super(PusherStatsd, self).__init__(address, prefix)
+
         self._set('statsd-no-workers', no_workers, cast=bool)
         self._set('statsd-all-gauges', all_gauges, cast=bool)
-
-        return self
 
 
 class PusherCarbon(Pusher):
@@ -258,22 +251,19 @@ class PusherZabbix(Pusher):
     name = 'zabbix'
     plugin = 'zabbix'
 
-    def __init__(self, address, prefix=None):
+    def __init__(self, address, prefix=None, template=None):
         """
         :param str|unicode address:
 
         :param str|unicode prefix: Arbitrary prefix to differentiate sender.
+
+        :param str|unicode template: Print (or store to a file) the zabbix template
+            for the current metrics setup.
+
         """
         super(PusherZabbix, self).__init__(address, prefix)
 
-    def set_basic_params(self, template=None):
-        """
-        :param str|unicode template: Print (or store to a file) the zabbix template
-            for the current metrics setup.
-        """
         self._set('zabbix-template', template)
-
-        return self
 
 
 class PusherMongo(Pusher):
