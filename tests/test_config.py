@@ -100,13 +100,12 @@ def test_section_derive_from(assert_lines):
 def test_section_plugins(assert_lines):
 
     assert_lines([
-        'plugin = plug',
-        'autoload',
-        'plugins-dir = /here',
-        'plugins-dir = /there',
+        'plugins-dir = /here\nplugins-dir = /there\nplugin = plug',
     ], Section().set_plugins_params(
         plugins='plug', search_dirs=['/here', '/there'], autoload=True
     ))
+
+
 
 
 def test_plugin_init(assert_lines):

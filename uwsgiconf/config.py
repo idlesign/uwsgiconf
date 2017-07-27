@@ -226,7 +226,7 @@ class Section(OptionsGroup):
                 self._set(command, plugin, multi=True)
                 self._plugins.append(plugin)
 
-        self._set('plugins-dir', search_dirs, multi=True)
+        self._set('plugins-dir', search_dirs, multi=True, priority=0)
         self._set('autoload', autoload, cast=bool)
 
         return self

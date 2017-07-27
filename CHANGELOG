@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Plugin search_dirs now precedes plugins.
+
+
 v0.3.0
 ------
 + Statics options group partially described.

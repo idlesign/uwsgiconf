@@ -93,10 +93,50 @@ class OptionsGroup(object):
         """
         return self._section
 
-    def _set(self, key, value, condition=True, cast=None, multi=False, plugin=None):
+    def _set(self, key, value, condition=True, cast=None, multi=False, plugin=None, priority=None):
+        """
 
+        :param str|unicode key: Option name
+
+        :param value: Option value. Can be a lis if ``multi``.
+
+        :param condition: Condition to test whether this option should be added to section.
+            * True - test value is not None.
+
+        :param cast: Value type caster.
+            * bool - treat value as a flag
+
+        :param bool multi: Indicate that many options can use the same name.
+
+        :param str|unicode plugin: Plugin this option exposed by. Activated automatically.
+
+        :param int priority: Option priority indicator. Options with lower numbers will come first.
+
+        """
         def set_plugin(plugin):
             self._section.set_plugins_params(plugins=plugin)
+
+        def handle_priority(value, use_list=False):
+
+            if priority is not None:
+                # Restructure options.
+                opts_copy = opts.copy()
+                opts.clear()
+
+                existing_value = opts_copy.pop(key, [])
+
+                if use_list:
+                    existing_value.extend(value)
+                    value = existing_value
+
+                for pos, (item_key, item_val) in enumerate(opts_copy.items()):
+
+                    if priority == pos:
+                        opts[key] = value
+
+                    opts[item_key] = item_val
+
+                return True
 
         def handle_plugin_required(val):
 
@@ -147,11 +187,14 @@ class OptionsGroup(object):
                     values.append(value)
 
                 # Second: list in new option.
-                opts.setdefault(key, []).extend(values)
+                if not handle_priority(values, use_list=True):
+                    opts.setdefault(key, []).extend(values)
 
             else:
                 handle_plugin_required(value)
-                opts[key] = value
+
+                if not handle_priority(value):
+                    opts[key] = value
 
 
 class ParametrizedValue(OptionsGroup):
