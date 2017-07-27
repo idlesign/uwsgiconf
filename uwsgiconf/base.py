@@ -40,6 +40,22 @@ class Options(object):
         return options_obj
 
 
+class OptionKey(object):
+
+    __slots__ = ['key']
+
+    def __init__(self, key):
+        self.key = key
+
+    def swap(self, new_key):
+
+        if new_key:
+            self.key = '%s' % new_key
+
+    def __str__(self):
+        return self.key
+
+
 class OptionsGroup(object):
     """Introduces group of options.
 
@@ -113,6 +129,8 @@ class OptionsGroup(object):
         :param int priority: Option priority indicator. Options with lower numbers will come first.
 
         """
+        key = OptionKey(key)
+
         def set_plugin(plugin):
             self._section.set_plugins_params(plugins=plugin)
 
@@ -141,6 +159,8 @@ class OptionsGroup(object):
         def handle_plugin_required(val):
 
             if isinstance(val, ParametrizedValue):
+                key.swap(val.opt_key or key)
+
                 if val.plugin:
                     # Automatic plugin activation.
                     set_plugin(val.plugin)
@@ -201,9 +221,19 @@ class ParametrizedValue(OptionsGroup):
     """Represents parametrized option value."""
 
     alias = None
+    """Alias to address this value."""
+
     args_joiner = ' '
+    """Symbol to join arguments with."""
+
     name_separator = ':'
+    """Separator to add after name portion."""
+
     name_separator_strip = False
+    """Strip leading and trailing name separator from the result."""
+
+    opt_key = None
+    """Allows swapping default uption key with custom value"""
 
     def __init__(self, *args):
         self.args = args
@@ -213,7 +243,10 @@ class ParametrizedValue(OptionsGroup):
     def __str__(self):
         args = [str(arg) for arg in self.args if arg is not None]
 
-        result = self._get_name() + self.name_separator
+        result = ''
+
+        if not self.opt_key:
+            result += self._get_name() + self.name_separator
 
         result += self.args_joiner.join(args)
 

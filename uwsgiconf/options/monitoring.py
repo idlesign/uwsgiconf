@@ -188,37 +188,35 @@ class PusherStatsd(Pusher):
 class PusherCarbon(Pusher):
     """Push metrics to a Carbon server.
 
+    Metric node format: ``<node_root>.hostname.<node_realm>.metrics_data``.
+
     * http://uwsgi.readthedocs.io/en/latest/Carbon.html
     * http://uwsgi.readthedocs.io/en/latest/tutorials/GraphiteAndMetrics.html
 
     """
     name = 'carbon'
     plugin = 'carbon'
+    opt_key = name
 
-    def __init__(self, address):
+    def __init__(
+            self, address, node_realm=None, node_root=None, push_interval=None, idle_avg_source=None,
+            use_metrics=None, no_workers=None, timeout=None, retries=None, retries_delay=None,
+            hostname_dots_replacer=None):
         """
-        :param str|unicode address:
-        """
-        super(PusherCarbon, self).__init__(address)
+        :param str|unicode|list[str|unicode] address: Host and port. Example: 127.0.0.1:2004
 
-    def set_basic_params(
-            self, id=None, root_node=None, push_interval=None, idle_avg_source=None,
-            use_metrics=None, no_workers=None):
-        """
+        :param str|unicode node_realm: Set carbon metrics realm node.
 
-        :param str|unicode id: Set carbon id.
-
-        :param str|unicode root_node: Set carbon metrics root node. Default: uwsgi.
+        :param str|unicode node_root: Set carbon metrics root node. Default: uwsgi.
 
         :param int push_interval: Set carbon push frequency in seconds. Default: 60.
 
         :param bool no_workers: Disable generation of single worker metrics.
 
         :param str|unicode idle_avg_source: Average values source during idle period (no requests).
-            Default: last.
 
             Variants:
-                * last
+                * last (default)
                 * zero
                 * none
 
@@ -226,21 +224,6 @@ class PusherCarbon(Pusher):
             instead.
 
             .. warning:: Key names will be different.
-
-        """
-        self._set('carbon-id', id)
-        self._set('carbon-root', root_node)
-        self._set('carbon-freq', push_interval)
-        self._set('carbon-idle-avg', idle_avg_source)
-        self._set('carbon-use-metrics', use_metrics, cast=bool)
-        self._set('carbon-no-workers', no_workers, cast=bool)
-
-        return self
-
-    def set_connection_params(
-            self, timeout=None, retries=None, retries_delay=None,
-            hostname_dots_replacer=None, hostname_as_address=None):
-        """Sets connection related parameters.
 
         :param int timeout: Set carbon connection timeout in seconds. Default: 3.
 
@@ -251,16 +234,22 @@ class PusherCarbon(Pusher):
         :param str|unicode hostname_dots_replacer: Set char to use as a replacement for
             dots in hostname (dots are not replaced by default).
 
-        :param bool hostname_as_address: Allow using hostname as carbon server address. Default: disabled.
-
         """
+        super(PusherCarbon, self).__init__(address)
+
+        self._set('carbon-node_realm', node_realm)
+        self._set('carbon-root', node_root)
+        self._set('carbon-freq', push_interval)
+        self._set('carbon-idle-avg', idle_avg_source)
+        self._set('carbon-use-metrics', use_metrics, cast=bool)
+        self._set('carbon-no-workers', no_workers, cast=bool)
         self._set('carbon-timeout', timeout)
         self._set('carbon-max-retry', retries)
         self._set('carbon-retry-delay', retries_delay)
         self._set('carbon-hostname-dots', hostname_dots_replacer)
-        self._set('carbon-name-resolve', hostname_as_address, cast=bool)
 
-        return self
+        if not address.split(':')[0].replace('.', '').isdigit():
+            self._set('carbon-name-resolve', True, cast=bool)
 
 
 class PusherZabbix(Pusher):
