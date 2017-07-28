@@ -27,11 +27,14 @@ class Metric(ParametrizedValue):
 
             * http://uwsgi-docs.readthedocs.io/en/latest/Metrics.html#oid-assigment-for-plugins
 
-        :param Collector collector:
+        :param Collector collector: Collector to be used. If not set it is considered that the value must
+            be updated manually from applications using the metrics API.
+
+            * http://uwsgi-docs.readthedocs.io/en/latest/Metrics.html#api
 
         :param int initial_value: Set the metric to a specific value on startup.
 
-        :param int collect_interval:
+        :param int collect_interval: How ofter the metric should be gathered. In seconds.
 
         :param bool reset_after_push: Reset the metric to zero (or the configured initial_value)
             after it's been pushed.
@@ -332,12 +335,6 @@ class Collector(ParametrizedValue):
         super(Collector, self).__init__(*args)
 
 
-class CollectorManual(Collector):
-    """The value must be updated manually from applications using the metrics API."""
-
-    name = 'manual'
-
-
 class CollectorPointer(Collector):
     """The value is collected from memory pointer."""
 
@@ -475,7 +472,6 @@ class Monitoring(OptionsGroup):
         avg = CollectorAvg
         file = CollectorFile
         function = CollectorFunction
-        manual = CollectorManual
         multiplier = CollectorMultiplier
         pointer = CollectorPointer
         sum = CollectorSum
