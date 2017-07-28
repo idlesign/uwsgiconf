@@ -230,7 +230,7 @@ class PusherCarbon(Pusher):
         """
         super(PusherCarbon, self).__init__(address)
 
-        self._set('carbon-node_realm', node_realm)
+        self._set('carbon-id', node_realm)
         self._set('carbon-root', node_root)
         self._set('carbon-freq', push_interval)
         self._set('carbon-idle-avg', idle_avg_source)
