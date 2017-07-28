@@ -28,4 +28,8 @@ def test_nice_python(assert_lines):
             search_path='/home/idle/apps/',
         ),
         wsgi_module='somepackage.module',
+        embedded_plugins=None
     ))
+
+    # Embedded plugins = True
+    assert_lines('plugin = python', PythonSection(wsgi_module='somepackage.module'), assert_in=False)

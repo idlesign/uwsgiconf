@@ -109,6 +109,12 @@ class OptionsGroup(object):
         """
         return self.set_basic_params(*args, **kwargs)
 
+    def __eq__(self, obj):
+        return '%s' % self == obj
+
+    def __hash__(self):
+        return hash('%s' % self)
+
     def set_basic_params(self, *args, **kwargs):
         """
         :rtype: Section

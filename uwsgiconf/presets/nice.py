@@ -44,22 +44,30 @@ class Section(_Section):
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
 
-    def __init__(self, name=None, params_python=None, wsgi_module=None, **kwargs):
+    def __init__(self, name=None, params_python=None, wsgi_module=None, embedded_plugins=True, **kwargs):
         """
 
         :param str|unicode name: Section name.
 
         :param dict params_python: See Python plugin basic params.
 
-        :param str|unicode wsgi_module: wsgi application module path or filepath
+        :param str|unicode wsgi_module: WSGI application module path or filepath.
 
             Example:
                 mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
+        :param bool|None embedded_plugins: This indicates whether plugins were embedded into uWSGI,
+            which is the case if you have uWSGI from PyPI.
+
         :param kwargs:
         """
-        super(PythonSection, self).__init__(name=name, params_python=params_python, **kwargs)
+        if embedded_plugins is True:
+            embedded_plugins = self.embedded_plugins_presets.BASIC + ['python', 'python2', 'python3']
+
+        super(PythonSection, self).__init__(name=name, embedded_plugins=embedded_plugins, **kwargs)
+
+        self.python.set_basic_params(**(params_python or {}))
 
         if wsgi_module:
             self.python.set_wsgi_params(module=wsgi_module)
