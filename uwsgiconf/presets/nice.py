@@ -44,12 +44,12 @@ class Section(_Section):
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
 
-    def __init__(self, name=None, basic_params_python=None, wsgi_module=None, **kwargs):
+    def __init__(self, name=None, params_python=None, wsgi_module=None, **kwargs):
         """
 
         :param str|unicode name: Section name.
 
-        :param dict basic_params_python: See Python plugin params.
+        :param dict params_python: See Python plugin basic params.
 
         :param str|unicode wsgi_module: wsgi application module path or filepath
 
@@ -59,7 +59,7 @@ class PythonSection(Section):
 
         :param kwargs:
         """
-        super(PythonSection, self).__init__(name=name, basic_params_python=basic_params_python, **kwargs)
+        super(PythonSection, self).__init__(name=name, params_python=params_python, **kwargs)
 
         if wsgi_module:
             self.python.set_wsgi_params(module=wsgi_module)
