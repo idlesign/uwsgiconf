@@ -18,7 +18,8 @@ def test_nice_section(assert_lines):
 def test_nice_python(assert_lines):
 
     assert_lines([
-        'plugin = python\npyhome = /home/idle/venv/\npythonpath = /home/idle/apps/',
+        'plugin = python',
+        'pyhome = /home/idle/venv/\npythonpath = /home/idle/apps/',
         'wsgi = somepackage.module',
 
     ], PythonSection(
