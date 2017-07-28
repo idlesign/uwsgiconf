@@ -86,7 +86,7 @@ Now if you want to generate ``myconf.ini`` file and use it for uWSGI you can do 
 .. code-block:: sh
 
   $ ./myconf.py > myconf.ini
-  $ uwsgi --ini=myconf.ini
+  $ uwsgi myconf.ini
 
 Or for dynamic usage of .py:
 
