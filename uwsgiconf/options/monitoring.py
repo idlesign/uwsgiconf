@@ -182,7 +182,7 @@ class PusherStatsd(Pusher):
 
 
 class PusherCarbon(Pusher):
-    """Push metrics to a Carbon server.
+    """Push metrics to a Carbon server of Graphite.
 
     Metric node format: ``<node_root>.hostname.<node_realm>.metrics_data``.
 
@@ -219,7 +219,7 @@ class PusherCarbon(Pusher):
         :param bool use_metrics: Don't compute all statistics, use metrics subsystem data
             instead.
 
-            .. warning:: Key names will be different.
+            .. warning:: Key names of built-in stats are different from those of metrics system.
 
         :param int timeout: Set carbon connection timeout in seconds. Default: 3.
 
@@ -228,7 +228,11 @@ class PusherCarbon(Pusher):
         :param int retries_delay: Set connection retry delay in seconds. Default: 7.
 
         :param str|unicode hostname_dots_replacer: Set char to use as a replacement for
-            dots in hostname (dots are not replaced by default).
+            dots in hostname in `<node_root>.hostname.<node_realm>.metrics_data``
+
+            This affects Graphite aggregation mechanics.
+
+            .. note:: Dots are not replaced by default.
 
         """
         super(PusherCarbon, self).__init__(address)
@@ -448,11 +452,14 @@ class Monitoring(OptionsGroup):
     """Monitoring facilities.
 
     * SNMP - http://uwsgi.readthedocs.io/en/latest/SNMP.html
+
     * Stats - http://uwsgi.readthedocs.io/en/latest/StatsServer.html
+        Set of metrics gathered from uWSGI internals.
+
     * Metrics - http://uwsgi.readthedocs.io/en/latest/Metrics.html
+        Basic set of metrics gathered from uWSGI internals + user defined metrics.
 
     """
-
     class metric_types(object):
         """Various metric types to represent data of various nature.
 
