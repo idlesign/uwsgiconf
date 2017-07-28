@@ -70,7 +70,6 @@ def test_monitoring_collectors(assert_lines):
 
     collectors = Section().monitoring.collectors
 
-    assert str(collectors.manual()) == 'manual'
     assert str(collectors.pointer()) == 'ptr'
     assert str(collectors.file('/here/a', get_slot=2)) == 'file,arg1=/here/a,arg1n=2'
     assert str(collectors.function('some')) == 'func,arg1=some'
