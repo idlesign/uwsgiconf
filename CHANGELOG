@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Added support for embedded plugins.
 * Fixed Carbon pusher
 * Plugin search_dirs now precedes plugins.
 

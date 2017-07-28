@@ -1,3 +1,8 @@
+from __future__ import unicode_literals
+from collections import namedtuple
+
+
+EmbeddedPlugins = namedtuple('EmbeddedPlugins', ['generic', 'request'])
 
 
 def listify(src):
@@ -75,3 +80,71 @@ def make_key_val_string(
             value_chunks.append('%s=%s' % (aliases.get(key, key), val))
 
     return items_separator.join(value_chunks).strip()
+
+
+class UwsgiRunner(object):
+    """Exposes methods to run uWSGI."""
+
+    def __init__(self, binary_path=None):
+        self.binary_path = binary_path or 'uwsgi'
+
+    def get_output(self, command_args):
+        """Runs a command and returns its output (stdout + stderr).
+
+        :param str|unicode|list[str|unicode] command_args:
+
+        :rtype: str|unicode
+
+        """
+        from subprocess import Popen, STDOUT, PIPE
+
+        command = [self.binary_path]
+        command.extend(listify(command_args))
+
+        process = Popen(command, stdout=PIPE, stderr=STDOUT)
+        out, _ = process.communicate()
+
+        return out
+
+    def get_plugins(self):
+        """Returns ``EmbeddedPlugins`` object with
+
+        :rtype EmbeddedPlugins:
+        """
+        out = self.get_output('--plugin-list')
+        return parse_command_plugins_output(out)
+
+
+def parse_command_plugins_output(out):
+    """Parses ``plugin-list`` command output from uWSGI
+    and returns object containing lists of embedded plugin names.
+
+    :param str|unicode out:
+
+    :rtype EmbeddedPlugins:
+
+    """
+    out = out.split('--- end of plugins list ---')[0]
+    out = out.partition('plugins ***')[2]
+    out = out.splitlines()
+
+    current_slot = 0
+
+    plugins = EmbeddedPlugins([], [])
+
+    for line in out:
+        line = line.strip()
+
+        if not line:
+            continue
+
+        if line.startswith('***'):
+            current_slot += 1
+            continue
+
+        if current_slot is not None:
+            plugins[current_slot].append(line)
+
+    plugins = plugins._replace(request=[plugin.partition(' ')[2] for plugin in plugins.request])
+
+    return plugins

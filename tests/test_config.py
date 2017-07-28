@@ -41,6 +41,27 @@ def test_section_basics(assert_lines):
     )
 
 
+def test_section_embeddeding_plugins(assert_lines, mock_popen):
+    # Embedded plugins handling.
+    section = Section(embedded_plugins=Section.embedded_plugins_presets.BASIC)
+    assert_lines([
+        'plugin = syslog'
+    ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
+
+    mock_popen(lambda: ('plugins ***\nsyslog', ''))
+
+    # Probing.
+    section = Section(embedded_plugins=Section.embedded_plugins_presets.PROBE)
+    assert_lines([
+        'plugin = syslog'
+    ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
+
+    section = Section(embedded_plugins=Section.embedded_plugins_presets.PROBE('/venv/bin/uwsgi'))
+    assert_lines([
+        'plugin = syslog'
+    ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
+
+
 def test_section_print(assert_lines):
 
     assert_lines('%[[37;49mAAA a%[[0m', Section(style_prints=True).print_out('a', indent='AAA '))

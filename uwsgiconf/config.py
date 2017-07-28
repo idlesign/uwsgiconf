@@ -1,5 +1,6 @@
 import os
 from copy import deepcopy
+from itertools import chain
 from datetime import datetime
 from collections import OrderedDict
 from functools import partial
@@ -9,7 +10,7 @@ from .base import Options, OptionsGroup
 from .options import *
 from .formatters import IniFormatter, format_print_text
 from .exceptions import ConfigurationError
-from .utils import listify
+from .utils import listify, UwsgiRunner
 
 
 class Section(OptionsGroup):
@@ -91,7 +92,29 @@ class Section(OptionsGroup):
     python = Options(Python)  # type: Python
     """Python options group."""
 
-    def __init__(self, name=None, strict_config=None, style_prints=False, **kwargs):
+    class embedded_plugins_presets(object):
+        """These are plugin presets that can be used as ``embedded_plugins`` values."""
+
+        BASIC = [plugin.strip() for plugin in (
+            'ping, cache, nagios, rrdtool, carbon, rpc, corerouter, fastrouter, http, ugreen, signal, '
+            'syslog, rsyslog, logsocket, router_uwsgi, router_redirect, router_basicauth, zergpool, '
+            'redislog, mongodblog, router_rewrite, router_http, logfile, router_cache, rawrouter, '
+            'router_static, sslrouter, spooler, cheaper_busyness, symcall, transformation_tofile, '
+            'transformation_gzip, transformation_chunked, transformation_offload, router_memcached, '
+            'router_redis, router_hash, router_expires, router_metrics, transformation_template, '
+            'stats_pusher_socket, router_fcgi').split(',')]
+        """Basic set of embedded plugins. This set is used in uWSGI package from PyPI."""
+
+        @staticmethod
+        def PROBE(uwsgi_binary=None):
+            """This preset allows probing real uWSGI to get actual embedded plugin list."""
+
+            def probe():
+                return list(chain.from_iterable(UwsgiRunner(uwsgi_binary).get_plugins()))
+
+            return probe
+
+    def __init__(self, name=None, strict_config=None, style_prints=False, embedded_plugins=None, **kwargs):
         """
 
         :param bool strict_config: Enable strict configuration parsing.
@@ -105,9 +128,27 @@ class Section(OptionsGroup):
         :param bool style_prints: Enables styling (e.g. colouring) for ``print_`` family methods.
             Could be nice for console and distracting in logs.
 
+        :param list|callable embedded_plugins: List of embedded plugins. Plugins from that list will
+            be considered already loaded so uwsgiconf won't instruct uWSGI to load it if required.
+
+            See ``.embedded_plugins_presets`` for shortcuts.
+
+            .. note::
+                * If you installed uWSGI using PyPI package there should already be basic plugins embedded.
+                * If using Ubuntu distribution you have to install plugins as separate packages.
+
+            * http://uwsgi-docs.readthedocs.io/en/latest/BuildSystem.html#plugins-and-uwsgiplugin-py
+
         """
         self._style_prints = style_prints
-        self._plugins = []
+
+        # Allow setting both PROBE and PROBE('/venv/bin/uwsgi')
+        if callable(embedded_plugins):
+            if embedded_plugins is self.embedded_plugins_presets.PROBE:
+                embedded_plugins = embedded_plugins()
+            embedded_plugins = embedded_plugins()
+
+        self._plugins = embedded_plugins or []
 
         self._section = self
         self._options_objects = OrderedDict()
