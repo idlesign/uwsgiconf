@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.4.0
+------
 + Added 'embedded_plugins' arg for PythonSection.
 + Added support for embedded plugins.
 * Fixed Carbon pusher
