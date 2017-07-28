@@ -85,7 +85,18 @@ There we configure it using nice ``PythonSection`` preset to run our web app.
 
     ).as_configuration().print_ini()
 
-Now we are ready to use this configuration dynamically (see ``Strategies`` paragraph above).
+Now if you want to generate ``myconf.ini`` file and use it for uWSGI you can do it with:
+
+.. code-block:: sh
+
+  $ ./myconf.py > myconf.ini
+  $ uwsgi --ini=myconf.ini
+
+Or for dynamic usage of .py:
+
+.. code-block:: sh
+
+  $ uwsgi --ini=exec://./myconf.py
 
 
 Documentation
