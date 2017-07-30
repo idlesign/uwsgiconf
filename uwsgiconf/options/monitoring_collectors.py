@@ -44,7 +44,7 @@ class CollectorFile(Collector):
         :param str|unicode fpath: File path.
 
         :param int get_slot: Get value from the given slot number.
-            Slots: the content is split (using \n, \t, spaces, \r and zero as separator)
+            Slots: the content is split (using \\n, \\t, spaces, \\r and zero as separator)
             and the item (the returned array is zero-based) used as the return value.
 
         """
