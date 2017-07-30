@@ -1,3 +1,4 @@
+from .routing_modifiers import *
 from ..base import OptionsGroup, ParametrizedValue
 from ..exceptions import ConfigurationError
 from ..utils import listify, make_key_val_string, filter_locals
@@ -332,14 +333,13 @@ class ActionRouteUwsgi(RouteAction):
     plugin = 'router_uwsgi'
     args_joiner = ','
 
-    def __init__(self, external_address='', mod1='', mod2='', app=''):
+    def __init__(self, external_address='', modifier='', mod2='', app=''):
         """
         :param str|unicode external_address: External uWSGI server address (host:port).
-        :param str|unicode mod1: Set modifier 1.
-        :param str|unicode mod2: Set modifier 2.
+        :param Modifier modifier: Set request modifier.
         :param str|unicode app: Set ``UWSGI_APPID``.
         """
-        super(ActionRouteUwsgi, self).__init__(external_address, mod1, mod2, app)
+        super(ActionRouteUwsgi, self).__init__(external_address, modifier, modifier.submod, app)
 
 
 class ActionRouteExternal(RouteAction):
@@ -1059,6 +1059,58 @@ class Routing(OptionsGroup):
     """
 
     route_rule = RouteRule
+
+    class modifiers(object):
+        """Routing modifiers.
+
+        * http://uwsgi.readthedocs.io/en/latest/Protocol.html
+
+        """
+        WSGI = ModifierWsgi
+        PSGI = ModifierPsgi
+        LUA = ModifierLua
+        RACK = ModifierRack
+        JVM = ModifierJvm
+        CGI = ModifierCgi
+        MANAGE = ModifierManage
+        GCCGO = ModifierGccgo
+        PHP = ModifierPhp
+        MONO = ModifierMono
+        SPLOOER = ModifierSpooler
+        SYMCALL = ModifierSymcall
+        SSI = ModifierSsi
+        EVAL = ModifierEval
+        XSLT = ModifierXslt
+        V8 = ModifierV8
+        GRIDFS = ModifierGridfs
+        FASTFUNC = ModifierFastfunc
+        GLUSTERFS = ModifierGlusterfs
+        RADOS = ModifierRados
+        MANAGE_PATH_INFO = ModifierManagePathInfo
+        MESSAGE = ModifierMessage
+        MESSAGE_ARRAY = ModifierMessageArray
+        MESSAGE_MARSHAL = ModifierMessageMarshal
+        WEBDAV = ModifierWebdav
+        SNMP = ModifierSnmp
+        RAW = ModifierRaw
+        MULTICAST_ANNOUNCE = ModifierMulticastAnnounce
+        MULTICAST = ModifierMulticast
+        CLUSTER_NODE = ModifierClusterNode
+        REMOTE_LOGGING = ModifierRemoteLogging
+        RELOAD_BRUTAL = ModifierReloadBrutal
+        RELOAD = ModifierReload
+        CONFIG_FROM_NODE = ModifierConfigFromNode
+        PING = ModifierPing
+        ECHO = ModifierEcho
+        LEGION_MSG = ModifierLegionMsg
+        SIGNAL = ModifierSignal
+        CACHE = ModifierCache
+        COREROUTER_SIGNAL = ModifierCorerouterSignal
+        RPC = ModifierRpc
+        PERSISTENT_CLOSE = ModifierPersistentClose
+        SUBSCRIPTION = ModifierSubscription
+        EXAMPLE = ModifierExample
+        RESPONSE = ModifierResponse
 
     def register_route(self, route_rules, label=None):
         """Registers a routing rule.

@@ -596,10 +596,10 @@ class Logging(OptionsGroup):
         """Size of the internal request uwsgi packet."""
 
         MOD1 = '%(modifier1)'
-        """modifier1 of the request."""
+        """``modifier1`` of the request. See ``.routing.modifiers``."""
 
         MOD2 = '%(modifier2)'
-        """modifier2 of the request."""
+        """``modifier2`` of the request. See ``.routing.modifiers``."""
 
         REQ_COUNT_ERR_READ = '%(rerr)'
         """Number of read errors for the request.

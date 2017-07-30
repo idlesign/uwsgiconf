@@ -62,6 +62,7 @@ API
     grp_networking
     grp_queue
     grp_routing
+    grp_routing_modifiers
     grp_spooler
     grp_statics
     grp_workers

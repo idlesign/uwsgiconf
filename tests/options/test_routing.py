@@ -137,7 +137,8 @@ def test_routing_actions(assert_lines):
         'route-run = uwsgi:127.0.0.1:3031,5,,fooapp',
 
     ], Section().routing.register_route(
-        rule(rule.actions.route_uwsgi('127.0.0.1:3031', mod1=5, app='fooapp'), subject=None)
+        rule(rule.actions.route_uwsgi(
+            '127.0.0.1:3031', modifier=Section.routing.modifiers.PSGI(), app='fooapp'), subject=None)
     ))
 
     assert_lines([

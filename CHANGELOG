@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Introduced routing modifiers.
+
+
 v0.4.0
 ------
 + Added 'embedded_plugins' arg for PythonSection.
