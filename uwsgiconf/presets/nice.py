@@ -35,6 +35,7 @@ class Section(_Section):
 
         self.workers.set_thread_params(count=threads)
         self.workers.set_mules_params(mules=mules)
+        self.workers.set_harakiri_params(verbose=True)
         self.main_process.set_basic_params(vacuum=True)
         self.main_process.set_naming_params(autonaming=True)
         self.master_process.set_basic_params(enable=True)

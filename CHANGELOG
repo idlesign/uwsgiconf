@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Nice preset: harakiri made verbose.
 + Introduced routing modifiers.
 
 
