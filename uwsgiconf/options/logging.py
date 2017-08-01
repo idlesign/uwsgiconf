@@ -299,7 +299,7 @@ class Logging(OptionsGroup):
         REQ_REFERER = '%(referer)'
         """HTTP_REFERER from ``wsgi_request`` of the current request."""
 
-        # The following are simple functions called for generating the logvar value.
+        # The following are simple functions called to generate the logvar value.
 
         RESP_STATUS = '%(status)'
         """HTTP response status code."""

@@ -106,3 +106,60 @@ class SubjectCustom(ParametrizedValue):
     def contains(self, val):
         """Check if the subject contains the specified pattern."""
         return self._setup('contains', val)
+
+
+class SubjectPathInfo(SubjectBuiltin):
+    """Default subject, maps to PATH_INFO."""
+
+    name = ''
+
+
+class SubjectRequestUri(SubjectBuiltin):
+    """Checks REQUEST_URI for a value."""
+
+    name = 'uri'
+
+
+class SubjectQueryString(SubjectBuiltin):
+    """Checks QUERY_STRING for a value."""
+
+    name = 'qs'
+
+
+class SubjectRemoteAddr(SubjectBuiltin):
+    """Checks REMOTE_ADDR for a value."""
+
+    name = 'remote-addr'
+
+
+class SubjectRemoteUser(SubjectBuiltin):
+    """Checks REMOTE_USER for a value."""
+
+    name = 'remote-user'
+
+
+class SubjectHttpHost(SubjectBuiltin):
+    """Checks HTTP_HOST for a value."""
+
+    name = 'host'
+
+
+class SubjectHttpReferer(SubjectBuiltin):
+    """Checks HTTP_REFERER for a value."""
+
+    name = 'referer'
+
+
+class SubjectHttpUserAgent(SubjectBuiltin):
+    """Checks HTTP_USER_AGENT for a value."""
+
+    name = 'user-agent'
+
+
+class SubjectStatus(SubjectBuiltin):
+    """Checks HTTP response status code.
+
+    .. warning:: Not available in the request chain.
+
+    """
+    name = 'status'

@@ -1,20 +1,10 @@
 from .routing_modifiers import *
 from .routing_actions import *
-from .routing_subjects import SubjectBuiltin, SubjectCustom
+from .routing_vars import *
+from .routing_subjects import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
 from ..utils import listify
-
-
-class Var(object):
-
-    tpl = '%s'
-
-    def __init__(self, name):
-        self._name = name
-
-    def __str__(self):
-        return self.tpl % self._name
 
 
 class RouteRule(object):
@@ -23,82 +13,23 @@ class RouteRule(object):
     class vars(object):
         """Routing variables."""
 
-        class request(Var):
-            """Returns request variable. Examples: PATH_INFO, SCRIPT_NAME, REQUEST_METHOD."""
-            tpl = '${%s}'
-
-        class metric(Var):
-            """Returns metric (see ``monitoring``) variable."""
-            tpl = '${metric[%s]}'
-
-        class cookie(Var):
-            """Returns cookie variable"""
-            tpl = '${cookie[%s]}'
-
-        class query(Var):
-            """Returns query string variable."""
-            tpl = '${qs[%s]}'
-
-        class uwsgi(Var):
-            """Returns internal uWSGI information.
-
-             Supported variables:
-                * wid
-                * pid
-                * uuid
-                * status
-
-            """
-            tpl = '${uwsgi[%s]}'
-
-        class time(Var):
-            """Returns time/date in various forms.
-
-            Supported variables:
-                * unix
-
-            """
-            tpl = '${time[%s]}'
-
-        class httptime(Var):
-            """Returns http date adding the numeric argument (if specified)
-            to the current time (use empty arg for current server time).
-
-            """
-            tpl = '${httptime[%s]}'
+        cookie = VarCookie
+        httptime = VarHttptime
+        metric = VarMetric
+        query = VarQuery
+        request = VarRequest
+        time = VarTime
+        uwsgi = VarUwsgi
 
     class var_functions(object):
         """Functions that can be applied to variables."""
 
-        class mime(Var):
-            """Returns mime type of a variable."""
-            tpl = '${mime[%s]}'
-
-        class math(Var):
-            """Perform a math operation. Example: CONTENT_LENGTH+1
-
-            Supported operations: + - * /
-
-            .. warning:: Requires matheval support.
-
-            """
-            tpl = '${math[%s]}'
-
-        class base64(Var):
-            """Encodes the specified var in base64"""
-            tpl = '${base64[%s]}'
-
-        class hex(Var):
-            """Encodes the specified var in hex."""
-            tpl = '${hex[%s]}'
-
-        class upper(Var):
-            """Uppercase the specified var."""
-            tpl = '${upper[%s]}'
-
-        class lower(Var):
-            """Lowercase the specified var."""
-            tpl = '${lower[%s]}'
+        base64 = FuncBase64
+        hex = FuncHex
+        lower = FuncLower
+        math = FuncMath
+        mime = FuncMime
+        upper = FuncUpper
 
     class stages(object):
         """During the request cycle, various stages (aka chains) are processed.
@@ -123,59 +54,21 @@ class RouteRule(object):
     class subjects(object):
         """Routing subjects. These can be request's variables or other entities.
 
-        .. note:: Non-custom subjects (uppercased) can be pre-optimized (during startup)
+        .. note:: Non-custom subjects can be pre-optimized (during startup)
             and should be used for performance reasons.
 
         """
         custom = SubjectCustom
 
-        class PATH_INFO(SubjectBuiltin):
-            """Default subject, maps to PATH_INFO."""
-
-            name = ''
-
-        class REQUEST_URI(SubjectBuiltin):
-            """Checks REQUEST_URI for a value."""
-
-            name = 'uri'
-
-        class QUERY_STRING(SubjectBuiltin):
-            """Checks QUERY_STRING for a value."""
-
-            name = 'qs'
-
-        class REMOTE_ADDR(SubjectBuiltin):
-            """Checks REMOTE_ADDR for a value."""
-
-            name = 'remote-addr'
-
-        class REMOTE_USER(SubjectBuiltin):
-            """Checks REMOTE_USER for a value."""
-
-            name = 'remote-user'
-
-        class HTTP_HOST(SubjectBuiltin):
-            """Checks HTTP_HOST for a value."""
-
-            name = 'host'
-
-        class HTTP_REFERER(SubjectBuiltin):
-            """Checks HTTP_REFERER for a value."""
-
-            name = 'referer'
-
-        class HTTP_USER_AGENT(SubjectBuiltin):
-            """Checks HTTP_USER_AGENT for a value."""
-
-            name = 'user-agent'
-
-        class STATUS(SubjectBuiltin):
-            """Checks HTTP response status code.
-
-            .. warning:: Not available in the request chain.
-
-            """
-            name = 'status'
+        http_host = SubjectHttpHost
+        http_referer = SubjectHttpReferer
+        http_user_agent = SubjectHttpUserAgent
+        path_info = SubjectPathInfo
+        query_string = SubjectQueryString
+        remote_addr = SubjectRemoteAddr
+        remote_user = SubjectRemoteUser
+        request_uri = SubjectRequestUri
+        status = SubjectStatus
 
     class transforms(object):
         """A transformation is like a filter applied to the response
