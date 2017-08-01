@@ -152,7 +152,7 @@ class RouteRule(object):
         # router_memcached: memcached, memcached-continue, memcachedstore
         # router_redis: redis, redis-continue, redisstore
 
-    def __init__(self, action, subject=subjects.PATH_INFO('(.*)'), stage=stages.REQUEST):
+    def __init__(self, action, subject=subjects.path_info('(.*)'), stage=stages.REQUEST):
         """
         :param RouteAction action: Action (or transformation) to perfrom.
             See ``.actions`` and ``.transforms``.

@@ -148,7 +148,7 @@ def test_routing_actions(assert_lines):
     ], Section().routing.register_route(
         rule(
             rule.actions.rewrite('/index.php?page=$1.php', do_continue=True),
-            subject=rule.subjects.REQUEST_URI('/some'))
+            subject=rule.subjects.request_uri('/some'))
     ))
 
     assert_lines([
@@ -395,14 +395,14 @@ def test_routing_goto_label(assert_lines):
 
             rule(
                 actions.do_goto(label),
-                subjects.HTTP_HOST('^localhost$')
+                subjects.http_host('^localhost$')
             )
 
         ).routing.register_route(
             [
                 rule(
                     actions.redirect('http://uwsgi.it'),
-                    subjects.HTTP_USER_AGENT('.*curl.*')
+                    subjects.http_user_agent('.*curl.*')
                 ),
                 rule(
                     actions.do_continue()
