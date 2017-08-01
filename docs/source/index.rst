@@ -31,6 +31,7 @@ Requirements
 ------------
 
 1. Python 2.7+, 3.3+
+2. ``click`` package (optional, for CLI)
 
 
 
@@ -41,6 +42,7 @@ Table of Contents
     :maxdepth: 2
 
     quickstart
+    cli
 
 
 API

@@ -95,6 +95,11 @@ Or for dynamic usage of .py:
   $ uwsgi --ini=exec://./myconf.py
 
 
+CLI
+---
+**uwsgiconf** comes with CLI to facilitate configuration. See the documentation.
+
+
 Documentation
 -------------
 

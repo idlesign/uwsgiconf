@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Introduced CLI with basic 'compile' command
 + Nice preset: harakiri made verbose.
 + Introduced routing modifiers.
 

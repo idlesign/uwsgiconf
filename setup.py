@@ -34,6 +34,9 @@ setup(
 
     install_requires=[],
     setup_requires=[] + PYTEST_RUNNER,
+    extras_require={
+        'cli':  ['click>=2.0'],
+    },
 
     entry_points={
         'console_scripts': ['uwsgiconf = uwsgiconf.cli:main'],
