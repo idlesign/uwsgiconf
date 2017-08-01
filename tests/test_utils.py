@@ -1,4 +1,9 @@
-from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output
+import os
+
+import pytest
+
+from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule
+from uwsgiconf.exceptions import ConfigurationError
 
 
 SAMPLE_OUT_PLUGINS_MANY = '''
@@ -49,3 +54,30 @@ def test_runner(mock_popen):
     plugins = runner.get_plugins()
     assert len(plugins.generic) == 3
     assert len(plugins.request) == 2
+
+
+def test_conf_module():
+    fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
+
+    # no attr
+    module = ConfModule(fpath)
+    module.confs_attr_name = 'faked'
+    with pytest.raises(ConfigurationError):
+        confs = module.configurations
+
+    # empty
+    module = ConfModule(fpath)
+    module.confs_attr_name = 'not_conf1'
+    with pytest.raises(ConfigurationError):
+        confs = module.configurations
+
+    # invalid objects
+    module = ConfModule(fpath)
+    module.confs_attr_name = 'not_conf2'
+    with pytest.raises(ConfigurationError):
+        confs = module.configurations
+
+    # invalid objects
+    module = ConfModule(fpath)
+    assert module.configurations
+    assert len(module.configurations) == 1

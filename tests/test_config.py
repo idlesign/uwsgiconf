@@ -126,7 +126,8 @@ def test_section_plugins(assert_lines):
         plugins='plug', search_dirs=['/here', '/there'], autoload=True
     ))
 
-
+    section = Section()
+    hash(section.python) == hash(section.python.name)
 
 
 def test_plugin_init(assert_lines):

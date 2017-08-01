@@ -1,8 +1,119 @@
 from __future__ import unicode_literals
+import os
+import sys
+from contextlib import contextmanager
 from collections import namedtuple
+from importlib import import_module
+
+try:  # pragma: nocover
+    from StringIO import StringIO
+except ImportError:  # pragma: nocover
+    from io import StringIO
+
+from .exceptions import ConfigurationError
 
 
 EmbeddedPlugins = namedtuple('EmbeddedPlugins', ['generic', 'request'])
+
+
+@contextmanager
+def output_capturing():
+    """Temporarily captures/redirects stdout."""
+    out = sys.stdout
+
+    sys.stdout = StringIO()
+
+    try:
+        yield
+
+    finally:
+        sys.stdout = out
+
+
+class ConfModule(object):
+    """Represents a uwsgiconf configuration module.
+
+    Allows reading configurations from .py files.
+
+    """
+    default_name = 'uwsgicfg.py'
+    confs_attr_name = 'configuration'
+
+    def __init__(self, fpath):
+        """Module filepath.
+
+        :param fpath:
+        """
+        fpath = os.path.abspath(fpath)
+        self.fpath = fpath
+        self._confs = None
+
+    @property
+    def configurations(self):
+        """Configuration( section(s) from uwsgiconf module."""
+
+        if self._confs is not None:
+            return self._confs
+
+        from uwsgiconf.config import Section, Configuration
+
+        fpath = self.fpath
+
+        with output_capturing():
+            module = self.load(fpath)
+
+            attr = getattr(module, self.confs_attr_name, None)
+
+            if attr is None:
+                raise ConfigurationError(
+                    "'configuration' attribute not found [ %s ]" % fpath)
+
+            if callable(attr):
+                attr = attr()
+
+        if not attr:
+            raise ConfigurationError(
+                "'configuration' attribute is empty [ %s ]" % fpath)
+
+        if not isinstance(attr, (list, tuple)):
+            attr = [attr]
+
+        confs = []
+
+        for conf_candidate in attr:
+            if not isinstance(conf_candidate, (Section, Configuration)):
+                continue
+
+            if isinstance(conf_candidate, Section):
+                conf_candidate = conf_candidate.as_configuration()
+
+            confs.append(conf_candidate)
+
+        if not confs:
+            raise ConfigurationError(
+                "'configuration' attribute must hold either 'Section' nor 'Configuration' objects [ %s ]" % fpath)
+
+        self._confs = confs
+
+        return confs
+
+    @classmethod
+    def load(cls, fpath):
+        """Loads a module and returns its object.
+
+        :param str|unicode fpath:
+        :rtype: module
+        """
+        module_name = os.path.splitext(os.path.basename(fpath))[0]
+
+        sys.path.insert(0, os.path.dirname(fpath))
+        try:
+            module = import_module(module_name)
+
+        finally:
+            sys.path = sys.path[1:]
+
+        return module
 
 
 def listify(src):
