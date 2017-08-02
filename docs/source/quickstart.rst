@@ -11,7 +11,7 @@ Two main strategies to use **uwsgiconf**:
 
   .. code-block:: bash
 
-    uwsgi --ini 'exec://path/to/myconf.py'
+    uwsgi --ini "exec://python <path-to-myconf.py>"
 
 
 Using a preset to run Python web application
