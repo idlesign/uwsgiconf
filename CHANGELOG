@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Routing modifier names now follow common pattern.
+
+
 v0.5.0
 ------
 + Introduced CLI with basic 'compile' command
