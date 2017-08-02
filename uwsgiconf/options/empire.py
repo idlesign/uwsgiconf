@@ -59,6 +59,7 @@ class Empire(OptionsGroup):
         * http://uwsgi-docs.readthedocs.io/en/latest/tutorials/EmperorSubscriptions.html
 
         :param str|unicode command_socket: Enable the Emperor command socket.
+            It is a channel allowing external process to govern vassals.
 
         :param bool wait_for_command: Always wait for a 'spawn' Emperor command before starting a vassal.
 
