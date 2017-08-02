@@ -56,7 +56,7 @@ def test_runner(mock_popen):
     assert len(plugins.request) == 2
 
 
-def test_conf_module():
+def test_conf_module_compile():
     fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
 
     # no attr
@@ -81,3 +81,15 @@ def test_conf_module():
     module = ConfModule(fpath)
     assert module.configurations
     assert len(module.configurations) == 1
+
+
+def test_conf_module_run(monkeypatch):
+    executed = []
+    monkeypatch.setattr(os, 'execvp', lambda *args: executed.append(True))
+
+    fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
+
+    module = ConfModule(fpath)
+    module.spawn_uwsgi()
+
+    assert all(executed)

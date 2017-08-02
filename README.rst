@@ -45,9 +45,11 @@ By that time you already know that **uwsgiconf** is just another configuration m
 
 .. _Why: http://uwsgi-docs.readthedocs.io/en/latest/FAQ.html#why-do-you-support-multiple-methods-of-configuration
 
+Moreover **uwsgiconf** comes with CLI to facilitate configuration.
 
-Strategies
-----------
+
+Usage Strategies
+----------------
 
 Two main strategies to use **uwsgiconf**:
 
@@ -58,16 +60,14 @@ Two main strategies to use **uwsgiconf**:
 A taste of it
 -------------
 
-Let's make ``myconf.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
+Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
 
 .. code-block:: python
 
     from uwsgiconf.presets.nice import PythonSection
 
 
-    PythonSection(
-        # Reload uWSGI when this file is touched/updated.
-        touch_reload=__file__,
+    configuration = PythonSection(
         # Load wsgi.py module containing WSGI application.
         wsgi_module='/home/idle/myapp/wsgi.py',
 
@@ -76,25 +76,27 @@ Let's make ``myconf.py``. There we configure it using nice ``PythonSection`` pre
         address='127.0.0.1:8000',
         type=PythonSection.networking.socket_types.HTTP,
 
-    ).as_configuration().print_ini()
+    ).as_configuration()
 
-Now if you want to generate ``myconf.ini`` file and use it for uWSGI you can do it with:
+    configuration.print_ini()
 
-.. code-block:: sh
+1. Now if you want to generate ``myconf.ini`` file and use it for uWSGI you can do it with:
 
-  $ python myconf.py > myconf.ini
-  $ uwsgi myconf.ini
+    .. code-block:: bash
 
-Or for dynamic usage of .py:
+        $ python uwsgicfg.py > myconf.ini
+        ; or just
+        $ uwsgiconf compile > myconf.ini
 
-.. code-block:: sh
+        $ uwsgi myconf.ini
 
-  $ uwsgi --ini "exec://python myconf.py"
+2. Or for dynamic usage of .py:
 
+    .. code-block:: bash
 
-CLI
----
-**uwsgiconf** comes with CLI to facilitate configuration. See the documentation.
+        $ uwsgi --ini "exec://python uwsgicfg.py"
+        ; or just
+        $ uwsgiconf run
 
 
 Documentation

@@ -48,6 +48,14 @@ class ConfModule(object):
         self.fpath = fpath
         self._confs = None
 
+    def spawn_uwsgi(self):
+        """Spawns uWSGI process wich will use current configuration module.
+
+        .. note:: uWSGI process will replace ``uwsgiconf`` process.
+
+        """
+        UwsgiRunner().spawn(self.fpath)
+
     @property
     def configurations(self):
         """Configuration( section(s) from uwsgiconf module."""
@@ -224,6 +232,17 @@ class UwsgiRunner(object):
         """
         out = self.get_output('--plugin-list')
         return parse_command_plugins_output(out)
+
+    def spawn(self, module_path):
+        """Spawns uWSGI using the given configuration module.
+
+        .. note:: uWSGI process will replace ``uwsgiconf`` process.
+
+        :param str|unicode module_path:
+
+        """
+        command = '%s %s' % (sys.executable, module_path)
+        os.execvp('uwsgi', ['uwsgi', '--ini', 'exec://%s' % command])
 
 
 def parse_command_plugins_output(out):

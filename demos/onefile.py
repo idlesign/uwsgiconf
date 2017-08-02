@@ -4,7 +4,7 @@ Trick demo. It shows how to use one file both for uWSGI configuration and applic
 
     Start uWSGi with the following command:
 
-        uwsgi --ini "exec://python <path-to-this-file>"
+        uwsgiconf run <path-to-this-file>
 
 * Python 3 is expected.
 

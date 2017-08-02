@@ -23,4 +23,21 @@ Compiles classic uWSGI configuration from a given `uwsgiconf` configuration modu
     ; This compiles there/thisfile.py file:
     $ uwsgiconf compile there/thisfile.py
 
+    ; Add "> target_file.ini" to redirect output (configuration) into a file.
 
+
+Run
+---
+
+Runs uWSGI using configuration from a given `uwsgiconf` configuration module
+(or from the default one - ``uwsgicfg.py``).
+
+.. note:: uWSGI process will replace ``uwsgiconf`` process.
+
+.. code-block:: bash
+
+    ; This runs uWSGI using uwsgicfg.py from the current directory.
+    $ uwsgiconf run
+
+    ; This runs uWSGI using configuration from there/thisfile.py:
+    $ uwsgiconf run there/thisfile.py

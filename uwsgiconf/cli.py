@@ -34,6 +34,17 @@ arg_conf = click.argument(
 
 @base.command()
 @arg_conf
+def run(conf):
+    """Runs uWSGI passing to it using the default or another `uwsgiconf` configuration module.
+
+    """
+    with errorprint():
+        config = ConfModule(conf)
+        config.spawn_uwsgi()
+
+
+@base.command()
+@arg_conf
 def compile(conf):
     """Compiles classic uWSGI configuration file using the default
     or given `uwsgiconf` configuration module.

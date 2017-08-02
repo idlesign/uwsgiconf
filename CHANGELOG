@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ CLI: implemented 'run' command.
 * Routing modifier names now follow common pattern.
 
 

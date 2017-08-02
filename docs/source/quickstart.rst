@@ -1,30 +1,41 @@
 Quickstart
 ==========
 
-Strategies
-----------
+Usage Strategies
+----------------
 
 Two main strategies to use **uwsgiconf**:
 
 1. **Static:** create configuration .py and compile it on demand into classic uWSGI .ini using provided methods.
+
+    .. code-block:: bash
+
+        $ python uwsgicfg.py > myconf.ini
+        ; or just
+        $ uwsgiconf compile > myconf.ini
+
+        $ uwsgi myconf.ini
+
 2. **Dynamic:** create configuration .py, and give it directly to uWSGI with ``exec`` directive.
 
-  .. code-block:: bash
+    .. code-block:: bash
 
-    uwsgi --ini "exec://python <path-to-myconf.py>"
+        $ uwsgi --ini "exec://python uwsgicfg.py"
+        ; or just
+        $ uwsgiconf run
 
 
 Using a preset to run Python web application
 --------------------------------------------
 
-Let's make ``myconf.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
+Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
 
 .. code-block:: python
 
     from uwsgiconf.presets.nice import PythonSection
 
 
-    PythonSection(
+    configuration = PythonSection(
         # Reload uWSGI when this file is updated.
         touch_reload=__file__,
 
@@ -37,12 +48,19 @@ Let's make ``myconf.py``. There we configure it using nice ``PythonSection`` pre
         # Load wsgi.py module from myapp package.
         wsgi_module='myapp.wsgi',
 
+        # If your uWSGI has no basic plugins embedded
+        # (i.e. not from PyPI) you can give uwsgiconf a hint:
+        # embedded_plugins=False,
+
     ).networking.register_socket(
         # Make app available at http://127.0.0.1:8000
         address='127.0.0.1:8000',
         type=PythonSection.networking.socket_types.HTTP,
 
-    ).as_configuration().print_ini()
+    ).as_configuration()
+
+    configuration.print_ini()
+
 
 Now we are ready to use this configuration dynamically (see ``Strategies`` paragraph above).
 
@@ -76,7 +94,7 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_.
     # in than case you won't get any arg hints from you IDE.
 
     # Now we add two sections based on common parameters into our configuration:
-    Configuration([
+    configuration = Configuration([
 
         # This section is for Broodlord Emperor.
         Section.derive_from(base_section).
