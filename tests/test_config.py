@@ -127,7 +127,7 @@ def test_section_plugins(assert_lines):
     ))
 
     section = Section()
-    hash(section.python) == hash(section.python.name)
+    assert hash(section.python) == hash(section.python.name)
 
 
 def test_plugin_init(assert_lines):
