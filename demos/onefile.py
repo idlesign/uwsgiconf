@@ -1,11 +1,10 @@
-#! /usr/bin/env python3
 # -*- encoding: utf-8 -*-
 """
 Trick demo. It shows how to use one file both for uWSGI configuration and application definition.
 
     Start uWSGi with the following command:
 
-        uwsgi --ini=exec://<path-to-this-file>
+        uwsgi --ini "exec://python <path-to-this-file>"
 
 * Python 3 is expected.
 

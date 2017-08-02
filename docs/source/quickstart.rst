@@ -7,7 +7,7 @@ Strategies
 Two main strategies to use **uwsgiconf**:
 
 1. **Static:** create configuration .py and compile it on demand into classic uWSGI .ini using provided methods.
-2. **Dynamic:** create configuration .py, make it executable and give it directly to uWSGI
+2. **Dynamic:** create configuration .py, and give it directly to uWSGI with ``exec`` directive.
 
   .. code-block:: bash
 
@@ -17,13 +17,10 @@ Two main strategies to use **uwsgiconf**:
 Using a preset to run Python web application
 --------------------------------------------
 
-Let's make ``myconf.py``, enable its execution (``-x`` permission and ``#!``).
-
-There we configure it using nice ``PythonSection`` preset to run our web app.
+Let's make ``myconf.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
 
 .. code-block:: python
 
-    #! /usr/bin/env python3
     from uwsgiconf.presets.nice import PythonSection
 
 
