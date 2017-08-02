@@ -108,4 +108,6 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_.
             workers.set_zerg_client_params(server_sockets=BROODLORD_SOCKET).
             master_process.set_idle_params(timeout=30, exit=True)
 
-    ]).print_ini()
+    ])
+
+    configuration.print_ini()
