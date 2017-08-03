@@ -241,8 +241,15 @@ class UwsgiRunner(object):
         :param str|unicode module_path:
 
         """
-        command = '%s %s' % (sys.executable, module_path)
-        os.execvp('uwsgi', ['uwsgi', '--ini', 'exec://%s' % command])
+        binary = sys.executable
+        basepath = os.path.dirname(binary)
+        binary = os.path.basename(binary)
+
+        # Add some virtualenv friendliness
+        # so that we try use uwsgi from it.
+        os.environ['PATH'] = basepath + os.pathsep + os.environ['PATH']
+
+        os.execvp('uwsgi', ['uwsgi', '--ini', 'exec://%s %s' % (binary, module_path)])
 
 
 def parse_command_plugins_output(out):
