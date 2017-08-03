@@ -26,7 +26,7 @@ You can try the following trick (from directory containing ``venv/`` and ``uwsgi
 
 .. code-block:: bash
 
-    $ venv/bin/uwsgi --ini "exec://venv/bin/python uwsgicfg.py"
+    $ venv/bin/uwsgiconf run
 
 
 Install with CLI
@@ -41,3 +41,12 @@ Use the following command to install **uwsgiconf** with ``click``:
 
     $ pip install uwsgiconf[cli]
 
+
+Unknown config directive
+------------------------
+
+*I use ``PythonSection`` for configuration and get **[strict-mode] unknown config directive: wsgi-file** on start. What's that.*
+
+**uwsgiconf** enables configuration options check (aka ``strict-mode``) by default. If uWSGI plugin which provides some options is not available, you'll get the message. That's because ``PythonSection`` by default won't instruct uWSGI to load Python plugin (since if you get uWSGI from PyPI you already have Python and a bunch of other plugins embedded, so there's no need to load them). 
+
+If you get that message most probably uWSGI is provided by your OS distribution (e.g. on Debian you'll need to install plugin packages separately from uWSGI itself). In that case you can try to set ``embedded_plugins=False`` for ``PythonSection`` (see Quickstart example).
