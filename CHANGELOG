@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.7.0
+------
 + Introduced Python uwsgi stub module.
 
 
