@@ -2,8 +2,8 @@ import os
 
 import pytest
 
-from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule
-from uwsgiconf.exceptions import ConfigurationError
+from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule, get_uwsgi_stub_attrs_diff
+from uwsgiconf.exceptions import ConfigurationError, UwsgiconfException
 
 
 SAMPLE_OUT_PLUGINS_MANY = '''
@@ -93,3 +93,20 @@ def test_conf_module_run(monkeypatch):
     module.spawn_uwsgi()
 
     assert all(executed)
+
+
+def test_get_uwsgi_stub_attrs_diff():
+
+    with pytest.raises(UwsgiconfException):
+        get_uwsgi_stub_attrs_diff()  # uwsgi is unavailable
+
+    import sys
+
+    sys.modules['uwsgi'] = type('DummyModule', (object,), {'dummy_uwsgi': True})
+
+    from_candidate, from_stub = get_uwsgi_stub_attrs_diff()
+
+    assert from_candidate == ['dummy_uwsgi']
+    assert from_stub
+
+    del sys.modules['uwsgi']

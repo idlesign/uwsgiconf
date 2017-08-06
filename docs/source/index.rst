@@ -43,6 +43,7 @@ Table of Contents
 
     quickstart
     cli
+    uwsgi_stub
     hints
 
 

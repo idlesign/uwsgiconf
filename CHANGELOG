@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Introduced Python uwsgi stub module.
+
+
 v0.6.0
 ------
 + CLI: implemented 'run' command.
