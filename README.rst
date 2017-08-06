@@ -40,7 +40,7 @@ There are so many subsystems and options_ (800+) it is difficult to even try to 
 * It ships some useful presets to reduce boilerplate code;
 * It encourages configuration reuse;
 * It comes with CLI to facilitate configuration;
-* It features documented **uwsgi stub** Python module (see documentation).
+* It features easy to use and documented **uwsgi stub** Python module.
 
 
 *Consider using IDE with autocompletion and docstings support to be more productive with uwsgiconf.*

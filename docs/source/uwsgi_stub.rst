@@ -1,5 +1,5 @@
-uwsgi module stub
-=================
+Python uwsgi module stub
+========================
 
 **uwsgiconf** comes with documented **uwsgi** module that you can import instead of ``import uwsgi``.
 
@@ -22,5 +22,5 @@ This also will facilitate your testing a bit, for those simple cases when you wo
    Use it for documentation purposes.
 
 
-.. automodule:: uwsgiconf.options.uwsgi_stub
+.. automodule:: uwsgiconf.uwsgi_stub
    :members:
