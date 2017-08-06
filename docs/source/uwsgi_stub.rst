@@ -4,6 +4,7 @@ uwsgi module stub
 **uwsgiconf** comes with documented **uwsgi** module that you can import instead of ``import uwsgi``.
 
 .. code-block:: python
+
     # Instead of
     import uwsgi
 
