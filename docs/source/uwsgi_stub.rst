@@ -22,5 +22,5 @@ This also will facilitate your testing a bit, for those simple cases when you wo
    Use it for documentation purposes.
 
 
-.. automodule:: uwsgiconf.uwsgi_stub
+.. automodule:: uwsgiconf.uwsgi
    :members:
