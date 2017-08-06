@@ -39,29 +39,15 @@ There are so many subsystems and options_ (800+) it is difficult to even try to 
 * It uses docstrings and sane naming to facilitate navigation;
 * It ships some useful presets to reduce boilerplate code;
 * It encourages configuration reuse;
-* It comes with CLI to facilitate configuration.
+* It comes with CLI to facilitate configuration;
+* It features documented **uwsgi stub** Python module (see documentation).
+
 
 *Consider using IDE with autocompletion and docstings support to be more productive with uwsgiconf.*
 
 By that time you already know that **uwsgiconf** is just another configuration method. Why_?
 
 .. _Why: http://uwsgi-docs.readthedocs.io/en/latest/FAQ.html#why-do-you-support-multiple-methods-of-configuration
-
-
-Bonus: Python uwsgi stub module
--------------------------------
-**uwsgiconf** comes with documented **uwsgi** module that you can import instead of ``import uwsgi``.
-
-.. code-block:: python
-
-    # Instead of ``import uwsgi`` you can do.
-    from uwsgiconf import uwsgi
-
-
-That way **uwsgi** will be available runtime as usual, besides you will get autocompletion
-and hints in IDE, and won't get ``ImportError`` when run without **uwsgi**.
-
-See more on that in documentation.
 
 
 Usage Strategies
