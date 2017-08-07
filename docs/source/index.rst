@@ -39,7 +39,7 @@ Table of Contents
 -----------------
 
 .. toctree::
-    :maxdepth: 4
+    :maxdepth: 2
 
     quickstart
     index_presets
