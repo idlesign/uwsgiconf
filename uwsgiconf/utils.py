@@ -205,7 +205,8 @@ class UwsgiRunner(object):
     """Exposes methods to run uWSGI."""
 
     def __init__(self, binary_path=None):
-        self.binary_path = binary_path or 'uwsgi'
+        self.binary_uwsgi = binary_path or 'uwsgi'
+        self.binary_python = self.prepare_env()
 
     def get_output(self, command_args):
         """Runs a command and returns its output (stdout + stderr).
@@ -217,7 +218,7 @@ class UwsgiRunner(object):
         """
         from subprocess import Popen, STDOUT, PIPE
 
-        command = [self.binary_path]
+        command = [self.binary_uwsgi]
         command.extend(listify(command_args))
 
         process = Popen(command, stdout=PIPE, stderr=STDOUT)
@@ -233,6 +234,21 @@ class UwsgiRunner(object):
         out = self.get_output('--plugin-list')
         return parse_command_plugins_output(out)
 
+    @classmethod
+    def prepare_env(cls):
+        """Prepares current environment and returns Python binary name.
+
+        This adds some virtualenv friendliness so that we try use uwsgi from it.
+
+        :rtype: str|unicode
+        """
+        python_binary = sys.executable
+        basepath = os.path.dirname(python_binary)
+
+        os.environ['PATH'] = basepath + os.pathsep + os.environ['PATH']
+
+        return os.path.basename(python_binary)
+
     def spawn(self, module_path):
         """Spawns uWSGI using the given configuration module.
 
@@ -241,15 +257,7 @@ class UwsgiRunner(object):
         :param str|unicode module_path:
 
         """
-        binary = sys.executable
-        basepath = os.path.dirname(binary)
-        binary = os.path.basename(binary)
-
-        # Add some virtualenv friendliness
-        # so that we try use uwsgi from it.
-        os.environ['PATH'] = basepath + os.pathsep + os.environ['PATH']
-
-        os.execvp('uwsgi', ['uwsgi', '--ini', 'exec://%s %s' % (binary, module_path)])
+        os.execvp('uwsgi', ['uwsgi', '--ini', 'exec://%s %s' % (self.binary_python, module_path)])
 
 
 def parse_command_plugins_output(out):
