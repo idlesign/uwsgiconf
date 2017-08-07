@@ -42,11 +42,11 @@ Table of Contents
     :maxdepth: 4
 
     quickstart
+    index_presets
     cli
     uwsgi_stub
     hints
     index_api
-    index_presets
 
 
 Get involved into uwsgiconf
