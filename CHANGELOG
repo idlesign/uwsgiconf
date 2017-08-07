@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ GeoIP param described.
+
+
 v0.7.0
 ------
 + Introduced Python uwsgi stub module.

@@ -1,10 +1,14 @@
+from ..base import ParametrizedValue
 
-class Var(object):
+
+class Var(ParametrizedValue):
 
     tpl = '%s'
 
     def __init__(self, name):
         self._name = name
+
+        super(Var, self).__init__()
 
     def __str__(self):
         return self.tpl % self._name
@@ -13,6 +17,51 @@ class Var(object):
 class Func(Var):
 
     pass
+
+
+class VarGeoip(Var):
+    """Returns Geoip data.
+
+    http://uwsgi.readthedocs.io/en/latest/GeoIP.html
+
+    """
+    tpl = '${geoip[%s]}'
+
+    COUNTRY_CODE = 'country_code'
+    COUNTRY_CODE3 = 'country_code3'
+    COUNTRY_NAME = 'country_name'
+    CONTINENT = 'continent'
+    REGION = 'region'
+    REGION_NAME = 'region_name'
+    CITY = 'city'
+    POSTAL_CODE = 'postal_code'
+    LATITUDE = 'lat'
+    LONGITUDE = 'lon'
+    DMA = 'dma'
+    AREA = 'area'
+
+    vars_country = [
+        COUNTRY_CODE,
+        COUNTRY_CODE3,
+        COUNTRY_NAME,
+    ]
+    """Keys avaiable for country database."""
+
+    vars_city = [
+        CONTINENT,
+        COUNTRY_CODE,
+        COUNTRY_CODE3,
+        COUNTRY_NAME,
+        REGION,
+        REGION_NAME,
+        CITY,
+        POSTAL_CODE,
+        LATITUDE,
+        LONGITUDE,
+        DMA,
+        AREA,
+    ]
+    """Keys avaiable for city database."""
 
 
 class VarRequest(Var):

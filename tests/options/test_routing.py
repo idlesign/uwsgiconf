@@ -17,13 +17,12 @@ def test_routing_basics(assert_lines):
     with pytest.raises(ConfigurationError):  # unsupported code
         assert_lines('', Section().routing.set_error_page(800, '/here/800.html'))
 
+    assert_lines([
+        'plugin = geoip\ngeoip-city = GeoLiteCity.dat',
+    ], Section().routing.set_geoip_params(db_city='GeoLiteCity.dat'))
+
 
 def test_routing_rules(assert_lines):
-    # route-if = equal:${PATH_INFO};/bad break:500 Internal Server Error
-    # response-route-if = equal:${MY_CONTENT_TYPE};text/html goto:gzipme
-    # response-route-if = contains:${HTTP_ACCEPT_ENCODING};gzip gzip:
-    # route-if = regexp:FOO;^F log:starts with F
-
     rule = Section.routing.route_rule
 
     assert_lines([
