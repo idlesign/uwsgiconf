@@ -4,7 +4,7 @@ from contextlib import contextmanager
 import click
 
 from uwsgiconf import VERSION
-from uwsgiconf.utils import ConfModule
+from uwsgiconf.utils import ConfModule, UwsgiRunner
 from uwsgiconf.exceptions import ConfigurationError
 
 
@@ -54,6 +54,24 @@ def compile(conf):
         config = ConfModule(conf)
         for conf in config.configurations:
             conf.format(do_print=True)
+
+
+@base.command()
+def probe_plugins():
+    """Runs uWSGI to determine what plugins are available and prints them out.
+
+    Generic plugins come first then after blank line follow request plugins.
+
+    """
+    plugins = UwsgiRunner().get_plugins()
+
+    for plugin in sorted(plugins.generic):
+        click.secho(plugin)
+
+    click.secho('')
+
+    for plugin in sorted(plugins.request):
+        click.secho(plugin)
 
 
 def main():
