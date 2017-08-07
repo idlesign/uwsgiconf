@@ -488,8 +488,15 @@ class ActionDirChange(RouteAction):
 
 
 class ActionSetVarUwsgiAppid(RouteAction):
-    """Set UWSGI_APPID"""
+    """Set UWSGI_APPID.
 
+    Bypass ``SCRIPT_NAME`` and ``VirtualHosting`` to let the user choose
+    the mountpoint without limitations (or headaches).
+
+    The concept is very generic: ``UWSGI_APPID`` is the identifier of an application.
+    If it is not found in the internal list of apps, it will be loaded.
+
+    """
     name = 'setapp'
 
     def __init__(self, app):
@@ -525,6 +532,9 @@ class ActionSetVarUwsgiHome(RouteAction):
 
 class ActionSetVarUwsgiScheme(RouteAction):
     """Set UWSGI_SCHEME.
+
+    Set the URL scheme when it cannot be reliably determined.
+    This may be used to force HTTPS (with the value ``https``), for instance.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.6.html#configuring-dynamic-apps-with-internal-routing
 
