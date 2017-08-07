@@ -320,7 +320,7 @@ class ActionRouteUwsgi(RouteAction):
     plugin = 'router_uwsgi'
     args_joiner = ','
 
-    def __init__(self, external_address='', modifier='', mod2='', app=''):
+    def __init__(self, external_address='', modifier='', app=''):
         """
         :param str|unicode external_address: External uWSGI server address (host:port).
         :param Modifier modifier: Set request modifier.
