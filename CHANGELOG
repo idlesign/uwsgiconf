@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Linux KSM option described.
 + GeoIP param described.
 
 

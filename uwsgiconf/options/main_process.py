@@ -193,10 +193,24 @@ class MainProcess(OptionsGroup):
         """
         self._set('touch-reload', touch_reload, multi=True)
         self._set('prio', priority)
-
         self._set('vacuum', vacuum, cast=bool)
         self._set('binary-path', binary_path)
         self._set('honour-stdin', honour_stdin, cast=bool)
+
+        return self._section
+
+    def set_advanced_params(self, ksm_interval=None):
+        """Set various advanced parameters.
+
+        :param int ksm_interval: Kernel Samepage Merging frequency option, that can reduce memory usage.
+            Accepts a number of requests (or master process cycles) to run page scanner after.
+
+            .. note:: Linux only.
+
+            * http://uwsgi.readthedocs.io/en/latest/KSM.html
+
+        """
+        self._set('ksm', ksm_interval)
 
         return self._section
 
