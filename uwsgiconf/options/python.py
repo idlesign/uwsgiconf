@@ -20,7 +20,8 @@ class Python(OptionsGroup):
 
     def set_basic_params(
             self, version=AUTO, python_home=None, enable_threads=None, search_path=None,
-            python_binary=None, tracebacker_path=None, plugin_dir=None, **kwargs):
+            python_binary=None, tracebacker_path=None, plugin_dir=None, os_env_reload=None,
+            optimization_level=None):
         """
 
         :param str|unicode|int version: Python version plugin supports.
@@ -49,6 +50,12 @@ class Python(OptionsGroup):
             .. warning:: Threads will simply *not work* if this option is not enabled.
                          There will likely be no error, just no execution of your thread code.
 
+        :param bool os_env_reload: Force ``os.environ`` reloading for every request.
+            Used to allow setting of ``UWSGI_SETENV`` for Python applications.
+
+        :param int optimization_level: Python optimization level (see ``-O`` argument).
+            .. warning:: This may be dangerous for some apps.
+
         """
         self._set_name(version)
 
@@ -57,6 +64,8 @@ class Python(OptionsGroup):
         self._set('py-program-name', python_binary)
         self._set('pyhome', python_home)
         self._set('pythonpath', search_path, multi=True)
+        self._set('reload-os-env', os_env_reload, cast=bool)
+        self._set('optimize', optimization_level)
 
         self._section.set_plugins_params(search_dirs=plugin_dir)
 
@@ -99,7 +108,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_wsgi_params(self, module=None, callable_name=None):
+    def set_wsgi_params(self, module=None, callable_name=None, env_strategy=None):
         """Set wsgi related parameters.
 
         :param str|unicode module:
@@ -114,6 +123,15 @@ class Python(OptionsGroup):
 
         :param str|unicode callable_name: Set WSGI callable name. Default: application.
 
+        :param str|unicode env_strategy: Strategy for allocating/deallocating
+            the WSGI env, can be:
+
+            * ``cheat`` - preallocates the env dictionary on uWSGI startup and clears it
+                after each request. Default behaviour for uWSGI <= 2.0.x
+
+            * ``holy`` - creates and destroys the environ dictionary at each request.
+                Default behaviour for uWSGI >= 2.1
+
         """
         module = module or ''
 
@@ -124,6 +142,7 @@ class Python(OptionsGroup):
             self._set('wsgi', module)
 
         self._set('callable', callable_name)
+        self._set('wsgi-env-behaviour', env_strategy)
 
         return self._section
 

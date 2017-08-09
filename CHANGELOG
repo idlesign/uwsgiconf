@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ More Python-related options described.
 + rsyslog logger made separate from syslog.
 + CLI: Added 'probe_plugins' command.
 + Linux KSM option described.
