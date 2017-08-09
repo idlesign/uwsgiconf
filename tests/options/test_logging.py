@@ -67,8 +67,16 @@ def test_logging_add_logger(assert_lines):
 
     logging = Section().logging
     assert_lines([
+        'plugin = syslog',
+        'logger = my syslog:myapp,local6',
+    ], logging.add_logger(logging.loggers.syslog('my', 'myapp', facility='local6')))
+
+    logging = Section().logging
+    assert_lines([
+        'plugin = rsyslog',
+        'rsyslog-packet-size = 1024',
         'logger = my rsyslog:127.0.0.1:1111,myapp',
-    ], logging.add_logger(logging.loggers.syslog('my', 'myapp', host='127.0.0.1:1111')))
+    ], logging.add_logger(logging.loggers.rsyslog('my', 'myapp', '127.0.0.1:1111', packet_size=1024)))
 
     logging = Section().logging
     assert_lines([

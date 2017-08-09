@@ -20,6 +20,7 @@ class Logging(OptionsGroup):
         redis = LoggerRedis
         socket = LoggerSocket
         syslog = LoggerSyslog
+        rsyslog = LoggerRsyslog
         zeromq = LoggerZeroMq
 
         # todo consider adding other loggers: crypto, graylog2, systemd

@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ rsyslog logger made separate from syslog.
 + CLI: Added 'probe_plugins' command.
 + Linux KSM option described.
 + GeoIP param described.

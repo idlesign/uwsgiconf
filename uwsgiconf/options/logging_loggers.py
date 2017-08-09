@@ -47,12 +47,12 @@ class LoggerSocket(Logger):
 
 
 class LoggerSyslog(Logger):
-    """Allows logging into Unix standard syslog or a remote syslog."""
+    """Allows logging into Unix standard syslog."""
 
     name = 'syslog'
     plugin = 'syslog'
 
-    def __init__(self, alias, app_name=None, facility=None, host=None):
+    def __init__(self, alias, app_name=None, facility=None):
         """
         :param str|unicode alias: Logger alias.
 
@@ -60,19 +60,45 @@ class LoggerSyslog(Logger):
 
         :param str|unicode facility:
 
-        :param str|unicode host: Host and port for remote syslog.
+            * https://en.wikipedia.org/wiki/Syslog#Facility
 
         """
-        args = []
+        super(LoggerSyslog, self).__init__(alias, app_name, facility)
 
-        if host:
-            self.name = 'rsyslog'
-            self.requires_plugin = 'rsyslog'
-            args.append(host)
 
-        args.extend([app_name, facility])
+class LoggerRsyslog(LoggerSyslog):
+    """Allows logging into Unix standard syslog or a remote syslog."""
 
-        super(LoggerSyslog, self).__init__(alias, *args)
+    name = 'rsyslog'
+    plugin = 'rsyslog'
+
+    def __init__(self, alias, app_name=None, host=None, facility=None, split=None, packet_size=None):
+        """
+        :param str|unicode alias: Logger alias.
+
+        :param str|unicode app_name:
+
+        :param str|unicode host: Address (host and port) or UNIX socket path.
+
+        :param str|unicode facility:
+
+            * https://en.wikipedia.org/wiki/Syslog#Facility
+
+        :param bool split: Split big messages into multiple chunks if they are bigger
+            than allowed packet size. Default: ``False``.
+
+        :param int packet_size: Set maximum packet size for syslog messages. Default: 1024.
+
+            .. warning:: using packets > 1024 breaks RFC 3164 (#4.1)
+
+        """
+
+        super(LoggerRsyslog, self).__init__(alias, app_name, facility)
+
+        self.args.insert(0, host)
+
+        self._set('rsyslog-packet-size', packet_size)
+        self._set('rsyslog-split-messages', split, cast=bool)
 
 
 class LoggerRedis(Logger):

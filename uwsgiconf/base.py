@@ -248,7 +248,7 @@ class ParametrizedValue(OptionsGroup):
     """Allows swapping default uption key with custom value"""
 
     def __init__(self, *args):
-        self.args = args
+        self.args = list(args)
         self._opts = OrderedDict()
         super(ParametrizedValue, self).__init__(_section=self)
 
