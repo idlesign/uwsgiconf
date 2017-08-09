@@ -48,7 +48,7 @@ def test_main_process_basics(assert_lines):
 def test_main_process_advanced(assert_lines):
     assert_lines([
         'ksm = 10',
-    ], Section().main_process.set_advanced_params(ksm_interval=10))
+    ], Section().main_process.set_memory_params(ksm_interval=10))
 
 
 def test_main_process_hooks(assert_lines):
