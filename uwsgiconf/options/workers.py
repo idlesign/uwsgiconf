@@ -244,7 +244,7 @@ class Workers(OptionsGroup):
             self, min_lifetime=None, max_lifetime=None,
             max_requests=None, max_requests_delta=None,
             max_addr_space=None, max_rss=None, max_uss=None, max_pss=None,
-            max_addr_space_forced=None, max_rss_forced=None,
+            max_addr_space_forced=None, max_rss_forced=None, watch_interval_forced=None,
             mercy=None):
         """Sets workers reload parameters.
 
@@ -292,6 +292,9 @@ class Workers(OptionsGroup):
         :param int max_rss_forced: Force the master to reload a worker
             if its resident set size memory is higher than specified in megabytes.
 
+        :param int watch_interval_forced: The memory collector [per-worker] thread memeory watch
+            interval (seconds) used for forced reloads. Default: 3.
+
         :param int mercy: Set the maximum time (in seconds) a worker can take
             before reload/shutdown. Default: 60.
 
@@ -309,6 +312,7 @@ class Workers(OptionsGroup):
 
         self._set('evil-reload-on-as', max_addr_space_forced)
         self._set('evil-reload-on-rss', max_rss_forced)
+        self._set('mem-collector-freq', watch_interval_forced)
 
         self._set('worker-reload-mercy', mercy)
 
