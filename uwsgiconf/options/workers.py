@@ -473,12 +473,12 @@ class Cheapening(OptionsGroup):
 
     def set_basic_params(
             self, spawn_on_request=None,
-            cheaper_algorithm=None, workers_min=None, workers_startup=None, workers_step=None):
+            cheaper_algo=None, workers_min=None, workers_startup=None, workers_step=None):
         """
 
         :param bool spawn_on_request: Spawn workers only after the first request.
 
-        :param cheaper_algorithm: The algorithm to be used used for adaptive process spawning. Default: ``spare``.
+        :param cheaper_algo: The algorithm to be used used for adaptive process spawning. Default: ``spare``.
             See ``.algorithms``.
 
         :param int workers_min: Minimal workers count. Enables cheaper mode (adaptive process spawning).
@@ -492,7 +492,7 @@ class Cheapening(OptionsGroup):
 
         """
         self._set('cheap', spawn_on_request, cast=bool)
-        self._set('cheaper-algo', cheaper_algorithm)
+        self._set('cheaper-algo', cheaper_algo)
         self._set('cheaper', workers_min)
         self._set('cheaper-initial', workers_startup)
         self._set('cheaper-step', workers_step)

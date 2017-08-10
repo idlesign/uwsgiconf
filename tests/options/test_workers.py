@@ -93,7 +93,7 @@ def test_cheapening(assert_lines):
 
     assert_lines([
         'cheaper-algo = manual',
-    ], Section().cheapening.set_basic_params(cheaper_algorithm=Section.cheapening.algorithms.MANUAL))
+    ], Section().cheapening.set_basic_params(cheaper_algo=Section.cheapening.algorithms.MANUAL))
 
     assert_lines([
         'cheaper-overload = 20',
