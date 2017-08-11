@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.8.0
+------
 + Subscriptions-related options partially described.
 + More worker-related options described.
 + More Python-related options described.
