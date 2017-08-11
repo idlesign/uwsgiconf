@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Subscriptions-related options partially described.
 + More worker-related options described.
 + More Python-related options described.
 + rsyslog logger made separate from syslog.

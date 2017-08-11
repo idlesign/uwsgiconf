@@ -19,6 +19,7 @@ API
     grp_routing
     grp_spooler
     grp_statics
+    grp_subscriptions
     grp_workers
     grp_python
     formatters

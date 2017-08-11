@@ -86,6 +86,9 @@ class Section(OptionsGroup):
     statics = Options(Statics)  # type: Statics
     """Static file serving options group."""
 
+    subscriptions = Options(Subscriptions)  # type: Subscriptions
+    """Subscription services options group."""
+
     workers = Options(Workers)  # type: Workers
     """Workers options group."""
 

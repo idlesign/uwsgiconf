@@ -13,4 +13,5 @@ from .queue import Queue
 from .routing import Routing
 from .spooler import Spooler
 from .statics import Statics
+from .subscriptions import Subscriptions
 from .workers import Workers, Cheapening
