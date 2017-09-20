@@ -245,7 +245,7 @@ class ParametrizedValue(OptionsGroup):
     """Strip leading and trailing name separator from the result."""
 
     opt_key = None
-    """Allows swapping default uption key with custom value"""
+    """Allows swapping default option key with custom value."""
 
     def __init__(self, *args):
         self.args = list(args)
