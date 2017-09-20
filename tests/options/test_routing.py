@@ -408,3 +408,4 @@ def test_routing_goto_label(assert_lines):
                 ),
             ], label=label)
     )
+

@@ -1,6 +1,7 @@
 from .routing_modifiers import *
 from .routing_actions import *
 from .routing_vars import *
+from .routing_routers import *
 from .routing_subjects import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
@@ -199,6 +200,16 @@ class Routing(OptionsGroup):
 
     route_rule = RouteRule
 
+    class routers(object):
+        """Dedicated routers, which can be used with `register_router()`."""
+
+        http = RouterHttp
+        ssl = RouterSsl
+        fast = RouterFast
+        raw = RouterRaw
+        forkpty = RouterForkPty
+        tuntap = RouterTunTap
+
     class modifiers(object):
         """Routing modifiers.
 
@@ -250,6 +261,22 @@ class Routing(OptionsGroup):
         webdav = ModifierWebdav
         wsgi = ModifierWsgi
         xslt = ModifierXslt
+
+    def use_router(self, router, force=None):
+        """
+
+        :param RouterBase router: Dedicated router object. See `.routers`.
+
+        :param bool force: All of the gateways (routers) has to be run under the master process,
+            supplying this you can try to bypass this limit.
+
+        """
+        # todo merge sections
+
+        self._set('force-gateway', force, cast=bool)
+        self._section._opts.update(router._section._opts)
+
+        return self._section
 
     def register_route(self, route_rules, label=None):
         """Registers a routing rule.

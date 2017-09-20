@@ -10,6 +10,8 @@ class Subscriptions(OptionsGroup):
     which in its turn can address those nodes (e.g. delegate request processing to them)
     and automatically remove dead nodes from the pool.
 
+    Some routers provide subscription server functionality. See `.routing.routers`.
+
     .. note:: Subscription system in many ways relies on Master Process.
 
     .. warning:: The subscription system is meant for "trusted" networks.

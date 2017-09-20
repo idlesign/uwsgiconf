@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Introduced dedicated routers.
+
+
 v0.8.0
 ------
 + Subscriptions-related options partially described.
