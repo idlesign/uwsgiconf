@@ -14,8 +14,10 @@ def test_nice_section(assert_lines):
 
     assert_lines([
         'enable-threads = true',
+        'uid = www-data',
+        'gid = www-data',
 
-    ], Section(threads=True))
+    ], Section(threads=True).configure_owner())
 
     assert_lines([
         'workers = 13',

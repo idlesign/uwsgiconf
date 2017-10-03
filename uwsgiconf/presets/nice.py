@@ -4,7 +4,7 @@ from ..config import Section as _Section
 class Section(_Section):
     """Basic nice configuration."""
 
-    def __init__(self, name=None, touch_reload=None, workers=None, threads=None, mules=None, **kwargs):
+    def __init__(self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -17,6 +17,8 @@ class Section(_Section):
         :param int|bool threads: Number of threads per worker or ``True`` to enable user-made threads support.
 
         :param int mules: Number of mules to spawn.
+
+        :param str|unicode owner: Set process owner user and group.
 
         :param kwargs:
         """
@@ -48,6 +50,18 @@ class Section(_Section):
         self.master_process.set_basic_params(enable=True)
         self.master_process.set_exit_events(sig_term=True)  # Respect the convention. Make Upstart and Co happy.
         self.locks.set_basic_params(thunder_lock=True)
+        self.configure_owner(owner=owner)
+
+    def configure_owner(self, owner='www-data'):
+        """Shortcut to set process owner data.
+
+        :param str|unicode owner: Sets user and group. Default: ``www-data``.
+
+        """
+        if owner is not None:
+            self.main_process.set_owner_params(uid=owner, gid=owner)
+
+        return self
 
 
 class PythonSection(Section):
