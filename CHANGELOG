@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.9.0
+------
 + Nice presets now accept 'log_into' arg
 * Nice Python preset now requires an app by default
 + Nice presets now accept 'owner' arg
