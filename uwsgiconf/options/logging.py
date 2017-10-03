@@ -76,21 +76,44 @@ class Logging(OptionsGroup):
 
         return self._section
 
+    def log_into(self, target, before_priv_drop=True):
+        """Simple file or UDP logging.
+
+        .. note:: This doesn't require any Logger plugin and can be used
+            if no log routing is required.
+
+        :param str|unicode target: Filepath or UDP address.
+
+        :param bool before_priv_drop: Whether to log data before or after privileges drop.
+
+        """
+        command = 'logto'
+
+        if not before_priv_drop:
+            command += '2'
+
+        self._set(command, target)
+
+        return self._section
+
     def set_file_params(
             self, reopen_on_reload=None, trucate_on_statup=None, max_size=None, rotation_fname=None,
             touch_reopen=None, touch_rotate=None, owner=None, mode=None):
-        """
+        """Set various parameters related to file logging.
 
         :param bool reopen_on_reload: Reopen log after reload.
 
         :param bool trucate_on_statup: Truncate log on startup.
 
-        :param int max_size: Set maximum logfile size in bytes.
+        :param int max_size: Set maximum logfile size in bytes after which log should be rotated.
 
         :param str|unicode rotation_fname: Set log file name after rotation.
 
         :param str|unicode|list touch_reopen: Trigger log reopen if the specified file
             is modified/touched.
+
+            .. note:: This can be set to a file touched by ``postrotate`` script of ``logrotate``
+                to implement rotation.
 
         :param str|unicode|list touch_rotate: Trigger log rotation if the specified file
             is modified/touched.
@@ -116,7 +139,7 @@ class Logging(OptionsGroup):
     def set_filters(
             self, include=None, exclude=None, slower=None, bigger=None, status_4xx=None, status_5xx=None,
             no_body=None, sendfile=None, io_errors=None):
-        """
+        """Set various log data filters.
 
         :param str|unicode|list include: Show only log lines matching the specified regexp.
 

@@ -19,6 +19,10 @@ def test_logging_basics(assert_lines):
     ], Section().logging.set_file_params(reopen_on_reload=True))
 
     assert_lines([
+        'logto2 = /a/b.log',
+    ], Section().logging.log_into('/a/b.log', before_priv_drop=False))
+
+    assert_lines([
         'log-master = true',
         'log-master-req-stream = true',
     ], Section().logging.set_master_logging_params(

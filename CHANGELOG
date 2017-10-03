@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Added Logging.log_into method
 * Logger alias made optional
 + Introduced dedicated routers.
 
