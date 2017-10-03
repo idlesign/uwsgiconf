@@ -2,7 +2,7 @@
 """
 Trick demo. It shows how to use one file both for uWSGI configuration and application definition.
 
-    Start uWSGi with the following command:
+    Start uWSGI with the following command:
 
         uwsgiconf run <path-to-this-file>
 
@@ -16,7 +16,7 @@ def application(env, start_response):
 
     from functools import partial
     import random
-    import uwsgi  # This will be available under uWSGI.
+    from uwsgiconf import uwsgi  # This will be available under uWSGI.
 
     start_response('200 OK', [('Content-Type','text/html')])
 
