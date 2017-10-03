@@ -13,11 +13,16 @@ def test_nice_section(assert_lines):
     ], Section(threads=4))
 
     assert_lines([
+        'logto',
+    ], Section(), assert_in=False)
+
+    assert_lines([
         'enable-threads = true',
         'uid = www-data',
         'gid = www-data',
+        'logto = /a/b.log',
 
-    ], Section(threads=True).configure_owner())
+    ], Section(threads=True, log_into='/a/b.log').configure_owner())
 
     assert_lines([
         'workers = 13',

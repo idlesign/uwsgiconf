@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Nice presets now accept 'log_into' arg
 * Nice Python preset now requires an app by default
 + Nice presets now accept 'owner' arg
 + Nice presets 'threads' arg now accepts bool

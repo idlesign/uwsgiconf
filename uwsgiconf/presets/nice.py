@@ -4,7 +4,9 @@ from ..config import Section as _Section
 class Section(_Section):
     """Basic nice configuration."""
 
-    def __init__(self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None, **kwargs):
+    def __init__(
+            self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None,
+            log_into=None, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -19,6 +21,8 @@ class Section(_Section):
         :param int mules: Number of mules to spawn.
 
         :param str|unicode owner: Set process owner user and group.
+
+        :param str|unicode log_into: Filepath or UDP address to send logs into.
 
         :param kwargs:
         """
@@ -51,6 +55,7 @@ class Section(_Section):
         self.master_process.set_exit_events(sig_term=True)  # Respect the convention. Make Upstart and Co happy.
         self.locks.set_basic_params(thunder_lock=True)
         self.configure_owner(owner=owner)
+        self.logging.log_into(target=log_into)
 
     def configure_owner(self, owner='www-data'):
         """Shortcut to set process owner data.
