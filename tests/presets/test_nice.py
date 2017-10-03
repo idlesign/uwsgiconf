@@ -4,7 +4,10 @@ from uwsgiconf.presets.nice import Section, PythonSection
 def test_nice_section(assert_lines):
 
     assert_lines([
+        'env = LANG=en_US.UTF-8',
         'workers = %k',
+        'die-on-term = true',
+        'vacuum = true',
 
     ], Section())
 

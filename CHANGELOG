@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Nice presets now use SIGTERM for uWSGI shutdown
 + Added Logging.log_into method
 * Logger alias made optional
 + Introduced dedicated routers.

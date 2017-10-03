@@ -39,6 +39,7 @@ class Section(_Section):
         self.main_process.set_basic_params(vacuum=True)
         self.main_process.set_naming_params(autonaming=True)
         self.master_process.set_basic_params(enable=True)
+        self.master_process.set_exit_events(sig_term=True)  # Respect the convention. Make Upstart and Co happy.
         self.locks.set_basic_params(thunder_lock=True)
 
 
