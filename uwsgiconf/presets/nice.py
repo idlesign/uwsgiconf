@@ -67,7 +67,9 @@ class Section(_Section):
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
 
-    def __init__(self, name=None, params_python=None, wsgi_module=None, embedded_plugins=True, **kwargs):
+    def __init__(
+            self, name=None, params_python=None, wsgi_module=None, embedded_plugins=True,
+            require_app=True, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -83,6 +85,8 @@ class PythonSection(Section):
         :param bool|None embedded_plugins: This indicates whether plugins were embedded into uWSGI,
             which is the case if you have uWSGI from PyPI.
 
+        :param bool require_app: Exit if no app can be loaded.
+
         :param kwargs:
         """
         if embedded_plugins is True:
@@ -94,3 +98,5 @@ class PythonSection(Section):
 
         if wsgi_module:
             self.python.set_wsgi_params(module=wsgi_module)
+
+        self.applications.set_basic_params(exit_if_none=require_app)

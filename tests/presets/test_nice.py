@@ -32,6 +32,7 @@ def test_nice_python(assert_lines):
         'plugin = python',
         'pyhome = /home/idle/venv/\npythonpath = /home/idle/apps/',
         'wsgi = somepackage.module',
+        'need-app = true',
 
     ], PythonSection(
         params_python=dict(

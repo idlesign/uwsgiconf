@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Nice Python preset now requires an app by default
 + Nice presets now accept 'owner' arg
 + Nice presets 'threads' arg now accepts bool
 + Nice presets now use SIGTERM for uWSGI shutdown
