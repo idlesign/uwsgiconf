@@ -10,7 +10,7 @@ class Networking(OptionsGroup):
         """Available socket types to use with ``.register_socket()``."""
     
         DEFAULT = 'default'
-        """Bind using default protocol. See ``default_protocol`` option."""
+        """Bind using default protocol. See ``default_socket_type`` option."""
 
         UWSGI = 'uwsgi'
 
