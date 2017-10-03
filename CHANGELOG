@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Logger alias made optional
 + Introduced dedicated routers.
 
 

@@ -53,45 +53,50 @@ def test_logging_add_logger(assert_lines):
     logging = Section().logging
     assert_lines([
         'worker-logger = my file:/home/here.log',
-    ], logging.add_logger(logging.loggers.file('my', '/home/here.log'), for_single_worker=True))
+    ], logging.add_logger(logging.loggers.file('/home/here.log', alias='my'), for_single_worker=True))
+
+    logging = Section().logging
+    assert_lines([
+        'logger = file:/home/there.log',
+    ], logging.add_logger(logging.loggers.file('/home/there.log')))
 
     logging = Section().logging
     assert_lines([
         'logger = my socket:/home/here.sock',
-    ], logging.add_logger(logging.loggers.socket('my', '/home/here.sock')))
+    ], logging.add_logger(logging.loggers.socket('/home/here.sock', alias='my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my syslog:myapp',
-    ], logging.add_logger(logging.loggers.syslog('my', 'myapp')))
+    ], logging.add_logger(logging.loggers.syslog('myapp', alias='my')))
 
     logging = Section().logging
     assert_lines([
         'plugin = syslog',
         'logger = my syslog:myapp,local6',
-    ], logging.add_logger(logging.loggers.syslog('my', 'myapp', facility='local6')))
+    ], logging.add_logger(logging.loggers.syslog('myapp', facility='local6', alias='my')))
 
     logging = Section().logging
     assert_lines([
         'plugin = rsyslog',
         'rsyslog-packet-size = 1024',
         'logger = my rsyslog:127.0.0.1:1111,myapp',
-    ], logging.add_logger(logging.loggers.rsyslog('my', 'myapp', '127.0.0.1:1111', packet_size=1024)))
+    ], logging.add_logger(logging.loggers.rsyslog('myapp', '127.0.0.1:1111', packet_size=1024, alias='my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my redislog',
-    ], logging.add_logger(logging.loggers.redis('my')))
+    ], logging.add_logger(logging.loggers.redis(alias='my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my mongodblog',
-    ], logging.add_logger(logging.loggers.mongo('my')))
+    ], logging.add_logger(logging.loggers.mongo(alias='my')))
 
     logging = Section().logging
     assert_lines([
         'logger = my zeromq:tcp://192.168.173.18:9191',
-    ], logging.add_logger(logging.loggers.zeromq('my', 'tcp://192.168.173.18:9191')))
+    ], logging.add_logger(logging.loggers.zeromq('tcp://192.168.173.18:9191', alias='my')))
 
 
 def test_logging_add_logger_encoder(assert_lines):
@@ -115,4 +120,4 @@ def test_logging_add_logger_encoder(assert_lines):
 
     ], logging.add_logger_encoder([
         enc_format('> %s <' % enc_format.vars.MESSAGE),
-    ], logger=logging.loggers.file('myfile', '/home/here.log')))
+    ], logger=logging.loggers.file('/home/here.log', alias='myfile')))
