@@ -14,7 +14,7 @@ class Section(_Section):
         :param int workers: Spawn the specified number of workers (processes).
             Default: workers number equals to CPU count.
 
-        :param int threads: Number of threads per worker.
+        :param int|bool threads: Number of threads per worker or ``True`` to enable user-made threads support.
 
         :param int mules: Number of mules to spawn.
 
@@ -33,7 +33,14 @@ class Section(_Section):
         else:
             self.workers.set_count_auto()
 
-        self.workers.set_thread_params(count=threads)
+        set_threads = self.workers.set_thread_params
+
+        if isinstance(threads, bool):
+            set_threads(enable=threads)
+
+        else:
+            set_threads(count=threads)
+
         self.workers.set_mules_params(mules=mules)
         self.workers.set_harakiri_params(verbose=True)
         self.main_process.set_basic_params(vacuum=True)

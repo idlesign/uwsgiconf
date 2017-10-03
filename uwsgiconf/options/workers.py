@@ -135,8 +135,9 @@ class Workers(OptionsGroup):
 
         :param bool enable: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
-            Threads will simply *not work* if this option is not enabled. There will likely be no error,
-            just no execution of your thread code.
+
+            .. warning:: Threads will simply *not work* if this option is not enabled.
+                There will likely be no error, just no execution of your thread code.
 
         :param int count: Run each worker in prethreaded mode with the specified number
             of threads per worker.

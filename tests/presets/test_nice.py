@@ -8,8 +8,14 @@ def test_nice_section(assert_lines):
         'workers = %k',
         'die-on-term = true',
         'vacuum = true',
+        'threads = 4',
 
-    ], Section())
+    ], Section(threads=4))
+
+    assert_lines([
+        'enable-threads = true',
+
+    ], Section(threads=True))
 
     assert_lines([
         'workers = 13',
