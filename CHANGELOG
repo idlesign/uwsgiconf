@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Nice presets now accept 'process_prefix' arg
+
+
 v0.9.0
 ------
 + Nice presets now accept 'log_into' arg

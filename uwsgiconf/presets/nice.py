@@ -6,7 +6,7 @@ class Section(_Section):
 
     def __init__(
             self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None,
-            log_into=None, **kwargs):
+            log_into=None, process_prefix=None, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -23,6 +23,8 @@ class Section(_Section):
         :param str|unicode owner: Set process owner user and group.
 
         :param str|unicode log_into: Filepath or UDP address to send logs into.
+
+        :param str|unicode process_prefix: Add prefix to process names.
 
         :param kwargs:
         """
@@ -50,7 +52,10 @@ class Section(_Section):
         self.workers.set_mules_params(mules=mules)
         self.workers.set_harakiri_params(verbose=True)
         self.main_process.set_basic_params(vacuum=True)
-        self.main_process.set_naming_params(autonaming=True)
+        self.main_process.set_naming_params(
+            autonaming=True,
+            prefix='%s ' % process_prefix if process_prefix else None,
+        )
         self.master_process.set_basic_params(enable=True)
         self.master_process.set_exit_events(sig_term=True)  # Respect the convention. Make Upstart and Co happy.
         self.locks.set_basic_params(thunder_lock=True)
