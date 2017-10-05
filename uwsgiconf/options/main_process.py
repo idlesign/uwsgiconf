@@ -372,11 +372,11 @@ class MainProcess(OptionsGroup):
         :param bool autonaming: Automatically set process name to something meaningful.
             Generated process names may be 'uWSGI Master', 'uWSGI Worker #', etc.
 
-        :param str prefix: Add prefix to process names.
+        :param str|unicode prefix: Add prefix to process names.
 
-        :param str suffix: Append string to process names.
+        :param str|unicode suffix: Append string to process names.
 
-        :param str name: Set process names to given static value.
+        :param str|unicode name: Set process names to given static value.
 
         """
         self._set('auto-procname', autonaming, cast=bool)
