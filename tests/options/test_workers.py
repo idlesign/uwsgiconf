@@ -1,4 +1,4 @@
-from uwsgiconf import Section
+from uwsgiconf.config import Section
 
 
 def test_workers_basics(assert_lines):

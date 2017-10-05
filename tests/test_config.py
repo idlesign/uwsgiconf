@@ -2,7 +2,7 @@ import os
 from tempfile import NamedTemporaryFile
 import pytest
 
-from uwsgiconf import Section, Configuration
+from uwsgiconf.config import Section, Configuration
 from uwsgiconf.exceptions import ConfigurationError
 
 

@@ -1,4 +1,4 @@
-from uwsgiconf import Section
+from uwsgiconf.config import Section
 from uwsgiconf.exceptions import ConfigurationError
 
 import pytest

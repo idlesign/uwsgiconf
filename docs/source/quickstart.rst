@@ -75,7 +75,7 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_.
 
 .. code-block:: python
 
-    from uwsgiconf import Configuration, Section
+    from uwsgiconf.config import Configuration, Section
 
 
     BROODLORD_SOCKET = '/tmp/broodlord.sock'

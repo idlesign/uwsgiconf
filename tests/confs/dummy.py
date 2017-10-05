@@ -1,4 +1,4 @@
-from uwsgiconf import Section
+from uwsgiconf.config import Section
 
 
 print("this line won't print")
