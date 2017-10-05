@@ -49,11 +49,11 @@ applications = None  # type: dict
 buffer_size = None  # type: int
 """The current configured buffer size in bytes."""
 
-cores = None  # type
+cores = None  # type: int
 """Detected number of processor cores."""
 
 env = None  # type: dict
-"""Request evironment dictionary."""
+"""Request environment dictionary."""
 
 has_threads = None  # type: bool
 """Flag indicating whether thread support is enabled."""
@@ -1064,7 +1064,7 @@ def setprocname(name):
     """
 
 
-def signal(num, remote=None):
+def signal(num, remote=''):
     """Sends the signal to master or remote.
 
     :param num: Signal number.
