@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Added 'runtime' package preview.
 + Nice presets now accept 'process_prefix' arg
 
 

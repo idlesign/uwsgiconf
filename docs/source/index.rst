@@ -46,7 +46,8 @@ Table of Contents
     cli
     uwsgi_stub
     hints
-    index_api
+    index_api_static
+    index_api_runtime
 
 
 Get involved into uwsgiconf

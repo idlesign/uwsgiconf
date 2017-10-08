@@ -1,8 +1,10 @@
 from __future__ import unicode_literals, absolute_import
+
 import os
 import sys
-from contextlib import contextmanager
+import logging
 from collections import namedtuple
+from contextlib import contextmanager
 from importlib import import_module
 
 try:  # pragma: nocover
@@ -17,11 +19,27 @@ PY3 = sys.version_info[0] == 3
 
 if PY3:  # pragma: nocover
     string_types = str,
+
 else:  # pragma: nocover
     string_types = basestring,
 
 
 EmbeddedPlugins = namedtuple('EmbeddedPlugins', ['generic', 'request'])
+
+
+def get_logger(name):
+    # Here to mitigate module name clashing.
+    return logging.getLogger(name)
+
+
+def encode(value):
+    """Encodes str into bytes if required."""
+    return value.encode('utf-8') if PY3 and isinstance(value, str) else value
+
+
+def decode(value):
+    """Decodes bytes into str if required."""
+    return value.decode('utf-8') if PY3 and isinstance(value, bytes) else value
 
 
 @contextmanager
