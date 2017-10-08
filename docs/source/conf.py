@@ -18,6 +18,9 @@ import sys, os
 sys.path.insert(0, os.path.abspath('../../'))
 from uwsgiconf import VERSION
 
+# Force stub for autodoc.
+os.environ['UWSGI_FORCE_STUB'] = '1'
+
 # -- Mocking ------------------------------------------------------------------
 
 # This is used to mock certain modules.

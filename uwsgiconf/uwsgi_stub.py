@@ -110,7 +110,7 @@ def add_cron(signal, minute, hour, day, month, weekday):
     """Adds cron. The interface to the uWSGI signal cron facility. The syntax is
 
     .. note:: The last 5 arguments work similarly to a standard crontab,
-    but instead of "*", use -1, and instead of "/2", "/3", etc. use -2 and -3, etc.
+        but instead of "*", use -1, and instead of "/2", "/3", etc. use -2 and -3, etc.
 
     :param int signal: Signal to raise.
 
