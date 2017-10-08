@@ -1,5 +1,5 @@
-API
-===
+Configuration [Dynamic]
+=======================
 
 .. toctree::
     :maxdepth: 3
