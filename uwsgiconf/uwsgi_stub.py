@@ -377,7 +377,7 @@ def cache_set(key, value, expires=None, cache=None):
 
     :param int value:
 
-    :param int expires: Expire timeout (seconds). Expire timeout (seconds)
+    :param int expires: Expire timeout (seconds).
 
     :param str|unicode cache: Cache name with optional address (if @-syntax is used).
 
@@ -392,7 +392,7 @@ def cache_update(key, value, expires=None, cache=None):
 
     :param int value:
 
-    :param int expires: Expire timeout (seconds). Expire timeout (seconds)
+    :param int expires: Expire timeout (seconds).
 
     :param str|unicode cache: Cache name with optional address (if @-syntax is used).
 
@@ -408,7 +408,7 @@ def call(func_name, *args):
     :param str|unicode func_name: Function name to call
         with optional address (if @-syntax is used).
 
-    :param args:
+    :param list[str|bytes] args:
 
     :rtype: bytes|str
     """
@@ -973,11 +973,11 @@ def rpc(address, func_name, *args):
 
     :param str|unicode func_name: Function name to call.
 
-    :param args:
+    :param list[str|bytes] args:
 
     :rtype: bytes|str
 
-    :raises ValueError: If unable to RPC function.
+    :raises ValueError: If unable to call RPC function.
     """
 
 
@@ -997,7 +997,7 @@ def scrolls(legion_name):
     """
 
 
-def send(df_or_data, data=None):
+def send(fd_or_data, data=None):
     """Puts data into file descriptor.
 
     * One argument. Data to write into request file descriptor.
