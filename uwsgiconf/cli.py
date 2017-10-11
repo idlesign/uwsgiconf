@@ -34,13 +34,17 @@ arg_conf = click.argument(
 
 @base.command()
 @arg_conf
-def run(conf):
+@click.option('--only', help='Configuration alias from module to run uWSGI with.')
+def run(conf, only):
     """Runs uWSGI passing to it using the default or another `uwsgiconf` configuration module.
 
     """
     with errorprint():
         config = ConfModule(conf)
-        config.spawn_uwsgi()
+        spawned = config.spawn_uwsgi(only)
+
+        for alias, pid in spawned:
+            click.secho("Spawned uWSGI for '%s' configuration. PID %s" % (alias, pid), fg='green')
 
 
 @base.command()

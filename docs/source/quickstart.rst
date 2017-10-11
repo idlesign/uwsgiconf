@@ -1,30 +1,6 @@
 Quickstart
 ==========
 
-Usage Strategies
-----------------
-
-Two main strategies to use **uwsgiconf**:
-
-1. **Static:** create configuration .py and compile it on demand into classic uWSGI .ini using provided methods.
-
-    .. code-block:: bash
-
-        $ python uwsgicfg.py > myconf.ini
-        ; or just
-        $ uwsgiconf compile > myconf.ini
-
-        $ uwsgi myconf.ini
-
-2. **Dynamic:** create configuration .py, and give it directly to uWSGI with ``exec`` directive.
-
-    .. code-block:: bash
-
-        $ uwsgi --ini "exec://python uwsgicfg.py"
-        ; or just
-        $ uwsgiconf run
-
-
 Using a preset to run Python web application
 --------------------------------------------
 
@@ -56,12 +32,18 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
         # Make app available at http://127.0.0.1:8000
         PythonSection.networking.sockets.http('127.0.0.1:8000'),
 
-    ).as_configuration()
-
-    configuration.print_ini()
+    )
 
 
-Now we are ready to use this configuration dynamically (see ``Strategies`` paragraph above).
+Now we are ready to use this configuration:
+
+.. code-block:: bash
+
+    $ uwsgiconf compile > myconf.ini
+    $ uwsgi myconf.ini
+
+    ; or instead just
+    $ uwsgiconf run
 
 
 Configuration with multiple sections
@@ -108,5 +90,3 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_.
             master_process.set_idle_params(timeout=30, exit=True)
 
     ])
-
-    configuration.print_ini()

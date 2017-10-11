@@ -1,5 +1,5 @@
-Tips and hints
-==============
+FAQ
+===
 
 
 How to get through

@@ -8,9 +8,11 @@ not_conf1 = lambda: []
 not_conf2 = [1, 2]
 
 configuration = [
+
     Configuration([
-        Section('conf1_1'),
+        Section(),
         Section('conf1_2').env('A', 'B')
-    ]),
-    Section('conf2_1'),
+    ], alias='uwsgicgf_test1'),
+
+    Section().env('D', 'E'),
 ]

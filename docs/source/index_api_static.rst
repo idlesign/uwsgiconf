@@ -1,5 +1,5 @@
-Configuration [Dynamic]
-=======================
+Configuration [Static]
+======================
 
 .. toctree::
     :maxdepth: 3

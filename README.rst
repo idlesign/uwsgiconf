@@ -51,19 +51,11 @@ By that time you already know that **uwsgiconf** is just another configuration m
 .. _Why: http://uwsgi-docs.readthedocs.io/en/latest/FAQ.html#why-do-you-support-multiple-methods-of-configuration
 
 
-Usage Strategies
-----------------
+Overview
+--------
 
-Two main strategies to use **uwsgiconf**:
-
-1. **Static:** create configuration ``.py`` and compile it when you like into classic uWSGI ``.ini`` using provided methods.
-2. **Dynamic:** create configuration .py, and give it directly to uWSGI with ``exec`` directive.
-
-**uwsgiconf** CLI has tools to streamline both of these.
-
-
-A taste of it
--------------
+Static configuration
+~~~~~~~~~~~~~~~~~~~~
 
 Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
 
@@ -80,27 +72,49 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
         # Make app available on http://127.0.0.1:8000
         PythonSection.networking.sockets.http('127.0.0.1:8000'),
 
-    ).as_configuration()
+    )
 
-    configuration.print_ini()
-
-1. Now if you want to generate ``myconf.ini`` file and use it for uWSGI you can do it with:
+1. Now if you want to generate ``myconf.ini`` file and use it for uWSGI manually you can do it with:
 
     .. code-block:: bash
 
-        $ python uwsgicfg.py > myconf.ini
-        ; or just
         $ uwsgiconf compile > myconf.ini
-
         $ uwsgi myconf.ini
 
-2. Or for dynamic usage of .py:
+2. Or use ``uwsgiconf`` to automatically spawn uWSGI processes for configurations defined in your module:
 
     .. code-block:: bash
 
-        $ uwsgi --ini "exec://python uwsgicfg.py"
-        ; or just
         $ uwsgiconf run
+
+
+**Note:** ``uwsgiconf`` CLI requires ``click`` package available.
+
+
+Runtime configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+**uwsgiconf** comes with ``runtime`` package which is similar to **uwsgidecorators** but offers different abstractions.
+
+These abstractions will also use a stub ``uwsgi`` module when if the real one is not available.
+
+A couple of examples:
+
+.. code-block:: python
+
+    from uwsgiconf.runtime.locking import lock
+    from uwsgiconf.runtime.scheduling import register_timer_rb
+
+    @register_timer_rb(10, repeat=2)
+    def repeat_twice():
+        """This function will be called twice with 10 seconds interval
+        (by default in in first available mule) using red-black tree based timer.
+
+        """
+        with lock():
+            # Code under this context manager will be locked using default (0) uWSGI lock.
+            do()
+
 
 
 Documentation

@@ -88,20 +88,21 @@ def test_conf_module_compile():
 
     out = '\n'.join(out)
 
-    assert 'conf1_1' in out
-    assert 'conf1_2' in out
-    assert 'conf2_1' in out
+    assert '[uwsgi]' in out
+    assert '[conf1_2]' in out
+    assert 'D=E' in out
 
 
 def test_conf_module_run(monkeypatch):
     executed = []
-    monkeypatch.setattr(os, 'execvp', lambda *args: executed.append(True))
+    monkeypatch.setattr(os, 'spawnvp', lambda *args: executed.append(True))
 
     fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
 
     module = ConfModule(fpath)
     module.spawn_uwsgi()
 
+    assert len(executed) == 2
     assert all(executed)
 
 

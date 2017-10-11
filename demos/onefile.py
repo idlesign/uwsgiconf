@@ -16,7 +16,7 @@ def application(env, start_response):
 
     from functools import partial
     import random
-    from uwsgiconf import uwsgi  # This will be available under uWSGI.
+    from uwsgiconf.runtime.environ import uwsgi_env
 
     start_response('200 OK', [('Content-Type','text/html')])
 
@@ -25,8 +25,8 @@ def application(env, start_response):
 
         '<div>Some random number for you: %s</div>' % random.randint(1, 99999),
 
-        '<div>uWSGI version: %s</div>' % uwsgi.version.decode('utf8'),
-        '<div>uWSGI request ID: %s</div>' % uwsgi.request_id(),
+        '<div>uWSGI version: %s</div>' % uwsgi_env.get_version(),
+        '<div>uWSGI request ID: %s</div>' % uwsgi_env.request.id,
     ]
 
     return map(partial(bytes, encoding='utf8'), data)
@@ -39,7 +39,7 @@ def configure():
 
     FILE = os.path.abspath(__file__)
 
-    PythonSection(
+    section = PythonSection(
         # Automatically reload uWSGI if this file is changed.
         touch_reload=FILE,
 
@@ -53,9 +53,9 @@ def configure():
     ).networking.register_socket(
         PythonSection.networking.sockets.http('127.0.0.1:8000'),
 
-    ).as_configuration().print_ini()
+    )
+
+    return section
 
 
-if __name__ == '__main__':
-    # It seems we're asked for a configuration file.
-    configure()
+configuration = configure()

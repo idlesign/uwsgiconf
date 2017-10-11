@@ -9,6 +9,8 @@ class _Environment(object):
 
     # todo slots
 
+    request = None  # type: _Request
+
     hostname = uwsgi.hostname  # type: str
     """Current host name."""
 
