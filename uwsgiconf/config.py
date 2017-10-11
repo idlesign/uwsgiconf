@@ -170,12 +170,14 @@ class Section(OptionsGroup):
 
         return self
 
-    def as_configuration(self):
+    def as_configuration(self, **kwargs):
         """Returns configuration object including only one (this very) section.
 
+        :param kwargs: Configuration objects initializer arguments.
+        
         :rtype: Configuration
         """
-        return Configuration([self])
+        return Configuration([self], **kwargs)
 
     def print_plugins(self):
         """Print out enabled plugins."""
@@ -463,7 +465,7 @@ class Configuration(object):
 
     """
 
-    def __init__(self, sections=None, autoinclude_sections=False):
+    def __init__(self, sections=None, autoinclude_sections=False, alias=None):
         """
 
         :param list[Section] sections: If not provided, empty section
@@ -471,6 +473,9 @@ class Configuration(object):
 
         :param bool autoinclude_sections: Whether to include
             in the first sections all subsequent sections.
+
+        :param str|unicode alias: Configuration alias.
+            This will be used in ``tofile`` as file name.
 
         """
         super(Configuration, self).__init__()
@@ -485,6 +490,7 @@ class Configuration(object):
                 first.include(section)
 
         self.sections = sections
+        self.alias = alias or 'uwsgicfg'
 
     @classmethod
     def _validate_sections(cls, sections):
@@ -539,11 +545,14 @@ class Configuration(object):
 
         """
         if filepath is None:
-            with NamedTemporaryFile(prefix='uwsgicfg_', suffix='.ini', delete=False) as f:
+            with NamedTemporaryFile(prefix='%s_' % self.alias, suffix='.ini', delete=False) as f:
                 filepath = f.name
 
         else:
             filepath = os.path.abspath(filepath)
+
+            if os.path.isdir(filepath):
+                filepath = os.path.join(filepath, '%s.ini' % self.alias)
 
         with open(filepath, 'w') as target_file:
             target_file.write(self.format())

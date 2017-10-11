@@ -82,6 +82,16 @@ def test_conf_module_compile():
     assert module.configurations
     assert len(module.configurations) == 2
 
+    out = []
+    for conf in module.configurations:
+        out.append(conf.format())
+
+    out = '\n'.join(out)
+
+    assert 'conf1_1' in out
+    assert 'conf1_2' in out
+    assert 'conf2_1' in out
+
 
 def test_conf_module_run(monkeypatch):
     executed = []
