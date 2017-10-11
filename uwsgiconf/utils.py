@@ -181,50 +181,55 @@ def filter_locals(locals_dict, drop=None):
     return locals_dict
 
 
-def make_key_val_string(
-        locals_dict, keys=None, aliases=None, bool_keys=None, list_keys=None,
-        items_separator=','):
-    """Flattens the given dictionary into key-value string.
+class KeyValue(object):
+    """Allows lazy flattening the given dictionary into a key-value string."""
 
-    :param dict locals_dict: Dictionary produced by locals().
+    def __init__(
+            self, locals_dict, keys=None, aliases=None, bool_keys=None, list_keys=None,
+            items_separator=','):
+        """
+        :param dict locals_dict: Dictionary produced by locals().
 
-    :param list keys: Relevant keys from dictionary.
-        If not defined - all keys are relevant.
-        If defined keys will flattened into string using given order.
+        :param list keys: Relevant keys from dictionary.
+            If not defined - all keys are relevant.
+            If defined keys will flattened into string using given order.
 
-    :param dict aliases: Mapping key names from locals_dict into names
-        they should be replaced with.
+        :param dict aliases: Mapping key names from locals_dict into names
+            they should be replaced with.
 
-    :param list bool_keys: Keys to consider their values bool.
+        :param list bool_keys: Keys to consider their values bool.
 
-    :param list list_keys: Keys expecting lists.
+        :param list list_keys: Keys expecting lists.
 
-    :param str|unicode items_separator: String to use as items (chunks) separator.
+        :param str|unicode items_separator: String to use as items (chunks) separator.
 
-    :rtype: str|unicode
-    """
-    value_chunks = []
+        :rtype: str|unicode
+        """
+        self.locals_dict = dict(locals_dict)
+        self.keys = keys or sorted(filter_locals(locals_dict).keys())
+        self.aliases = aliases or {}
+        self.bool_keys = bool_keys or []
+        self.list_keys = list_keys or []
+        self.items_separator = items_separator
 
-    keys = keys or sorted(filter_locals(locals_dict).keys())
-    aliases = aliases or {}
-    bool_keys = bool_keys or []
-    list_keys = list_keys or []
+    def __str__(self):
+        value_chunks = []
 
-    for key in keys:
-        val = locals_dict[key]
+        for key in self.keys:
+            val = self.locals_dict[key]
 
-        if val is not None:
+            if val is not None:
 
-            if key in bool_keys:
-                val = 1
+                if key in self.bool_keys:
+                    val = 1
 
-            elif key in list_keys:
+                elif key in self.list_keys:
 
-                val = ';'.join(listify(val))
+                    val = ';'.join(listify(val))
 
-            value_chunks.append('%s=%s' % (aliases.get(key, key), val))
+                value_chunks.append('%s=%s' % (self.aliases.get(key, key), val))
 
-    return items_separator.join(value_chunks).strip()
+        return self.items_separator.join(value_chunks).strip()
 
 
 class UwsgiRunner(object):

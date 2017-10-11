@@ -3,7 +3,7 @@ from .monitoring_collectors import *
 from .monitoring_pushers import *
 from .monitoring_metric_types import *
 from ..base import OptionsGroup
-from ..utils import make_key_val_string, listify
+from ..utils import KeyValue, listify
 
 
 class Monitoring(OptionsGroup):
@@ -145,7 +145,7 @@ class Monitoring(OptionsGroup):
             self._section.alarms.register_alarm(alarm)
             alarm = alarm.alias
 
-        value = make_key_val_string(
+        value = KeyValue(
             locals(),
             aliases={
                 'name': 'key',

@@ -54,8 +54,7 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
 
     ).networking.register_socket(
         # Make app available at http://127.0.0.1:8000
-        address='127.0.0.1:8000',
-        type=PythonSection.networking.socket_types.HTTP,
+        PythonSection.networking.sockets.http('127.0.0.1:8000'),
 
     ).as_configuration()
 
@@ -98,7 +97,7 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_.
 
         # This section is for Broodlord Emperor.
         Section.derive_from(base_section).
-            networking.register_socket(address=':3031').
+            networking.register_socket(Section.networking.sockets.default(':3031')).
             workers.set_zerg_server_params(socket=BROODLORD_SOCKET).
             empire.set_emperor_params(vassals_home='/etc/vassals').
             empire.set_mode_broodlord_params(zerg_count=40, vassal_backlog_items_sos=10),

@@ -406,8 +406,7 @@ class Workers(OptionsGroup):
             self._set('zerg-fallback', use_fallback_socket, cast=bool)
 
             for socket in listify(server_sockets):
-                self._section.networking.register_socket(socket, type=self._section.networking.socket_types.DEFAULT)
-
+                self._section.networking.register_socket(self._section.networking.sockets.default(socket))
 
         return self._section
 

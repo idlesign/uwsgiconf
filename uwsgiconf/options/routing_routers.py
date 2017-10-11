@@ -1,32 +1,54 @@
-from collections import OrderedDict
-
 from ..base import OptionsGroup, ParametrizedValue
-from ..utils import make_key_val_string, filter_locals
+from ..utils import KeyValue, filter_locals
 from .routing_modifiers import Modifier, ModifierWsgi
+from .networking_sockets import SocketShared
 
 
 class RouterBase(OptionsGroup):
 
     alias = None
+    on_command = None
 
     def _set_aliased(self, *args, **kwargs):
         args = list(args)
         args[0] = '%s-%s' % (self.alias, args[0])
         self._set(*args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        self._section = type('SectionLike', (object,), {'_opts': OrderedDict()})
-        super(RouterBase, self).__init__(*args, **kwargs)
-
-    def on(self, address):
-        """Activates the router on the given address.
-
-        :param str|unicode address: Address for router to bind to.
-
+    def __init__(self, on=None):
         """
-        self._set(self.alias, address)
+        :param SocketShared|str|unicode on: Activates the router on the given address.
+        """
+        self._make_section_like()
 
-        return self
+        command = self.on_command or self.alias
+
+        self._set(command, on)
+
+        super(RouterBase, self).__init__()
+
+    def _contribute_to_opts(self, target):
+        target_section = target._section
+        networking = target_section.networking
+
+        def handle_shared(value):
+            # Handle shared sockets as addresses.
+            networking.register_socket(value)
+            return networking._get_shared_socket_idx(value)
+
+        for key, value in self._section._opts.items():
+
+            if isinstance(value, KeyValue):
+                on = value.locals_dict.get('on')
+
+                if isinstance(on, SocketShared):
+                    # Replace address with shared socket index.
+                    value.locals_dict['on'] = handle_shared(on)
+
+            else:
+                if isinstance(value, SocketShared):
+                    value = handle_shared(value)
+
+            target_section._opts[key] = value
 
 
 class _RouterCommon(RouterBase):
@@ -199,6 +221,26 @@ class _RouterWithForwarders(_RouterCommon):
         socket = ForwarderSocket
         subscription_server = ForwarderSubscriptionServer
 
+    def __init__(self, on=None, forward_to=None):
+        """Activates the router on the given address.
+
+        :param SocketShared|str|unicode on: Activates the router on the given address.
+
+        :param Forwarder|str|unicode|list[str|unicode] forward_to: Where to forward requests.
+            Expects a forwarder instance or one or more node names.
+
+        """
+        super(_RouterWithForwarders, self).__init__(on)
+
+        if forward_to is not None:
+            if isinstance(forward_to, Forwarder):
+
+                value = '%s' % forward_to
+                self._set_aliased(forward_to.name, value, multi=True)
+
+            else:
+                self._set_aliased('to', forward_to, multi=True)
+
     def set_basic_params(
             self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None, quiet=None, buffer_size=None):
@@ -238,31 +280,9 @@ class _RouterWithForwarders(_RouterCommon):
 
         return self
 
-    def on(self, address, forward_to=None):
-        """Activates the router on the given address.
-
-        :param str|unicode address: Address for router to bind to.
-
-        :param Forwarder|str|unicode|list[str|unicode] forward_to: Where to forward requests.
-            Expects a forwarder instance or one or more node names.
-
-        """
-        super(_RouterWithForwarders, self).on(address)
-
-        if forward_to is not None:
-            if isinstance(forward_to, Forwarder):
-
-                value = '%s' % forward_to
-                self._set_aliased(forward_to.name, value, multi=True)
-
-            else:
-                self._set_aliased('to', forward_to, multi=True)
-
-        return self
-
 
 class RouterHttp(_RouterWithForwarders):
-    """uWSGI includes an HTTP/HTTPS router/proxy/load-balancer that can forward requests to uWSGI workers.
+    """uWSGI includes an HTTP router/proxy/load-balancer that can forward requests to uWSGI workers.
 
     The server can be used in two ways:
 
@@ -418,12 +438,31 @@ class RouterHttp(_RouterWithForwarders):
 
         return self
 
-    def https_on(
-            self, address, cert, key, ciphers=None, client_ca=None, session_context=None, use_spdy=None,
+
+class RouterHttps(RouterHttp):
+    """uWSGI includes an HTTPS router/proxy/load-balancer that can forward requests to uWSGI workers.
+
+    The server can be used in two ways:
+
+        * embedded - automatically spawn workers and setup the communication socket
+        * standalone - you have to specify the address of a uwsgi socket to connect to
+
+            See `subscribe_to` argument to `.set_basic_params()`
+
+    .. note:: If you want to go massive (virtualhosting and zero-conf scaling) combine the HTTP router
+        with the uWSGI Subscription Server.
+
+    """
+    alias = 'http'  # Shares options with http.
+    plugin = alias
+    on_command = 'https2'
+
+    def __init__(
+            self, on, cert, key, ciphers=None, client_ca=None, session_context=None, use_spdy=None,
             export_cert_var=None):
         """Binds https router to run on the given address.
 
-        :param str|unicode address: Address for router to bind to.
+        :param SocketShared|str|unicode on: Activates the router on the given address.
 
         :param str|unicode cert: Certificate file.
 
@@ -440,6 +479,9 @@ class RouterHttp(_RouterWithForwarders):
 
         :param str|unicode client_ca: Client CA file for client-based auth.
 
+            .. note: You can prepend ! (exclamation mark) to make client certificate
+                authentication mandatory.
+
         :param str|unicode session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
@@ -452,15 +494,15 @@ class RouterHttp(_RouterWithForwarders):
         :param bool export_cert_var: Export uwsgi variable `HTTPS_CC` containing the raw client certificate.
 
         """
-        self._set('https2', make_key_val_string(
+        on = KeyValue(
             filter_locals(locals(), drop=['session_context']),
-            aliases={'address': 'addr', 'use_spdy': 'spdy'},
+            aliases={'on': 'addr', 'use_spdy': 'spdy'},
             bool_keys=['use_spdy'],
-        ))
+        )
+
+        super(_RouterWithForwarders, self).__init__(on)
 
         self._set_aliased('session-context', session_context)
-
-        return self
 
 
 class RouterSsl(_RouterWithForwarders):
@@ -471,30 +513,12 @@ class RouterSsl(_RouterWithForwarders):
     """
     alias = 'sslrouter'
     plugin = alias
+    on_command = 'sslrouter2'
 
-    def set_connections_params(self, harakiri=None, timeout_socket=None, retry_delay=None, retry_max=None):
-        """Sets connection-related parameters.
-
-        :param int harakiri: Set gateway harakiri timeout (seconds).
-
-        :param int timeout_socket: Node socket timeout (seconds). Default: 60.
-
-        :param int retry_delay: Retry connections to dead static nodes after the specified
-            amount of seconds. Default: 30.
-
-        :param int retry_max: Maximum number of retries/fallbacks to other nodes. Default: 3.
-
-        """
-        super(RouterSsl, self).set_connections_params(**filter_locals(locals(), ['retry_max']))
-
-        self._set_aliased('max-retries', retry_max)
-
-        return self
-
-    def on(self, address, cert, key, forward_to=None, ciphers=None, client_ca=None, session_context=None, use_sni=None):
+    def __init__(self, on, cert, key, forward_to=None, ciphers=None, client_ca=None, session_context=None, use_sni=None):
         """Activates the router on the given address.
 
-        :param str|unicode address: Address for router to bind to.
+        :param SocketShared|str|unicode on: Activates the router on the given address.
 
         :param str|unicode cert: Certificate file.
 
@@ -524,13 +548,32 @@ class RouterSsl(_RouterWithForwarders):
         :param bool use_sni: Use SNI to route requests.
 
         """
-        self._set('sslrouter2', make_key_val_string(
+        on = KeyValue(
             filter_locals(locals(), drop=['session_context', 'use_sni']),
-            aliases={'address': 'addr'},
-        ))
+            aliases={'on': 'addr'},
+        )
 
         self._set_aliased('session-context', session_context)
         self._set_aliased('sni', use_sni, cast=bool)
+
+        super(RouterSsl, self).__init__(on, forward_to)
+
+    def set_connections_params(self, harakiri=None, timeout_socket=None, retry_delay=None, retry_max=None):
+        """Sets connection-related parameters.
+
+        :param int harakiri: Set gateway harakiri timeout (seconds).
+
+        :param int timeout_socket: Node socket timeout (seconds). Default: 60.
+
+        :param int retry_delay: Retry connections to dead static nodes after the specified
+            amount of seconds. Default: 30.
+
+        :param int retry_max: Maximum number of retries/fallbacks to other nodes. Default: 3.
+
+        """
+        super(RouterSsl, self).set_connections_params(**filter_locals(locals(), ['retry_max']))
+
+        self._set_aliased('max-retries', retry_max)
 
         return self
 
@@ -711,6 +754,23 @@ class RouterForkPty(_RouterCommon):
     alias = 'forkptyrouter'
     plugin = alias
 
+    def __init__(self, on=None, undeferred=False):
+        """Binds router to run on the given address.
+
+        :param SocketShared|str|unicode on: Activates the router on the given address.
+
+        :param bool undeferred: Run router in undeferred mode.
+
+        """
+        router_name = self.alias
+
+        if undeferred:
+            router_name = 'forkptyurouter'
+
+        self.on_command = router_name
+
+        super(RouterForkPty, self).__init__(on)
+
     def set_basic_params(
             self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None, run_command=None):
@@ -740,23 +800,6 @@ class RouterForkPty(_RouterCommon):
         super(RouterForkPty, self).set_basic_params(**filter_locals(locals(), ['run_command']))
 
         self._set_aliased('command', run_command)
-
-        return self
-
-    def on(self, address=None, undeferred=False, ):
-        """Binds router to run on the given address.
-
-        :param str|unicode address: Run the router on the specified address.
-
-        :param bool undeferred: Run router in undeferred mode.
-
-        """
-        router_name = self.alias
-
-        if undeferred:
-            router_name = 'forkptyurouter'
-
-        self._set(router_name, address)
 
         return self
 
@@ -806,6 +849,31 @@ class RouterTunTap(RouterBase):
     alias = 'tuntap'
     plugin = alias
 
+    def __init__(self, on=None, device=None, stats_server=None, gateway=None):
+        """Passing params will create a router device.
+
+        :param str|unicode on: Socket file.
+
+        :param str|unicode device: Device name.
+
+        :param str|unicode stats_server: Router stats server address to run at.
+
+        :param str|unicode gateway: Gateway address.
+
+        """
+        super(RouterTunTap, self).__init__()
+
+        if on is not None:
+            value = [device or 'uwsgidev', on]
+
+            if stats_server:
+                value.append(stats_server)
+
+                if gateway:
+                    value.append(gateway)
+
+            self._set_aliased('router', ' '.join(value), multi=True)
+
     def set_basic_params(self, use_credentials=None, stats_server=None):
         """
         :param str|unicode use_credentials: Enable check of SCM_CREDENTIALS for tuntap client/server.
@@ -815,30 +883,6 @@ class RouterTunTap(RouterBase):
         """
         self._set_aliased('use-credentials', use_credentials)
         self._set_aliased('router-stats', stats_server)
-
-        return self
-
-    def on(self, device, socket, stats_server=None, gateway=None):
-        """Creates router device.
-
-        :param str|unicode device: Device name.
-
-        :param str|unicode socket: Socket file.
-
-        :param str|unicode stats_server: Router stats server address to run at.
-
-        :param str|unicode gateway: Gateway address.
-
-        """
-        value = [device, socket]
-
-        if stats_server:
-            value.append(stats_server)
-
-            if gateway:
-                value.append(gateway)
-
-        self._set_aliased('router', ' '.join(value), multi=True)
 
         return self
 
@@ -856,21 +900,21 @@ class RouterTunTap(RouterBase):
 
         return self
 
-    def device_connect(self, device_name, address):
+    def device_connect(self, socket, device_name):
         """Add a tuntap device to the instance.
 
         To be used in a vassal.
+
+        :param str|unicode socket: Router socket.
+
+            Example: `/run/tuntap_router.socket`.
 
         :param str|unicode device_name: Device.
 
             Example: `uwsgi0`.
 
-        :param str|unicode address: Router socket.
-
-            Example: `/run/tuntap_router.socket`.
-
         """
-        self._set_aliased('device', '%s %s' % (device_name, address))
+        self._set_aliased('device', '%s %s' % (device_name, socket))
 
         return self
 

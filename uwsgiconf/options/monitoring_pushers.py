@@ -1,5 +1,5 @@
 from ..base import ParametrizedValue
-from ..utils import make_key_val_string
+from ..utils import KeyValue
 
 
 class Pusher(ParametrizedValue):
@@ -178,7 +178,7 @@ class PusherMongo(Pusher):
 
         :param int push_interval: Write interval in seconds.
         """
-        value = make_key_val_string(locals(), aliases={'push_interval': 'freq'})
+        value = KeyValue(locals(), aliases={'push_interval': 'freq'})
 
         super(PusherMongo, self).__init__(value)
 
@@ -200,6 +200,6 @@ class PusherFile(Pusher):
 
         :param int push_interval: Write interval in seconds.
         """
-        value = make_key_val_string(locals(), aliases={'fpath': 'path', 'push_interval': 'freq'})
+        value = KeyValue(locals(), aliases={'fpath': 'path', 'push_interval': 'freq'})
 
         super(PusherFile, self).__init__(value)

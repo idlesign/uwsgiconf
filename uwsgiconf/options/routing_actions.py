@@ -1,5 +1,5 @@
 from ..base import ParametrizedValue
-from ..utils import make_key_val_string, filter_locals
+from ..utils import KeyValue, filter_locals
 
 
 class RouteAction(ParametrizedValue):
@@ -37,7 +37,7 @@ class ActionToFile(RouteAction):
     plugin = 'transformation_tofile'
 
     def __init__(self, filename, mode=None):
-        arg = make_key_val_string(locals())
+        arg = KeyValue(locals())
         super(ActionToFile, self).__init__(arg)
 
 
@@ -444,7 +444,7 @@ class AuthLdap(RouteAction):
 
         :param bool do_next: Allow next rule.
         """
-        arg = make_key_val_string(
+        arg = KeyValue(
             filter_locals(locals(), drop=['realm', 'do_next']),
             aliases={
                 'address': 'url',

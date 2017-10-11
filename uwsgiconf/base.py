@@ -171,7 +171,7 @@ class OptionsGroup(object):
         def handle_plugin_required(val):
 
             if isinstance(val, ParametrizedValue):
-                key.swap(val.opt_key or key)
+                key.swap(val.opt_key or key)  # todo
 
                 if val.plugin:
                     # Automatic plugin activation.
@@ -228,6 +228,13 @@ class OptionsGroup(object):
                 if not handle_priority(value):
                     opts[key] = value
 
+    def _make_section_like(self):
+        self._section = type('SectionLike', (object,), {'_opts': OrderedDict()})
+
+    def _contribute_to_opts(self, target):
+        target_section = target._section
+        target_section._opts.update(self._section._opts)
+
 
 class ParametrizedValue(OptionsGroup):
     """Represents parametrized option value."""
@@ -257,7 +264,7 @@ class ParametrizedValue(OptionsGroup):
 
         result = ''
 
-        if not self.opt_key:
+        if self.opt_key is None:
             result += self._get_name() + self.name_separator
 
         result += self.args_joiner.join(args)

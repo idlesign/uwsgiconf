@@ -1,6 +1,6 @@
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..utils import make_key_val_string, filter_locals
+from ..utils import KeyValue, filter_locals
 from .subscriptions_algos import *
 
 
@@ -196,7 +196,7 @@ class Subscriptions(OptionsGroup):
             if modifier.submod:
                 modifier2 = modifier.submod
 
-        rule = make_key_val_string(
+        rule = KeyValue(
             filter_locals(locals(), drop=['address_key', 'modifier']),
             aliases={
                 'address': address_key,

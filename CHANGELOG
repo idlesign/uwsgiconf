@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Sockets and Routers reworked.
+
+
 v0.10.0
 -------
 + Added 'runtime' package preview.

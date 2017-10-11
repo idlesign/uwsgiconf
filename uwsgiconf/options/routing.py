@@ -204,6 +204,7 @@ class Routing(OptionsGroup):
         """Dedicated routers, which can be used with `register_router()`."""
 
         http = RouterHttp
+        https = RouterHttps
         ssl = RouterSsl
         fast = RouterFast
         raw = RouterRaw
@@ -271,10 +272,9 @@ class Routing(OptionsGroup):
             supplying this you can try to bypass this limit.
 
         """
-        # todo merge sections
-
         self._set('force-gateway', force, cast=bool)
-        self._section._opts.update(router._section._opts)
+
+        router._contribute_to_opts(self)
 
         return self._section
 

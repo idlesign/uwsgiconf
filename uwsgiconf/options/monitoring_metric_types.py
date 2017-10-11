@@ -1,5 +1,5 @@
 from ..base import ParametrizedValue
-from ..utils import make_key_val_string, filter_locals
+from ..utils import KeyValue, filter_locals
 from ..exceptions import ConfigurationError
 
 
@@ -54,7 +54,7 @@ class Metric(ParametrizedValue):
 
         type_str = self.type_str
 
-        value = make_key_val_string(
+        value = KeyValue(
             filter_locals(locals(), drop=['name']),
             aliases={'collect_interval': 'freq', 'type_str': 'type', 'alias_for': 'alias'}
         )

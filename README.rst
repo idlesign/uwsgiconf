@@ -77,9 +77,8 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
         wsgi_module='/home/idle/myapp/wsgi.py',
 
     ).networking.register_socket(
-        # Make app available at http://127.0.0.1:8000
-        address='127.0.0.1:8000',
-        type=PythonSection.networking.socket_types.HTTP,
+        # Make app available on http://127.0.0.1:8000
+        PythonSection.networking.sockets.http('127.0.0.1:8000'),
 
     ).as_configuration()
 

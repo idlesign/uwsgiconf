@@ -51,8 +51,7 @@ def configure():
         workers=1
 
     ).networking.register_socket(
-        '127.0.0.1:8000',
-        type=PythonSection.networking.socket_types.HTTP
+        PythonSection.networking.sockets.http('127.0.0.1:8000'),
 
     ).as_configuration().print_ini()
 

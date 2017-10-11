@@ -1,5 +1,5 @@
 from ..base import ParametrizedValue
-from ..utils import listify, filter_locals, make_key_val_string
+from ..utils import listify, filter_locals, KeyValue
 
 
 class AlarmType(ParametrizedValue):
@@ -58,7 +58,7 @@ class AlarmCurl(AlarmType):
             timeout=None, conn_timeout=None,
             mail_from=None, mail_to=None, subject=None):
 
-        opts = make_key_val_string(
+        opts = KeyValue(
             filter_locals(locals(), drop=['alias', 'url']),
             bool_keys=['ssl', 'ssl_insecure'],
             items_separator=self.args_joiner,

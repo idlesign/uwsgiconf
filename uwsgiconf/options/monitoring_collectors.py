@@ -1,5 +1,5 @@
 from ..base import ParametrizedValue
-from ..utils import make_key_val_string, filter_locals
+from ..utils import KeyValue, filter_locals
 from .monitoring_metric_types import Metric
 
 
@@ -48,7 +48,7 @@ class CollectorFile(Collector):
             and the item (the returned array is zero-based) used as the return value.
 
         """
-        value = make_key_val_string(locals(), aliases={'fpath': 'arg1', 'get_slot': 'arg1n'})
+        value = KeyValue(locals(), aliases={'fpath': 'arg1', 'get_slot': 'arg1n'})
 
         super(CollectorFile, self).__init__(value)
 
@@ -70,7 +70,7 @@ class CollectorFunction(Collector):
         """
         :param str|unicode func: Function to call.
         """
-        value = make_key_val_string(locals(), aliases={'func': 'arg1'})
+        value = KeyValue(locals(), aliases={'func': 'arg1'})
 
         super(CollectorFunction, self).__init__(value)
 
@@ -121,7 +121,7 @@ class CollectorAdder(Collector):
         """
         :param int value: Value to add (multiply if it is CollectorMultiplier).
         """
-        value = make_key_val_string(filter_locals(locals(), drop=['what']), aliases={'value': 'arg1n'})
+        value = KeyValue(filter_locals(locals(), drop=['what']), aliases={'value': 'arg1n'})
 
         super(CollectorAdder, self).__init__(value, children=what)
 
