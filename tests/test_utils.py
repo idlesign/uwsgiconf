@@ -80,7 +80,7 @@ def test_conf_module_compile():
     # invalid objects
     module = ConfModule(fpath)
     assert module.configurations
-    assert len(module.configurations) == 1
+    assert len(module.configurations) == 2
 
 
 def test_conf_module_run(monkeypatch):

@@ -7,4 +7,4 @@ not_conf1 = lambda: []
 
 not_conf2 = [1, 2]
 
-configuration = Section()
+configuration = [Section(), Section('another')]
