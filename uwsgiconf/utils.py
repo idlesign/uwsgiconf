@@ -125,7 +125,7 @@ class ConfModule(object):
 
         if not confs:
             raise ConfigurationError(
-                "'configuration' attribute must hold either 'Section' nor 'Configuration' objects [ %s ]" % fpath)
+                "'configuration' attribute must hold either 'Section' or 'Configuration' objects [ %s ]" % fpath)
 
         self._confs = confs
 
