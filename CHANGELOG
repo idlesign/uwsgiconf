@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Nice preset. Threads are now on by default for PythonSection.
 + Sockets and Routers reworked.
 
 

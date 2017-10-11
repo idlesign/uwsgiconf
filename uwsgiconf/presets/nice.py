@@ -79,7 +79,7 @@ class PythonSection(Section):
 
     def __init__(
             self, name=None, params_python=None, wsgi_module=None, embedded_plugins=True,
-            require_app=True, **kwargs):
+            require_app=True, threads=True, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -97,12 +97,16 @@ class PythonSection(Section):
 
         :param bool require_app: Exit if no app can be loaded.
 
+        :param int|bool threads: Number of threads per worker or ``True`` to enable user-made threads support.
+
         :param kwargs:
         """
         if embedded_plugins is True:
             embedded_plugins = self.embedded_plugins_presets.BASIC + ['python', 'python2', 'python3']
 
-        super(PythonSection, self).__init__(name=name, embedded_plugins=embedded_plugins, **kwargs)
+        super(PythonSection, self).__init__(
+            name=name, embedded_plugins=embedded_plugins, threads=threads,
+            **kwargs)
 
         self.python.set_basic_params(**(params_python or {}))
 
