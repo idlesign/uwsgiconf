@@ -57,7 +57,7 @@ Overview
 Static configuration
 ~~~~~~~~~~~~~~~~~~~~
 
-Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
+Let's make ``uwsgicfg.py``. There we configure uWSGI using nice ``PythonSection`` preset to run our web app.
 
 .. code-block:: python
 
@@ -110,7 +110,7 @@ Runtime configuration
 
 **uwsgiconf** comes with ``runtime`` package which is similar to **uwsgidecorators** but offers different abstractions.
 
-These abstractions will also use a stub ``uwsgi`` module when if the real one is not available.
+These abstractions will also use a stub ``uwsgi`` module when the real one is not available.
 
 A couple of examples:
 

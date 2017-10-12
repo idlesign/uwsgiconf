@@ -27,7 +27,7 @@ Use the following command to install **uwsgiconf** with ``click``:
 Using a preset to run Python web application
 --------------------------------------------
 
-Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` preset to run our web app.
+Let's make ``uwsgicfg.py``. There we configure uWSGI using nice ``PythonSection`` preset to run our web app.
 
 .. code-block:: python
 
@@ -40,16 +40,21 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
         In such a way you can configure more than one uWSGI instance in the same place.
 
         """
+        my_app_dir = '/home/idle/myapp/'
+
         section = PythonSection(
             # Reload uWSGI when this file is updated.
             touch_reload=__file__,
 
             params_python=dict(
                 # Let's add something into Python path.
-                search_path='/home/idle/apps/',
+                search_path='/opt/apps_shared/',
             ),
 
-            wsgi_module='/home/idle/myapp/wsgi.py',
+            wsgi_module=my_app_dir + 'wsgi.py',
+
+            # We'll redirect logs into a file.
+            log_into=my_app_dir + 'app.log',
 
             # If your uWSGI has no basic plugins embedded
             # (i.e. not from PyPI) you can give uwsgiconf a hint:
