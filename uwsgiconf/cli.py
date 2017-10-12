@@ -44,7 +44,7 @@ def run(conf, only):
         spawned = config.spawn_uwsgi(only)
 
         for alias, pid in spawned:
-            click.secho("Spawned uWSGI for '%s' configuration. PID %s" % (alias, pid), fg='green')
+            click.secho("Spawned uWSGI for configuration aliased '%s'. PID %s" % (alias, pid), fg='green')
 
 
 @base.command()

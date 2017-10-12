@@ -12,7 +12,7 @@ try:  # pragma: nocover
 except ImportError:  # pragma: nocover
     from io import StringIO
 
-from .exceptions import ConfigurationError
+from .settings import CONFIGS_MODULE_ATTR, ENV_CONF_ALIAS
 
 
 if False:  # pragma: nocover
@@ -67,7 +67,6 @@ class ConfModule(object):
 
     """
     default_name = 'uwsgicfg.py'
-    confs_attr_name = 'configuration'
 
     def __init__(self, fpath):
         """Module filepath.
@@ -95,56 +94,21 @@ class ConfModule(object):
             alias = config.alias
 
             if only is None or alias == only:
-                filepath = config.tofile()
-                pid = UwsgiRunner().spawn(filepath)
+                pid = UwsgiRunner().spawn(self.fpath, alias)
                 spawned.append((alias, pid))
 
         return spawned
 
     @property
     def configurations(self):
-        """Configuration( section(s) from uwsgiconf module."""
+        """Configurations from uwsgiconf module."""
 
         if self._confs is not None:
             return self._confs
 
-        from uwsgiconf.config import Section, Configuration
-
-        fpath = self.fpath
-
         with output_capturing():
-            module = self.load(fpath)
-
-            attr = getattr(module, self.confs_attr_name, None)
-
-            if attr is None:
-                raise ConfigurationError(
-                    "'configuration' attribute not found. File: %s" % fpath)
-
-            if callable(attr):
-                attr = attr()
-
-        if not attr:
-            raise ConfigurationError(
-                "'configuration' attribute is empty. File: %s" % fpath)
-
-        if not isinstance(attr, (list, tuple)):
-            attr = [attr]
-
-        confs = []
-
-        for conf_candidate in attr:
-            if not isinstance(conf_candidate, (Section, Configuration)):
-                continue
-
-            if isinstance(conf_candidate, Section):
-                conf_candidate = conf_candidate.as_configuration()
-
-            confs.append(conf_candidate)
-
-        if not confs:
-            raise ConfigurationError(
-                "'configuration' attribute must hold either 'Section' or 'Configuration' objects. File: %s" % fpath)
+            module = self.load(self.fpath)
+            confs = getattr(module, CONFIGS_MODULE_ATTR)
 
         self._confs = confs
 
@@ -299,18 +263,17 @@ class UwsgiRunner(object):
 
         return os.path.basename(python_binary)
 
-    def spawn(self, filepath):
-        """Spawns uWSGI using the given configuration file (python module or .ini file).
+    def spawn(self, filepath, configuration_alias):
+        """Spawns uWSGI using the given configuration module.
 
         :param str|unicode filepath:
 
-        """
-        if filepath.endswith('.ini'):
-            target = filepath
+        :param str|unicode configuration_alias:
 
-        else:
-            # todo Use this to get more.
-            target = 'exec://%s %s' % (self.binary_python, filepath)
+        """
+        os.environ[ENV_CONF_ALIAS] = configuration_alias
+
+        target = 'exec://%s %s' % (self.binary_python, filepath)
 
         return os.spawnvp(os.P_NOWAIT, 'uwsgi', ['uwsgi', '--ini', target])
 

@@ -61,18 +61,32 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
 
 .. code-block:: python
 
+    from uwsgiconf.config import configure_uwsgi
     from uwsgiconf.presets.nice import PythonSection
 
 
-    configuration = PythonSection(
-        # Load wsgi.py module containing WSGI application.
-        wsgi_module='/home/idle/myapp/wsgi.py',
+    def get_configurations():
+        """This should return one or more Section or Configuration objects.
+        In such a way you can configure more than one uWSGI instance in the same place.
 
-    ).networking.register_socket(
-        # Make app available on http://127.0.0.1:8000
-        PythonSection.networking.sockets.http('127.0.0.1:8000'),
+        Here we'll define just one configuration section, which
+        will instruct uWSGI to serve WSGI application (from wsgi.py module)
+        on http://127.0.0.1:8000
 
-    )
+        """
+        section = PythonSection(
+            wsgi_module='/home/idle/myapp/wsgi.py',
+
+        ).networking.register_socket(
+            PythonSection.networking.sockets.http('127.0.0.1:8000'))
+
+        return section
+
+
+    # Almost done. One more thing:
+    configure_uwsgi(get_configurations)
+
+
 
 1. Now if you want to generate ``myconf.ini`` file and use it for uWSGI manually you can do it with:
 
@@ -112,8 +126,9 @@ A couple of examples:
 
         """
         with lock():
-            # Code under this context manager will be locked using default (0) uWSGI lock.
-            do()
+            # Code under this context manager will be locked
+            # using default (0) uWSGI lock.
+            do_something()
 
 
 

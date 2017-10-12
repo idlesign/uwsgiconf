@@ -1,18 +1,21 @@
-from uwsgiconf.config import Section, Configuration
+from uwsgiconf.config import Section, Configuration, configure_uwsgi
 
 
 print("this line won't print")
 
-not_conf1 = lambda: []
 
-not_conf2 = [1, 2]
+def get_config():
 
-configuration = [
+    configuration = [
 
-    Configuration([
-        Section(),
-        Section('conf1_2').env('A', 'B')
-    ], alias='uwsgicgf_test1'),
+        Configuration([
+            Section(),
+            Section('conf1_2').env('A', 'B')
+        ], alias='uwsgicgf_test1'),
 
-    Section().env('D', 'E'),
-]
+        Section().env('D', 'E'),
+    ]
+    return configuration
+
+
+configure_uwsgi(get_config)

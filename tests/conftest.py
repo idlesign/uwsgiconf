@@ -1,11 +1,12 @@
+import subprocess
 from os import environ
 
 import pytest
-import subprocess
 
+from uwsgiconf.settings import ENV_FORCE_STUB
 
 # Force stub to allow shallow testing.
-environ['UWSGI_FORCE_STUB'] = '1'
+environ[ENV_FORCE_STUB] = '1'
 
 
 @pytest.fixture(scope='session')

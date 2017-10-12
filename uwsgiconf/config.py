@@ -1,15 +1,15 @@
 import os
-from copy import deepcopy
-from itertools import chain
-from datetime import datetime
 from collections import OrderedDict
+from copy import deepcopy
+from datetime import datetime
 from functools import partial
+from itertools import chain
 from tempfile import NamedTemporaryFile
 
 from .base import Options, OptionsGroup
-from .options import *
-from .formatters import IniFormatter, format_print_text
 from .exceptions import ConfigurationError
+from .formatters import IniFormatter, format_print_text
+from .options import *
 from .utils import listify, UwsgiRunner
 
 
@@ -291,6 +291,22 @@ class Section(OptionsGroup):
 
         return self
 
+    def set_placeholder(self, key, value):
+        """Placeholders are custom magic variables defined during configuration
+        time.
+
+        .. note:: These are accessible, like any uWSGI option, in your application code via
+            ``.runtime.environ.uwsgi_env.config``.
+
+        :param str|unicode key:
+
+        :param str|unicode value:
+
+        """
+        self._set('set-placeholder', '%s=%s' % (key, value), multi=True)
+
+        return self
+
     def env(self, key, value=None, unset=False, asap=False):
         """Processes (sets/unsets) environment variable.
 
@@ -559,3 +575,81 @@ class Configuration(object):
             target_file.flush()
 
         return filepath
+
+
+def configure_uwsgi(configurator_func):
+    """Allows configuring uWSGI using Configuration objects returned
+    by the given configuration function.
+
+    .. code-block: python
+
+        # In configuration module, e.g `uwsgicfg.py`
+
+        from uwsgiconf.config import configure_uwsgi
+
+        configure_uwsgi(get_configurations)
+
+
+    :param callable configurator_func: Function which return a list on configurations.
+
+    """
+    from .settings import ENV_CONF_READY, ENV_CONF_ALIAS, CONFIGS_MODULE_ATTR
+
+    if os.environ.get(ENV_CONF_READY):
+        # This call is from uWSGI trying to load an application.
+
+        # We prevent unnecessary configuration
+        # for setups where application is located in the same
+        # file as configuration.
+        return
+
+    configurations = configurator_func()
+    registry = OrderedDict()
+
+    if not isinstance(configurations, (list, tuple)):
+        configurations = [configurations]
+
+    for conf_candidate in configurations:
+        if not isinstance(conf_candidate, (Section, Configuration)):
+            continue
+
+        if isinstance(conf_candidate, Section):
+            conf_candidate = conf_candidate.as_configuration()
+
+        alias = conf_candidate.alias
+
+        if alias in registry:
+            raise ConfigurationError(
+                "Configuration alias '%s' clashes with another configuration. "
+                "Please change the alias." % alias)
+
+        registry[alias] = conf_candidate
+
+    if not registry:
+        raise ConfigurationError(
+            "Callable passed into 'configure_uwsgi' must return 'Section' or 'Configuration' objects.")
+
+    target_alias = os.environ.get(ENV_CONF_ALIAS)
+
+    if target_alias:
+        # This call is [presumably] from uWSGI configuration read procedure.
+        config = registry.get(target_alias)
+
+        if config:
+            section = config.sections[0]  # type: Section
+            # Set ready marker which is checked above.
+            section.env(ENV_CONF_READY, 1)
+
+            # Placeholder for runtime introspection.
+            section.set_placeholder('config-alias', target_alias)
+
+            # Print out
+            config.print_ini()
+
+    else:
+        # This call is from module containing uWSGI configurations.
+        import inspect
+
+        # Set module attribute automatically.
+        config_module = inspect.currentframe().f_back
+        config_module.f_locals[CONFIGS_MODULE_ATTR] = registry.values()

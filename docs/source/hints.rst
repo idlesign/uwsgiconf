@@ -29,19 +29,6 @@ You can try the following trick (from directory containing ``venv/`` and ``uwsgi
     $ venv/bin/uwsgiconf run
 
 
-Install with CLI
-----------------
-*I'm unable to run CLI because of a strange error, what should I do?*
-
-**uwsgiconf** expects ``click`` package available for CLI but won't install this dependency by default.
-
-Use the following command to install **uwsgiconf** with ``click``:
-
-.. code-block:: bash
-
-    $ pip install uwsgiconf[cli]
-
-
 Unknown config directive
 ------------------------
 

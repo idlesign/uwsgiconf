@@ -3,7 +3,7 @@ import os
 import pytest
 
 from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule, get_uwsgi_stub_attrs_diff
-from uwsgiconf.exceptions import ConfigurationError, UwsgiconfException
+from uwsgiconf.exceptions import UwsgiconfException
 
 
 SAMPLE_OUT_PLUGINS_MANY = '''
@@ -58,24 +58,6 @@ def test_runner(mock_popen):
 
 def test_conf_module_compile():
     fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
-
-    # no attr
-    module = ConfModule(fpath)
-    module.confs_attr_name = 'faked'
-    with pytest.raises(ConfigurationError):
-        confs = module.configurations
-
-    # empty
-    module = ConfModule(fpath)
-    module.confs_attr_name = 'not_conf1'
-    with pytest.raises(ConfigurationError):
-        confs = module.configurations
-
-    # invalid objects
-    module = ConfModule(fpath)
-    module.confs_attr_name = 'not_conf2'
-    with pytest.raises(ConfigurationError):
-        confs = module.configurations
 
     # invalid objects
     module = ConfModule(fpath)

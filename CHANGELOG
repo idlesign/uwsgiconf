@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Added support for multiple configurations in one module.
 + Configuration now accepts 'alias' param.
 * Nice preset. Threads are now on by default for PythonSection.
 + Sockets and Routers reworked.

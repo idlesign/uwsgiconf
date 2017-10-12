@@ -78,8 +78,8 @@ class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
 
     def __init__(
-            self, name=None, params_python=None, wsgi_module=None, embedded_plugins=True,
-            require_app=True, threads=True, **kwargs):
+            self, name=None, params_python=None, wsgi_module=None, wsgi_callable=None,
+            embedded_plugins=True, require_app=True, threads=True, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -91,6 +91,8 @@ class PythonSection(Section):
             Example:
                 mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
+
+        :param str|unicode|callable wsgi_callable: WSGI application callable name. Default: application.
 
         :param bool|None embedded_plugins: This indicates whether plugins were embedded into uWSGI,
             which is the case if you have uWSGI from PyPI.
@@ -110,7 +112,9 @@ class PythonSection(Section):
 
         self.python.set_basic_params(**(params_python or {}))
 
-        if wsgi_module:
-            self.python.set_wsgi_params(module=wsgi_module)
+        if callable(wsgi_callable):
+            wsgi_callable = wsgi_callable.__name__
+
+        self.python.set_wsgi_params(module=wsgi_module, callable_name=wsgi_callable)
 
         self.applications.set_basic_params(exit_if_none=require_app)

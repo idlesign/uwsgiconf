@@ -8,6 +8,8 @@ from uwsgiconf.exceptions import ConfigurationError
 
 def test_section_basics(assert_lines):
 
+    assert_lines('set-placeholder = one=two', Section().set_placeholder('one', 'two'))
+
     my_section = Section()
 
     assert_lines('automatically generated', my_section, stamp=True)

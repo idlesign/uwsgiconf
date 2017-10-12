@@ -1,6 +1,29 @@
 Quickstart
 ==========
 
+
+Install
+-------
+
+You can get and install **uwsgiconf** from PyPI using ``pip``:
+
+.. code-block:: bash
+
+    $ pip install uwsgiconf
+
+
+CLI
+~~~
+
+**uwsgiconf** expects ``click`` package available for CLI but won't install this dependency by default.
+
+Use the following command to install **uwsgiconf** with ``click``:
+
+.. code-block:: bash
+
+    $ pip install uwsgiconf[cli]
+
+
 Using a preset to run Python web application
 --------------------------------------------
 
@@ -8,31 +31,39 @@ Let's make ``uwsgicfg.py``. There we configure it using nice ``PythonSection`` p
 
 .. code-block:: python
 
+    from uwsgiconf.config import configure_uwsgi
     from uwsgiconf.presets.nice import PythonSection
 
 
-    configuration = PythonSection(
-        # Reload uWSGI when this file is updated.
-        touch_reload=__file__,
+    def get_configurations():
+        """This should return one or more Section or Configuration objects.
+        In such a way you can configure more than one uWSGI instance in the same place.
 
-        params_python=dict(
-            # We'll run our app using virtualenv.
-            python_home='/home/idle/venv/',
-            search_path='/home/idle/apps/',
-        ),
+        """
+        section = PythonSection(
+            # Reload uWSGI when this file is updated.
+            touch_reload=__file__,
 
-        # Load wsgi.py module from myapp package.
-        wsgi_module='myapp.wsgi',
+            params_python=dict(
+                # Let's add something into Python path.
+                search_path='/home/idle/apps/',
+            ),
 
-        # If your uWSGI has no basic plugins embedded
-        # (i.e. not from PyPI) you can give uwsgiconf a hint:
-        # embedded_plugins=False,
+            wsgi_module='/home/idle/myapp/wsgi.py',
 
-    ).networking.register_socket(
-        # Make app available at http://127.0.0.1:8000
-        PythonSection.networking.sockets.http('127.0.0.1:8000'),
+            # If your uWSGI has no basic plugins embedded
+            # (i.e. not from PyPI) you can give uwsgiconf a hint:
+            # embedded_plugins=False,
 
-    )
+        ).networking.register_socket(
+            # Make app available at http://127.0.0.1:8000
+            PythonSection.networking.sockets.http('127.0.0.1:8000'))
+
+        return section
+
+
+    # Almost done. One more thing:
+    configure_uwsgi(get_configurations)
 
 
 Now we are ready to use this configuration:
