@@ -64,7 +64,7 @@ class MasterProcess(OptionsGroup):
 
         :param bool sig_term: Exit on SIGTERM instead of brutal workers reload.
 
-            .. note:: Before 2.0.1 SIGTERM reloaded the stack while SIGINT/SIGQUIT shut it down.
+            .. note:: Before 2.1 SIGTERM reloaded the stack while SIGINT/SIGQUIT shut it down.
 
         """
         self._set('die-on-no-workers', no_workers, cast=bool)
