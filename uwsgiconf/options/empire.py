@@ -16,6 +16,14 @@ class Empire(OptionsGroup):
             stats_address=None, trigger_socket=None, links_no_follow=None):
         """
 
+        .. note:: The emperor should generally not be run with master, unless master features like advanced
+            logging are specifically needed.
+
+        .. note:: The emperor should generally be started at server boot time and left alone,
+            not reloaded/restarted except for uWSGI upgrades;
+            emperor reloads are a bit drastic, reloading all vassals at once.
+            Instead vassals should be reloaded individually when needed, in the manner of the imperial monitor in use.
+
         :param str|unicode|list[str|unicode] vassals_home: Set vassals home and enable Emperor mode.
 
         :param str|unicode name: Set the Emperor process name.

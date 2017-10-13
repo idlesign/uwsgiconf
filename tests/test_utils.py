@@ -2,7 +2,8 @@ import os
 
 import pytest
 
-from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule, get_uwsgi_stub_attrs_diff
+from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule, get_uwsgi_stub_attrs_diff, \
+    filter_locals
 from uwsgiconf.exceptions import UwsgiconfException
 
 
@@ -32,6 +33,15 @@ SAMPLE_OUT_PLUGINS_EMPTY = '''
 *** Starting uWSGI 2.0.14-debian (64bit) on [Fri Jul 28 20:09:00 2017] ***
 compiled with version: 6.3.0 20170221 on 27 February 2017 15:11:38
 '''
+
+
+def test_filter_locals():
+
+    fake_locals = {'a': 1, 'b': 2, 'c': 3}
+
+    assert filter_locals(fake_locals, drop=['a', 'c']) == {'b': 2}
+    assert filter_locals(fake_locals, include=['a', 'b']) == {'a': 1, 'b': 2}
+    assert filter_locals(fake_locals, include=['a', 'b'], drop=['b']) == {'a': 1}
 
 
 def test_parser():

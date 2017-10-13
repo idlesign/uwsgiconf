@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Added empire.Broodlord preset
+
+
 v0.11.0
 -------
 + Added support for multiple configurations in one module.

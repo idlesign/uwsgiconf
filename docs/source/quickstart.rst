@@ -85,44 +85,41 @@ Now we are ready to use this configuration:
 Configuration with multiple sections
 ------------------------------------
 
-Let's configure uWSGI to use Emperor Broodlord mode as described here_.
+Let's configure uWSGI to use Emperor Broodlord mode as described here_ using ``Broodlord`` preset.
 
 .. _here: http://uwsgi-docs.readthedocs.io/en/latest/Broodlord.html#a-simple-example
 
 
 .. code-block:: python
 
-    from uwsgiconf.config import Configuration, Section
+    from uwsgiconf.config import Section, Configuration
+    from uwsgiconf.presets.empire import Broodlord
 
+    emperor, zerg = Broodlord(
 
-    BROODLORD_SOCKET = '/tmp/broodlord.sock'
+        zerg_socket='/tmp/broodlord.sock',
+        zerg_count=40,
+        zerg_die_on_idle=30,
 
-    # We'll use the same basic params both for Broodlord Emperor and his zergs.
-    base_section = (
-        Section().
-            master_process.set_basic_params(enable=True).
-            workers.set_basic_params(count=1).
-            logging.set_basic_params(no_requests=True).
-            python.set_wsgi_params(module='werkzeug.testapp:test_app'))
-            
-    # NOTE. There is a shortcut for ``set_basic_params`` methods:
-    # Instead of `master_process.set_basic_params(enable=True)`
-    # you can say plain `master_process(enable=True)`, yet
-    # in than case you won't get any arg hints from you IDE.
+        vassals_home='/etc/vassals',
+        vassal_backlog_items_sos=10,
 
-    # Now we add two sections based on common parameters into our configuration:
-    configuration = Configuration([
+        # We'll use the same basic params both for Broodlord Emperor and his zergs.
+        section_emperor=(Section().
+            # NOTE. Here we use a shortcut for ``set_basic_params`` methods:
+            # E.g.: instead of `master_process.set_basic_params(enable=True)`
+            # you say `master_process(enable=True)`.
+            # But in that case you won't get any arg hints from you IDE.
+            master_process(enable=True).
+            workers(count=1).
+            logging(no_requests=True).
+            python.set_wsgi_params(module='werkzeug.testapp:test_app')
+        ),
 
-        # This section is for Broodlord Emperor.
-        Section.derive_from(base_section).
-            networking.register_socket(Section.networking.sockets.default(':3031')).
-            workers.set_zerg_server_params(socket=BROODLORD_SOCKET).
-            empire.set_emperor_params(vassals_home='/etc/vassals').
-            empire.set_mode_broodlord_params(zerg_count=40, vassal_backlog_items_sos=10),
+    ).configure()
 
-        # And this one is for zergs.
-        Section.derive_from(base_section, name='zerg').
-            workers.set_zerg_client_params(server_sockets=BROODLORD_SOCKET).
-            master_process.set_idle_params(timeout=30, exit=True)
+    # Bind Emperor to socket.
+    emperor.networking.register_socket(Section.networking.sockets.default(':3031'))
 
-    ])
+    # Put Emperor and zerg sections into configuration.
+    multisection_config = Configuration([emperor, zerg])
