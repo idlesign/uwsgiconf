@@ -2,12 +2,9 @@ uwsgiconf
 =========
 https://github.com/idlesign/uwsgiconf
 
-|release| |stats|  |lic| |ci| |coverage|
+|release| |lic| |ci| |coverage|
 
 .. |release| image:: https://img.shields.io/pypi/v/uwsgiconf.svg
-    :target: https://pypi.python.org/pypi/uwsgiconf
-
-.. |stats| image:: https://img.shields.io/pypi/dm/uwsgiconf.svg
     :target: https://pypi.python.org/pypi/uwsgiconf
 
 .. |lic| image:: https://img.shields.io/pypi/l/uwsgiconf.svg
