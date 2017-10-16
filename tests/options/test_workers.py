@@ -93,29 +93,30 @@ def test_cheapening(assert_lines):
 
     assert_lines([
         'cheaper-algo = manual',
-    ], Section().cheapening.set_basic_params(cheaper_algo=Section.cheapening.algorithms.MANUAL))
+    ], Section().cheapening.set_basic_params(cheaper_algo=Section.cheapening.algorithms.manual()))
 
     assert_lines([
+        'cheaper-algo = spare',
         'cheaper-overload = 20',
-    ], Section().cheapening.set_algo_spare_params(check_interval_overload=20))
+    ], Section().cheapening(cheaper_algo=Section.cheapening.algorithms.spare(check_interval_overload=20)))
 
     assert_lines([
+        'cheaper-algo = spare2',
         'cheaper-idle = 10',
-    ], Section().cheapening.set_algo_spare2_params(check_interval_idle=10))
+    ], Section().cheapening(cheaper_algo=Section.cheapening.algorithms.spare2(check_interval_idle=10)))
 
     assert_lines([
+        'cheaper-algo = backlog',
         'cheaper-overload = 30',
-    ], Section().cheapening.set_algo_backlog_params(check_num_overload=30))
+    ], Section().cheapening(cheaper_algo=Section.cheapening.algorithms.backlog(check_num_overload=30)))
 
     assert_lines([
         'plugin = cheaper_busyness',
         'cheaper-busyness-max = 25',
-    ], Section().cheapening.set_algo_busyness_params(busy_max=25))
-
-    assert_lines([
-        'plugin = cheaper_busyness',
         'cheaper-busyness-backlog-step = 3',
-    ], Section().cheapening.set_algo_busyness_emergency_params(workers_step=3))
+    ], Section().cheapening(
+        cheaper_algo=Section.cheapening.algorithms.busyness(busy_max=25).set_emergency_params(workers_step=3)
+    ))
 
     assert_lines([
         'cheaper-rss-limit-soft = 1024',

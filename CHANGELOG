@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Improved cheapening abstractions.
 + Added empire.Broodlord preset
 
 
