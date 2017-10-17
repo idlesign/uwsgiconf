@@ -11,7 +11,7 @@ class Algo(OptionsGroup):
 class AlgoSpare(Algo):
     """The **default** algorithm.
 
-    If all workers are busy for ``cheaper_overload`` seconds then uWSGI will spawn new workers.
+    If all workers are busy for a certain amount of time seconds then uWSGI will spawn new workers.
     When the load is gone it will begin stopping processes one at a time.
 
     * http://uwsgi.readthedocs.io/en/latest/Cheaper.html#spare-cheaper-algorithm
@@ -20,11 +20,9 @@ class AlgoSpare(Algo):
     name = 'spare'
 
     def set_basic_params(self, check_interval_overload=None):
-        """Sets ``spare`` cheaper algorithm params.
-
-        * http://uwsgi.readthedocs.io/en/latest/Cheaper.html#spare-cheaper-algorithm
-
-        :param int check_interval_overload: Interval (sec) to for worker overload.
+        """
+        :param int check_interval_overload: Interval (sec) to wait after all workers are busy
+            before new worker spawn.
 
         """
         self._set('cheaper-overload', check_interval_overload)
@@ -34,7 +32,7 @@ class AlgoSpare(Algo):
 
 class AlgoSpare2(Algo):
     """This algorithm is similar to ``spare``, but suitable for large scale
-    by increase workers faster and decrease workers slower.
+    by increase workers faster (before overload) and decrease them slower.
 
     * http://uwsgi.readthedocs.io/en/latest/Cheaper.html#spare2-cheaper-algorithm
 
@@ -43,10 +41,7 @@ class AlgoSpare2(Algo):
     name = 'spare2'
 
     def set_basic_params(self, check_interval_idle=None):
-        """Sets ``spare2`` cheaper algorithm params.
-
-        * http://uwsgi.readthedocs.io/en/latest/Cheaper.html#spare2-cheaper-algorithm
-
+        """
         :param int check_interval_idle: Decrease workers after specified idle. Default: 10.
 
         """
@@ -69,10 +64,7 @@ class AlgoBacklog(Algo):
     name = 'backlog'
 
     def set_basic_params(self, check_num_overload=None):
-        """Sets ``backlog`` cheaper algorithm params.
-
-        * http://uwsgi.readthedocs.io/en/latest/Cheaper.html#backlog-cheaper-algorithm
-
+        """
         :param int check_num_overload: Number of backlog items in queue.
 
         """
@@ -100,8 +92,7 @@ class AlgoBusyness(Algo):
             busy_max=None, busy_min=None,
             idle_cycles_max=None, idle_cycles_penalty=None,
             verbose=None):
-        """Sets busyness algorithm related params.
-
+        """
         :param int check_interval_busy: Interval (sec) to check worker busyness.
 
         :param int busy_max: Maximum busyness (percents). Every time the calculated busyness
