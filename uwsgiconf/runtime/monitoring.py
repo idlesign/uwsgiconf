@@ -29,7 +29,7 @@ class Metric(object):
         return uwsgi.metric_get(key)
 
     @classmethod
-    def metric_set(cls, key, value, mode=None):
+    def set(cls, key, value, mode=None):
         """Sets metric value.
 
         :param str|unicode key:
