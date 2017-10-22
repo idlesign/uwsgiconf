@@ -638,6 +638,8 @@ def configure_uwsgi(configurator_func):
 
     target_alias = os.environ.get(ENV_CONF_ALIAS)
 
+    conf_list = list(registry.values())
+
     if target_alias:
         # This call is [presumably] from uWSGI configuration read procedure.
         config = registry.get(target_alias)
@@ -659,6 +661,6 @@ def configure_uwsgi(configurator_func):
 
         # Set module attribute automatically.
         config_module = inspect.currentframe().f_back
-        config_module.f_locals[CONFIGS_MODULE_ATTR] = registry.values()
+        config_module.f_locals[CONFIGS_MODULE_ATTR] = conf_list
 
-    return registry.values()
+    return conf_list
