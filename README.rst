@@ -119,7 +119,7 @@ A couple of examples:
     @register_timer_rb(10, repeat=2)
     def repeat_twice():
         """This function will be called twice with 10 seconds interval
-        (by default in in first available mule) using red-black tree based timer.
+        (by default in first available mule) using red-black tree based timer.
 
         """
         with lock():
