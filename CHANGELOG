@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Nice presets now accept 'log_dedicated' arg
 * change_dir() moved from Applications into Main process.
 + Improved cheapening abstractions.
 + Added empire.Broodlord preset

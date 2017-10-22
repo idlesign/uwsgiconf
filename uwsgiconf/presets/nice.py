@@ -6,7 +6,7 @@ class Section(_Section):
 
     def __init__(
             self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None,
-            log_into=None, process_prefix=None, **kwargs):
+            log_into=None, process_prefix=None, log_dedicated=None, **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -25,6 +25,9 @@ class Section(_Section):
         :param str|unicode log_into: Filepath or UDP address to send logs into.
 
         :param str|unicode process_prefix: Add prefix to process names.
+
+        :param bool log_dedicated: If ``True`` all logging will be handled with a separate
+            thread in master process.
 
         :param kwargs:
         """
@@ -48,6 +51,9 @@ class Section(_Section):
 
         else:
             set_threads(count=threads)
+
+        if log_dedicated:
+            self.logging.set_master_logging_params(enable=True, dedicate_thread=True)
 
         self.workers.set_mules_params(mules=mules)
         self.workers.set_harakiri_params(verbose=True)
