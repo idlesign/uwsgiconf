@@ -5,7 +5,6 @@ from uwsgiconf.runtime.control import *
 from uwsgiconf.runtime.environ import *
 from uwsgiconf.runtime.locking import *
 from uwsgiconf.runtime.logging import *
-from uwsgiconf.runtime.monitoring import *
 from uwsgiconf.runtime.mules import *
 from uwsgiconf.runtime.request import *
 from uwsgiconf.runtime.rpc import *
@@ -59,11 +58,4 @@ def test_signals():
 
     @sig.register_handler()
     def signalled():
-        pass
-
-
-def test_monitoring():
-
-    @register_file_monitor('/here/there.file')
-    def handle_file_modification(sig_num):
         pass

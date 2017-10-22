@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Runtime. Metric is now OOP.
 + Nice presets now accept 'log_dedicated' arg
 * change_dir() moved from Applications into Main process.
 + Improved cheapening abstractions.

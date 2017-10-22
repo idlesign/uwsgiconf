@@ -18,23 +18,25 @@ def register_file_monitor(filename, signal_or_target=None):
 class Metric(object):
     """User metric related stuff."""
 
-    @classmethod
-    def get(cls, key):
-        """Returns metric value by key.
+    def __init__(self, name):
+        """
+        :param str|unicode name: Metric name.
 
-        :param str|unicode key:
+        """
+        self.name = name
+
+    @property
+    def value(self):
+        """Current metric value.
 
         :rtype: int|long
         """
-        return uwsgi.metric_get(key)
+        return uwsgi.metric_get(self.name)
 
-    @classmethod
-    def set(cls, key, value, mode=None):
+    def set(self, value, mode=None):
         """Sets metric value.
 
-        :param str|unicode key:
-
-        :param int|long value:
+        :param int|long value: New value.
 
         :param str|unicode mode: Update mode.
 
@@ -43,6 +45,7 @@ class Metric(object):
             * min - Sets metric value if it is less that the current one.
 
         :rtype: bool
+
         """
         if mode == 'max':
             func = uwsgi.metric_set_max
@@ -53,52 +56,43 @@ class Metric(object):
         else:
             func = uwsgi.metric_set
 
-        return func(key, value)
+        return func(self.name, value)
 
-    @classmethod
-    def incr(cls, key, delta=1):
+    def incr(self, delta=1):
         """Increments the specified metric key value by the specified value.
 
-        :param str|unicode key:
-
         :param int delta:
 
         :rtype: bool
-        """
-        return uwsgi.metric_inc(key, delta)
 
-    @classmethod
-    def decr(cls, key, delta=1):
+        """
+        return uwsgi.metric_inc(self.name, delta)
+
+    def decr(self, delta=1):
         """Decrements the specified metric key value by the specified value.
 
-        :param str|unicode key:
-
         :param int delta:
 
         :rtype: bool
-        """
-        return uwsgi.metric_dec(key, delta)
 
-    @classmethod
-    def mul(cls, key, value=1):
+        """
+        return uwsgi.metric_dec(self.name, delta)
+
+    def mul(self, value=1):
         """Multiplies the specified metric key value by the specified value.
 
-        :param str|unicode key:
-
         :param int value:
 
         :rtype: bool
-        """
-        return uwsgi.metric_mul(key, value)
 
-    @classmethod
-    def div(cls, key, value=1):
+        """
+        return uwsgi.metric_mul(self.name, value)
+
+    def div(self, value=1):
         """Divides the specified metric key value by the specified value.
 
-        :param str|unicode key:
-
         :param int value:
 
         :rtype: bool
         """
-        return uwsgi.metric_div(key, value)
+        return uwsgi.metric_div(self.name, value)
