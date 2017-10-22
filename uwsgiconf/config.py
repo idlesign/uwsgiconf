@@ -592,6 +592,13 @@ def configure_uwsgi(configurator_func):
 
     :param callable configurator_func: Function which return a list on configurations.
 
+    :rtype: OrderedDict|None
+
+    :returns: A dictionary with detected configurations or
+        ``None`` if called from within uWSGI (e.g. when trying to load WSGI application).
+
+    :raises ConfigurationError:
+
     """
     from .settings import ENV_CONF_READY, ENV_CONF_ALIAS, CONFIGS_MODULE_ATTR
 
@@ -601,7 +608,7 @@ def configure_uwsgi(configurator_func):
         # We prevent unnecessary configuration
         # for setups where application is located in the same
         # file as configuration.
-        return
+        return None
 
     configurations = configurator_func()
     registry = OrderedDict()
@@ -653,3 +660,5 @@ def configure_uwsgi(configurator_func):
         # Set module attribute automatically.
         config_module = inspect.currentframe().f_back
         config_module.f_locals[CONFIGS_MODULE_ATTR] = registry.values()
+
+    return registry
