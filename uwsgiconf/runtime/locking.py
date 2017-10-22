@@ -2,14 +2,14 @@ from functools import wraps
 
 from .. import uwsgi
 
-# todo: convenience `is_set` check before aquire
-
 
 class Lock(object):
-    """Lock related stuff.
+    """Locks related stuff.
 
     Lock number 0 is always available. More locks need to be registered
     with ``.config.locking.set_basic_params(count=X)`` where ``X`` is the number of locks.
+
+    .. note:: The same lock should be released before next acquiring.
 
     Can be used as context manager:
 
