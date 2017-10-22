@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* change_dir() moved from Applications into Main process.
 + Improved cheapening abstractions.
 + Added empire.Broodlord preset
 

@@ -31,20 +31,6 @@ class Applications(OptionsGroup):
 
         return self._section
 
-    def change_dir(self, to, after_load=False):
-        """Chdir to specified directory before or after apps loading.
-
-        :param str|unicode to: Target directory.
-
-        :param bool after_load:
-                *True* - after load
-                *False* - before load
-
-        """
-        self._set('chdir2' if after_load else 'chdir', to)
-
-        return self._section
-
     def mount(self, mountpoint, app, into_worker=False):
         """Load application under mountpoint.
 

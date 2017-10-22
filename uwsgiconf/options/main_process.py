@@ -238,6 +238,20 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
+    def change_dir(self, to, after_app_loading=False):
+        """Chdir to specified directory before or after apps loading.
+
+        :param str|unicode to: Target directory.
+
+        :param bool after_app_loading:
+                *True* - after load
+                *False* - before load
+
+        """
+        self._set('chdir2' if after_app_loading else 'chdir', to)
+
+        return self._section
+
     def set_owner_params(self, uid=None, gid=None, add_gids=None, set_asap=False):
         """Set process owner params - user, group.
 

@@ -44,6 +44,10 @@ def test_main_process_basics(assert_lines):
         'skip-atexit = true',
     ], Section().main_process.set_on_exit_params(skip_hooks=True))
 
+    assert_lines([
+        'chdir = /here',
+    ], Section().main_process.change_dir('/here'))
+
 
 def test_main_process_advanced(assert_lines):
     assert_lines([

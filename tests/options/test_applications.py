@@ -8,10 +8,6 @@ def test_applications_basics(assert_lines):
     ], Section().applications.set_basic_params(exit_if_none=True))
 
     assert_lines([
-        'chdir = /here',
-    ], Section().applications.change_dir('/here'))
-
-    assert_lines([
         'mount = /articles=app.py',
     ], Section().applications.mount('/articles', 'app.py'))
 
