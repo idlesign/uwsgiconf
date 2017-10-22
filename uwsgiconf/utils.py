@@ -83,19 +83,30 @@ class ConfModule(object):
         Returns list of tuples:
             (configuration_alias, uwsgi_process_id)
 
+        If only one configuration found current process (uwsgiconf) is replaced with a new one (uWSGI),
+        otherwise a number of new detached processes is spawned.
+
         :param str|unicode only: Configuration alias to run from the module.
             If not set uWSGI will be spawned for every configuration found in the module.
 
         :rtype: list
         """
         spawned = []
+        configs = self.configurations
 
-        for config in self.configurations:  # type: Configuration
-            alias = config.alias
+        if len(configs) == 1:
 
-            if only is None or alias == only:
-                pid = UwsgiRunner().spawn(self.fpath, alias)
-                spawned.append((alias, pid))
+            alias = configs[0].alias
+            UwsgiRunner().spawn(self.fpath, alias, replace=True)
+            spawned.append((alias, os.getpid()))
+
+        else:
+            for config in configs:  # type: Configuration
+                alias = config.alias
+
+                if only is None or alias == only:
+                    pid = UwsgiRunner().spawn(self.fpath, alias)
+                    spawned.append((alias, pid))
 
         return spawned
 
@@ -109,6 +120,7 @@ class ConfModule(object):
         with output_capturing():
             module = self.load(self.fpath)
             confs = getattr(module, CONFIGS_MODULE_ATTR)
+            confs = listify(confs)
 
         self._confs = confs
 
@@ -271,19 +283,24 @@ class UwsgiRunner(object):
 
         return os.path.basename(python_binary)
 
-    def spawn(self, filepath, configuration_alias):
+    def spawn(self, filepath, configuration_alias, replace=False):
         """Spawns uWSGI using the given configuration module.
 
         :param str|unicode filepath:
 
         :param str|unicode configuration_alias:
 
+        :param bool replace: Whether a new process should replace current one.
+
         """
         os.environ[ENV_CONF_ALIAS] = configuration_alias
 
-        target = 'exec://%s %s' % (self.binary_python, filepath)
+        args = ['uwsgi', '--ini', 'exec://%s %s' % (self.binary_python, filepath)]
 
-        return os.spawnvp(os.P_NOWAIT, 'uwsgi', ['uwsgi', '--ini', target])
+        if replace:
+            return os.execvp('uwsgi', args)
+
+        return os.spawnvp(os.P_NOWAIT, 'uwsgi', args)
 
 
 def parse_command_plugins_output(out):

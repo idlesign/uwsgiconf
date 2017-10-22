@@ -592,9 +592,9 @@ def configure_uwsgi(configurator_func):
 
     :param callable configurator_func: Function which return a list on configurations.
 
-    :rtype: OrderedDict|None
+    :rtype: list|None
 
-    :returns: A dictionary with detected configurations or
+    :returns: A list with detected configurations or
         ``None`` if called from within uWSGI (e.g. when trying to load WSGI application).
 
     :raises ConfigurationError:
@@ -661,4 +661,4 @@ def configure_uwsgi(configurator_func):
         config_module = inspect.currentframe().f_back
         config_module.f_locals[CONFIGS_MODULE_ATTR] = registry.values()
 
-    return registry
+    return registry.values()

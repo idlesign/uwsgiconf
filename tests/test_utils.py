@@ -89,12 +89,19 @@ def test_conf_module_run(monkeypatch):
     executed = []
     monkeypatch.setattr(os, 'spawnvp', lambda *args: executed.append(True))
 
-    fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
-
-    module = ConfModule(fpath)
+    module = ConfModule(os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py'))
     module.spawn_uwsgi()
 
     assert len(executed) == 2
+    assert all(executed)
+
+    executed = []
+    monkeypatch.setattr(os, 'execvp', lambda *args: executed.append(True))
+
+    module = ConfModule(os.path.join(os.path.dirname(__file__), 'confs', 'dummyone.py'))
+    module.spawn_uwsgi()
+
+    assert len(executed) == 1
     assert all(executed)
 
 
