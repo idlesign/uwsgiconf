@@ -67,9 +67,9 @@ class Farm(object):
         self.name = name
 
     @property
-    def is_in(self):
-        """Returns flag indicating whether you are (mule) belong
-        to the given farm.
+    def is_mine(self):
+        """Returns flag indicating whether current mule belongs
+        to this farm.
 
         :param str|unicode name: Farm name.
 

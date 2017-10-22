@@ -4,7 +4,6 @@ from uwsgiconf.runtime.control import *
 from uwsgiconf.runtime.environ import *
 from uwsgiconf.runtime.locking import *
 from uwsgiconf.runtime.logging import *
-from uwsgiconf.runtime.mules import *
 from uwsgiconf.runtime.request import *
 from uwsgiconf.runtime.rpc import *
 from uwsgiconf.runtime.scheduling import *
