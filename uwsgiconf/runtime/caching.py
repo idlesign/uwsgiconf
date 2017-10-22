@@ -2,7 +2,6 @@ from .. import uwsgi
 from ..utils import decode
 
 # todo: may be cache_update
-# todo: auto setter for .get()
 
 
 class Cache(object):
@@ -42,7 +41,7 @@ class Cache(object):
         """Clears cache the cache."""
         uwsgi.cache_clear(self.name)
 
-    def get(self, key, default=None, as_int=False):
+    def get(self, key, default=None, as_int=False, setter=None):
         """Gets a value from the cache.
 
         :param str|unicode key: The cache key to get value for.
@@ -51,7 +50,12 @@ class Cache(object):
 
         :param bool as_int: Return 64bit number instead of str.
 
+        :param callable setter: Setter callable to automatically set cache
+            value if not already cached. Required to accept a key and return
+            a value that will be cached.
+
         :rtype: str|unicode|int
+
         """
         if as_int:
             val = uwsgi.cache_num(key, self.name)
@@ -59,20 +63,33 @@ class Cache(object):
             val = decode(uwsgi.cache_get(key, self.name))
 
         if val is None:
-            return default
+
+            if setter is None:
+                return default
+
+            val = setter(key)
+
+            if val is None:
+                return default
+
+            self.set(key, val)
 
         return val
+
+    __getitem__ = get
 
     def set(self, key, value):
         """Sets the specified key value.
 
         :param str|unicode key:
 
-        :param int value:
+        :param int|str|unicode value:
 
         :rtype: bool
         """
         return uwsgi.cache_set(key, value, self.timeout, self.name)
+
+    __setitem__ = set
 
     def delete(self, key):
         """Deletes the given cached key from the cache.
@@ -82,6 +99,8 @@ class Cache(object):
         :rtype: None
         """
         uwsgi.cache_del(key, self.name)
+
+    __delitem__ = delete
 
     def incr(self, key, delta=1):
         """Increments the specified key value by the specified value.

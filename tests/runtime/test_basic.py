@@ -1,6 +1,5 @@
 from uwsgiconf.runtime.alarms import *
 from uwsgiconf.runtime.async import *
-from uwsgiconf.runtime.caching import *
 from uwsgiconf.runtime.control import *
 from uwsgiconf.runtime.environ import *
 from uwsgiconf.runtime.locking import *
@@ -23,12 +22,6 @@ def test_harakiri_imposed():
 
     with harakiri_imposed(1):
         pass
-
-
-def test_caching():
-
-    cache = Cache('mine')
-    assert cache.get('some', 'other') == 'other'
 
 
 def test_locking():
