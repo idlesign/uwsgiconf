@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.12.0
+-------
 * Runtime. Farm.is_in renamed into Farm.is_mine.
 * Runtime. Cache improved.
 * Runtime. Metric is now OOP.
