@@ -5,7 +5,6 @@ from uwsgiconf.runtime.environ import *
 from uwsgiconf.runtime.locking import *
 from uwsgiconf.runtime.logging import *
 from uwsgiconf.runtime.request import *
-from uwsgiconf.runtime.rpc import *
 from uwsgiconf.runtime.scheduling import *
 from uwsgiconf.runtime.signals import *
 from uwsgiconf.runtime.websockets import *
@@ -33,15 +32,6 @@ def test_locking():
 
     with lock():
         pass
-
-
-def test_rpc():
-
-    @register_rpc()
-    def expose_me():
-        pass
-
-    make_rpc_call('expose_me')
 
 
 def test_signals():
