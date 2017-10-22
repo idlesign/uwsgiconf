@@ -4,8 +4,6 @@ from uwsgiconf.runtime.control import *
 from uwsgiconf.runtime.environ import *
 from uwsgiconf.runtime.logging import *
 from uwsgiconf.runtime.request import *
-from uwsgiconf.runtime.scheduling import *
-from uwsgiconf.runtime.signals import *
 from uwsgiconf.runtime.websockets import *
 
 
@@ -18,13 +16,4 @@ def test_harakiri_imposed():
     doomed()
 
     with harakiri_imposed(1):
-        pass
-
-
-def test_signals():
-
-    sig = Signal()
-
-    @sig.register_handler()
-    def signalled():
         pass
