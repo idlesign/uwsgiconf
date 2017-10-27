@@ -119,7 +119,7 @@ class Logging(OptionsGroup):
             is modified/touched.
 
         :param str|unicode owner: Set owner chown() for logs.
-        .
+        
         :param str|unicode mode: Set mode chmod() for logs.
 
         """
