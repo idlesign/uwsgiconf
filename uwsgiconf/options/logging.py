@@ -136,9 +136,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def set_filters(
-            self, include=None, exclude=None, slower=None, bigger=None, status_4xx=None, status_5xx=None,
-            no_body=None, sendfile=None, io_errors=None, write_errors=None, sigpipe=None):
+    def set_filters(self, include=None, exclude=None, write_errors=None, sigpipe=None):
         """Set various log data filters.
 
         :param str|unicode|list include: Show only log lines matching the specified regexp.
@@ -148,6 +146,30 @@ class Logging(OptionsGroup):
         :param str|unicode|list exclude: Do not show log lines matching the specified regexp.
 
             .. note:: Requires enabled PCRE support.
+
+        :param bool write_errors: Log (annoying) write()/writev() errors. Default: ``True``.
+
+        :param bool sigpipe: Log (annoying) SIGPIPE. Default: ``True``.
+
+        """
+        if write_errors is not None:
+            self._set('ignore-write-errors', not write_errors, cast=bool)
+
+        if sigpipe is not None:
+            self._set('ignore-sigpipe', not sigpipe, cast=bool)
+
+        for line in listify(include):
+            self._set('log-filter', line, multi=True)
+
+        for line in listify(exclude):
+            self._set('log-drain', line, multi=True)
+
+        return self._section
+
+    def set_requests_filters(
+            self, slower=None, bigger=None, status_4xx=None, status_5xx=None,
+            no_body=None, sendfile=None, io_errors=None):
+        """Set various log data filters.
 
         :param int slower: Log requests slower than the specified number of milliseconds.
 
@@ -163,10 +185,6 @@ class Logging(OptionsGroup):
 
         :param bool io_errors: Log requests with io errors.
 
-        :param bool write_errors: Report (annoying) write()/writev() errors. Default: ``True``.
-
-        :param bool sigpipe: Report (annoying) SIGPIPE. Default: ``True``.
-
         """
         self._set('log-slow', slower)
         self._set('log-big', bigger)
@@ -175,18 +193,6 @@ class Logging(OptionsGroup):
         self._set('log-zero', no_body, cast=bool)
         self._set('log-sendfile', sendfile, cast=bool)
         self._set('log-ioerror', io_errors, cast=bool)
-
-        if write_errors is not None:
-            self._set('ignore-write-errors', not write_errors, cast=bool)
-
-        if sigpipe is not None:
-            self._set('ignore-sigpipe', not sigpipe, cast=bool)
-
-        for line in listify(include):
-            self._set('log-filter', line, multi=True)
-
-        for line in listify(exclude):
-            self._set('log-drain', line, multi=True)
 
         return self._section
 

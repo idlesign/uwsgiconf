@@ -38,11 +38,6 @@ def test_logging_basics(assert_lines):
 
 
 def test_logging_set_filters(assert_lines):
-
-    assert_lines([
-        'log-slow = 100',
-    ], Section().logging.set_filters(slower=100))
-
     assert_lines([
         'log-filter = some',
     ], Section().logging.set_filters(include='some'))
@@ -52,9 +47,22 @@ def test_logging_set_filters(assert_lines):
     ], Section().logging.set_filters(exclude='other'))
 
     assert_lines([
-        'log-ioerror = true',
         'ignore-write-errors = true',
-    ], Section().logging.set_filters(io_errors=True, write_errors=False, sigpipe=True))
+        'ignore-sigpipe = true',
+    ], Section().logging.set_filters(write_errors=False, sigpipe=False))
+
+    assert_lines('ignore-write-errors = true', Section().logging.set_filters(write_errors=True), assert_in=False)
+
+
+def test_logging_set_requests_filters(assert_lines):
+
+    assert_lines([
+        'log-slow = 100',
+    ], Section().logging.set_requests_filters(slower=100))
+
+    assert_lines([
+        'log-ioerror = true',
+    ], Section().logging.set_requests_filters(io_errors=True))
 
     assert_lines('ignore-write-errors = true', Section().logging.set_filters(write_errors=True), assert_in=False)
 

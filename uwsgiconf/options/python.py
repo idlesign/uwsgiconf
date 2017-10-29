@@ -146,6 +146,8 @@ class Python(OptionsGroup):
 
         return self._section
 
+
+
     def eval_wsgi_entrypoint(self, code):
         """Evaluates Python code as WSGI entry point.
 
