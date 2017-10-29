@@ -18,6 +18,10 @@ def test_master_process_basics(assert_lines):
         'idle = 10',
     ], Section().master_process.set_idle_params(timeout=10))
 
+    assert_lines([
+        'catch-exceptions = true',
+    ], Section().master_process.set_exception_handling_params(catch=True))
+
 
 def test_master_attach_process_classic(assert_lines):
 

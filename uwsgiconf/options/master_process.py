@@ -72,6 +72,23 @@ class MasterProcess(OptionsGroup):
         self._set('die-on-term', sig_term, cast=bool)
         self.set_idle_params(exit=idle)
 
+        return self._section
+
+    def set_exception_handling_params(self, handler=None, catch=None):
+        """Do exit on certain events
+
+        :param str|unicode|list[str|unicode] handler: Register one or more exception handling C-functions.
+
+        :param bool catch: Catch exceptions and report them as http output (including stack trace and env params).
+
+            .. warning:: Use only for testing purposes.
+
+        """
+        self._set('exception-handler', handler, multi=True)
+        self._set('catch-exceptions', catch, cast=bool)
+
+        return self._section
+
     def set_idle_params(self, timeout=None, exit=None):
         """Activate idle mode - put uWSGI in cheap mode after inactivity timeout.
 
