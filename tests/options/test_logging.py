@@ -51,6 +51,13 @@ def test_logging_set_filters(assert_lines):
         'log-drain = other',
     ], Section().logging.set_filters(exclude='other'))
 
+    assert_lines([
+        'log-ioerror = true',
+        'ignore-write-errors = true',
+    ], Section().logging.set_filters(io_errors=True, write_errors=False, sigpipe=True))
+
+    assert_lines('ignore-write-errors = true', Section().logging.set_filters(write_errors=True), assert_in=False)
+
 
 def test_logging_add_logger(assert_lines):
 
