@@ -30,6 +30,15 @@ def test_nice_section(assert_lines):
 
     ], Section(workers=13, touch_reload=__file__))
 
+    assert_lines([
+        'disable-write-exception = true',
+        'ignore-write-errors = true',
+        'ignore-sigpipe = true',
+        'log-master = true',
+        'threaded-logger = true',
+
+    ], Section(log_dedicated=True, ignore_write_errors=True))
+
 
 def test_nice_python(assert_lines):
 

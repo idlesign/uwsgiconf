@@ -6,7 +6,8 @@ class Section(_Section):
 
     def __init__(
             self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None,
-            log_into=None, process_prefix=None, log_dedicated=None, **kwargs):
+            log_into=None, process_prefix=None, log_dedicated=None, ignore_write_errors=None,
+            **kwargs):
         """
 
         :param str|unicode name: Section name.
@@ -28,6 +29,12 @@ class Section(_Section):
 
         :param bool log_dedicated: If ``True`` all logging will be handled with a separate
             thread in master process.
+
+        :param bool ignore_write_errors: If ``True`` no annoying SIGPIPE/write/writev errors
+            will be logged, and no related exceptions will be raised.
+
+            .. note:: Usually such errors could be seen on client connection cancelling
+               and are safe to ignore.
 
         :param kwargs:
         """
@@ -67,6 +74,10 @@ class Section(_Section):
         self.locks.set_basic_params(thunder_lock=True)
         self.configure_owner(owner=owner)
         self.logging.log_into(target=log_into)
+
+        if ignore_write_errors:
+            self.master_process.set_exception_handling_params(no_write_exception=True)
+            self.logging.set_filters(write_errors=False, sigpipe=False)
 
     def configure_owner(self, owner='www-data'):
         """Shortcut to set process owner data.
