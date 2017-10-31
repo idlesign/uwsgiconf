@@ -341,3 +341,42 @@ class Routing(OptionsGroup):
         self._set('geoip-city', db_city, plugin='geoip')
 
         return self._section
+
+    def header_add(self, name, value):
+        """Automatically add HTTP headers to response.
+
+        :param str|unicode name:
+
+        :param str|unicode value:
+
+        """
+        self._set('add-header', '%s: %s' % (name, value), multi=True)
+
+        return self._section
+
+    def header_remove(self, value):
+        """Automatically remove specified HTTP header from the response.
+
+        :param str|unicode value:
+
+        """
+        self._set('del-header', value, multi=True)
+
+        return self._section
+
+    def header_collect(self, name, target_var, pull=False):
+        """Store the specified response header in a request var
+        (optionally removing it from the response).
+
+        :param str|unicode name:
+
+        :param str|unicode target_var:
+
+        :param bool pull: Whether to remove header from response.
+
+        """
+        self._set(
+            'pull-header' if pull else 'collect-header',
+            '%s %s' % (name, target_var), multi=True)
+
+        return self._section

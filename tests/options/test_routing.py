@@ -21,6 +21,22 @@ def test_routing_basics(assert_lines):
         'plugin = geoip\ngeoip-city = GeoLiteCity.dat',
     ], Section().routing.set_geoip_params(db_city='GeoLiteCity.dat'))
 
+    assert_lines([
+        'del-header = Connection',
+    ], Section().routing.header_remove('Connection'))
+
+    assert_lines([
+        'add-header = Connection: Keep-Alive',
+    ], Section().routing.header_add('Connection', 'Keep-Alive'))
+
+    assert_lines([
+        'pull-header = X-Offload-to-SSE X_OFFLOAD',
+    ], Section().routing.header_collect('X-Offload-to-SSE', 'X_OFFLOAD', pull=True))
+
+    assert_lines([
+        'collect-header = Content-Type CONTENT_TYPE',
+    ], Section().routing.header_collect('Content-Type', 'CONTENT_TYPE'))
+
 
 def test_routing_rules(assert_lines):
     rule = Section.routing.route_rule
