@@ -7,7 +7,7 @@ from ..utils import listify
 class Logging(OptionsGroup):
     """Logging.
 
-    * http://uwsgi.readthedocs.io/en/latest/Locks.html
+    * http://uwsgi.readthedocs.io/en/latest/Logging.html
     * http://uwsgi-docs.readthedocs.io/en/latest/LogFormat.html
 
     """
