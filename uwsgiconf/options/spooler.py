@@ -26,7 +26,7 @@ class Spooler(OptionsGroup):
 
         :param str|unicode|list touch_reload: reload spoolers if the specified file is modified/touched
 
-        :param bool quiet: Do not be verbose with spooler tasks.
+        :param bool quiet: Do not log spooler related messages.
 
         :param int process_count: Set the number of processes for spoolers.
 
@@ -49,7 +49,7 @@ class Spooler(OptionsGroup):
 
         """
         self._set('touch-spoolers-reload', touch_reload, multi=True)
-        self._set('spooler-quiets', quiet, cast=bool)
+        self._set('spooler-quiet', quiet, cast=bool)
         self._set('spooler-processes', process_count)
         self._set('spooler-max-tasks', max_tasks)
         self._set('spooler-ordered', order_tasks, cast=bool)
