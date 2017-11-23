@@ -28,11 +28,15 @@ class Networking(OptionsGroup):
     def set_basic_params(self, queue_size=None, freebind=None, default_socket_type=None):
         """
 
-        :param int queue_size: Every socket has an associated queue where request will be put waiting
-            for a process to became ready to accept them. When this queue is full, requests will be rejected.
-            Default 100.
+        :param int queue_size: Also known as a backlog. Every socket has an associated queue 
+            where request will be put waiting for a process to became ready to accept them. 
+            When this queue is full, requests will be rejected.
+            
+            Default: 100 (an average value chosen by the maximum value allowed by default 
+            by your kernel).
 
-            .. note:: The maximum value is system/kernel dependent.
+            .. note:: The maximum value is system/kernel dependent. Before increasing it you may 
+                need to increase your kernel limit too.
 
         :param bool freebind: Put socket in freebind mode.
             Allows binding to non-existent network addresses.
