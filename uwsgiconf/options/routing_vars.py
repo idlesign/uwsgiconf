@@ -1,17 +1,9 @@
-from ..base import ParametrizedValue
+from ..base import TemplatedValue
 
 
-class Var(ParametrizedValue):
+class Var(TemplatedValue):
 
-    tpl = '%s'
-
-    def __init__(self, name):
-        self._name = name
-
-        super(Var, self).__init__()
-
-    def __str__(self):
-        return self.tpl % self._name
+    pass
 
 
 class Func(Var):

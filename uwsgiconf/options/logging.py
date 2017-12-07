@@ -1,7 +1,27 @@
-from ..base import OptionsGroup, ParametrizedValue
+from ..base import OptionsGroup, TemplatedValue
 from .logging_loggers import *
 from .logging_encoders import *
 from ..utils import listify, string_types
+
+
+class Var(TemplatedValue):
+
+    def __str__(self):
+        return '%(' + super(Var, self).__str__() + ')'
+
+
+class VarMetric(Var):
+
+    tpl = 'metric.%s'
+
+
+class VarRequestVar(Var):
+
+    tpl = 'var.%s'
+
+    def __init__(self, name):
+        name = name.replace('-', '_').upper()  # Normalize.
+        super(VarRequestVar, self).__init__(name)
 
 
 class Logging(OptionsGroup):
@@ -481,5 +501,8 @@ class Logging(OptionsGroup):
     
         """
 
-        # todo %(metric.XXX) - access the XXX metric value (see The Metrics subsystem)
-        # todo %(var.XXX)
+        metric = VarMetric
+        """Metric value (see The Metrics subsystem)."""
+
+        request_var = VarRequestVar
+        """Request variable value."""

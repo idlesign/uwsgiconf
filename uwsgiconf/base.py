@@ -278,3 +278,15 @@ class ParametrizedValue(OptionsGroup):
             result = result.strip(self.name_separator)
 
         return result
+
+
+class TemplatedValue(ParametrizedValue):
+
+    tpl = '%s'
+
+    def __init__(self, name):
+        self._name = name
+        super(TemplatedValue, self).__init__()
+
+    def __str__(self):
+        return self.tpl % self._name

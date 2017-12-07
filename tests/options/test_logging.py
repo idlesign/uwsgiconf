@@ -7,12 +7,17 @@ def test_logging_basics(assert_lines):
 
     assert_lines([
         'disable-logging = true',
-        'log-format = %(method) --> %(uri)',
+        'log-format = %(method) --> %(uri) %(metric.my) %(var.X_REQUEST_ID)',
         'log-date = true',
 
     ], logging.set_basic_params(
         no_requests=True,
-        template='%s --> %s' % (logging.vars.REQ_METHOD, logging.vars.REQ_URL),
+        template='%s --> %s %s %s' % (
+            logging.vars.REQ_METHOD,
+            logging.vars.REQ_URL,
+            logging.vars.metric('my'),
+            logging.vars.request_var('X-Request-Id'),
+        ),
         prefix_date=True
     ))
 

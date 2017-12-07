@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Implemented 'logging.vars.request_var' and 'logging.vars.metric'
 * Renamed .logging.vars.RESP_START_CTIME into REQ_START_CTIME
 * Fixed .logging 'prefix_date' parameter handling.
 * Fixed .logging  parameter handling.
