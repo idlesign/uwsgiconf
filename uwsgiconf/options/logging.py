@@ -1,7 +1,7 @@
 from ..base import OptionsGroup, ParametrizedValue
 from .logging_loggers import *
 from .logging_encoders import *
-from ..utils import listify
+from ..utils import listify, string_types
 
 
 class Logging(OptionsGroup):
@@ -51,13 +51,17 @@ class Logging(OptionsGroup):
 
         :param str|unicode prefix: Prefix log items with a string.
 
-        :param str|unicode prefix_date: Prefix log items with date.
+        :param str|unicode prefix_date: Prefix log items with date string. 
+        
+            .. note:: This can be ``True`` or contain formatting placeholders (e.g. %Y-%m-%d %H:%M:%S) 
+               if used with ``apply_strftime``.
 
         :param int memory_report: Enable memory report.
                 * **1** - basic (default);
                 * **2** - uss/pss (Linux only)
 
-        :param bool apply_strftime: Apply strftime to logformat output.
+        :param bool apply_strftime: Apply strftime to dates in log entries. 
+            E.g. ``prefix_date`` can contain format placeholders. See also ``vars.REQ_TIME_FORMATTED``.
 
         :param bool response_ms: Report response time in microseconds instead of milliseconds.
 
@@ -69,7 +73,12 @@ class Logging(OptionsGroup):
         self._set('log-format', template)
         self._set('memory-report', memory_report)
         self._set('log-prefix', prefix)
-        self._set('log-date', prefix_date, cast=bool)
+
+        if isinstance(prefix_date, string_types) and '%' in prefix_date:
+            prefix_date = prefix_date.replace('%', '%%')  # Escaping.
+                
+        self._set('log-date', prefix_date, cast=(bool if isinstance(prefix_date, bool) else None))
+
         self._set('logformat-strftime', apply_strftime, cast=bool)
         self._set('log-micros', response_ms, cast=bool)
         self._set('log-x-forwarded-for', ip_x_forwarded, cast=bool)
