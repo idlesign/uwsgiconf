@@ -1,9 +1,15 @@
 from __future__ import absolute_import
 
+from sys import modules
 from os import environ as __env
 
 from .settings import ENV_FORCE_STUB
 from .exceptions import UwsgiconfException as __DummyException
+
+
+if False:  # pragma: nocover
+    # Give IDEs a chance load stub symbols.
+    from .uwsgi_stub import *
 
 
 try:  # pragma: nocover
@@ -15,7 +21,10 @@ try:  # pragma: nocover
 
     ####################################################################
 
-    from uwsgi import *
+    import uwsgi
+
+    # The following allows proper dynamic attributes (e.g. ``env``) addressing.
+    modules[__name__] = uwsgi
 
 except (ImportError, __DummyException):
 
@@ -24,4 +33,6 @@ except (ImportError, __DummyException):
 
     ####################################################################
 
-    from .uwsgi_stub import *
+    import uwsgi_stub
+
+    modules[__name__] = uwsgi_stub
