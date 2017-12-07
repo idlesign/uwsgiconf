@@ -33,6 +33,6 @@ except (ImportError, __DummyException):
 
     ####################################################################
 
-    import uwsgi_stub
+    from . import uwsgi_stub
 
     modules[__name__] = uwsgi_stub
