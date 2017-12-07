@@ -361,7 +361,7 @@ class Logging(OptionsGroup):
 
         # The following are taken blindly from the internal wsgi_request structure of the current request.
 
-        REQ_URL = '%(uri)'
+        REQ_URI = '%(uri)'
         """REQUEST_URI from ``wsgi_request`` of the current request."""
 
         REQ_METHOD = '%(method)'
@@ -387,6 +387,63 @@ class Logging(OptionsGroup):
 
         # The following are simple functions called to generate the logvar value.
 
+        REQ_START_TS = '%(time)'
+        """Timestamp of the start of the request. E.g.: 1512623650"""
+
+        REQ_START_CTIME = '%(ctime)'
+        """Ctime of the start of the request. E.g.: Thu Dec  7 08:05:35 2017"""
+
+        REQ_START_UNIX_US = '%(tmsecs)'
+        """Timestamp of the start of the request in milliseconds since the epoch.
+
+        .. note:: since 1.9.21
+
+        """
+
+        REQ_START_UNIX_MS = '%(tmicros)'
+        """Timestamp of the start of the request in microseconds since the epoch.
+
+        .. note:: since 1.9.21
+
+        """
+
+        REQ_START_HUMAN = '%(ltime)'
+        """Human-formatted (Apache style) request time."""
+
+        REQ_START_FORMATTED = '%(ftime)'
+        """Request time formatted with ``apply_strftime``. 
+
+        .. note:: Use ``apply_strftime`` and placeholders.
+
+        """
+
+        REQ_SIZE_BODY = '%(cl)'
+        """Request content body size."""
+
+        REQ_COUNT_VARS_CGI = '%(vars)'
+        """Number of CGI vars in the request."""
+
+        REQ_COUNT_ERR_READ = '%(rerr)'
+        """Number of read errors for the request.
+
+        .. note:: since 1.9.21
+
+        """
+
+        REQ_COUNT_ERR_WRITE = '%(werr)'
+        """Number of write errors for the request.
+
+        .. note:: since 1.9.21
+
+        """
+
+        REQ_COUNT_ERR = '%(ioerr)'
+        """Number of write and read errors for the request.
+
+        .. note:: since 1.9.21
+
+        """
+
         RESP_STATUS = '%(status)'
         """HTTP response status code."""
 
@@ -396,36 +453,20 @@ class Logging(OptionsGroup):
         RESP_TIME_MS = '%(msecs)'
         """Response time in milliseconds. E.g.: 1512623650704413"""
 
-        REQ_START_TS = '%(time)'
-        """Timestamp of the start of the request. E.g.: 1512623650"""
-
-        REQ_START_CTIME = '%(ctime)'
-        """Ctime of the start of the request. E.g.: Thu Dec  7 08:05:35 2017"""
-
-        TIME_UNIX = '%(epoch)'
-        """The current time in Unix format."""
-
         RESP_SIZE = '%(size)'
         """Response body size + response headers size."""
 
-        REQ_TIME_HUMAN = '%(ltime)'
-        """Human-formatted (Apache style) request time."""
-
-        REQ_TIME_FORMATTED = '%(ftime)'
-        """Request time formatted with ``apply_strftime``. 
-        
-        .. note:: Use ``apply_strftime`` and placeholders.
-        
-        """
-
-        RESP_SIZE_HEADER = '%(hsize)'
+        RESP_SIZE_HEADERS = '%(hsize)'
         """Response headers size."""
 
         RESP_SIZE_BODY = '%(rsize)'
         """Response body size."""
 
-        REQ_SIZE_BODY = '%(cl)'
-        """Request content body size."""
+        RESP_COUNT_HEADERS = '%(headers)'
+        """Number of generated response headers."""
+
+        TIME_UNIX = '%(epoch)'
+        """The current time in Unix format."""
 
         WORKER_PID = '%(pid)'
         """pid of the worker handling the request."""
@@ -435,12 +476,6 @@ class Logging(OptionsGroup):
 
         ASYNC_SWITCHES = '%(switches)'
         """Number of async switches."""
-
-        REQ_COUNT_VARS_CGI = '%(vars)'
-        """Number of CGI vars in the request."""
-
-        RESP_COUNT_HEADERS = '%(headers)'
-        """Number of generated response headers."""
 
         CORE = '%(core)'
         """The core running the request."""
@@ -465,41 +500,6 @@ class Logging(OptionsGroup):
 
         MOD2 = '%(modifier2)'
         """``modifier2`` of the request. See ``.routing.modifiers``."""
-
-        REQ_COUNT_ERR_READ = '%(rerr)'
-        """Number of read errors for the request.
-    
-        .. note:: since 1.9.21
-    
-        """
-
-        REQ_COUNT_ERR_WRITE = '%(werr)'
-        """Number of write errors for the request.
-    
-        .. note:: since 1.9.21
-    
-        """
-
-        REQ_COUNT_ERR = '%(ioerr)'
-        """Number of write and read errors for the request.
-    
-        .. note:: since 1.9.21
-    
-        """
-
-        REQ_START_UNIX_US = '%(tmsecs)'
-        """Timestamp of the start of the request in milliseconds since the epoch.
-    
-        .. note:: since 1.9.21
-    
-        """
-
-        REQ_START_UNIX_MS = '%(tmicros)'
-        """Timestamp of the start of the request in microseconds since the epoch.
-    
-        .. note:: since 1.9.21
-    
-        """
 
         metric = VarMetric
         """Metric value (see The Metrics subsystem)."""

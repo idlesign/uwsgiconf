@@ -14,7 +14,7 @@ def test_logging_basics(assert_lines):
         no_requests=True,
         template='%s --> %s %s %s' % (
             logging.vars.REQ_METHOD,
-            logging.vars.REQ_URL,
+            logging.vars.REQ_URI,
             logging.vars.metric('my'),
             logging.vars.request_var('X-Request-Id'),
         ),

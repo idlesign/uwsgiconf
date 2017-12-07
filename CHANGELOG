@@ -5,7 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 + Implemented 'logging.vars.request_var' and 'logging.vars.metric'
-* Renamed .logging.vars.RESP_START_CTIME into REQ_START_CTIME
+* Renamed several .logging.vars.
 * Fixed .logging 'prefix_date' parameter handling.
 * Fixed .logging  parameter handling.
 + Nice preset. Added 'ignore_write_errors' shortcut support.
