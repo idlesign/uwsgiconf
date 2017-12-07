@@ -371,16 +371,16 @@ class Logging(OptionsGroup):
         """HTTP response status code."""
 
         RESP_TIME_US = '%(micros)'
-        """Response time in microseconds."""
+        """Response time in microseconds. E.g.: 1512623650704"""
 
         RESP_TIME_MS = '%(msecs)'
-        """Response time in milliseconds."""
+        """Response time in milliseconds. E.g.: 1512623650704413"""
 
         REQ_START_TS = '%(time)'
-        """Timestamp of the start of the request."""
+        """Timestamp of the start of the request. E.g.: 1512623650"""
 
-        RESP_START_CTIME = '%(ctime)'
-        """Ctime of the start of the request."""
+        REQ_START_CTIME = '%(ctime)'
+        """Ctime of the start of the request. E.g.: Thu Dec  7 08:05:35 2017"""
 
         TIME_UNIX = '%(epoch)'
         """The current time in Unix format."""
@@ -392,7 +392,11 @@ class Logging(OptionsGroup):
         """Human-formatted (Apache style) request time."""
 
         REQ_TIME_FORMATTED = '%(ftime)'
-        """Request time formatted with ``date_format``."""
+        """Request time formatted with ``apply_strftime``. 
+        
+        .. note:: Use ``apply_strftime`` and placeholders.
+        
+        """
 
         RESP_SIZE_HEADER = '%(hsize)'
         """Response headers size."""
