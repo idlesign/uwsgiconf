@@ -39,6 +39,8 @@ def test_nice_section(assert_lines):
 
     ], Section(log_dedicated=True, ignore_write_errors=True))
 
+    assert '%(headers) headers in %(hsize) bytes' in Section().get_log_format_default()
+
 
 def test_nice_python(assert_lines):
 
