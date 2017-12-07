@@ -51,7 +51,7 @@ class Logging(OptionsGroup):
 
         :param str|unicode prefix: Prefix log items with a string.
 
-        :param str|unicode prefix_date: Prefix log items with date string. 
+        :param str|unicode|bool prefix_date: Prefix log items with date string.
         
             .. note:: This can be ``True`` or contain formatting placeholders (e.g. %Y-%m-%d %H:%M:%S) 
                if used with ``apply_strftime``.

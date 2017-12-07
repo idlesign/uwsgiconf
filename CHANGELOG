@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Fixed .logging  parameter handling.
 + Nice preset. Added 'ignore_write_errors' shortcut support.
 + CLI. Added headers related methods to routing options group.
 + Added 'master_process.set_exception_handling_params'.

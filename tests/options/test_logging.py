@@ -8,10 +8,21 @@ def test_logging_basics(assert_lines):
     assert_lines([
         'disable-logging = true',
         'log-format = %(method) --> %(uri)',
+        'log-date = true',
 
     ], logging.set_basic_params(
         no_requests=True,
-        template='%s --> %s' % (logging.vars.REQ_METHOD, logging.vars.REQ_URL)
+        template='%s --> %s' % (logging.vars.REQ_METHOD, logging.vars.REQ_URL),
+        prefix_date=True
+    ))
+
+    assert_lines([
+        'logformat-strftime = true',
+        'log-date = %%Y-%%M-%%D',
+
+    ], Section().logging.set_basic_params(
+        prefix_date='%Y-%M-%D',
+        apply_strftime=True,
     ))
 
     assert_lines([
