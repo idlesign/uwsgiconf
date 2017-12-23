@@ -17,7 +17,7 @@ class Broodlord(object):
     """
     def __init__(
             self, zerg_socket, zerg_die_on_idle=None, vassals_home=None,
-            zerg_count=None, vassal_overload_sos_interval=None, vassal_backlog_items_sos=None,
+            zerg_count=None, vassal_overload_sos_interval=None, vassal_queue_items_sos=None,
             section_emperor=None, section_zerg=None):
         """
         :param str|unicode zerg_socket: Unix socket to bind server to.
@@ -31,7 +31,7 @@ class Broodlord(object):
         :param int vassal_overload_sos_interval: Ask emperor for reinforcement when overloaded.
             Accepts the number of seconds to wait between asking for a new reinforcements.
 
-        :param int vassal_backlog_items_sos: Ask emperor for sos if backlog queue has more
+        :param int vassal_queue_items_sos: Ask emperor for sos if backlog queue has more
             items than the value specified
         """
 
@@ -42,7 +42,7 @@ class Broodlord(object):
             locals(), include=[
                 'zerg_count',
                 'vassal_overload_sos_interval',
-                'vassal_backlog_items_sos',
+                'vassal_queue_items_sos',
             ])
 
         section_emperor = section_emperor or Section()

@@ -108,7 +108,7 @@ def test_cheapening(assert_lines):
     assert_lines([
         'cheaper-algo = backlog',
         'cheaper-overload = 30',
-    ], Section().cheapening(cheaper_algo=Section.cheapening.algorithms.backlog(check_num_overload=30)))
+    ], Section().cheapening(cheaper_algo=Section.cheapening.algorithms.queue(check_num_overload=30)))
 
     assert_lines([
         'plugin = cheaper_busyness',

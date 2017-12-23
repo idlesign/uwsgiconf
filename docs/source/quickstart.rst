@@ -102,7 +102,7 @@ Let's configure uWSGI to use Emperor Broodlord mode as described here_ using ``B
         zerg_die_on_idle=30,
 
         vassals_home='/etc/vassals',
-        vassal_backlog_items_sos=10,
+        vassal_queue_items_sos=10,
 
         # We'll use the same basic params both for Broodlord Emperor and his zergs.
         section_emperor=(Section().

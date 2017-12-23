@@ -118,7 +118,7 @@ class Alarms(OptionsGroup):
 
         return self._section
 
-    def alarm_on_backlog_full(self, alarm):
+    def alarm_on_queue_full(self, alarm):
         """Raise the specified alarm when the socket backlog queue is full.
 
         :param AlarmType|list[AlarmType] alarm: Alarm.

@@ -83,7 +83,7 @@ def test_alarms_on_fd(assert_lines):
     ], alarms.alarm_on_fd_ready([alarm1, alarm2], '$(CGROUP_OOM_FD)', 'damn it!', byte_count=8))
 
 
-def test_alarms_on_backlog(assert_lines):
+def test_alarms_on_queue(assert_lines):
 
     alarms = Section().alarms
     alarm1 = alarms.alarm_types.signal('mysig', 27)
@@ -94,7 +94,7 @@ def test_alarms_on_backlog(assert_lines):
         'alarm = some signal:17',
         'alarm-backlog = mysig',
         'alarm-backlog = some',
-    ], alarms.alarm_on_backlog_full([alarm1, alarm2]))
+    ], alarms.alarm_on_queue_full([alarm1, alarm2]))
 
 
 def test_alarms_on_segfault(assert_lines):

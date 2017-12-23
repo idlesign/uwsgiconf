@@ -10,7 +10,7 @@ def test_broodlord(assert_lines):
         zerg_count=40,
         zerg_die_on_idle=30,
         vassals_home='/etc/vassals',
-        vassal_backlog_items_sos=10,
+        vassal_queue_items_sos=10,
 
         section_emperor=(Section().
             master_process(enable=True).

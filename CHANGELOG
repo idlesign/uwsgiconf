@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Term 'backlog' is changed into '[listen] queue' for consistency.
 * Fixed touch reload from py configuration file.
 + Nice preset extended with 'get_log_format_default()' demo helper method.
 + Implemented 'logging.vars.request_var' and 'logging.vars.metric'

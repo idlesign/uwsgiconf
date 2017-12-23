@@ -50,7 +50,7 @@ class AlgoSpare2(Algo):
         return self
 
 
-class AlgoBacklog(Algo):
+class AlgoQueue(Algo):
     """If the socket's listen queue has more than ``cheaper_overload`` requests
     waiting to be processed, uWSGI will spawn new workers.
 
@@ -121,7 +121,7 @@ class AlgoBusyness(Algo):
         return self._section
 
     def set_emergency_params(
-            self, workers_step=None, idle_cycles_max=None, backlog_size=None, backlog_nonzero_delay=None):
+            self, workers_step=None, idle_cycles_max=None, queue_size=None, queue_nonzero_delay=None):
         """Sets busyness algorithm emergency workers related params.
 
         Emergency workers could be spawned depending upon uWSGI backlog state.
@@ -132,16 +132,16 @@ class AlgoBusyness(Algo):
 
         :param int idle_cycles_max: Idle cycles to reach before stopping an emergency worker. Default: 3.
 
-        :param int backlog_size: Backlog max queue size to spawn an emergency worker. Default: 33.
+        :param int queue_size: Listen queue (backlog) max size to spawn an emergency worker. Default: 33.
 
-        :param int backlog_nonzero_delay: If the request listen queue is > 0 for more than given amount of seconds
+        :param int queue_nonzero_delay: If the request listen queue is > 0 for more than given amount of seconds
             new emergency workers will be spawned. Default: 60.
 
         """
         self._set('cheaper-busyness-backlog-step', workers_step)
         self._set('cheaper-busyness-backlog-multiplier', idle_cycles_max)
-        self._set('cheaper-busyness-backlog-alert', backlog_size)
-        self._set('cheaper-busyness-backlog-nonzero', backlog_nonzero_delay)
+        self._set('cheaper-busyness-backlog-alert', queue_size)
+        self._set('cheaper-busyness-backlog-nonzero', queue_nonzero_delay)
 
         return self
 
@@ -166,11 +166,11 @@ class Cheapening(OptionsGroup):
     class algorithms(object):
         """Algorithms available to use with ``cheaper_algorithm``."""
 
-        spare = AlgoSpare
-        spare2 = AlgoSpare2
-        backlog = AlgoBacklog
         busyness = AlgoBusyness
         manual = AlgoManual
+        queue = AlgoQueue
+        spare = AlgoSpare
+        spare2 = AlgoSpare2
 
     def set_basic_params(
             self, spawn_on_request=None,
