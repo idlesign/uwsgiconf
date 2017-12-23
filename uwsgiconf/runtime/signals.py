@@ -105,13 +105,13 @@ class Signal(object):
         uwsgi.signal_wait(self.num)
 
 
-def _automate_signal(signal_or_target, func):
+def _automate_signal(target, func):
 
-    if signal_or_target is None or isinstance(signal_or_target, string_types):
+    if target is None or isinstance(target, string_types):
         sig = Signal()
 
         func(sig)
 
-        return sig.register_handler(target=signal_or_target)
+        return sig.register_handler(target=target)
 
-    func(signal_or_target)
+    func(target)

@@ -2,12 +2,12 @@ from .signals import _automate_signal
 from .. import uwsgi
 
 
-def register_file_monitor(filename, signal_or_target=None):
+def register_file_monitor(filename, target=None):
     """Maps a specific file/directory modification event to a signal.
 
     :param str|unicode filename: File or a directory to watch for its modification.
 
-    :param int|Signal|str|unicode signal_or_target: Existing signal to raise
+    :param int|Signal|str|unicode target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -26,7 +26,7 @@ def register_file_monitor(filename, signal_or_target=None):
 
     :raises ValueError: If unable to register monitor.
     """
-    return _automate_signal(signal_or_target, func=lambda sig: uwsgi.add_file_monitor(int(sig), filename))
+    return _automate_signal(target, func=lambda sig: uwsgi.add_file_monitor(int(sig), filename))
 
 
 class Metric(object):

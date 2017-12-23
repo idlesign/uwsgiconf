@@ -5,7 +5,7 @@ from .. import uwsgi
 # todo: add_ms_timer
 
 
-def register_timer(period, signal_or_target=None):
+def register_timer(period, target=None):
     """Add timer.
 
     Can be used as a decorator:
@@ -18,7 +18,7 @@ def register_timer(period, signal_or_target=None):
 
     :param int period: The interval (seconds) at which to raise the signal.
 
-    :param int|Signal|str|unicode signal_or_target: Existing signal to raise
+    :param int|Signal|str|unicode target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -39,10 +39,10 @@ def register_timer(period, signal_or_target=None):
 
     :raises ValueError: If unable to add timer.
     """
-    return _automate_signal(signal_or_target, func=lambda sig: uwsgi.add_timer(int(sig), period))
+    return _automate_signal(target, func=lambda sig: uwsgi.add_timer(int(sig), period))
 
 
-def register_timer_rb(period, repeat=None, signal_or_target=None):
+def register_timer_rb(period, repeat=None, target=None):
     """Add a red-black timer (based on black-red tree).
 
         .. code-block:: python
@@ -55,7 +55,7 @@ def register_timer_rb(period, repeat=None, signal_or_target=None):
 
     :param int repeat: How many times to repeat. Default: None - infinitely.
 
-    :param int|Signal|str|unicode signal_or_target: Existing signal to raise
+    :param int|Signal|str|unicode target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -76,10 +76,10 @@ def register_timer_rb(period, repeat=None, signal_or_target=None):
 
     :raises ValueError: If unable to add timer.
     """
-    return _automate_signal(signal_or_target, func=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0))
+    return _automate_signal(target, func=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0))
 
 
-def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, signal_or_target=None):
+def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, target=None):
     """Adds cron. The interface to the uWSGI signal cron facility.
 
         .. code-block:: python
@@ -104,7 +104,7 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, si
 
     :param int minute: Minute 0-59. Defaults to `each`.
 
-    :param int|Signal|str|unicode signal_or_target: Existing signal to raise
+    :param int|Signal|str|unicode target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -127,4 +127,4 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, si
     """
     args = [(-1 if arg is None else arg) for arg in (minute, hour, day, month, weekday)]
 
-    return _automate_signal(signal_or_target, func=lambda sig: uwsgi.add_cron(int(sig), *args))
+    return _automate_signal(target, func=lambda sig: uwsgi.add_cron(int(sig), *args))
