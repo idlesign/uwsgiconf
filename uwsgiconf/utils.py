@@ -293,9 +293,9 @@ class UwsgiRunner(object):
         :param bool replace: Whether a new process should replace current one.
 
         """
-        os.environ[ENV_CONF_ALIAS] = configuration_alias
-
-        args = ['uwsgi', '--ini', 'exec://%s %s' % (self.binary_python, filepath)]
+        # Pass --conf as an argument to have a chance to use
+        # touch reloading form .py configuration file change.
+        args = ['uwsgi', '--ini', 'exec://%s %s --conf %s' % (self.binary_python, filepath, configuration_alias)]
 
         if replace:
             return os.execvp('uwsgi', args)

@@ -1,3 +1,4 @@
+import sys
 import os
 from collections import OrderedDict
 from copy import deepcopy
@@ -608,6 +609,9 @@ def configure_uwsgi(configurator_func):
         # We prevent unnecessary configuration
         # for setups where application is located in the same
         # file as configuration.
+
+        del os.environ[ENV_CONF_READY]  # Drop it support consecutive reconfiguration.
+
         return None
 
     configurations = configurator_func()
@@ -636,7 +640,14 @@ def configure_uwsgi(configurator_func):
         raise ConfigurationError(
             "Callable passed into 'configure_uwsgi' must return 'Section' or 'Configuration' objects.")
 
+    # Try to get configuration alias from env with fall back
+    # to --conf argument (as passed by UwsgiRunner.spawn()).
     target_alias = os.environ.get(ENV_CONF_ALIAS)
+
+    if not target_alias:
+        last = sys.argv[-2:]
+        if len(last) == 2 and last[0] == '--conf':
+            target_alias = last[1]
 
     conf_list = list(registry.values())
 
@@ -647,7 +658,7 @@ def configure_uwsgi(configurator_func):
         if config:
             section = config.sections[0]  # type: Section
             # Set ready marker which is checked above.
-            section.env(ENV_CONF_READY, 1)
+            os.environ[ENV_CONF_READY] = '1'
 
             # Placeholder for runtime introspection.
             section.set_placeholder('config-alias', target_alias)
