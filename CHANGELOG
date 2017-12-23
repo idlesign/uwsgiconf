@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.13.0
+-------
 * Runtime. 'signal_or_target' parameter is renamed into 'target'.
 * Term 'backlog' is changed into '[listen] queue' for consistency.
 * Fixed touch reload from py configuration file.
