@@ -81,7 +81,7 @@ class Logging(OptionsGroup):
                 * **2** - uss/pss (Linux only)
 
         :param bool apply_strftime: Apply strftime to dates in log entries. 
-            E.g. ``prefix_date`` can contain format placeholders. See also ``vars.REQ_TIME_FORMATTED``.
+            E.g. ``prefix_date`` can contain format placeholders. See also ``vars.REQ_START_FORMATTED``.
 
         :param bool response_ms: Report response time in microseconds instead of milliseconds.
 
