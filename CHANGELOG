@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 ! Dropped support for py 3.3.
++ Runtime. register_cron() now handles periods.
 
 
 v0.13.0
