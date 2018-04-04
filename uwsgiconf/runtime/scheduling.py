@@ -212,7 +212,7 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, ta
             return func_action(*args, **kwargs)
 
         args = []
-        for arg_name in {'minute', 'hour', 'day', 'month', 'weekday'}:
+        for arg_name in ['minute', 'hour', 'day', 'month', 'weekday']:
             arg = task_args_casted.get(arg_name, None)
             args.append(-1 if arg is None else arg)
 
