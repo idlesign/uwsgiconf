@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.14.2
+-------
 * Fixed SocketHttps construction.
 
 
