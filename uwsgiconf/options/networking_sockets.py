@@ -121,7 +121,12 @@ class SocketHttps(Socket):
         :param Modifier modifier: Socket routing modifier.
         """
         super(SocketHttps, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
-        self.args.extend([cert, key, ciphers or '', client_ca or ''])
+        args = [cert, key]
+
+        if ciphers or client_ca:
+            args.extend([ciphers or '', client_ca or ''])
+
+        self.args.extend(args)
 
 
 class SocketUwsgi(Socket):

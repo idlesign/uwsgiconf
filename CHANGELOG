@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Fixed SocketHttps construction.
+
+
 v0.14.1
 -------
 * Fixed register_cron() work with periods.
