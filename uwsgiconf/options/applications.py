@@ -7,7 +7,8 @@ class Applications(OptionsGroup):
     """
 
     def set_basic_params(
-            self, exit_if_none=None, max_per_worker=None, single_interpreter=None, no_default=None):
+            self, exit_if_none=None, max_per_worker=None, single_interpreter=None, no_default=None,
+            manage_script_name=None):
         """
 
         :param bool exit_if_none: Exit if no app can be loaded.
@@ -20,14 +21,19 @@ class Applications(OptionsGroup):
             namespace for each app). If you want all of the app to be loaded in the same python vm,
             use the this option.
 
-        :param bool no_default: Do not fallback to default app.
+        :param bool no_default: Do not automatically fallback to default app. By default, the first loaded app
+            is mounted as the “default one”. That app will be served when no mountpoint matches.
+
+        :param bool manage_script_name: You can to instruct uWSGI to map specific apps in the so called "mountpoint"
+            and rewrite SCRIPT_NAME and PATH_INFO automatically. See .mount().
+            The WSGI standard dictates that SCRIPT_NAME is the variable used to select a specific application.
 
         """
-
         self._set('need-app', exit_if_none, cast=bool)
         self._set('max-apps', max_per_worker)
         self._set('single-interpreter', single_interpreter, cast=bool)
         self._set('no-default-app', no_default, cast=bool)
+        self._set('manage-script-name', manage_script_name, cast=bool)
 
         return self._section
 
@@ -35,14 +41,20 @@ class Applications(OptionsGroup):
         """Load application under mountpoint.
 
         Example:
-            * .mount('/app1', 'app1.py')
-            * .mount('example.com', 'app2.py')
-            * .mount('the_app3', 'app3.py')
+            * .mount('', 'app0.py') -- Root URL part
+            * .mount('/app1', 'app1.py') -- URL part
             * .mount('/pinax/here', '/var/www/pinax/deploy/pinax.wsgi')
+            * .mount('the_app3', 'app3.py')  -- Variable value: application alias (can be set by ``UWSGI_APPID``)
+            * .mount('example.com', 'app2.py')  -- Variable value: Hostname (variable set in nginx)
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Nginx.html#hosting-multiple-apps-in-the-same-process-aka-managing-script-name-and-path-info
 
-        :param str|unicode mountpoint: Host name, URL part, etc.
+        :param str|unicode mountpoint: URL part, or variable value.
+
+            .. note:: In case of URL part you may also want to set ``manage_script_name`` basic param to ``True``.
+
+            .. warning:: In case of URL part a trailing slash may case problems in some cases
+                (e.g. with Django based projects).
 
         :param str|unicode app: App module/file.
 

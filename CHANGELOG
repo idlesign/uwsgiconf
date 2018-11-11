@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
++ Application. Added support for 'manage_script_name' option.
+
+
 v0.14.2
 -------
 * Fixed SocketHttps construction.
