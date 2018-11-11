@@ -22,7 +22,7 @@ class Applications(OptionsGroup):
             use the this option.
 
         :param bool no_default: Do not automatically fallback to default app. By default, the first loaded app
-            is mounted as the “default one”. That app will be served when no mountpoint matches.
+            is mounted as the "default one". That app will be served when no mountpoint matches.
 
         :param bool manage_script_name: You can to instruct uWSGI to map specific apps in the so called "mountpoint"
             and rewrite SCRIPT_NAME and PATH_INFO automatically. See .mount().
