@@ -24,8 +24,10 @@ Alternatively you can install ``uwsgiconf`` from PyPI:
 
     pip install uwsgiconf
 
+    ; Install with Click package for CLI:
+    pip install uwsgiconf[cli]
+
 
 Use `-U` flag for upgrade:
 
     pip install -U uwsgiconf
-

@@ -3,6 +3,11 @@ Command-line interface (CLI)
 
 **uwsgiconf** comes with CLI (``click`` package required) to facilitate configuration.
 
+.. code-block:: bash
+
+    ; To install uwsgiconf with click:
+    $ pip install uwsgiconf[cli]
+
 
 Compile
 -------

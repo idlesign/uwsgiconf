@@ -34,7 +34,7 @@ runuwsgi
 Now your project is up and running on ``http://127.0.0.1:8000``.
 
 By default the command runs your project using some defaults, but you can configure it to your needs
-with the help of ``uwsgicfg.py`` (constructed in a usual for ``uwsgiconf`` manner) placed near your ``manage.py``.
+with the help of ``uwsgicfg.py`` (constructed in a usual for **uwsgiconf** manner) placed near your ``manage.py``.
 
 
 .. code-block:: python

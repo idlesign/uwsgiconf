@@ -100,7 +100,7 @@ Let's make ``uwsgicfg.py``. There we configure uWSGI using nice ``PythonSection`
         $ uwsgiconf run
 
 
-**Note:** ``uwsgiconf`` CLI requires ``click`` package available.
+**Note:** ``uwsgiconf`` CLI requires ``click`` package available (can be installed with ``uwsgiconf``).
 
 
 Runtime configuration
