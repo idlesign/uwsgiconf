@@ -39,6 +39,7 @@ There are so many subsystems and options_ (800+) it is difficult to even try to 
 * It comes with CLI to facilitate configuration;
 * It features easy to use and documented **uwsgi stub** Python module;
 * It offers **runtime** package, similar to **uwsgidecorators**, but with more abstractions.
+* It features integration with Django Framework.
 
 
 *Consider using IDE with autocompletion and docstings support to be more productive with uwsgiconf.*
@@ -128,8 +129,18 @@ A couple of examples:
             do_something()
 
 
+Third parties
+~~~~~~~~~~~~~
+
+**Django.** Run your Django-based project on uWSGI using manage command:
+
+.. code-block:: bash
+
+    $ ./manage.py runuwsgi
+
+
 
 Documentation
 -------------
 
-http://uwsgiconf.readthedocs.org/
+More information can be found at http://uwsgiconf.readthedocs.org/

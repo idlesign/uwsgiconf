@@ -19,6 +19,11 @@ There are so many subsystems and options_ (800+) it is difficult to even try to 
 * It structures options for various subsystems using classes and methods;
 * It uses docstrings and sane naming to facilitate navigation;
 * It ships some useful presets to reduce boilerplate code;
+* It encourages configuration reuse;
+* It comes with CLI to facilitate configuration;
+* It features easy to use and documented **uwsgi stub** Python module;
+* It offers **runtime** package, similar to **uwsgidecorators**, but with more abstractions.
+* It features integration with Django Framework.
 
 *Consider using IDE with autocompletion and docstings support to be more productive with uwsgiconf.*
 
@@ -45,6 +50,7 @@ Table of Contents
     index_presets
     cli
     uwsgi_stub
+    index_contrib
     hints
     index_api_runtime
     index_api_static
