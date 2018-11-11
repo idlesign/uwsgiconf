@@ -6,6 +6,7 @@ Unreleased
 ----------
 + Application. Added support for 'manage_script_name' option.
 + Routing. Added '.set_error_pages()' shortcut method.
+* Routing. Renamed '.print_routes()' -> '.print_routing_rules()'.
 
 
 v0.14.2

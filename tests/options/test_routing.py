@@ -8,7 +8,7 @@ def test_routing_basics(assert_lines):
 
     assert_lines([
         'routers-list = true',
-    ], Section().routing.print_routes())
+    ], Section().routing.print_routing_rules())
 
     assert_lines([
         'error-page-500 = /here/500.html',
