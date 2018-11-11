@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 + Application. Added support for 'manage_script_name' option.
++ Routing. Added '.set_error_pages()' shortcut method.
 
 
 v0.14.2

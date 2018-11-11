@@ -14,6 +14,26 @@ def test_routing_basics(assert_lines):
         'error-page-500 = /here/500.html',
     ], Section().routing.set_error_page(500, '/here/500.html'))
 
+    assert_lines([
+        'error-page-403 = /there/403.html',
+        'error-page-404 = /there/404.html',
+        'error-page-500 = /there/500.html',
+    ], Section().routing.set_error_pages(common_prefix='/there/'))
+
+    assert_lines([
+        'error-page-404 = /opt/missing.html',
+
+    ], Section().routing.set_error_pages(
+        {404: 'missing.html'},
+        common_prefix='/opt/'))
+
+    assert_lines([
+        'error-page-404 = /a/missing.html',
+        'error-page-500 = /b/error.html',
+
+    ], Section().routing.set_error_pages(
+        {404: '/a/missing.html', 500: '/b/error.html'}))
+
     with pytest.raises(ConfigurationError):  # unsupported code
         assert_lines('', Section().routing.set_error_page(800, '/here/800.html'))
 
