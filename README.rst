@@ -137,7 +137,10 @@ Third parties
 .. code-block:: bash
 
     $ ./manage.py uwsgi_run
+    $ ./manage.py uwsgi_reload --force
 
+
+Other commands are available.
 
 
 Documentation

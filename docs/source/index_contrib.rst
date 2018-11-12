@@ -30,6 +30,9 @@ uwsgi_run
 
     $ ./manage.py uwsgi_run
 
+    ; Options are available, use --help switch to get help.
+    $ ./manage.py uwsgi_run --help
+
 
 Now your project is up and running on ``http://127.0.0.1:8000``.
 
@@ -60,3 +63,16 @@ with the help of ``uwsgicfg.py`` (constructed in a usual for **uwsgiconf** manne
 
 
     configure_uwsgi(get_configurations)
+
+
+uwsgi_reload
+~~~~~~~~~~~~
+
+``uwsgi_reload`` management command reloads uWSGI master process, workers.
+
+.. code-block:: bash
+
+    $ ./manage.py uwsgi_reload
+
+    ; Options are available, use --help switch to get help.
+    $ ./manage.py uwsgi_reload --help
