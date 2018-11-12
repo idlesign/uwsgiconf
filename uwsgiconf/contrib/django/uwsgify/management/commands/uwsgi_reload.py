@@ -15,10 +15,18 @@ class Command(ControlCommand):
         )
         parser.add_argument(
             '--workers-only', action='store_true', dest='workers',
-            help='Only reload workers.',
+            help='Reload only workers.',
+        )
+        parser.add_argument(
+            '--workers-chain', action='store_true', dest='chain',
+            help='Run chained workers reload (one after another, instead of destroying all of them in bulk).',
         )
 
     def get_cmd(self, options):
+
+        if options['chain']:
+            return b'c'
+
         forced = options['force']
 
         if options['workers']:
