@@ -1,11 +1,12 @@
 import os
+
 from django.core.management.base import BaseCommand, CommandError
 
 from ...toolbox import find_project_dir, get_project_name, SectionMutator
 
 
-class ControlCommand(BaseCommand):
-    """Base for uWSGI control management commands."""
+class FifoCommand(BaseCommand):
+    """Base for uWSGI control management commands using master FIFO."""
 
     def get_cmd(self, options):
         """Must return FIFO command.

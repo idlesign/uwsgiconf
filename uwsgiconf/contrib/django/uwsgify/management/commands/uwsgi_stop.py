@@ -1,7 +1,7 @@
-from ._base import ControlCommand
+from ._base import FifoCommand
 
 
-class Command(ControlCommand):
+class Command(FifoCommand):
 
     help = 'Shutdown uWSGI instance'
 
