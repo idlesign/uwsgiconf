@@ -360,7 +360,10 @@ class MainProcess(OptionsGroup):
 
         :param str|unicode fpath: File path.
 
-        :param bool before_priv_drop:
+        :param bool before_priv_drop: Whether to create pidfile before privileges are dropped.
+
+            .. note:: Vacuum is made after privileges drop, so it may not be able
+                to delete PID file if it was created before dropping.
 
         :param bool safe: The safe-pidfile works similar to pidfile
             but performs the write a little later in the loading process.
