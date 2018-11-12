@@ -40,11 +40,24 @@ class SectionMutator(object):
         # todo maybe integrate envbox
         from django.conf import settings
 
-        self.section = section
+        self.section = section  # type: Section
         self.dir_base = dir_base
         self.project_name = project_name
         self.settings = settings
         self.options = options
+
+    @classmethod
+    def get_pid_filepath(cls, project_name):
+        """Return pidfile path for the given project.
+
+        :param str|unicode project_name:
+        :rtype: str|unicode
+
+        """
+        path_tpl = '/var/run/user/{user}/{project}_uwsgi.pid'
+        # PID file path template. User dir to not to bother with permissions.
+
+        return path_tpl.format(user=os.getuid(), project=project_name)
 
     @classmethod
     def run(cls, dir_base, options):
@@ -145,6 +158,11 @@ class SectionMutator(object):
         main = section.main_process
         main.set_owner_params(os.getuid(), os.getegid())
         main.set_naming_params(prefix='[%s] ' % self.project_name)
+        main.set_pid_file(
+            self.get_pid_filepath(self.project_name),
+            before_priv_drop=False,  # For vacuum to cleanup properly.
+            safe=True
+        )
 
         # todo maybe autoreload in debug
 
