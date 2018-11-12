@@ -89,3 +89,13 @@ uwsgi_stop
 
     ; Options are available, use --help switch to get help.
     $ ./manage.py uwsgi_stop --help
+
+
+uwsgi_stats
+~~~~~~~~~~~
+
+``uwsgi_stats`` management command allows you to dump uWSGI configuration and current stats into the log.
+
+.. code-block:: bash
+
+    $ ./manage.py uwsgi_stats
