@@ -8,7 +8,7 @@ if False:  # pragma: nocover
 class SectionMutator(object):
     """Configuration file section mutator."""
 
-    def __init__(self, section, dir_base, project_name):
+    def __init__(self, section, dir_base, project_name, options):
         # todo maybe integrate envbox
         from django.conf import settings
 
@@ -16,12 +16,14 @@ class SectionMutator(object):
         self.dir_base = dir_base
         self.project_name = project_name
         self.settings = settings
+        self.options = options
 
     @classmethod
-    def run(cls, dir_base):
+    def run(cls, dir_base, options):
         """Alternative constructor. Creates a mutator and returns section object.
 
         :param str|unicode dir_base:
+        :param dict options:
         :rtype: Section
 
         """
@@ -39,7 +41,12 @@ class SectionMutator(object):
             # Create section on-fly.
             section = cls._get_section_new(dir_base)
 
-        wrapped = cls(section, dir_base, name_project)
+        wrapped = cls(
+            section=section,
+            dir_base=dir_base,
+            project_name=name_project,
+            options=options)
+
         wrapped.mutate()
 
         return section
@@ -84,6 +91,10 @@ class SectionMutator(object):
 
     def contribute_static(self):
         """Contributes static and media file serving settings to an existing section."""
+
+        if not self.options['use_static_handler']:
+            return
+
         from django.core import management
 
         settings = self.settings
