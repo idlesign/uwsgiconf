@@ -25,8 +25,11 @@ class FifoCommand(BaseCommand):
 
         if os.path.exists(filepath):
 
-            with open(filepath, 'wb') as f:
-                f.write(self.get_cmd(options))
+            cmd = self.get_cmd(options)
+
+            if cmd:
+                with open(filepath, 'wb') as f:
+                    f.write(cmd)
 
         else:
             raise CommandError(

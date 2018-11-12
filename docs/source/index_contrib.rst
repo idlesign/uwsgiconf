@@ -99,3 +99,16 @@ uwsgi_stats
 .. code-block:: bash
 
     $ ./manage.py uwsgi_stats
+
+
+uwsgi_log
+~~~~~~~~~
+
+``uwsgi_log`` management command allows you to manage uWSGI log related stuff.
+
+.. code-block:: bash
+
+    $ ./manage.py uwsgi_log --rotate
+
+    ; Options are available, use --help switch to get help.
+    $ ./manage.py uwsgi_log --help
