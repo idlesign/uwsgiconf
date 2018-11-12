@@ -76,3 +76,16 @@ uwsgi_reload
 
     ; Options are available, use --help switch to get help.
     $ ./manage.py uwsgi_reload --help
+
+
+uwsgi_stop
+~~~~~~~~~~
+
+``uwsgi_stop`` management command allows you to shutdown uWSGI instance.
+
+.. code-block:: bash
+
+    $ ./manage.py uwsgi_stop
+
+    ; Options are available, use --help switch to get help.
+    $ ./manage.py uwsgi_stop --help
