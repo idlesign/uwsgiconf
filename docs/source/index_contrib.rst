@@ -21,14 +21,14 @@ First add ``uwsgify`` into ``INSTALLED_APPS``.
 
 
 
-runuwsgi
-~~~~~~~~
+uwsgi_run
+~~~~~~~~~
 
-``runuwsgi`` management command runs uWSGI to serve your Django-based project.
+``uwsgi_run`` management command runs uWSGI to serve your Django-based project.
 
 .. code-block:: bash
 
-    $ ./manage.py runuwsgi
+    $ ./manage.py uwsgi_run
 
 
 Now your project is up and running on ``http://127.0.0.1:8000``.

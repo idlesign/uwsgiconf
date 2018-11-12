@@ -1,8 +1,36 @@
+import inspect
 import os
 
 
 if False:  # pragma: nocover
     from uwsgiconf.base import Section
+
+
+def find_project_dir():
+    """Runs up the stack to find the location of manage.py
+    which will be considered a project base path.
+
+    :rtype: str|unicode
+    """
+    frame = inspect.currentframe()
+
+    while True:
+        frame = frame.f_back
+        fname = frame.f_globals['__file__']
+
+        if os.path.basename(fname) == 'manage.py':
+            break
+
+    return os.path.dirname(fname)
+
+
+def get_project_name(project_dir):
+    """Return project name from project directory.
+
+    :param str|unicode project_dir:
+    :rtype: str|unicode
+    """
+    return os.path.basename(project_dir)
 
 
 class SectionMutator(object):
@@ -30,7 +58,7 @@ class SectionMutator(object):
         from uwsgiconf.utils import ConfModule
 
         name_module = ConfModule.default_name
-        name_project = os.path.basename(dir_base)
+        name_project = get_project_name(dir_base)
         path_conf = os.path.join(dir_base, name_module)
 
         if os.path.exists(path_conf):
@@ -122,7 +150,6 @@ class SectionMutator(object):
 
         apps = section.applications
         apps.set_basic_params(
-            no_default=True,
             manage_script_name=True,
         )
 

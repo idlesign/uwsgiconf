@@ -136,7 +136,7 @@ Third parties
 
 .. code-block:: bash
 
-    $ ./manage.py runuwsgi
+    $ ./manage.py uwsgi_run
 
 
 
