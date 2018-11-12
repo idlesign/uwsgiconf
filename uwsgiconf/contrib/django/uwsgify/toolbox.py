@@ -60,6 +60,19 @@ class SectionMutator(object):
         return path_tpl.format(user=os.getuid(), project=project_name)
 
     @classmethod
+    def get_fifo_filepath(cls, project_name):
+        """Return master FIFO path for the given project.
+
+        :param str|unicode project_name:
+        :rtype: str|unicode
+
+        """
+        path_tpl = '/var/run/user/{user}/{project}_uwsgi.fifo'
+        # FIFO file path template. User dir to not to bother with permissions.
+
+        return path_tpl.format(user=os.getuid(), project=project_name)
+
+    @classmethod
     def run(cls, dir_base, options):
         """Alternative constructor. Creates a mutator and returns section object.
 
@@ -154,15 +167,18 @@ class SectionMutator(object):
     def mutate(self):
         """Mutates current section."""
         section = self.section
+        project_name = self.project_name
 
         main = section.main_process
         main.set_owner_params(os.getuid(), os.getegid())
-        main.set_naming_params(prefix='[%s] ' % self.project_name)
+        main.set_naming_params(prefix='[%s] ' % project_name)
         main.set_pid_file(
-            self.get_pid_filepath(self.project_name),
+            self.get_pid_filepath(project_name),
             before_priv_drop=False,  # For vacuum to cleanup properly.
             safe=True
         )
+
+        section.master_process.set_basic_params(fifo_file=self.get_fifo_filepath(project_name))
 
         # todo maybe autoreload in debug
 
