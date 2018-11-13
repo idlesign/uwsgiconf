@@ -54,6 +54,7 @@ Probe plugins
 Shows available uWSGI plugins.
 
 .. code-block:: bash
+
     $ uwsgiconf probe_plugins
 
 
@@ -65,6 +66,7 @@ You can generate configuration files to launch ``uwsgiconf`` automatically using
 Config contents in sent to stdout and could be redirected into a file.
 
 .. code-block:: bash
+
     $ uwsgiconf sysinit systemd
     $ uwsgiconf sysinit upstart
 
