@@ -146,7 +146,8 @@ class SectionMutator(object):
     def contribute_static(self):
         """Contributes static and media file serving settings to an existing section."""
 
-        if not self.options['use_static_handler']:
+        options = self.options
+        if options['compile'] or not options['use_static_handler']:
             return
 
         from django.core import management
@@ -191,11 +192,18 @@ class SectionMutator(object):
         self.contribute_static()
 
 
-def run_uwsgi(config_section):
+def run_uwsgi(config_section, compile_only=False):
     """Runs uWSGI using the given section configuration.
 
     :param Section config_section:
+    :param bool compile_only: Do not run, only compile and output configuration file for run.
 
     """
-    config_path = config_section.as_configuration().tofile()
+    config = config_section.as_configuration()
+
+    if compile_only:
+        config.print_ini()
+        return
+
+    config_path = config.tofile()
     os.execvp('uwsgi', ['uwsgi', '--ini=%s' % config_path])

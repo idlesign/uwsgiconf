@@ -15,8 +15,12 @@ class Command(BaseCommand):
             '--nostatic', action='store_false', dest='use_static_handler',
             help='Tells uWSGI to NOT to serve static and media files.',
         )
+        parser.add_argument(
+            '--compile', action='store_true', dest='compile',
+            help='Do not run just print out compiled uWSGI .ini configuration.',
+        )
 
     def handle(self, *args, **options):
         dir_base = find_project_dir()
         section = SectionMutator.run(dir_base=dir_base, options=options)
-        run_uwsgi(section)
+        run_uwsgi(section, compile_only=options['compile'])
