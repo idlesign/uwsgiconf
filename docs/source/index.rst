@@ -24,7 +24,7 @@ There are so many subsystems and options_ (800+) it is difficult to even try to 
 * It features easy to use and documented **uwsgi stub** Python module;
 * It offers **runtime** package, similar to **uwsgidecorators**, but with more abstractions;
 * It features integration with Django Framework;
-* It is able generate configuration files for Systemd, Upstart.
+* It is able to generate configuration files for Systemd, Upstart.
 
 *Consider using IDE with autocompletion and docstings support to be more productive with uwsgiconf.*
 
