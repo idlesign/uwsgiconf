@@ -46,3 +46,42 @@ Runs uWSGI using configuration from a given `uwsgiconf` configuration module
 
     ; This runs uWSGI using configuration from there/thisfile.py:
     $ uwsgiconf run there/thisfile.py
+
+
+Probe plugins
+-------------
+
+Shows available uWSGI plugins.
+
+.. code-block:: bash
+    $ uwsgiconf probe_plugins
+
+
+Systemd and other configs
+-------------------------
+
+You can generate configuration files to launch ``uwsgiconf`` automatically using system facilities.
+
+Config contents in sent to stdout and could be redirected into a file.
+
+.. code-block:: bash
+    $ uwsgiconf sysinit systemd
+    $ uwsgiconf sysinit upstart
+
+
+Usage example for Systemd:
+
+.. code-block:: bash
+
+    ; Generate and save config into `myapp.service` file
+    $ uwsgiconf sysinit --project myapp > myapp.service
+
+    ; Copy config into standard location
+    $ sudo cp myapp.service /etc/systemd/system/myapp.service
+
+    ; Reload available configs information and run service
+    $ sudo systemctl daemon-reload && systemctl start myapp.service
+
+    ; Watch application log realtime (is syslog is used)
+    $ journalctl -fu myapp.service
+

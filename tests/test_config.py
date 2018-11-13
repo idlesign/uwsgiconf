@@ -50,7 +50,7 @@ def test_section_embeddeding_plugins(assert_lines, mock_popen):
         'plugin = syslog'
     ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
 
-    mock_popen(lambda: ('plugins ***\nsyslog', ''))
+    mock_popen(lambda: (b'plugins ***\nsyslog', b''))
 
     # Probing.
     section = Section(embedded_plugins=Section.embedded_plugins_presets.PROBE)

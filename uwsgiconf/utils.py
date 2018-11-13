@@ -1,8 +1,8 @@
 from __future__ import unicode_literals, absolute_import
 
+import logging
 import os
 import sys
-import logging
 from collections import namedtuple
 from contextlib import contextmanager
 from importlib import import_module
@@ -12,8 +12,7 @@ try:  # pragma: nocover
 except ImportError:  # pragma: nocover
     from io import StringIO
 
-from .settings import CONFIGS_MODULE_ATTR, ENV_CONF_ALIAS
-
+from .settings import CONFIGS_MODULE_ATTR
 
 if False:  # pragma: nocover
     from uwsgiconf.config import Configuration
@@ -235,6 +234,34 @@ class KeyValue(object):
         return self.items_separator.join(value_chunks).strip()
 
 
+def get_output(cmd, args):
+    """Runs a command and returns its output (stdout + stderr).
+
+    :param str|unicode cmd:
+    :param str|unicode|list[str|unicode] args:
+
+    :rtype: str|unicode
+
+    """
+    from subprocess import Popen, STDOUT, PIPE
+
+    command = [cmd]
+    command.extend(listify(args))
+
+    process = Popen(command, stdout=PIPE, stderr=STDOUT)
+    out, _ = process.communicate()
+
+    return out.decode('utf-8')
+
+
+def locate_uwsgiconf():
+    """Locates uwsgiconf executable location.
+
+    :rtype: str|unicode
+    """
+    return get_output('which', ['uwsgiconf']).strip()
+
+
 class UwsgiRunner(object):
     """Exposes methods to run uWSGI."""
 
@@ -250,15 +277,7 @@ class UwsgiRunner(object):
         :rtype: str|unicode
 
         """
-        from subprocess import Popen, STDOUT, PIPE
-
-        command = [self.binary_uwsgi]
-        command.extend(listify(command_args))
-
-        process = Popen(command, stdout=PIPE, stderr=STDOUT)
-        out, _ = process.communicate()
-
-        return out
+        return get_output(self.binary_uwsgi, command_args)
 
     def get_plugins(self):
         """Returns ``EmbeddedPlugins`` object with
@@ -269,6 +288,15 @@ class UwsgiRunner(object):
         return parse_command_plugins_output(out)
 
     @classmethod
+    def get_env_path(cls):
+        """Returns PATH environment variable updated to run uwsgiconf in
+        (e.g. for virtualenv).
+
+        :rtype: str|unicode
+        """
+        return os.path.dirname(sys.executable) + os.pathsep + os.environ['PATH']
+
+    @classmethod
     def prepare_env(cls):
         """Prepares current environment and returns Python binary name.
 
@@ -276,12 +304,8 @@ class UwsgiRunner(object):
 
         :rtype: str|unicode
         """
-        python_binary = sys.executable
-        basepath = os.path.dirname(python_binary)
-
-        os.environ['PATH'] = basepath + os.pathsep + os.environ['PATH']
-
-        return os.path.basename(python_binary)
+        os.environ['PATH'] = cls.get_env_path()
+        return os.path.basename(sys.executable)
 
     def spawn(self, filepath, configuration_alias, replace=False):
         """Spawns uWSGI using the given configuration module.

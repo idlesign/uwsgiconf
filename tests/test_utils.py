@@ -7,7 +7,7 @@ from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModul
 from uwsgiconf.exceptions import UwsgiconfException
 
 
-SAMPLE_OUT_PLUGINS_MANY = '''
+SAMPLE_OUT_PLUGINS_MANY = b'''
 
 *** uWSGI loaded generic plugins ***
 gevent
@@ -23,7 +23,7 @@ stats_pusher_socket
 compiled with version: 6.3.0 20170406 on 28 July 2017 20:04:29
 '''
 
-SAMPLE_OUT_PLUGINS_EMPTY = '''
+SAMPLE_OUT_PLUGINS_EMPTY = b'''
 
 *** uWSGI loaded generic plugins ***
 
@@ -45,13 +45,13 @@ def test_filter_locals():
 
 
 def test_parser():
-    plugins = parse_command_plugins_output(SAMPLE_OUT_PLUGINS_MANY)
+    plugins = parse_command_plugins_output(SAMPLE_OUT_PLUGINS_MANY.decode())
 
     assert len(plugins.generic) == 3
     assert len(plugins.request) == 2
     assert 'rpc' in plugins.request
 
-    plugins = parse_command_plugins_output(SAMPLE_OUT_PLUGINS_EMPTY)
+    plugins = parse_command_plugins_output(SAMPLE_OUT_PLUGINS_EMPTY.decode())
     assert len(plugins.generic) == 0
     assert len(plugins.request) == 0
 

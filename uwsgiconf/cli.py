@@ -4,8 +4,9 @@ from contextlib import contextmanager
 import click
 
 from uwsgiconf import VERSION
-from uwsgiconf.utils import ConfModule, UwsgiRunner
 from uwsgiconf.exceptions import ConfigurationError
+from uwsgiconf.sysinit import TYPES, TYPE_SYSTEMD, get_config
+from uwsgiconf.utils import ConfModule, UwsgiRunner
 
 
 @contextmanager
@@ -58,6 +59,16 @@ def compile(conf):
         config = ConfModule(conf)
         for conf in config.configurations:
             conf.format(do_print=True)
+
+
+@base.command()
+@click.argument('systype', type=click.Choice(TYPES), default=TYPE_SYSTEMD)
+@arg_conf
+@click.option('--project', help='Project name to use as service name.')
+def sysinit(systype, conf, project):
+    """Outputs configuration for system initialization subsystem."""
+
+    click.secho(get_config(systype, conf_file=conf, project=project or ''))
 
 
 @base.command()
