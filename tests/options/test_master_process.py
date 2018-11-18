@@ -23,6 +23,20 @@ def test_master_process_basics(assert_lines):
     ], Section().master_process.set_exception_handling_params(catch=True))
 
 
+def test_master_fifo(assert_lines):
+
+    assert_lines([
+        'master-fifo = /here/my.fifo',
+    ], Section().master_process.set_basic_params(fifo_file='/here/my.fifo'))
+
+    assert_lines([
+        'master-fifo = /there/is/mine.fifo',
+
+    ], Section(
+        runtime_dir='/there/is/', project_name='mine',
+    ).master_process.set_basic_params(fifo_file='{project_runtime_dir}.fifo'))
+
+
 def test_master_attach_process_classic(assert_lines):
 
     assert_lines([

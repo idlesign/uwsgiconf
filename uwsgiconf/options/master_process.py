@@ -34,6 +34,9 @@ class MasterProcess(OptionsGroup):
 
         :param str|unicode fifo_file: Enables the master FIFO.
 
+            .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}.fifo
+              See ``Section.project_name`` and ``Section.runtime_dir``.
+
             Instead of signals, you can tell the master to create a UNIX named pipe (FIFO)
             that you may use to issue commands to the master.
 
@@ -49,7 +52,7 @@ class MasterProcess(OptionsGroup):
         self._set('no-orphans', no_orphans)
         self._set('master-as-root', as_root)
         self._set('check-interval', subproc_check_interval)
-        self._set('master-fifo', fifo_file, multi=True)
+        self._set('master-fifo', self._section.replace_placeholders(fifo_file), multi=True)
 
         return self._section
 
