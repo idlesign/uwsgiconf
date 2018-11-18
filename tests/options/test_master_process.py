@@ -30,11 +30,13 @@ def test_master_fifo(assert_lines):
     ], Section().master_process.set_basic_params(fifo_file='/here/my.fifo'))
 
     assert_lines([
-        'master-fifo = /there/is/mine.fifo',
+        'master-fifo = /there/is/mine_1.fifo',
+        'master-fifo = /there/is/mine_2.fifo',
 
     ], Section(
         runtime_dir='/there/is/', project_name='mine',
-    ).master_process.set_basic_params(fifo_file='{project_runtime_dir}.fifo'))
+    ).master_process.set_basic_params(
+        fifo_file=['{project_runtime_dir}_1.fifo', '{project_runtime_dir}_2.fifo']))
 
 
 def test_master_attach_process_classic(assert_lines):

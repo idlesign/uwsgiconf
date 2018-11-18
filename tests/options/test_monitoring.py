@@ -24,8 +24,11 @@ def test_monitoring_metrics(assert_lines):
 
     assert_lines([
         'enable-metrics = true',
-        'metrics-dir = /here',
-    ], Section().monitoring.set_metrics_params(enable=True, store_dir='/here'))
+        'metrics-dir = /var/run/mine/metrics',
+
+    ], Section(
+        runtime_dir='/var/run/', project_name='mine'
+    ).monitoring.set_metrics_params(enable=True, store_dir='{project_runtime_dir}/metrics'))
 
     assert_lines([
         'metric-threshold = alarm=some,key=mycounter,reset=0,value=1000',

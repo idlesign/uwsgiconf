@@ -110,6 +110,9 @@ class Monitoring(OptionsGroup):
             of text files in a directory. The content of each file is the value
             of the metric (updated in real time).
 
+            .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}/metrics/
+              See ``Section.project_name`` and ``Section.runtime_dir``.
+
         :param bool restore: Restore previous metrics from ``store_dir``.
             When you restart a uWSGI instance, all of its metrics are reset.
             Use the option to force the metric subsystem to read-back the values
@@ -119,7 +122,7 @@ class Monitoring(OptionsGroup):
 
         """
         self._set('enable-metrics', enable, cast=bool)
-        self._set('metrics-dir', store_dir)
+        self._set('metrics-dir', self._section.replace_placeholders(store_dir))
         self._set('metrics-dir-restore', restore, cast=bool)
         self._set('metrics-no-cores', no_cores, cast=bool)
 
