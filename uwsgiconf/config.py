@@ -118,7 +118,9 @@ class Section(OptionsGroup):
 
             return probe
 
-    def __init__(self, name=None, strict_config=None, style_prints=False, embedded_plugins=None, **kwargs):
+    def __init__(
+            self, name=None, runtime_dir=None, project_name=None, strict_config=None, style_prints=False,
+            embedded_plugins=None, **kwargs):
         """
 
         :param bool strict_config: Enable strict configuration parsing.
@@ -127,7 +129,15 @@ class Section(OptionsGroup):
 
             To use placeholder variables when using strict mode, use the ``set-placeholder`` option.
 
-        :param str name: Configuration section name.
+        :param str|unicode name: Configuration section name.
+
+        :param str|unicode runtime_dir: Directory to store runtime files.
+            See ``.replace_placeholders()``
+
+            .. note:: This can be used to store PID files, sockets, master FIFO, etc.
+
+        :param str|unicode project_name: Project name (alias) to be used to differentiate projects.
+            See ``.replace_placeholders()``.
 
         :param bool style_prints: Enables styling (e.g. colouring) for ``print_`` family methods.
             Could be nice for console and distracting in logs.
@@ -159,11 +169,64 @@ class Section(OptionsGroup):
         self._opts = OrderedDict()
 
         self.name = name or 'uwsgi'
+        self._runtime_dir = runtime_dir or ''
+        self._project_name = project_name or ''
 
         super(Section, self).__init__(**kwargs)
 
         self._set_basic_params_from_dict(kwargs)
         self.set_basic_params(strict_config=strict_config)
+
+    def replace_placeholders(self, value):
+        """Replaces placeholders that can be used e.g. in filepaths.
+
+        Supported placeholders:
+            * {project_runtime_dir}
+            * {project_name}
+            * {runtime_dir}
+
+        :param str|unicode|None value:
+        :rtype: None|str|unicode
+
+        """
+        if value is None:
+            return
+
+        runtime_dir = self.runtime_dir
+        project_name = self.project_name
+
+        value = value.replace('{runtime_dir}', runtime_dir)
+        value = value.replace('{project_name}', project_name)
+        value = value.replace('{project_runtime_dir}', os.path.join(runtime_dir, project_name))
+
+        return value
+
+    @property
+    def project_name(self):
+        """Project name (alias) to be used to differentiate projects. See ``.replace_placeholders()``.
+
+        :rtype: str|unicode
+        """
+        return self._project_name
+
+    @project_name.setter
+    def project_name(self, value):
+        self._project_name = value or ''
+
+    @property
+    def runtime_dir(self):
+        """Directory to store runtime files.
+        See ``.replace_placeholders()``
+
+        .. note:: This can be used to store PID files, sockets, master FIFO, etc.
+
+        :rtype: str|unicode
+        """
+        return self._runtime_dir
+
+    @runtime_dir.setter
+    def runtime_dir(self, value):
+        self._runtime_dir = value or ''
 
     def set_basic_params(self, strict_config=None, **kwargs):
 
