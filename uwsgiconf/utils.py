@@ -254,12 +254,24 @@ def get_output(cmd, args):
     return out.decode('utf-8')
 
 
-def locate_uwsgiconf():
-    """Locates uwsgiconf executable location.
+class Finder(object):
+    """Finds various entities."""
 
-    :rtype: str|unicode
-    """
-    return get_output('which', ['uwsgiconf']).strip()
+    @classmethod
+    def uwsgiconf(cls):
+        """Finds uwsgiconf executable location.
+
+        :rtype: str|unicode
+        """
+        return get_output('which', ['uwsgiconf']).strip()
+
+    @classmethod
+    def python(cls):
+        """Finds Python executable location.
+
+        :rtype: str|unicode
+        """
+        return sys.executable
 
 
 class UwsgiRunner(object):
@@ -294,7 +306,7 @@ class UwsgiRunner(object):
 
         :rtype: str|unicode
         """
-        return os.path.dirname(sys.executable) + os.pathsep + os.environ['PATH']
+        return os.path.dirname(Finder.python()) + os.pathsep + os.environ['PATH']
 
     @classmethod
     def prepare_env(cls):
@@ -305,7 +317,7 @@ class UwsgiRunner(object):
         :rtype: str|unicode
         """
         os.environ['PATH'] = cls.get_env_path()
-        return os.path.basename(sys.executable)
+        return os.path.basename(Finder.python())
 
     def spawn(self, filepath, configuration_alias, replace=False):
         """Spawns uWSGI using the given configuration module.

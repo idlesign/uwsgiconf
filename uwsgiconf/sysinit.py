@@ -2,7 +2,7 @@ from os import getuid, getgid
 from os.path import dirname, basename, abspath
 from textwrap import dedent
 
-from .utils import get_output, locate_uwsgiconf, UwsgiRunner
+from .utils import get_output, Finder, UwsgiRunner
 
 
 TYPE_UPSTART = 'upstart'
@@ -119,7 +119,7 @@ def get_config(systype, conf_file, project):
 
     formatted = tpl.format(
         project=project or basename(dirname(conf_file)),
-        command='%s run %s' % (locate_uwsgiconf(), conf_file),
+        command='%s run %s' % (Finder.uwsgiconf(), conf_file),
     )
 
     return formatted

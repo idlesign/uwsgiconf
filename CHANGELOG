@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 + Added basic intergation with Django Framework.
++ Added Finder utility.
 + Application. Added support for 'manage_script_name' option.
 + CLI. Added 'sysinit' command to generate Systemd and Upstart configs.
 + Routing. Added '.set_error_pages()' shortcut method.
