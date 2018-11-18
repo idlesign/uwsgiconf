@@ -140,6 +140,7 @@ class Networking(OptionsGroup):
 
                 socket.address = self._get_shared_socket_idx(shared_socket)
 
+            socket.address = self._section.replace_placeholders(socket.address)
             self._set(socket.name, socket, multi=True)
 
             socket._contribute_to_opts(self)

@@ -37,6 +37,12 @@ def test_networking_basics(assert_lines):
     ], Section().networking.register_socket(sockets.default(':8000', bound_workers=[2, 3])))
 
     assert_lines([
+        'socket = /var/run/mine.sock',
+    ], Section(
+        runtime_dir='/var/run', project_name='mine'
+    ).networking.register_socket(sockets.default('{project_runtime_dir}.sock')))
+
+    assert_lines([
         'plugin = http',
         'https-export-cert = MYVAR',
 

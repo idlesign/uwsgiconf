@@ -11,6 +11,7 @@ Unreleased
 + CLI. Added 'sysinit' command to generate Systemd and Upstart configs.
 + Master. FIFO filepath now supports placeholders'.
 + Metrics. Store directory now supports placeholders'.
++ Networking. Unix sockets filepaths now support placeholders.
 + Routing. Added '.set_error_pages()' shortcut method.
 + Sections now support setting of 'runtime_dir' and 'project_name'.
 + Spooler. Work directory now supports placeholders.
