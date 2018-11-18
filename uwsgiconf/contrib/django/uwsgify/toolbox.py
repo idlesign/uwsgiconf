@@ -150,14 +150,14 @@ class SectionMutator(object):
         if options['compile'] or not options['use_static_handler']:
             return
 
-        from django.core import management
+        from django.core.management import call_command
 
         settings = self.settings
         statics = self.section.statics
         statics.register_static_map(settings.STATIC_URL, settings.STATIC_ROOT)
         statics.register_static_map(settings.MEDIA_URL, settings.MEDIA_ROOT)
 
-        management.call_command('collectstatic', clear=True, interactive=False)
+        call_command('collectstatic', clear=True, interactive=False)
 
     def contribute_error_pages(self):
         """Contributes generic static error massage pages to an existing section."""

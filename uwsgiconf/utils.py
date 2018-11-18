@@ -274,6 +274,75 @@ class Finder(object):
         return sys.executable
 
 
+class Fifo(object):
+    """uWSGI Master FIFO interface."""
+
+    def __init__(self, fifo_filepath):
+        """
+        :param str|unicode fifo_filepath: Path to uWSGI Master FIFO file.
+
+        """
+        self.fifo = fifo_filepath
+
+    def cmd_log(self, reopen=False, rotate=False):
+        """Allows managing of uWSGI log related stuff
+
+        :param bool reopen: Reopen log file. Could be required after third party rotation.
+        :param bool rotate: Trigger built-in log rotation.
+
+        """
+        cmd = b''
+
+        if reopen:
+            cmd += b'l'
+
+        if rotate:
+            cmd += b'L'
+
+        return self.send_command(cmd)
+
+    def cmd_stats(self):
+        """Dump uWSGI configuration and current stats into the log."""
+        return self.send_command(b's')
+
+    def cmd_stop(self, force=False):
+        """Shutdown uWSGI instance.
+
+        :param bool force: Use forced (brutal) shutdown instead of a graceful one.
+
+        """
+        return self.send_command(b'Q' if force else b'q')
+
+    def cmd_reload(self, force=False, workers_only=False, workers_chain=False):
+        """Reloads uWSGI master process, workers.
+
+        :param bool force: Use forced (brutal) reload instead of a graceful one.
+        :param bool workers_only: Reload only workers.
+        :param bool workers_chain: Run chained workers reload (one after another,
+            instead of destroying all of them in bulk).
+
+        """
+        if workers_chain:
+            return self.send_command(b'c')
+
+        if workers_only:
+            return self.send_command(b'R' if force else b'r')
+
+        return self.send_command(b'R' if force else b'r')
+
+    def send_command(self, cmd):
+        """Sends a generic command into FIFO.
+
+        :param bytes cmd: Command chars to send into FIFO.
+
+        """
+        if not cmd:
+            return
+
+        with open(self.fifo, 'wb') as f:
+            f.write(cmd)
+
+
 class UwsgiRunner(object):
     """Exposes methods to run uWSGI."""
 

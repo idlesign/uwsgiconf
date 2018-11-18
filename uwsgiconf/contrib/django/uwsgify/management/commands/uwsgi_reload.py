@@ -22,14 +22,9 @@ class Command(FifoCommand):
             help='Run chained workers reload (one after another, instead of destroying all of them in bulk).',
         )
 
-    def get_cmd(self, options):
-
-        if options['chain']:
-            return b'c'
-
-        forced = options['force']
-
-        if options['workers']:
-            return b'R' if forced else b'r'
-
-        return b'R' if forced else b'r'
+    def run_cmd(self, fifo, options):
+        fifo.cmd_reload(
+            force=options['force'],
+            workers_only=options['workers'],
+            workers_chain=options['chain'],
+        )

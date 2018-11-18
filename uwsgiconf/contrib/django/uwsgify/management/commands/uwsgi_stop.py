@@ -14,5 +14,5 @@ class Command(FifoCommand):
             help='Use forced (brutal) shutdown instead of a graceful one.',
         )
 
-    def get_cmd(self, options):
-        return b'Q' if options['force'] else b'q'
+    def run_cmd(self, fifo, options):
+        fifo.cmd_stop(force=options['force'])

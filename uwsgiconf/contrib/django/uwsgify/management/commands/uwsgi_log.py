@@ -18,14 +18,5 @@ class Command(FifoCommand):
             help='Trigger built-in log rotation.',
         )
 
-    def get_cmd(self, options):
-
-        result = b''
-
-        if options['reopen']:
-            result += b'l'
-
-        if options['rotate']:
-            result += b'L'
-
-        return result
+    def run_cmd(self, fifo, options):
+        fifo.cmd_log(reopen=options['reopen'], rotate=options['rotate'])

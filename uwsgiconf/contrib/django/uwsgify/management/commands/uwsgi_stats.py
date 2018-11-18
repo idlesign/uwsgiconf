@@ -5,5 +5,5 @@ class Command(FifoCommand):
 
     help = 'Dump uWSGI configuration and current stats into the log'
 
-    def get_cmd(self, options):
-        return b's'
+    def run_cmd(self, fifo, options):
+        fifo.cmd_stats()
