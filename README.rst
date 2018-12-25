@@ -141,6 +141,17 @@ Third parties
 Other commands are available.
 
 
+System configs
+~~~~~~~~~~~~~
+
+Compile system service config (e.g ``systemd``) to run your uWSGI-powered project:
+
+.. code-block:: bash
+
+    $ uwsgiconf sysinit systemd
+
+
+
 Documentation
 -------------
 
