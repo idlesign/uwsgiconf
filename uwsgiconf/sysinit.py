@@ -99,8 +99,6 @@ def get_tpl_upstart(conf):
         exec {command}
     '''
 
-    # todo preExec dirs
-
     uid, gid = conf.main_process.get_owner()
 
     tpl = tpl % {
