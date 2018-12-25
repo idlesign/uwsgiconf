@@ -1,5 +1,7 @@
-from ..base import OptionsGroup
+import os
+
 from .main_process_actions import *
+from ..base import OptionsGroup
 
 
 class MainProcess(OptionsGroup):
@@ -171,6 +173,11 @@ class MainProcess(OptionsGroup):
         
         """
 
+    def __init__(self, *args, **kwargs):
+        super(MainProcess, self).__init__(*args, **kwargs)
+
+        self.owner = [None, None]
+
     def set_basic_params(
             self, touch_reload=None, priority=None, vacuum=None, binary_path=None, honour_stdin=None):
         """
@@ -274,7 +281,26 @@ class MainProcess(OptionsGroup):
         self._set(prefix + 'gid', gid)
         self._set('add-gid', add_gids, multi=True)
 
+        # This may be wrong for subsequent method calls.
+        self.owner = [uid, gid]
+
         return self._section
+
+    def get_owner(self, default=True):
+        """Return (User ID, Group ID) tuple
+
+        :param bool default: Whether to return default if not set.
+        :rtype: tuple[int, int]
+        """
+        uid, gid = self.owner
+
+        if not uid and default:
+            uid = os.getuid()
+
+        if not gid and default:
+            gid = os.getgid()
+
+        return uid, gid
 
     def set_hook(self, phase, action):
         """Allows setting hooks (attaching actions) for various uWSGI phases.

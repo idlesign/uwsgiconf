@@ -4,11 +4,12 @@ uwsgiconf changelog
 
 Unreleased
 ----------
-+ Added basic intergation with Django Framework.
++ Added basic integration with Django Framework.
 + Added Fifo utility.
 + Added Finder utility.
 + Application. Added support for 'manage_script_name' option.
 + CLI. Added 'sysinit' command to generate Systemd and Upstart configs.
++ Main process. Added 'get_owner()' method.
 + Master. FIFO filepath now supports placeholders'.
 + Metrics. Store directory now supports placeholders'.
 + Networking. Unix sockets filepaths now support placeholders.
