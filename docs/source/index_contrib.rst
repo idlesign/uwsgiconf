@@ -112,3 +112,24 @@ uwsgi_log
 
     ; Options are available, use --help switch to get help.
     $ ./manage.py uwsgi_log --help
+
+
+uwsgi_sysinit
+~~~~~~~~~~~~~
+
+``uwsgi_sysinit`` management command allows you to generate system service configs (e.g. ``systemd``)
+to start your Django project on system start.
+
+.. code-block:: bash
+
+    ; Dump config to file.
+    $ ./manage.py uwsgi_sysinit > myapp.service
+
+    ; Copy config into standard location
+    $ sudo cp myapp.service /etc/systemd/system/
+
+    ; Reload available configs information and run service
+    $ sudo sh -c "systemctl daemon-reload; systemctl start myapp.service"
+
+    ; Watch application log realtime (if syslog is used)
+    $ journalctl -fu myapp.service

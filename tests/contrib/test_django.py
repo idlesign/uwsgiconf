@@ -1,3 +1,4 @@
+import os
 import pytest
 
 
@@ -9,14 +10,20 @@ def patch_project_dir(monkeypatch):
 @pytest.fixture
 def patch_base_command(monkeypatch, patch_project_dir, tmpdir):
 
+    class Settings(object):
+
+        configured = True
+        DEBUG = False
+        STATIC_ROOT = '/static/'
+
     class Command(object):
         pass
 
     class Error(Exception):
         pass
 
+    monkeypatch.setattr('django.conf.settings', Settings)
     monkeypatch.setattr('django.core.management.base.BaseCommand', Command)
-    monkeypatch.setattr('django.core.management.base.CommandError', Error)
     monkeypatch.setattr('django.core.management.base.CommandError', Error)
 
     fifofile = tmpdir.join('some.fifo')
@@ -24,7 +31,7 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir):
 
     monkeypatch.setattr(
         'uwsgiconf.contrib.django.uwsgify.toolbox.SectionMutator.get_fifo_filepath',
-        lambda project_name: fifofile)
+        lambda project_name: '%s' % fifofile)
 
 
 def test_uwsgi_run(monkeypatch, patch_project_dir):
@@ -73,3 +80,31 @@ def test_uwsgi_stop(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_stop import Command
 
     Command().handle(force=False)
+
+
+def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
+    from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
+
+    Command().handle(systype='systemd')
+
+    out, err = capsys.readouterr()
+
+    assert not err
+    assert ('-o %s -g %s' % (os.getuid(), os.getgid())) in out
+    assert '/run/user/1000/dummy' in out
+    assert 'Description=dummy uWSGI Service' in out
+    assert 'bin/python' in out
+    assert 'dummy/manage.py uwsgi_run' in out
+
+
+def test_uwsgi_sysinit_upstart(patch_base_command, capsys):
+    from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
+
+    Command().handle(systype='upstart')
+
+    out, err = capsys.readouterr()
+
+    assert not err
+    assert 'description "dummy uWSGI Service"' in out
+    assert 'bin/python' in out
+    assert 'dummy/manage.py uwsgi_run' in out
