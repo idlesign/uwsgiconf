@@ -79,11 +79,11 @@ Usage example for Systemd:
     $ uwsgiconf sysinit --project myapp > myapp.service
 
     ; Copy config into standard location
-    $ sudo cp myapp.service /etc/systemd/system/myapp.service
+    $ sudo cp myapp.service /etc/systemd/system/
 
     ; Reload available configs information and run service
-    $ sudo systemctl daemon-reload && systemctl start myapp.service
+    $ sudo sh -c "systemctl daemon-reload; systemctl start myapp.service"
 
-    ; Watch application log realtime (is syslog is used)
+    ; Watch application log realtime (if syslog is used)
     $ journalctl -fu myapp.service
 

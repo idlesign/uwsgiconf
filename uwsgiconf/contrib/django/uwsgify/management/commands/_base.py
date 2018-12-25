@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand, CommandError
 
 from uwsgiconf.utils import Fifo
-from ...toolbox import find_project_dir, get_project_name, SectionMutator
+from ...toolbox import SectionMutator
 
 
 class FifoCommand(BaseCommand):
@@ -20,10 +20,9 @@ class FifoCommand(BaseCommand):
         raise NotImplementedError
 
     def handle(self, *args, **options):
+        mutator = SectionMutator.spawn()
+        filepath = mutator.get_fifo_filepath()
 
-        project_name = get_project_name(find_project_dir())
-
-        filepath = SectionMutator.get_fifo_filepath(project_name)
         fifo = Fifo(filepath)
 
         if os.path.exists(filepath):
@@ -32,4 +31,5 @@ class FifoCommand(BaseCommand):
 
         else:
             raise CommandError(
-                'Unable to find uWSGI FIFO file for "%s" project in %s' % (project_name, filepath))
+                'Unable to find uWSGI FIFO file for "%s" project in %s' %
+                (mutator.section.project_name, filepath))

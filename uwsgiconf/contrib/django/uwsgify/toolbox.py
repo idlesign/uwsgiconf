@@ -46,42 +46,49 @@ class SectionMutator(object):
         self.settings = settings
         self.options = options
 
-    @classmethod
-    def get_pid_filepath(cls, project_name):
+    @property
+    def runtime_dir(self):
+        """Project runtime directory.
+
+        :rtype: str
+
+        """
+        return self.section.replace_placeholders('{project_runtime_dir}')
+
+    def get_pid_filepath(self):
         """Return pidfile path for the given project.
 
         :param str|unicode project_name:
         :rtype: str|unicode
 
         """
-        path_tpl = '/var/run/user/{user}/{project}_uwsgi.pid'
-        # PID file path template. User dir to not to bother with permissions.
+        return os.path.join(self.runtime_dir, 'uwsgi.pid')
 
-        return path_tpl.format(user=os.getuid(), project=project_name)
-
-    @classmethod
-    def get_fifo_filepath(cls, project_name):
+    def get_fifo_filepath(self):
         """Return master FIFO path for the given project.
 
         :param str|unicode project_name:
         :rtype: str|unicode
 
         """
-        path_tpl = '/var/run/user/{user}/{project}_uwsgi.fifo'
-        # FIFO file path template. User dir to not to bother with permissions.
-
-        return path_tpl.format(user=os.getuid(), project=project_name)
+        return os.path.join(self.runtime_dir, 'uwsgi.fifo')
 
     @classmethod
-    def run(cls, dir_base, options):
+    def spawn(cls, options=None, dir_base=None):
         """Alternative constructor. Creates a mutator and returns section object.
 
-        :param str|unicode dir_base:
         :param dict options:
-        :rtype: Section
+        :param str|unicode dir_base:
+
+        :rtype: SectionMutator
 
         """
         from uwsgiconf.utils import ConfModule
+
+        options = options or {
+            'compile': True,
+        }
+        dir_base = dir_base or find_project_dir()
 
         name_module = ConfModule.default_name
         name_project = get_project_name(dir_base)
@@ -95,15 +102,15 @@ class SectionMutator(object):
             # Create section on-fly.
             section = cls._get_section_new(dir_base)
 
-        wrapped = cls(
+        mutator = cls(
             section=section,
             dir_base=dir_base,
             project_name=name_project,
             options=options)
 
-        wrapped.mutate()
+        mutator.mutate()
 
-        return section
+        return mutator
 
     @classmethod
     def _get_section_existing(self, name_module, name_project):
@@ -165,21 +172,37 @@ class SectionMutator(object):
         self.section.routing.set_error_pages(
             common_prefix=os.path.join(self.settings.STATIC_ROOT, 'uwsgify'))
 
+    def contribute_runtime_dir(self):
+        section = self.section
+
+        if not section.get_runtime_dir(default=False):
+            # If runtime directory is not set by user, let's try use system default.
+            section.set_runtime_dir(section.get_runtime_dir())
+
+            if not self.options['compile']:
+                os.makedirs(self.runtime_dir, 0o755, True)
+
     def mutate(self):
         """Mutates current section."""
         section = self.section
         project_name = self.project_name
 
+        section.project_name = project_name
+
+        self.contribute_runtime_dir()
+
         main = section.main_process
-        main.set_owner_params(os.getuid(), os.getegid())
         main.set_naming_params(prefix='[%s] ' % project_name)
+
         main.set_pid_file(
-            self.get_pid_filepath(project_name),
+            self.get_pid_filepath(),
             before_priv_drop=False,  # For vacuum to cleanup properly.
-            safe=True
+            safe=True,
         )
 
-        section.master_process.set_basic_params(fifo_file=self.get_fifo_filepath(project_name))
+        section.master_process.set_basic_params(
+            fifo_file=self.get_fifo_filepath(),
+        )
 
         # todo maybe autoreload in debug
 

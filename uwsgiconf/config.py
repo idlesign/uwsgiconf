@@ -196,7 +196,7 @@ class Section(OptionsGroup):
         values = []
 
         for value in listify(value):
-            runtime_dir = self.runtime_dir
+            runtime_dir = self.get_runtime_dir()
             project_name = self.project_name
 
             value = value.replace('{runtime_dir}', runtime_dir)
@@ -221,19 +221,30 @@ class Section(OptionsGroup):
     def project_name(self, value):
         self._project_name = value or ''
 
-    @property
-    def runtime_dir(self):
+    def get_runtime_dir(self, default=True):
         """Directory to store runtime files.
         See ``.replace_placeholders()``
 
         .. note:: This can be used to store PID files, sockets, master FIFO, etc.
 
+        :param bool default: Whether to return [system] default if not set.
+
         :rtype: str|unicode
         """
-        return self._runtime_dir
+        dir_ = self._runtime_dir
 
-    @runtime_dir.setter
-    def runtime_dir(self, value):
+        if not dir_ and default:
+            uid = self.main_process.get_owner()[0]
+            dir_ = '/run/user/%s/' % uid if uid else '/run/'
+
+        return dir_
+
+    def set_runtime_dir(self, value):
+        """Sets user-defined runtime directory value.
+
+        :param str|unicode value:
+
+        """
         self._runtime_dir = value or ''
 
     def set_basic_params(self, strict_config=None, **kwargs):

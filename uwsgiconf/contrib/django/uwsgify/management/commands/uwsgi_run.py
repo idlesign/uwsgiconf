@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from ...toolbox import run_uwsgi, SectionMutator, find_project_dir
+from ...toolbox import run_uwsgi, SectionMutator
 
 
 class Command(BaseCommand):
@@ -21,6 +21,5 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        dir_base = find_project_dir()
-        section = SectionMutator.run(dir_base=dir_base, options=options)
-        run_uwsgi(section, compile_only=options['compile'])
+        mutator = SectionMutator.spawn(options=options)
+        run_uwsgi(mutator.section, compile_only=options['compile'])
