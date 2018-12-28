@@ -9,6 +9,8 @@ def test_sysinit_systemd():
     section = PythonSection()
     config = get_config('systemd', conf=section, conf_path='/some/path')
 
+    print(config)
+
     assert ('-o %s -g %s' % (os.getuid(), os.getgid())) in config
     assert 'bin/uwsgiconf run /some/path' in config
     assert 'Description=some uWSGI Service' in config
@@ -23,6 +25,8 @@ def test_sysinit_upstart():
     section = PythonSection()
 
     config = get_config('upstart', conf=section, conf_path='/other/path')
+
+    print(config)
 
     assert 'bin/uwsgiconf run /other/path' in config
     assert 'description "other uWSGI Service"' in config
