@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.15.0
+-------
 + Added basic integration with Django Framework.
 + Added Fifo utility.
 + Added Finder utility.
