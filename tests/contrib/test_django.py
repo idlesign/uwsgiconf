@@ -98,11 +98,11 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
 
     out, err = capsys.readouterr()
 
-    print(out)
+    uid = os.getuid()
 
     assert not err
-    assert ('-o %s -g %s' % (os.getuid(), os.getgid())) in out
-    assert '/run/user/1000/dummy' in out
+    assert ('-o %s -g %s' % (uid, os.getgid())) in out
+    assert ('/run/user/%s/dummy' % uid) in out
     assert 'Description=dummy uWSGI Service' in out
     assert 'bin/python' in out
     assert 'dummy/manage.py uwsgi_run' in out
@@ -115,8 +115,6 @@ def test_uwsgi_sysinit_upstart(patch_base_command, capsys):
     Command().handle(systype='upstart')
 
     out, err = capsys.readouterr()
-
-    print(out)
 
     assert not err
     assert 'description "dummy uWSGI Service"' in out
