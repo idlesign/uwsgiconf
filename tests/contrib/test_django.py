@@ -1,5 +1,9 @@
 import os
+from sys import version_info
+
 import pytest
+
+PY2 = (version_info[0] == 2)
 
 
 @pytest.fixture
@@ -8,7 +12,7 @@ def patch_project_dir(monkeypatch):
 
 
 @pytest.fixture
-def patch_base_command(monkeypatch, patch_project_dir, tmpdir):
+def patch_base_command(monkeypatch, patch_project_dir, tmpdir, stub):
 
     class Settings(object):
 
@@ -16,15 +20,16 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir):
         DEBUG = False
         STATIC_ROOT = '/static/'
 
-    class Command(object):
-        pass
-
     class Error(Exception):
         pass
 
-    monkeypatch.setattr('django.conf.settings', Settings)
-    monkeypatch.setattr('django.core.management.base.BaseCommand', Command)
-    monkeypatch.setattr('django.core.management.base.CommandError', Error)
+    stub.apply({
+        'django.core.management.base': {
+            'CommandError': Error,
+            'BaseCommand': '[cls]',
+        },
+        'django.conf.settings': Settings,
+    })
 
     fifofile = tmpdir.join('some.fifo')
     fifofile.write('')
@@ -34,10 +39,8 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir):
         lambda project_name: '%s' % fifofile)
 
 
-def test_uwsgi_run(monkeypatch, patch_project_dir):
-
-    def exec(cmd, args):
-        pass
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
+def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
 
     class Settings(object):
 
@@ -46,42 +49,48 @@ def test_uwsgi_run(monkeypatch, patch_project_dir):
         STATIC_URL = '/static/'
         STATIC_ROOT = '/dummy/static/'
 
-    def call_command(*args, **kwargs):
-        return
+    stub.apply({
+        'django.core.management.call_command': '[func]',
+        'django.core.management.base.BaseCommand': '[cls]',
+        'django.conf.settings': Settings,
+    })
 
-    monkeypatch.setattr('django.core.management.call_command', call_command)
-    monkeypatch.setattr('django.conf.settings', Settings)
-    monkeypatch.setattr('os.execvp', exec)
+    monkeypatch.setattr('os.execvp', lambda *args, **kwargs: None)
 
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_run import Command
 
     Command().handle(compile=False, use_static_handler=True)
 
 
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_log(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_log import Command
 
     Command().handle(reopen=True, rotate=False)
 
 
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_reload(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_reload import Command
 
     Command().handle(force=False, workers=False, chain=False)
 
 
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_stats(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_stats import Command
 
     Command().handle()
 
 
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_stop(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_stop import Command
 
     Command().handle(force=False)
 
 
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 
@@ -97,6 +106,7 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     assert 'dummy/manage.py uwsgi_run' in out
 
 
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_sysinit_upstart(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 
