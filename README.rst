@@ -142,7 +142,7 @@ Other commands are available.
 
 
 System configs
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 Compile system service config (e.g ``systemd``) to run your uWSGI-powered project:
 
