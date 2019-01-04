@@ -19,6 +19,7 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir, stub):
         configured = True
         DEBUG = False
         STATIC_ROOT = '/static/'
+        WSGI_APPLICATION = 'settings.wsgi.application'
 
     class Error(Exception):
         pass
@@ -48,6 +49,7 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
         MEDIA_ROOT = '/dummy/media/'
         STATIC_URL = '/static/'
         STATIC_ROOT = '/dummy/static/'
+        WSGI_APPLICATION = 'settings.wsgi.application'
 
     stub.apply({
         'django.core.management.call_command': '[func]',
