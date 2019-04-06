@@ -1,5 +1,5 @@
 from uwsgiconf.runtime.alarms import *
-from uwsgiconf.runtime.async import *
+from uwsgiconf.runtime.asynced import *
 from uwsgiconf.runtime.control import *
 from uwsgiconf.runtime.environ import *
 from uwsgiconf.runtime.logging import *

@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+! runtime.async module is deprecated if favor of runtime.asynced.
 * Added QA for py3.7.
 * Dropped QA for py<3.5.
 

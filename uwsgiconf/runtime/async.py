@@ -1,14 +1,7 @@
-from .. import uwsgi
+# This module is for backward compatibility:
+# since in python 3.7+ `async` is a keyword it cannot be used in imports.
+from warnings import warn
 
+from .asynced import *
 
-connect = uwsgi.async_connect
-
-sleep = uwsgi.async_sleep
-
-suspend = uwsgi.suspend
-
-get_loop_name = uwsgi.loop
-
-wait_for_fd_read = uwsgi.wait_fd_read
-
-wait_for_fd_write = uwsgi.wait_fd_write
+warn('runtime.async module is deprecated. Please use runtime.asynced', DeprecationWarning)
