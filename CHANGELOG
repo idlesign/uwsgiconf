@@ -2,9 +2,9 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
-+ Django contrib compatibility improved.
+v0.15.3
+-------
+* Django contrib compatibility improved.
 
 
 v0.15.2
