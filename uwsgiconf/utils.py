@@ -13,6 +13,7 @@ except ImportError:  # pragma: nocover
     from io import StringIO
 
 from .settings import CONFIGS_MODULE_ATTR
+from .exceptions import UwsgiconfException
 
 if False:  # pragma: nocover
     from uwsgiconf.config import Configuration
@@ -398,12 +399,36 @@ class UwsgiRunner(object):
         :param bool replace: Whether a new process should replace current one.
 
         """
-        # Pass --conf as an argument to have a chance to use
-        # touch reloading form .py configuration file change.
-        args = ['uwsgi', '--ini', 'exec://%s %s --conf %s' % (self.binary_python, filepath, configuration_alias)]
+        args = ['uwsgi', '--ini']
+
+        if os.path.splitext(os.path.basename(filepath))[1] == '.ini':
+            args.append(filepath)
+
+        else:
+            # Consider it a python script (uwsgicfg.py).
+            # Pass --conf as an argument to have a chance to use
+            # touch reloading form .py configuration file change.
+            args.append('exec://%s %s --conf %s' % (self.binary_python, filepath, configuration_alias))
 
         if replace:
-            return os.execvp('uwsgi', args)
+
+            try:
+
+                import pyuwsgi
+
+                args = args[1:]
+                pyuwsgi.run(args)
+
+            except ImportError:
+
+                try:
+                    return os.execvp('uwsgi', args)
+
+                except FileNotFoundError:
+
+                    raise UwsgiconfException(
+                        'uWSGI executable not found. '
+                        'Please make sure it is installed and available.')
 
         return os.spawnvp(os.P_NOWAIT, 'uwsgi', args)
 

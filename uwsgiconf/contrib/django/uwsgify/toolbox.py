@@ -267,7 +267,10 @@ def run_uwsgi(config_section, compile_only=False):
 
     from uwsgiconf.utils import UwsgiRunner
 
-    UwsgiRunner.prepare_env()  # Use uwsgi command from venv if any.
-
     config_path = config.tofile()
-    os.execvp('uwsgi', ['uwsgi', '--ini=%s' % config_path])
+
+    runner = UwsgiRunner()
+    runner.spawn(
+        filepath=config_path,
+        configuration_alias=config.alias,
+        replace=True)
