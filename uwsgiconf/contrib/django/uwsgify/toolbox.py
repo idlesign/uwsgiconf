@@ -97,7 +97,7 @@ class SectionMutator(object):
 
         if os.path.exists(path_conf):
             # Read an existing config for further modification of first section.
-            section = cls._get_section_existing(name_module, name_project)
+            section = cls._get_section_existing(path_conf, name_module, name_project)
 
         else:
             # Create section on-fly.
@@ -114,21 +114,34 @@ class SectionMutator(object):
         return mutator
 
     @classmethod
-    def _get_section_existing(self, name_module, name_project):
+    def _get_section_existing(self, path_conf, name_module, name_project):
         """Loads config section from existing configuration file (aka uwsgicfg.py)
 
+        :param str|unicode path_conf:
         :param str|unicode name_module:
         :param str|unicode name_project:
         :rtype: Section
 
         """
-        from importlib import import_module
-
+        from uwsgiconf.utils import PY3
         from uwsgiconf.settings import CONFIGS_MODULE_ATTR
 
-        config = getattr(
-            import_module(os.path.splitext(name_module)[0], package=name_project),
-            CONFIGS_MODULE_ATTR)[0]
+        def load():
+            module_fake_name = '%s.%s' % (name_project, os.path.splitext(name_module)[0])
+
+            if not PY3:  # pragma: nocover
+                import imp
+                return imp.load_source(module_fake_name, path_conf)
+
+            import importlib.util
+
+            spec = importlib.util.spec_from_file_location(module_fake_name, path_conf)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+
+            return module
+
+        config = getattr(load(), CONFIGS_MODULE_ATTR)[0]
 
         return config.sections[0]
 
@@ -145,8 +158,16 @@ class SectionMutator(object):
 
         wsgi_app = settings.WSGI_APPLICATION
 
-        path_wsgi, filename, _, = wsgi_app.split('.')
-        path_wsgi = os.path.join(dir_base, path_wsgi, '%s.py' %filename)
+        app_package, filename, _, = wsgi_app.split('.')
+
+        def get_wsgi_path(base):
+            return os.path.join(base, app_package, '%s.py' %filename)
+
+        path_wsgi = get_wsgi_path(dir_base)
+
+        if not os.path.exists(path_wsgi):
+            # Maybe dir_base already contains app_package.
+            path_wsgi = get_wsgi_path(os.path.dirname(dir_base))
 
         section = PythonSection(
             wsgi_module=path_wsgi,
@@ -243,6 +264,10 @@ def run_uwsgi(config_section, compile_only=False):
     if compile_only:
         config.print_ini()
         return
+
+    from uwsgiconf.utils import UwsgiRunner
+
+    UwsgiRunner.prepare_env()  # Use uwsgi command from venv if any.
 
     config_path = config.tofile()
     os.execvp('uwsgi', ['uwsgi', '--ini=%s' % config_path])

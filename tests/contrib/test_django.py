@@ -41,6 +41,14 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir, stub):
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
+def test_mutate_existing_section(patch_base_command):
+    from uwsgiconf.contrib.django.uwsgify.toolbox import SectionMutator
+
+    mutator = SectionMutator.spawn(dir_base=os.path.dirname(__file__))
+    assert mutator.section.name == 'testdummy'
+
+
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
 
     class Settings(object):
@@ -62,6 +70,7 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_run import Command
 
     Command().handle(compile=False, use_static_handler=True)
+    Command().handle(compile=True)
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
