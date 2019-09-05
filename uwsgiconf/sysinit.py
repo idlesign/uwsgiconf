@@ -35,10 +35,10 @@ def get_tpl_systemd(conf):
     """
     tpl = '''
         # Place into:   /etc/systemd/system/{project}.service
-        # Setup:        sudo sh -c "systemctl daemon-reload; systemctl start {project}.service"
-        # Start:        systemctl start {project}.service
-        # Stop:         systemctl stop {project}.service
-        # Restart:      systemctl restart {project}.service
+        # Setup:        sudo systemctl enable $PWD/{project}.service
+        # Start:        sudo systemctl start {project}.service
+        # Stop:         sudo systemctl stop {project}.service
+        # Restart:      sudo systemctl restart {project}.service
         # Status:       systemctl status {project}.service
         # Journal:      journalctl -fu {project}.service
 
