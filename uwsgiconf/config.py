@@ -556,6 +556,31 @@ class Section(OptionsGroup):
 
             return OrderedDict(descriptions)
 
+    @classmethod
+    def bootstrap(cls, dsn, **init_kwargs):
+        """Constructs a section object performing it's basic (default) configuration.
+
+        :param str|unicode|list[str|unicode] dsn: Data source name, e.g:
+                * http://127.0.0.1:8000
+                * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
+
+                .. note:: Some schemas:
+                    fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
+
+        :param init_kwargs: Additional initialization keyword arguments accepted by section type.
+
+        :rtype: Section
+
+        """
+        section = cls(**init_kwargs)
+        networking = section.networking
+
+        for name in listify(dsn):
+            socket = networking.sockets.from_dsn(name)
+            networking.register_socket(socket)
+
+        return section
+
 
 class Configuration(object):
     """

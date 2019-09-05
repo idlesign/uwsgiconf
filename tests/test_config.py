@@ -44,6 +44,12 @@ def test_section_basics(assert_lines):
     )
 
 
+def test_bootstrap(assert_lines):
+
+    section = NiceSection.bootstrap('http://1.1.1.1:2222')
+    assert_lines('http-socket = 1.1.1.1:2222', section)
+
+
 def test_section_embeddeding_plugins(assert_lines, mock_popen):
     # Embedded plugins handling.
     section = Section(embedded_plugins=Section.embedded_plugins_presets.BASIC)
