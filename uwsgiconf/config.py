@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from collections import OrderedDict
 from copy import deepcopy
 from datetime import datetime
@@ -9,7 +9,7 @@ from tempfile import NamedTemporaryFile
 
 from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
-from .formatters import IniFormatter, format_print_text
+from .formatters import FORMATTERS, format_print_text
 from .options import *
 from .utils import listify, UwsgiRunner
 
@@ -606,19 +606,19 @@ class Configuration(object):
 
             names.append(name)
 
-    def format(self, do_print=False, stamp=True):
+    def format(self, do_print=False, stamp=True, formatter='ini'):
         """Applies formatting to configuration.
-
-        *Currently formats to .ini*
 
         :param bool do_print: Whether to print out formatted config.
         :param bool stamp: Whether to add stamp data to the first configuration section.
-        :rtype: str|unicode
+        :param str|unicode formatter: Formatter alias to format options. Default: ini.
+        :rtype: str|unicode|list
         """
         if stamp and self.sections:
             self.sections[0].print_stamp()
 
-        formatted = IniFormatter(self.sections).format()
+        formatter = FORMATTERS[formatter]
+        formatted = formatter(self.sections).format()
 
         if do_print:
             print(formatted)
@@ -692,7 +692,7 @@ def configure_uwsgi(configurator_func):
         # for setups where application is located in the same
         # file as configuration.
 
-        del os.environ[ENV_CONF_READY]  # Drop it support consecutive reconfiguration.
+        del os.environ[ENV_CONF_READY]  # Drop it to support consecutive reconfiguration.
 
         return None
 
