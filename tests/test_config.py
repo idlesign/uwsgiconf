@@ -3,6 +3,7 @@ from tempfile import NamedTemporaryFile, gettempdir
 import pytest
 
 from uwsgiconf.config import Section, Configuration
+from uwsgiconf.presets.nice import Section as NiceSection
 from uwsgiconf.exceptions import ConfigurationError
 
 
@@ -173,3 +174,11 @@ def test_configuration(capsys, assert_lines):
     assert 'ini = :another' in Configuration([s1, s2], autoinclude_sections=True).format()
 
     assert Configuration([s1, s2]).print_ini()
+
+
+def test_args_formatter(capsys, assert_lines):
+
+    formatted = NiceSection().as_configuration().format(formatter='args')
+    assert '--master' in formatted
+    assert 'true' not in formatted  # no values for bools
+    assert '%k' not in formatted  # no config vars support for CLI

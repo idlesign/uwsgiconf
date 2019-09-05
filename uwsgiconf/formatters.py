@@ -69,6 +69,8 @@ def format_print_text(text, color_fg=None, color_bg=None):
 class FormatterBase(object):
     """Base class for configuration formatters."""
 
+    alias = None
+
     def __init__(self, sections):
         self.sections = sections
 
@@ -86,6 +88,8 @@ class FormatterBase(object):
 class IniFormatter(FormatterBase):
     """Translates a configuration as INI file."""
 
+    alias = 'ini'
+
     def format(self):
         lines = []
         last_section = ''
@@ -100,3 +104,36 @@ class IniFormatter(FormatterBase):
 
         lines = '\n'.join(lines)
         return lines
+
+
+class ArgsFormatter(FormatterBase):
+    """Translates a configuration to command line arguments."""
+
+    alias = 'args'
+
+    def format(self):
+        lines = []
+
+        for section_name, key, value in self.iter_options():
+
+            if section_name == 'uwsgi':
+                value = str(value).strip()
+
+                if value == 'true':
+                    lines.append('--%s' % key)
+
+                elif value.startswith('%'):
+                    # No config var support is available in command line.
+                    continue
+
+                else:
+                    lines.extend(['--%s' % key, '%s' % value])
+
+        return lines
+
+
+FORMATTERS = {formatter.alias: formatter for formatter in (
+    ArgsFormatter,
+    IniFormatter,
+)}
+"""Available formatters by alias."""
