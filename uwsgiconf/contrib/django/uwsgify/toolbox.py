@@ -1,6 +1,10 @@
 import inspect
 import os
+from importlib import import_module
 
+from uwsgiconf.presets.nice import PythonSection
+from uwsgiconf.settings import CONFIGS_MODULE_ATTR
+from uwsgiconf.utils import ConfModule, UwsgiRunner, PY3
 
 if False:  # pragma: nocover
     from uwsgiconf.base import Section
@@ -16,12 +20,12 @@ def find_project_dir():
 
     while True:
         frame = frame.f_back
-        fname = frame.f_globals['__file__']
+        filename = frame.f_globals['__file__']
 
-        if os.path.basename(fname) == 'manage.py':
+        if os.path.basename(filename).startswith('manage.py'):  # support py, pyc, etc.
             break
 
-    return os.path.dirname(fname)
+    return os.path.dirname(filename)
 
 
 def get_project_name(project_dir):
@@ -37,7 +41,6 @@ class SectionMutator(object):
     """Configuration file section mutator."""
 
     def __init__(self, section, dir_base, project_name, options):
-        # todo maybe integrate envbox
         from django.conf import settings
 
         self.section = section  # type: Section
@@ -217,7 +220,14 @@ class SectionMutator(object):
             section.set_runtime_dir(section.get_runtime_dir())
 
             if not self.options['compile']:
-                os.makedirs(self.runtime_dir, 0o755, True)
+                if PY3:
+                    os.makedirs(self.runtime_dir, 0o755, True)
+                else:
+                    try:
+                        os.makedirs(self.runtime_dir, 0o755)
+
+                    except OSError:  # simulate exist_ok
+                        pass
 
     def mutate(self):
         """Mutates current section."""
