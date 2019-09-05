@@ -97,7 +97,7 @@ class ConfModule(object):
         if len(configs) == 1:
 
             alias = configs[0].alias
-            UwsgiRunner().spawn(self.fpath, alias, replace=True)
+            UwsgiRunner().spawn(configs[0], replace=True, filepath=self.fpath)
             spawned.append((alias, os.getpid()))
 
         else:
@@ -105,7 +105,7 @@ class ConfModule(object):
                 alias = config.alias
 
                 if only is None or alias == only:
-                    pid = UwsgiRunner().spawn(self.fpath, alias)
+                    pid = UwsgiRunner().spawn(config, filepath=self.fpath)
                     spawned.append((alias, pid))
 
         return spawned
@@ -389,42 +389,65 @@ class UwsgiRunner(object):
         os.environ['PATH'] = cls.get_env_path()
         return os.path.basename(Finder.python())
 
-    def spawn(self, filepath, configuration_alias, replace=False):
+    def spawn(self, config, replace=False, filepath=None, embedded=False):
         """Spawns uWSGI using the given configuration module.
 
-        :param str|unicode filepath:
+        .. note::
+            uWSGI loader schemas:
+                * From a symbol -- sym://uwsgi_funny_function
+                * From binary appended data -- data://0
+                * From http -- http://example.com/hello
+                * From a file descriptor -- fd://3
+                * From a process stdout -- exec://foo.pl
+                * From a function call returning a char * -- call://uwsgi_func
 
-        :param str|unicode configuration_alias:
+            Loading in config:
+                foo = @(sym://uwsgi_funny_function)
+
+        :param Configuration config: Configuration object to spawn uWSGI with.
+
+        :param str|unicode filepath: Override configuration file path.
 
         :param bool replace: Whether a new process should replace current one.
+            If this mode is enabled uwsgiconf will try to use ``pyuwsgi`` first.
+
+        :param bool embedded: Flag. Do not create a configuration file even if required,
+            translate all config parameters into command line arguments.
 
         """
-        args = ['uwsgi', '--ini']
+        args = ['uwsgi']
 
-        if os.path.splitext(os.path.basename(filepath))[1] == '.ini':
-            args.append(filepath)
+        if embedded:
+            args.extend(config.format(formatter='args'))
+            replace = True
 
         else:
-            # Consider it a python script (uwsgicfg.py).
-            # Pass --conf as an argument to have a chance to use
-            # touch reloading form .py configuration file change.
-            args.append('exec://%s %s --conf %s' % (self.binary_python, filepath, configuration_alias))
+            args.append('--ini')
+
+            filepath = filepath or config.tofile()
+
+            if os.path.splitext(os.path.basename(filepath))[1] == '.ini':
+                args.append(filepath)
+
+            else:
+                # Consider it to be a python script (uwsgicfg.py).
+                # Pass --conf as an argument to have a chance to use
+                # touch reloading form .py configuration file change.
+                args.append('exec://%s %s --conf %s' % (self.binary_python, filepath, config.alias))
 
         if replace:
 
             try:
-
+                # Try to load .so module first.
                 import pyuwsgi
-
-                args = args[1:]
-                pyuwsgi.run(args)
+                pyuwsgi.run(args[1:])
 
             except ImportError:
-
+                # Try to run an executable.
                 try:
                     return os.execvp('uwsgi', args)
 
-                except FileNotFoundError:
+                except OSError:  # py3 - FileNotFoundError
 
                     raise UwsgiconfException(
                         'uWSGI executable not found. '
