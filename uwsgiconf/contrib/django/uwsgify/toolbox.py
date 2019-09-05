@@ -193,8 +193,13 @@ class SectionMutator(object):
 
         settings = self.settings
         statics = self.section.statics
-        statics.register_static_map(settings.STATIC_URL, settings.STATIC_ROOT)
-        statics.register_static_map(settings.MEDIA_URL, settings.MEDIA_ROOT)
+
+        static_tuples = (
+            (settings.STATIC_URL, settings.STATIC_ROOT),
+            (settings.MEDIA_URL, settings.MEDIA_ROOT),
+        )
+        for url, path in static_tuples:
+            path and statics.register_static_map(url, path)
 
         call_command('collectstatic', clear=True, interactive=False)
 
