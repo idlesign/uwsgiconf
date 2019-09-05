@@ -68,7 +68,8 @@ Let's make ``uwsgicfg.py``. There we configure uWSGI using nice ``PythonSection`
 
         Here we'll define just one configuration section, which
         will instruct uWSGI to serve WSGI application (from wsgi.py module)
-        on http://127.0.0.1:8000
+        on http://127.0.0.1:8000. We use .bootstrap shortcut method
+        to construct out configuration section object.
 
         """
         return PythonSection.bootstrap('http://127.0.0.1:8000', wsgi_module='/home/idle/myapp/wsgi.py')
