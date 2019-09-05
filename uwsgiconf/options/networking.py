@@ -1,5 +1,11 @@
-from ..base import OptionsGroup
+try:
+    from urllib.parse import urlsplit, parse_qs
+except ImportError:
+    from urlparse import urlsplit, parse_qs
+
 from .networking_sockets import *
+from ..base import OptionsGroup
+from ..exceptions import ConfigurationError
 
 
 class Networking(OptionsGroup):
@@ -19,6 +25,41 @@ class Networking(OptionsGroup):
         uwsgi = SocketUwsgi
         uwsgis = SocketUwsgis
         zeromq = SocketZeromq
+
+        @classmethod
+        def from_dsn(cls, dsn):
+            """Constructs socket configuration object from DSN.
+
+            :param str|unicode dsn: Data source name, e.g:
+                * http://127.0.0.1:8000
+                * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
+
+                .. note:: Some schemas:
+                    fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
+
+            :rtype Socket
+
+            """
+            split = urlsplit(dsn)
+
+            sockets = {
+                socket.name.replace('socket', '').rstrip('-'): socket
+                for socket in cls.__dict__.values() if isinstance(socket, type) and issubclass(socket, Socket)}
+
+            socket_kwargs = {
+                'address': split.netloc,
+            }
+            socket_kwargs.update({key: val[0] for key, val in parse_qs(split.query).items()})
+            socket = sockets[split.scheme]
+
+            try:
+                socket = socket(**socket_kwargs)
+
+            except TypeError as e:
+                raise ConfigurationError(
+                    'Unable to configure %s using `%s` DSN: %s' % (socket.__name__, dsn, e))
+
+            return socket
 
     def __init__(self, *args, **kwargs):
         super(Networking, self).__init__(*args, **kwargs)

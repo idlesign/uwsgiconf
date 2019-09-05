@@ -1,4 +1,7 @@
+import pytest
+
 from uwsgiconf.config import Section
+from uwsgiconf.exceptions import ConfigurationError
 
 
 def test_networking_basics(assert_lines):
@@ -95,6 +98,22 @@ def test_networking_basics(assert_lines):
             Section.routing.routers.https(sockets.shared(':443'), cert='foobar.crt', key='foobar.key')
         )
     )
+
+
+def test_networking_sockets(assert_lines):
+
+    sockets = Section.networking.sockets
+
+    socket = sockets.from_dsn('http://192.168.1.1:8000')
+    assert isinstance(socket, sockets.http)
+    assert str(socket) == '192.168.1.1:8000'
+
+    socket = sockets.from_dsn('https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key')
+    assert isinstance(socket, sockets.https)
+    assert str(socket) == '127.0.0.1:443,/here/there.crt,/that/my.key'
+
+    with pytest.raises(ConfigurationError):
+        sockets.from_dsn('http://127.0.0.1:443?unsupported_arg=1020')
 
 
 def test_networking_sni(assert_lines):
