@@ -4,7 +4,13 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Added ArgsFormatter (repesent options as command line args).
++ Added Networking.sockets.from_dsn() as a shortcut for socket construction.
++ Added Section.bootstrap() shortcut.
++ Config.format() now supports formatter aliasing.
++ Django contrib. 'uwsgi_run' command now allows embedded runs.
 + Introduced pyuwsgi compatibility.
+* Django contrib. Py2 compatibility improved.
 
 
 v0.15.3
