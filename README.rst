@@ -71,13 +71,7 @@ Let's make ``uwsgicfg.py``. There we configure uWSGI using nice ``PythonSection`
         on http://127.0.0.1:8000
 
         """
-        section = PythonSection(
-            wsgi_module='/home/idle/myapp/wsgi.py',
-
-        ).networking.register_socket(
-            PythonSection.networking.sockets.http('127.0.0.1:8000'))
-
-        return section
+        return PythonSection.bootstrap('http://127.0.0.1:8000', wsgi_module='/home/idle/myapp/wsgi.py')
 
 
     # Almost done. One more thing:

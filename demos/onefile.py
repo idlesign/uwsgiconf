@@ -71,7 +71,10 @@ def configure():
 
         alias = 'app_%s' % (idx + 1)
 
-        section = PythonSection(
+        section = PythonSection. bootstrap(
+
+            'http://127.0.0.1:%s' % port,
+
             # Automatically reload uWSGI if this file is changed.
             touch_reload=FILE,
 
@@ -88,8 +91,6 @@ def configure():
             # for this demo.
             workers=1,
 
-        ).networking.register_socket(
-            PythonSection.networking.sockets.http('127.0.0.1:%s' % port)
         )
 
         port += 1
