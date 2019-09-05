@@ -19,7 +19,15 @@ class Command(BaseCommand):
             '--compile', action='store_true', dest='compile',
             help='Do not run just print out compiled uWSGI .ini configuration.',
         )
+        parser.add_argument(
+            '--embedded', action='store_true', dest='embedded',
+            help='Do not create temporary config files and try to use resource files for configuration',
+        )
 
     def handle(self, *args, **options):
         mutator = SectionMutator.spawn(options=options)
-        run_uwsgi(mutator.section, compile_only=options['compile'])
+        run_uwsgi(
+            mutator.section,
+            compile_only=options['compile'],
+            embedded=options['embedded'],
+        )

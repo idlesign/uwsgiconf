@@ -69,8 +69,9 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
 
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_run import Command
 
-    Command().handle(compile=False, use_static_handler=True)
-    Command().handle(compile=True)
+    Command().handle(compile=False, use_static_handler=True, embedded=False)
+    Command().handle(compile=True, embedded=False)
+    Command().handle(compile=False, use_static_handler=True, embedded=True)
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')

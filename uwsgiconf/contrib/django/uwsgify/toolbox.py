@@ -86,10 +86,9 @@ class SectionMutator(object):
         :rtype: SectionMutator
 
         """
-        from uwsgiconf.utils import ConfModule
-
         options = options or {
             'compile': True,
+            'embedded': False,
         }
 
         dir_base = os.path.abspath(dir_base or find_project_dir())
@@ -97,12 +96,14 @@ class SectionMutator(object):
         name_module = ConfModule.default_name
         name_project = get_project_name(dir_base)
         path_conf = os.path.join(dir_base, name_module)
+        embedded = options.get('embedded')
 
-        if os.path.exists(path_conf):
-            # Read an existing config for further modification of first section.
-            section = cls._get_section_existing(path_conf, name_module, name_project)
+        # Read an existing config for further modification of first section.
+        section = cls._get_section_existing(
+            path_conf, name_module, name_project,
+            embedded=embedded)
 
-        else:
+        if not section:
             # Create section on-fly.
             section = cls._get_section_new(dir_base)
 
@@ -117,18 +118,18 @@ class SectionMutator(object):
         return mutator
 
     @classmethod
-    def _get_section_existing(self, path_conf, name_module, name_project):
+    def _get_section_existing(self, path_conf, name_module, name_project, embedded=False):
         """Loads config section from existing configuration file (aka uwsgicfg.py)
 
-        :param str|unicode path_conf:
-        :param str|unicode name_module:
-        :param str|unicode name_project:
-        :rtype: Section
+        :param str|unicode path_conf: Path containing configuration module.
+        :param str|unicode name_module: Configuration module name.
+        :param str|unicode name_project: Project (package) name.
+        :param bool embedded: Flag. Do not try to load module file from file system manually,
+            but try to import the module.
+
+        :rtype: Optional[Section]
 
         """
-        from uwsgiconf.utils import PY3
-        from uwsgiconf.settings import CONFIGS_MODULE_ATTR
-
         def load():
             module_fake_name = '%s.%s' % (name_project, os.path.splitext(name_module)[0])
 
@@ -144,9 +145,23 @@ class SectionMutator(object):
 
             return module
 
-        config = getattr(load(), CONFIGS_MODULE_ATTR)[0]
+        if embedded:
+            try:
+                module = import_module('%s.%s' % (name_project, name_module.rstrip('.py')))
 
-        return config.sections[0]
+            except ImportError:  # py3 - ModuleNotFoundError
+                return None
+
+        else:
+            if os.path.exists(path_conf):
+                module = load()
+            else:
+                return None
+
+        config = getattr(module, CONFIGS_MODULE_ATTR)[0]
+        section = config.sections[0]
+
+        return section
 
     @classmethod
     def _get_section_new(cls, dir_base):
@@ -156,29 +171,18 @@ class SectionMutator(object):
         :rtype: Section
 
         """
-        from uwsgiconf.presets.nice import PythonSection
         from django.conf import settings
 
         wsgi_app = settings.WSGI_APPLICATION
+        name_package, name_module, name_func = wsgi_app.split('.')
 
-        app_package, filename, _, = wsgi_app.split('.')
+        section = PythonSection.bootstrap(
+            'http://127.0.0.1:8000',
+            wsgi_module='%s.%s' % (name_package, name_module),
+        )
 
-        def get_wsgi_path(base):
-            return os.path.join(base, app_package, '%s.py' %filename)
-
-        path_wsgi = get_wsgi_path(dir_base)
-
-        if not os.path.exists(path_wsgi):
-            # Maybe dir_base already contains app_package.
-            path_wsgi = get_wsgi_path(os.path.dirname(dir_base))
-
-        section = PythonSection(
-            wsgi_module=path_wsgi,
-
-        ).networking.register_socket(
-            PythonSection.networking.sockets.http('127.0.0.1:8000')
-
-        ).main_process.change_dir(dir_base)
+        if os.path.exists(dir_base):
+            section.main_process.change_dir(dir_base)
 
         return section
 
@@ -267,11 +271,12 @@ class SectionMutator(object):
         self.contribute_static()
 
 
-def run_uwsgi(config_section, compile_only=False):
+def run_uwsgi(config_section, compile_only=False, embedded=False):
     """Runs uWSGI using the given section configuration.
 
     :param Section config_section:
     :param bool compile_only: Do not run, only compile and output configuration file for run.
+    :param bool embedded: Do not create temporary config files and try to use resource files for configuration.
 
     """
     config = config_section.as_configuration()
@@ -280,12 +285,9 @@ def run_uwsgi(config_section, compile_only=False):
         config.print_ini()
         return
 
-    from uwsgiconf.utils import UwsgiRunner
-
-    config_path = config.tofile()
-
     runner = UwsgiRunner()
     runner.spawn(
-        filepath=config_path,
-        configuration_alias=config.alias,
-        replace=True)
+        config=config,
+        replace=True,
+        embedded=embedded,
+    )
