@@ -113,7 +113,7 @@ class SectionMutator(object):
             project_name=name_project,
             options=options)
 
-        mutator.mutate()
+        mutator.mutate(embedded=embedded)
 
         return mutator
 
@@ -238,7 +238,7 @@ class SectionMutator(object):
                     except OSError:  # simulate exist_ok
                         pass
 
-    def mutate(self):
+    def mutate(self, embedded=False):
         """Mutates current section."""
         section = self.section
         project_name = self.project_name
@@ -247,8 +247,14 @@ class SectionMutator(object):
 
         self.contribute_runtime_dir()
 
-        main = section.main_process
-        main.set_naming_params(prefix='[%s] ' % project_name)
+        main = section.main_process        
+
+        # The following should prevent possible segfaults in uwsgi_set_processname()'s memsets
+        # while embedded.
+        if embedded:
+            main.set_naming_params(autonaming=False)
+        else:
+            main.set_naming_params(prefix='[%s] ' % project_name)
 
         main.set_pid_file(
             self.get_pid_filepath(),
