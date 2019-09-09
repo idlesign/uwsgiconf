@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+! Dropped QA for Python 2.
+
+
 v0.16.0
 -------
 + Added ArgsFormatter (repesent options as command line args).
