@@ -20,7 +20,6 @@ First add ``uwsgify`` into ``INSTALLED_APPS``.
     ]
 
 
-
 uwsgi_run
 ~~~~~~~~~
 
@@ -63,6 +62,10 @@ with the help of ``uwsgicfg.py`` (constructed in a usual for **uwsgiconf** manne
 
 
     configure_uwsgi(get_configurations)
+    
+
+.. note:: **Embedding.** if you're using **pyuwsgi** having uWSGI and your entire project compiled into a single binary, and your *manage.py* is the entrypoint, use **--embedded** option: ``myproject uwsgi_run --embedded``.
+
 
 
 uwsgi_reload
@@ -133,3 +136,4 @@ to start your Django project on system start.
 
     ; Watch application log realtime (if syslog is used)
     $ journalctl -fu myapp.service
+    
