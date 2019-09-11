@@ -1,1 +1,1 @@
-default_app_config = 'uwsgify.config.UwsgifyConfig'
+default_app_config = 'uwsgiconf.contrib.django.uwsgify.config.UwsgifyConfig'

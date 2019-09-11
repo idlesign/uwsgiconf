@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 ! Dropped QA for Python 2.
+* Django. Fixed uwsgify default config loading.
 
 
 v0.16.0
