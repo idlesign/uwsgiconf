@@ -6,6 +6,7 @@ Unreleased
 ----------
 ! Dropped QA for Python 2.
 * Django. Fixed uwsgify default config loading.
+* Fixed 'is_stub' attribute binding to uwsgi/uwsgi_stub modules.
 
 
 v0.16.0
