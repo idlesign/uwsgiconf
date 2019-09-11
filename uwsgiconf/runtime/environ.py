@@ -20,7 +20,7 @@ class _Environment(object):
     cores_count = uwsgi.cores  # type: int
     """Detected number of processor cores."""
 
-    buffer_size = uwsgi.buffer_size = None  # type: int
+    buffer_size = uwsgi.buffer_size  # type: int
     """The current configured buffer size in bytes."""
 
     threads_enabled = uwsgi.has_threads  # type: bool
