@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+
+    {% if stub %}
+    <p class="errornote">
+        {% trans "This site is not served by uWSGI. Some functionality may be unavailable." %}
+    </p>
+    {% endif %}
+
+
+<div class="results">
+
+    <table width="100%">
+        <thead></thead>
+        <tbody>
+        {% for key, val in info.items %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+            <td nowrap width="25%">{{ key }}:</td>
+            <td>{{ val }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+
+class Summary(models.Model):
+
+    class Meta:
+        app_label = 'uwsgify'
+        managed = False
+        verbose_name = _('Summary')
+        verbose_name_plural = _('Summary')
+
+
+class Configuration(models.Model):
+
+    class Meta:
+        app_label = 'uwsgify'
+        managed = False
+        verbose_name = _('Configuration')
+        verbose_name_plural = _('Configuration')
