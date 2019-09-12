@@ -1,41 +1,41 @@
 from threading import local
 
-from .. import uwsgi
+from .. import uwsgi as _uwsgi
 from .request import _Request
 from ..utils import decode
 
 
-class _Environment(object):
+class _Platform(object):
 
     # todo slots
 
     request = None  # type: _Request
 
-    hostname = uwsgi.hostname  # type: str
+    hostname = _uwsgi.hostname  # type: str
     """Current host name."""
 
-    workers_count = uwsgi.numproc  # type: int
+    workers_count = _uwsgi.numproc  # type: int
     """Number of workers (processes) currently running."""
 
-    cores_count = uwsgi.cores  # type: int
+    cores_count = _uwsgi.cores  # type: int
     """Detected number of processor cores."""
 
-    buffer_size = uwsgi.buffer_size  # type: int
+    buffer_size = _uwsgi.buffer_size  # type: int
     """The current configured buffer size in bytes."""
 
-    threads_enabled = uwsgi.has_threads  # type: bool
+    threads_enabled = _uwsgi.has_threads  # type: bool
     """Flag indicating whether thread support is enabled."""
 
-    started_on = uwsgi.started_on  # type: int
+    started_on = _uwsgi.started_on  # type: int
     """uWSGI's startup Unix timestamp."""
 
-    config_variables = uwsgi.magic_table  # type: dict
+    config_variables = _uwsgi.magic_table  # type: dict
     """Current mapping of configuration file "magic" variables."""
 
-    config = uwsgi.opt  # type: dict
+    config = _uwsgi.opt  # type: dict
     """The current configuration options, including any custom placeholders."""
 
-    apps_map = uwsgi.applications  # type: dict
+    apps_map = _uwsgi.applications  # type: dict
     """Applications dictionary mapping mountpoints to application callables."""
 
     @property
@@ -44,7 +44,7 @@ class _Environment(object):
 
         :rtype: int
         """
-        return uwsgi.worker_id()
+        return _uwsgi.worker_id()
 
     @property
     def workers_info(self):
@@ -54,7 +54,7 @@ class _Environment(object):
 
         :rtype: tuple[dict]
         """
-        return uwsgi.workers()
+        return _uwsgi.workers()
 
     @property
     def ready_for_requests(self):
@@ -62,7 +62,7 @@ class _Environment(object):
 
         :rtype: bool
         """
-        return uwsgi.ready()
+        return _uwsgi.ready()
 
     @property
     def master_pid(self):
@@ -70,7 +70,7 @@ class _Environment(object):
 
         :rtype: int
         """
-        return uwsgi.masterpid()
+        return _uwsgi.masterpid()
 
     @property
     def memory(self):
@@ -78,7 +78,7 @@ class _Environment(object):
 
         :rtype: tuple[int, int]
         """
-        return uwsgi.mem()
+        return _uwsgi.mem()
 
     @property
     def clock(self):
@@ -86,7 +86,7 @@ class _Environment(object):
 
         :rtype|long
         """
-        return uwsgi.micros()
+        return _uwsgi.micros()
 
     def get_listen_queue(self, socket_num=0):
         """Returns listen queue (backlog size) of the given socket.
@@ -97,7 +97,7 @@ class _Environment(object):
 
         :raises ValueError: If socket is not found
         """
-        return uwsgi.listen_queue(socket_num)
+        return _uwsgi.listen_queue(socket_num)
 
     def get_version(self, as_tuple=False):
         """Returns uWSGI version string or tuple.
@@ -107,24 +107,24 @@ class _Environment(object):
         :rtype: str|tuple
         """
         if as_tuple:
-            return uwsgi.version_info
+            return _uwsgi.version_info
 
-        return decode(uwsgi.version)
+        return decode(_uwsgi.version)
 
 
 __THREAD_LOCAL = local()
 
 
-def __get_env():
-    environ = getattr(__THREAD_LOCAL, 'uwsgi_env', None)
+def __get_platform():
+    platform = getattr(__THREAD_LOCAL, 'uwsgi_platform', None)
 
-    if environ is None:
-        environ = _Environment()
-        environ.request = _Request()
+    if platform is None:
+        platform = _Platform()
+        platform.request = _Request()
 
-        setattr(__THREAD_LOCAL, 'uwsgi_env', environ)
+        setattr(__THREAD_LOCAL, 'uwsgi_platform', platform)
 
-    return environ
+    return platform
 
 
-uwsgi_env = __get_env()
+uwsgi = __get_platform()

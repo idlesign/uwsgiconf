@@ -379,7 +379,7 @@ class Section(OptionsGroup):
         time.
 
         .. note:: These are accessible, like any uWSGI option, in your application code via
-            ``.runtime.environ.uwsgi_env.config``.
+            ``.runtime.platform.uwsgi.config``.
 
         :param str|unicode key:
 

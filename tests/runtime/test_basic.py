@@ -1,7 +1,7 @@
 from uwsgiconf.runtime.alarms import *
 from uwsgiconf.runtime.asynced import *
 from uwsgiconf.runtime.control import *
-from uwsgiconf.runtime.environ import *
+from uwsgiconf.runtime.platform import uwsgi as platform
 from uwsgiconf.runtime.logging import *
 from uwsgiconf.runtime.request import *
 from uwsgiconf.runtime.websockets import *
