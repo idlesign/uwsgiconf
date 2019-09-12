@@ -71,7 +71,7 @@ magic_table = None  # type: dict
 numproc = None  # type: int
 """Number of workers (processes) currently running."""
 
-opt = None  # type: dict
+opt = {}  # type: dict
 """The current configuration options, including any custom placeholders."""
 
 started_on = 0  # type: int
@@ -627,12 +627,12 @@ def is_locked(lock_num=0):
     """
 
 
-def listen_queue(socket_num):
+def listen_queue(socket_num=0):
     """Returns listen queue (backlog size) of the given socket.
 
     :param int socket_num: Socket number.
 
-    :rtype: bool
+    :rtype: int
 
     :raises ValueError: If socket is not found
     """
@@ -704,6 +704,7 @@ def mem():
 
     :rtype: tuple
     """
+    return 0, 0
 
 
 def metric_dec(key, value=1):
@@ -986,6 +987,7 @@ def rpc_list():
 
     :rtype: tuple
     """
+    return tuple()
 
 
 def scrolls(legion_name):
@@ -1260,3 +1262,4 @@ def workers():
 
     :rtype: tuple[dict]
     """
+    return tuple()
