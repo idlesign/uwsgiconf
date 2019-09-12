@@ -105,7 +105,7 @@ class WorkersAdmin(OnePageAdmin):
         info_workers = OrderedDict()
         unknown = object()
 
-        for info_worker in uwsgi_env.get_workers_info():
+        for info_worker in uwsgi_env.workers_info:
             for keyname, (name, func) in info_worker_map.items():
 
                 value = info_worker.get(keyname, unknown)

@@ -47,6 +47,16 @@ class _Environment(object):
         return uwsgi.worker_id()
 
     @property
+    def workers_info(self):
+        """Gets statistics for all the workers for the current server.
+
+        Returns tuple of dicts.
+
+        :rtype: tuple[dict]
+        """
+        return uwsgi.workers()
+
+    @property
     def ready_for_requests(self):
         """Returns flag indicating whether we are ready to handle requests.
 
@@ -77,6 +87,17 @@ class _Environment(object):
         :rtype|long
         """
         return uwsgi.micros()
+
+    def get_listen_queue(self, socket_num=0):
+        """Returns listen queue (backlog size) of the given socket.
+
+        :param int socket_num: Socket number.
+
+        :rtype: int
+
+        :raises ValueError: If socket is not found
+        """
+        return uwsgi.listen_queue(socket_num)
 
     def get_version(self, as_tuple=False):
         """Returns uWSGI version string or tuple.
