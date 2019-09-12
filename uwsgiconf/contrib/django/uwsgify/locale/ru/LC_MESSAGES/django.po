@@ -1,0 +1,173 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-12 19:14+0700\n"
+"PO-Revision-Date: 2019-09-12 19:24+0700\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+"Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
+"Language-Team: \n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: admin/models.py:10 admin/models.py:11
+msgid "Summary"
+msgstr "Сводка"
+
+#: admin/models.py:19 admin/models.py:20
+msgid "Configuration"
+msgstr "Конфигурация"
+
+#: admin/models.py:28 admin/models.py:29 admin/realms.py:31
+msgid "Workers"
+msgstr "Рабочие"
+
+#: admin/realms.py:22
+msgid "Version"
+msgstr "Версия"
+
+#: admin/realms.py:23
+msgid "Hostname"
+msgstr "Хост"
+
+#: admin/realms.py:24
+msgid "Serving since"
+msgstr "Работает с"
+
+#: admin/realms.py:25
+msgid "Serving for"
+msgstr "Время работы"
+
+#: admin/realms.py:26
+msgid "Clock"
+msgstr "Часы"
+
+#: admin/realms.py:27
+msgid "Master PID"
+msgstr "PID Мастера"
+
+#: admin/realms.py:28
+msgid "Memory (RSS, VSZ)"
+msgstr "Память (RSS, VSZ)"
+
+#: admin/realms.py:29
+msgid "Buffer size"
+msgstr "Размер буфера"
+
+#: admin/realms.py:30
+msgid "Cores"
+msgstr "Ядра"
+
+#: admin/realms.py:32
+msgid "Threads support"
+msgstr "Поддержка нитей"
+
+#: admin/realms.py:33
+msgid "Current worker"
+msgstr "Текущий рабочий"
+
+#: admin/realms.py:34
+msgid "Requests by worker"
+msgstr "Запросов на рабочем"
+
+#: admin/realms.py:35
+msgid "Requests total"
+msgstr "Запросов всего"
+
+#: admin/realms.py:36
+msgid "Socket queue size"
+msgstr "Размер очереди сокета"
+
+#: admin/realms.py:37
+msgid "Log size"
+msgstr "Размер журнала"
+
+#: admin/realms.py:38
+msgid "RPC"
+msgstr ""
+
+#: admin/realms.py:39
+msgid "Available signal number"
+msgstr "Доступный номер сигнала"
+
+#: admin/realms.py:71
+msgid "ID"
+msgstr ""
+
+#: admin/realms.py:72
+msgid "PID"
+msgstr ""
+
+#: admin/realms.py:73
+msgid "Status"
+msgstr "Статус"
+
+#: admin/realms.py:75
+msgid "Running for"
+msgstr "Время работы"
+
+#: admin/realms.py:76
+msgid "Spawned at"
+msgstr "Время порождения"
+
+#: admin/realms.py:78
+msgid "Respawns"
+msgstr "Порождения"
+
+#: admin/realms.py:79
+msgid "Requests"
+msgstr "Запросы"
+
+#: admin/realms.py:80
+msgid "Delta requests"
+msgstr "Разница запросов"
+
+#: admin/realms.py:81
+msgid "Exceptions"
+msgstr "Исключения"
+
+#: admin/realms.py:82
+msgid "Signals"
+msgstr "Сигналы"
+
+#: admin/realms.py:84
+msgid "RSS"
+msgstr ""
+
+#: admin/realms.py:85
+msgid "VSZ"
+msgstr ""
+
+#: admin/realms.py:87
+msgid "Transmitted"
+msgstr "Передано"
+
+#: admin/realms.py:88
+msgid "Avg. response"
+msgstr "На запрос (сред.)"
+
+#: config.py:8
+msgid "uWSGI Integration"
+msgstr "Интеграция с uWSGI"
+
+#: templates/admin/uwsgify/onepage.html:7
+msgid "Home"
+msgstr "Домой"
+
+#: templates/admin/uwsgify/onepage.html:18
+msgid ""
+"This site is not served by uWSGI. Certain functionality or data may be "
+"unavailable."
+msgstr ""
+"Этот сайт работает на на uWSGI. Некоторая функциональность или данные могут "
+"быть недоступны."
