@@ -18,3 +18,12 @@ class Configuration(models.Model):
         managed = False
         verbose_name = _('Configuration')
         verbose_name_plural = _('Configuration')
+
+
+class Workers(models.Model):
+
+    class Meta:
+        app_label = 'uwsgify'
+        managed = False
+        verbose_name = _('Workers')
+        verbose_name_plural = _('Workers')

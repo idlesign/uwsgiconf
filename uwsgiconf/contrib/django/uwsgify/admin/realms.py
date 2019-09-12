@@ -58,3 +58,67 @@ class ConfigurationAdmin(OnePageAdmin):
                 '': {'rows': OrderedDict(((key, [val]) for key, val in uwsgi_env.config.items()))},
             },
         })
+
+
+class WorkersAdmin(OnePageAdmin):
+
+    def contribute_onepage_context(self, request, context):
+        from uwsgiconf.runtime.environ import uwsgi_env
+
+        fromts = datetime.fromtimestamp
+
+        info_worker_map = OrderedDict([
+            ('id', (_('ID'), None)),
+            ('pid', (_('PID'), None)),
+            ('status', (_('Status'), None)),
+
+            ('running_time', (_('Running for'), lambda val: timedelta(microseconds=val))),
+            ('last_spawn', (_('Spawned at'), lambda val: fromts(val))),
+
+            ('respawn_count', (_('Respawns'), None)),
+            ('requests', (_('Requests'), None)),
+            ('delta_requests', (_('Delta requests'), None)),  # Used alongside with MAX_REQUESTS
+            ('exceptions', (_('Exceptions'), None)),
+            ('signals', (_('Signals'), None)),
+
+            ('rss', (_('RSS'), lambda val: filesizeformat(val))),
+            ('vsz', (_('VSZ'), lambda val: filesizeformat(val))),
+
+            ('tx', (_('Transmitted'), lambda val: filesizeformat(val))),
+            ('avg_rt', (_('Avg. response'), lambda val: timedelta(microseconds=val))),
+
+            # todo maybe
+            # ('apps', (_(''), None)),
+            # {
+            #     'modifier1': 0,
+            #     'chdir': '',
+            #     'startup_time': 0,
+            #     'callable': 139896737453968,
+            #     'mountpoint': '',
+            #     'exceptions': 0L,
+            #     'interpreter': 19550368,
+            #     'requests': 1L,
+            #     'id': 0
+            # },
+        ])
+
+        info_workers = OrderedDict()
+        unknown = object()
+
+        for info_worker in uwsgi_env.get_workers_info():
+            for keyname, (name, func) in info_worker_map.items():
+
+                value = info_worker.get(keyname, unknown)
+                if value is unknown:
+                    continue
+
+                if func is not None:
+                    value = func(value)
+
+                info_workers.setdefault(name, []).append(value)
+
+        context.update({
+            'panels': {
+                '': {'rows': info_workers},
+            },
+        })
