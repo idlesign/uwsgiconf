@@ -155,4 +155,4 @@ class Cache(object):
 
         :rtype: bool
         """
-        return uwsgi.cache_mul(key, value, self.timeout, self.name)
+        return uwsgi.cache_div(key, value, self.timeout, self.name)
