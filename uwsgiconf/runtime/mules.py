@@ -1,5 +1,62 @@
+import pickle
+from functools import partial
+
 from .. import uwsgi
 from ..utils import decode
+
+__offloaded_functions = {}
+
+
+def _mule_messages_hook(message):
+    # Processes mule messages, tries to decode it.
+    try:
+        loaded = pickle.loads(message)
+
+    except Exception:  # py3 pickle.UnpicklingError
+        return
+
+    else:
+        if not isinstance(loaded, tuple):
+            return
+
+        return __offloaded_functions[loaded[1]](*loaded[2], **loaded[3])
+
+
+uwsgi.mule_msg_hook = _mule_messages_hook
+
+
+def __offload(func_name, mule_or_farm, *args, **kwargs):
+    # Sends a message to a mule/farm, instructing it
+    # to run a function using given arguments,
+    Mule(mule_or_farm).send(pickle.dumps(
+        (
+            'uwcf',
+            func_name,
+            args,
+            kwargs,
+        )
+    ))
+
+
+def mule_offload(mule_or_farm=None):
+    """Decorator. Use to offload function execution to a mule or a farm.
+
+    :param int|str|Mule|Farm mule_or_farm:
+
+    """
+    if isinstance(mule_or_farm, Mule):
+        mule_or_farm = mule_or_farm.id
+    elif isinstance(mule_or_farm, Farm):
+        mule_or_farm = mule_or_farm.name
+
+    mule_or_farm = mule_or_farm or 0
+
+    def mule_offload_(func):
+        func_name = func.__name__
+        __offloaded_functions[func_name] = func
+        return partial(__offload, func_name, mule_or_farm)
+        
+    return mule_offload_
 
 
 class Mule(object):
@@ -14,13 +71,30 @@ class Mule(object):
         """
         self.id = id
 
+    def offload(self):
+        """Decorator. Allows to offload function execution on this mule."""
+        return mule_offload(self)
+
     @classmethod
     def get_current_id(cls):
-        """Returns current mule ID.
+        """Returns current mule ID. Returns 0 if not a mule.
 
         :rtype: int
         """
         return uwsgi.mule_id()
+
+    @classmethod
+    def get_current(cls):
+        """Returns current mule object or None if not a mule.
+
+        :rtype: Optional[Mule]
+        """
+        mule_id = cls.get_current_id()
+
+        if not mule_id:
+            return None
+
+        return Mule(mule_id)
 
     @classmethod
     def get_message(cls, signals=True, farms=False, buffer_size=65536, timeout=-1):
@@ -65,6 +139,10 @@ class Farm(object):
 
         """
         self.name = name
+
+    def offload(self):
+        """Decorator. Allows to offload function execution on mules of this farm."""
+        return mule_offload(self)
 
     @property
     def is_mine(self):
