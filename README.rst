@@ -106,7 +106,8 @@ Let's make ``uwsgicfg.py``. There we configure uWSGI using nice ``PythonSection`
 Runtime configuration
 ~~~~~~~~~~~~~~~~~~~~~
 
-**uwsgiconf** comes with ``runtime`` package which is similar to **uwsgidecorators** but offers different abstractions.
+**uwsgiconf** comes with ``runtime`` package which is similar to **uwsgidecorators** but
+offers different abstractions to provide useful shortcuts and defaults.
 
 These abstractions will also use a stub ``uwsgi`` module when the real one is not available.
 
@@ -120,19 +121,35 @@ A couple of examples:
     @register_timer_rb(10, repeat=2)
     def repeat_twice():
         """This function will be called twice with 10 seconds interval
-        (by default in first available mule) using red-black tree based timer.
+        using red-black tree based timer.
 
         """
         with lock():
-            # Code under this context manager will be locked
-            # using default (0) uWSGI lock.
+            # Code under this context manager will be locked.
             do_something()
 
 
-Third parties
-~~~~~~~~~~~~~
+Allows for runtime access to:
 
-**Django.** Run your Django-based project on uWSGI using manage command:
+* Alarms
+* Caches
+* Locks
+* Logging
+* Monitoring
+* Mules
+* RPC
+* Scheduling
+* Signals
+* Websockets
+* and more
+
+
+Third parties support
+~~~~~~~~~~~~~~~~~~~~~
+
+**Django**
+
+Run your Django-based project on uWSGI using manage command:
 
 .. code-block:: bash
 
@@ -140,7 +157,8 @@ Third parties
     $ ./manage.py uwsgi_reload --force
 
 
-Other commands are available.
+* Other commands are available.
+* uWSGI summary and statistics are also available from Admin interface.
 
 
 System configs
