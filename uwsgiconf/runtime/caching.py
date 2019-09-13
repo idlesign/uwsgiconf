@@ -1,18 +1,24 @@
 from .. import uwsgi
 from ..utils import decode
 
-# todo: may be cache_update
-
 
 class Cache(object):
-    """Interface for uWSGI Caching subsystem."""
+    """Interface for uWSGI Caching subsystem.
 
+    .. warning:: To use this helper one needs
+        to configure cache(s) in uWSGI config beforehand.
+
+    """
     __slots__ = ['name', 'timeout']
 
     def __init__(self, name=None, timeout=None):
         """
         :param str|unicode name: Cache name with optional address (if @-syntax is used).
-        :param int timeout: Expire timeout (seconds). Default 300 (5 minutes).
+
+        :param int timeout: Expire timeout (seconds).
+            Default: 300 (5 minutes). Use 0 to not to set a timeout (not to expire).
+
+            .. note:: This value is ignore if cache is configured not to expire.
 
         """
         self.timeout = timeout or 300
@@ -78,16 +84,21 @@ class Cache(object):
 
     __getitem__ = get
 
-    def set(self, key, value):
+    def set(self, key, value, timeout=None):
         """Sets the specified key value.
 
         :param str|unicode key:
 
-        :param int|str|unicode value:
+        :param str|unicode value:
+
+        :param int timeout: 0 to not to expire. Object default is used if not set.
 
         :rtype: bool
         """
-        return uwsgi.cache_set(key, value, self.timeout, self.name)
+        if timeout is None:
+            timeout = self.timeout
+
+        return uwsgi.cache_set(key, value, timeout, self.name)
 
     __setitem__ = set
 

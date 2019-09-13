@@ -5,11 +5,11 @@ def test_caching():
 
     cache = Cache('mine')
 
-    keys = cache.keys
+    assert cache.keys == []
 
     cache.clear()
 
-    cache.set('my', 10)
+    cache.set('my', '10')
     cache.incr('my')
     cache.decr('my')
     cache.mul('my')
