@@ -17,6 +17,7 @@ class SummaryAdmin(OnePageAdmin):
 
         time_started = datetime.fromtimestamp(uwsgi.started_on)
         rss, vsz = uwsgi.memory
+        config = uwsgi.config
 
         info_basic = OrderedDict([
             (_('Version'), uwsgi.get_version()),
@@ -25,17 +26,20 @@ class SummaryAdmin(OnePageAdmin):
             (_('Serving for'), datetime.now() - time_started),
             (_('Clock'), uwsgi.clock),
             (_('Master PID'), uwsgi.master_pid),
-            (_('Memory (RSS, VSZ)'), ', '.join((filesizeformat(rss), filesizeformat(vsz)))),
+            (_('Memory (RSS, VSZ)'), '\n'.join((filesizeformat(rss), filesizeformat(vsz)))),
             (_('Buffer size'), uwsgi.buffer_size),
             (_('Cores'), uwsgi.cores_count),
             (_('Workers'), uwsgi.workers_count),
+            (_('Mules'), config.get('mules', 0)),
+            (_('Farms'), '\n'.join(config.get('farm', []))),
             (_('Threads support'), '+' if uwsgi.threads_enabled else '-'),
             (_('Current worker'), uwsgi.worker_id),
             (_('Requests by worker'), uwsgi.request.id),
             (_('Requests total'), uwsgi.request.total_count),
             (_('Socket queue size'), uwsgi.get_listen_queue()),
             (_('Log size'), get_current_log_size()),
-            (_('RPC'), ', '.join(get_rpc_list())),
+            (_('RPC'), '\n'.join(get_rpc_list())),
+            (_('Post fork hooks'), '\n'.join(uwsgi.postfork_hooks.list())),
             (_('Available signal number'), get_available_num()),
         ])
 
