@@ -35,7 +35,7 @@ class Signal(object):
 
     def __init__(self, num=None):
         """
-        :param int num: Signal number (0-256).
+        :param int num: Signal number (0-255).
 
             .. note:: If not set it will be chosen automatically.
 
@@ -47,6 +47,13 @@ class Signal(object):
 
     def register_handler(self, target=None):
         """Decorator for a function to be used as a signal handler.
+
+        .. code-block::
+            signal = Signal()
+
+            @signal.register_handler()
+            def somefunc():
+                pass
 
         :param str|unicode target: Where this signal will be delivered to. Default: ``worker``.
 
@@ -78,10 +85,10 @@ class Signal(object):
 
         return wrapper
 
-    def send(self, remote=''):
+    def send(self, remote=None):
         """Sends the signal to master or remote.
 
-        :param str|unicode remote: Remote address.
+        :param str|unicode|None remote: Remote address.
 
         :rtype: None
 
@@ -89,7 +96,7 @@ class Signal(object):
 
         :raises IOError: If unable to deliver to remote.
         """
-        uwsgi.signal(self.num, remote)
+        uwsgi.signal(self.num, *([remote] if remote is not None else []))
 
     def wait(self):
         """Waits for the given of any signal.
