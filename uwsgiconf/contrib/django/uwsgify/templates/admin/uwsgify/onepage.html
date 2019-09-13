@@ -29,7 +29,7 @@
             <tr class="{% cycle 'row1' 'row2' %}">
                 <td nowrap width="25%"><strong>{{ title }}:</strong></td>
                 {% for value in values %}
-                    <td>{{ value }}</td>
+                    <td>{{ value|linebreaksbr }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
