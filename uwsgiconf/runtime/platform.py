@@ -5,12 +5,63 @@ from .request import _Request
 from ..utils import decode
 
 
+class _PostForkHooks(object):
+
+    _hooks = []
+
+    @classmethod
+    def list(cls):
+        """Returns a list of names of registered hooks.
+
+        :rtype: list
+        """
+        items = []
+
+        for func in cls._hooks:
+
+            module_path = func.__module__
+            if module_path.startswith('uwsgi_file'):
+                module_path = module_path.replace('uwsgi_file__', 'uwsgi://',  1).replace('_', '/')
+            items.append('%s.%s' % (module_path, func.__name__))
+
+        return items
+
+    @classmethod
+    def add(cls):
+        """Decorator. Registers a function to be called after process fork().
+
+        :param callable func:
+        """
+        def add_(func):
+            cls._hooks.append(func)
+        return add_
+
+    @classmethod
+    def run(cls):
+        """Runs registered hooks."""
+        for func in cls._hooks:
+            func()
+
+
+_uwsgi.post_fork_hook = _PostForkHooks.run
+
+
 class _Platform(object):
 
     # todo slots
 
     request = None  # type: _Request
+    
+    postfork_hooks = _PostForkHooks
+    """uWSGI is a preforking server, so you might need 
+    to execute a fixup tasks (hooks) after each fork(). 
+    Each hook will be executed in sequence on each process (worker/mule).
+    
+    .. note:: The fork() happen before app loading, so there's no hooks for dynamic apps.
+        But one can still move postfork hooks in a .py file and import it on server startup with: `--import xxx`
 
+    """
+    
     hostname = _uwsgi.hostname  # type: str
     """Current host name."""
 
@@ -40,7 +91,7 @@ class _Platform(object):
 
     @property
     def worker_id(self):
-        """Returns current worker ID.
+        """Returns current worker ID. 0 if not a worker (e.g. mule).
 
         :rtype: int
         """
