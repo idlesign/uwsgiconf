@@ -97,6 +97,14 @@ version_info = None  # type: tuple
 :rtype: tuple[int, int, int, int, bytes|str]
 """
 
+post_fork_hook = lambda: None  # type: callable
+"""Function to be called after process fork (spawning a new worker/mule)."""
+
+
+# todo wait for install_mule_msg_hook merged in master and define here
+mule_msg_hook = lambda: None  # type: callable
+"""Registers a function to be called for each mule message."""
+
 
 def accepting():
     """Called to notify the master that the worker is accepting requests,
@@ -258,6 +266,7 @@ def cache_dec(key, value=1, expires=None, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def cache_del(key, cache=None):
@@ -269,6 +278,7 @@ def cache_del(key, cache=None):
 
     :rtype: None
     """
+    return False
 
 
 def cache_div(key, value=2, expires=None, cache=None):
@@ -286,6 +296,7 @@ def cache_div(key, value=2, expires=None, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def cache_exists(key, cache=None):
@@ -297,6 +308,7 @@ def cache_exists(key, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def cache_get(key, cache=None):
@@ -308,7 +320,7 @@ def cache_get(key, cache=None):
 
     :param str|unicode cache: Cache name with optional address (if @-syntax is used).
 
-    :rtype: bytes|str
+    :rtype: bytes|str|None
     """
 
 
@@ -327,6 +339,7 @@ def cache_inc(key, value=1, expires=None, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def cache_keys(cache=None):
@@ -338,6 +351,7 @@ def cache_keys(cache=None):
 
     :raises ValueError: If cache is unavailable.
     """
+    return []
 
 
 def cache_mul(key, value=2, expires=None, cache=None):
@@ -355,6 +369,7 @@ def cache_mul(key, value=2, expires=None, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def cache_num(key, cache=None):
@@ -366,7 +381,7 @@ def cache_num(key, cache=None):
 
     :param str|unicode cache: Cache name with optional address (if @-syntax is used).
 
-    :rtype: int|long
+    :rtype: int|long|None
     """
 
 
@@ -375,7 +390,7 @@ def cache_set(key, value, expires=None, cache=None):
 
     :param str|unicode key:
 
-    :param int value:
+    :param str|unicode value:
 
     :param int expires: Expire timeout (seconds).
 
@@ -383,6 +398,7 @@ def cache_set(key, value, expires=None, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def cache_update(key, value, expires=None, cache=None):
@@ -398,6 +414,7 @@ def cache_update(key, value, expires=None, cache=None):
 
     :rtype: bool
     """
+    return False
 
 
 def call(func_name, *args):
@@ -449,6 +466,7 @@ def cl():
 
     :rtype: int|long
     """
+    return 0
 
 
 def close(fd):
@@ -822,10 +840,11 @@ def mule_get_msg(signals=None, farms=None, buffer_size=65536, timeout=-1):
 
 
 def mule_id():
-    """Returns current mule ID.
+    """Returns current mule ID. 0 if not a mule (e.g. worker).
 
     :rtype: int
     """
+    return 0
 
 
 def mule_msg(message, mule_farm=None):
@@ -1249,10 +1268,11 @@ def websocket_send_binary(message, request_context=None):
 
 
 def worker_id():
-    """Returns current worker ID.
+    """Returns current worker ID. 0 if not a worker (e.g. mule).
 
     :rtype: int
     """
+    return 0
 
 
 def workers():
