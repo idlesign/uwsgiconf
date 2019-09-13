@@ -81,7 +81,7 @@ class Caching(OptionsGroup):
         return self._section
 
     def add_cache(
-            self, name, max_items, expires=None, store=None, store_sync_interval=None, store_delete=None,
+            self, name, max_items, no_expire=None, store=None, store_sync_interval=None, store_delete=None,
             hash_algo=None, hash_size=None, key_size=None, udp_clients=None, udp_servers=None,
             block_size=None, block_count=None, sync_from=None, mode_bitmap=None, use_lastmod=None,
             full_silent=None, full_purge_lru=None):
@@ -101,8 +101,8 @@ class Caching(OptionsGroup):
             .. note:: Effective number of items is **max_items - 1** -
                 the first item of the cache is always internally used as "NULL/None/undef".
 
-        :param int expires: The number of seconds after the object is no more valid
-            (and will be removed by the cache sweeper when ``full_purge_lru`` is not set.
+        :param bool no_expire: If ``True`` cache items won't expire even if instructed
+            to do so by cache set method.
 
         :param str|unicode store: Set the filename for the persistent storage.
             If it doesn't exist, the system assumes an empty cache and the file will be created.
@@ -163,13 +163,13 @@ class Caching(OptionsGroup):
         :param bool full_purge_lru: Allows the caching framework to evict Least Recently Used (LRU)
             item when you try to add new item to cache storage that is full.
 
-            .. note:: ``expires`` argument will be ignored.
+            .. note:: ``no_expire`` argument will be ignored.
 
         """
         value = KeyValue(
             locals(),
             keys=[
-                'name', 'max_items', 'expires', 'store', 'store_sync_interval', 'store_delete',
+                'name', 'max_items', 'no_expire', 'store', 'store_sync_interval', 'store_delete',
                 'hash_algo', 'hash_size', 'key_size', 'udp_clients', 'udp_servers',
                 'block_size', 'block_count', 'sync_from', 'mode_bitmap', 'use_lastmod',
                 'full_silent', 'full_purge_lru',
@@ -187,7 +187,7 @@ class Caching(OptionsGroup):
                 'full_silent': 'ignore_full',
                 'full_purge_lru': 'purge_lru',
             },
-            bool_keys=['store_delete', 'mode_bitmap', 'use_lastmod', 'full_silent', 'full_purge_lru'],
+            bool_keys=['store_delete', 'mode_bitmap', 'use_lastmod', 'full_silent', 'full_purge_lru', 'no_expire'],
             list_keys=['udp_clients', 'udp_servers', 'sync_from'],
         )
 

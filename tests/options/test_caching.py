@@ -31,3 +31,9 @@ def test_caching_basics(assert_lines):
         'cache2 = name=mine,maxitems=333',
     ], Section().caching.add_cache('mine', 333))
 
+
+def test_cache_registration(assert_lines):
+
+    assert_lines([
+        'cache2 = name=mycache,maxitems=20,no_expire=1',
+    ], Section().caching.add_cache('mycache', 20, no_expire=True))
