@@ -6,16 +6,19 @@ Unreleased
 ----------
 ! Dropped QA for Python 2.
 ! Runtime. '.environ' module is deprecated in favor of '.platform'.
+! Stub updated with return values.
++ Django. Added uwsgiinit modules autodiscover for applications.
 + Django. Basic uWSGI information exposed via Admin contrib.
 + Runtime. Added postfork functions support.
++ Runtime. Added signals registry for introspection.
 + Runtime. Cache '.set()' now accepts 'timeout' argument.
 + Runtime. Mules module extended, including function offloading support.
-* Runtime. Cache. Fixed '.div()' behaviour.
-* Runtime. Signals. Fixed Signal.send() for non-remotes.
-* Fixed argument 'expires' behaviour for 'caching.add_cache()' and renamed into 'no_expire'.
 * Django. Fixed uwsgify default config loading.
 * Fixed 'is_stub' attribute binding to uwsgi/uwsgi_stub modules.
+* Fixed argument 'expires' behaviour for 'caching.add_cache()' and renamed into 'no_expire'.
+* Runtime. Cache. Fixed '.div()' behaviour.
 * Runtime. Fixed 'environ.uwsgi_env.buffer_size' value.
+* Runtime. Signals. Fixed Signal.send() for non-remotes.
 
 
 v0.16.0

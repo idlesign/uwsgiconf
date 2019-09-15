@@ -13,7 +13,23 @@ class SummaryAdmin(OnePageAdmin):
         from uwsgiconf.runtime.platform import uwsgi
         from uwsgiconf.runtime.logging import get_current_log_size
         from uwsgiconf.runtime.rpc import get_rpc_list
-        from uwsgiconf.runtime.signals import get_available_num
+        from uwsgiconf.runtime.signals import registry_signals
+
+        def get_func_name(func):
+            """Returns a distinctive name for a given function.
+
+            :rtype: str
+            """
+            module_path = func.__module__
+            if module_path.startswith('uwsgi_file'):
+                module_path = module_path.replace('uwsgi_file__', 'uwsgi://', 1).replace('_', '/')
+            return '%s.%s' % (module_path, func.__name__)
+
+        def get_signals_info(signals):
+            info = []
+            for signal in signals:
+                info.append('%s - %s: %s' % (signal.num, signal.target, get_func_name(signal.func)))
+            return info
 
         time_started = datetime.fromtimestamp(uwsgi.started_on)
         rss, vsz = uwsgi.memory
@@ -39,8 +55,8 @@ class SummaryAdmin(OnePageAdmin):
             (_('Socket queue size'), uwsgi.get_listen_queue()),
             (_('Log size'), get_current_log_size()),
             (_('RPC'), '\n'.join(get_rpc_list())),
-            (_('Post fork hooks'), '\n'.join(uwsgi.postfork_hooks.list())),
-            (_('Available signal number'), get_available_num()),
+            (_('Post fork hooks'), '\n'.join(map(get_func_name, uwsgi.postfork_hooks.funcs))),
+            (_('Signals'), '\n'.join(get_signals_info(registry_signals))),
         ])
 
         context.update({

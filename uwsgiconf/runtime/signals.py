@@ -1,8 +1,14 @@
+from collections import namedtuple
+
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
 from ..utils import string_types, get_logger
 
 _LOG = get_logger(__name__)
+
+
+registry_signals = []
+SignalDescription = namedtuple('SignalDescription', ['num', 'target', 'func'])
 
 
 def get_available_num():
@@ -80,6 +86,7 @@ class Signal(object):
             _LOG.debug("Registering '%s' as signal '%s' handler ...", func.__name__, sign_num)
 
             uwsgi.register_signal(sign_num, target, func)
+            registry_signals.append(SignalDescription(sign_num, target, func))
 
             return func
 
