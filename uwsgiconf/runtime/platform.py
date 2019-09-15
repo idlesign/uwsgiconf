@@ -58,7 +58,8 @@ class _Platform(object):
     Each hook will be executed in sequence on each process (worker/mule).
     
     .. note:: The fork() happen before app loading, so there's no hooks for dynamic apps.
-        But one can still move postfork hooks in a .py file and import it on server startup with: `--import xxx`
+        But one can still move postfork hooks in a .py file and 
+        import it on server startup with `python.import_module()`.
 
     """
     
