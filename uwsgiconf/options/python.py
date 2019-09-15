@@ -189,7 +189,8 @@ class Python(OptionsGroup):
 
         :param list|str|unicode modules:
 
-        :param bool shared: Import a python module in all of the processes.
+        :param bool shared: If shared import is done once in master process.
+            Otherwise import a python module in all of the processes.
             This is done after fork but before request processing.
 
         :param bool into_spooler: Import a python module in the spooler.
