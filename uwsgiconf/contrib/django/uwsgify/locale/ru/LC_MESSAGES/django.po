@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-13 20:23+0700\n"
-"PO-Revision-Date: 2019-09-13 20:24+0700\n"
+"POT-Creation-Date: 2019-09-15 12:17+0700\n"
+"PO-Revision-Date: 2019-09-15 12:18+0700\n"
 "Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -28,145 +28,169 @@ msgstr "Сводка"
 msgid "Configuration"
 msgstr "Конфигурация"
 
-#: admin/models.py:28 admin/models.py:29 admin/realms.py:32
+#: admin/models.py:28 admin/models.py:29 admin/realms.py:48
 msgid "Workers"
 msgstr "Рабочие"
 
-#: admin/realms.py:23
+#: admin/realms.py:39
 msgid "Version"
 msgstr "Версия"
 
-#: admin/realms.py:24
+#: admin/realms.py:40
 msgid "Hostname"
 msgstr "Хост"
 
-#: admin/realms.py:25
+#: admin/realms.py:41 admin/realms.py:115
 msgid "Serving since"
 msgstr "Работает с"
 
-#: admin/realms.py:26
+#: admin/realms.py:42
 msgid "Serving for"
 msgstr "Время работы"
 
-#: admin/realms.py:27
+#: admin/realms.py:43
 msgid "Clock"
 msgstr "Часы"
 
-#: admin/realms.py:28
+#: admin/realms.py:44
 msgid "Master PID"
 msgstr "PID Мастера"
 
-#: admin/realms.py:29
+#: admin/realms.py:45
 msgid "Memory (RSS, VSZ)"
 msgstr "Память (RSS, VSZ)"
 
-#: admin/realms.py:30
+#: admin/realms.py:46
 msgid "Buffer size"
 msgstr "Размер буфера"
 
-#: admin/realms.py:31
+#: admin/realms.py:47
 msgid "Cores"
 msgstr "Ядра"
 
-#: admin/realms.py:33
+#: admin/realms.py:49
 msgid "Mules"
 msgstr "Мулы"
 
-#: admin/realms.py:34
+#: admin/realms.py:50
 msgid "Farms"
 msgstr "Фермы"
 
-#: admin/realms.py:35
+#: admin/realms.py:51
 msgid "Threads support"
 msgstr "Поддержка нитей"
 
-#: admin/realms.py:36
+#: admin/realms.py:52
 msgid "Current worker"
 msgstr "Текущий рабочий"
 
-#: admin/realms.py:37
+#: admin/realms.py:53
 msgid "Requests by worker"
 msgstr "Запросов на рабочем"
 
-#: admin/realms.py:38
+#: admin/realms.py:54
 msgid "Requests total"
 msgstr "Запросов всего"
 
-#: admin/realms.py:39
+#: admin/realms.py:55
 msgid "Socket queue size"
 msgstr "Размер очереди сокета"
 
-#: admin/realms.py:40
+#: admin/realms.py:56
 msgid "Log size"
 msgstr "Размер журнала"
 
-#: admin/realms.py:41
+#: admin/realms.py:57
 msgid "RPC"
 msgstr ""
 
-#: admin/realms.py:42
+#: admin/realms.py:58
 msgid "Post fork hooks"
 msgstr "Хуки после fork"
 
-#: admin/realms.py:43
-msgid "Available signal number"
-msgstr "Доступный номер сигнала"
-
-#: admin/realms.py:75
-msgid "ID"
-msgstr ""
-
-#: admin/realms.py:76
-msgid "PID"
-msgstr ""
-
-#: admin/realms.py:77
-msgid "Status"
-msgstr "Статус"
-
-#: admin/realms.py:79
-msgid "Running for"
-msgstr "Время работы"
-
-#: admin/realms.py:80
-msgid "Spawned at"
-msgstr "Время порождения"
-
-#: admin/realms.py:82
-msgid "Respawns"
-msgstr "Порождения"
-
-#: admin/realms.py:83
-msgid "Requests"
-msgstr "Запросы"
-
-#: admin/realms.py:84
-msgid "Delta requests"
-msgstr "Разница запросов"
-
-#: admin/realms.py:85
-msgid "Exceptions"
-msgstr "Исключения"
-
-#: admin/realms.py:86
+#: admin/realms.py:59 admin/realms.py:102
 msgid "Signals"
 msgstr "Сигналы"
 
-#: admin/realms.py:88
+#: admin/realms.py:91 admin/realms.py:114
+msgid "ID"
+msgstr ""
+
+#: admin/realms.py:92
+msgid "PID"
+msgstr ""
+
+#: admin/realms.py:93
+msgid "Status"
+msgstr "Статус"
+
+#: admin/realms.py:95
+msgid "Running for"
+msgstr "Время работы"
+
+#: admin/realms.py:96
+msgid "Spawned at"
+msgstr "Время порождения"
+
+#: admin/realms.py:98
+msgid "Respawns"
+msgstr "Порождения"
+
+#: admin/realms.py:99 admin/realms.py:121
+msgid "Requests"
+msgstr "Запросы"
+
+#: admin/realms.py:100
+msgid "Delta requests"
+msgstr "Разница запросов"
+
+#: admin/realms.py:101 admin/realms.py:122
+msgid "Exceptions"
+msgstr "Исключения"
+
+#: admin/realms.py:104
 msgid "RSS"
 msgstr ""
 
-#: admin/realms.py:89
+#: admin/realms.py:105
 msgid "VSZ"
 msgstr ""
 
-#: admin/realms.py:91
+#: admin/realms.py:107
 msgid "Transmitted"
 msgstr "Передано"
 
-#: admin/realms.py:92
+#: admin/realms.py:108
 msgid "Avg. response"
 msgstr "На запрос (сред.)"
+
+#: admin/realms.py:116
+msgid "Interpreter"
+msgstr "Интерпретатор"
+
+#: admin/realms.py:117
+msgid "Modifier 1"
+msgstr "Модификатор 1"
+
+#: admin/realms.py:118
+msgid "Mountpoint"
+msgstr "Точка входа"
+
+#: admin/realms.py:119
+msgid "Callable"
+msgstr "Вызываемый объект"
+
+#: admin/realms.py:120
+msgid "Directory"
+msgstr "Директория"
+
+#: admin/realms.py:152
+msgid "Worker"
+msgstr "Рабочий"
+
+#: admin/realms.py:152
+msgid "Application"
+msgstr "Приложение"
 
 #: config.py:8
 msgid "uWSGI Integration"
@@ -183,3 +207,6 @@ msgid ""
 msgstr ""
 "Этот сайт работает на на uWSGI. Некоторая функциональность или данные могут "
 "быть недоступны."
+
+#~ msgid "Available signal number"
+#~ msgstr "Доступный номер сигнала"

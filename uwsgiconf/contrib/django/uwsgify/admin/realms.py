@@ -107,38 +107,56 @@ class WorkersAdmin(OnePageAdmin):
             ('tx', (_('Transmitted'), lambda val: filesizeformat(val))),
             ('avg_rt', (_('Avg. response'), lambda val: timedelta(microseconds=val))),
 
-            # todo maybe
-            # ('apps', (_(''), None)),
-            # {
-            #     'modifier1': 0,
-            #     'chdir': '',
-            #     'startup_time': 0,
-            #     'callable': 139896737453968,
-            #     'mountpoint': '',
-            #     'exceptions': 0L,
-            #     'interpreter': 19550368,
-            #     'requests': 1L,
-            #     'id': 0
-            # },
+            ('apps', (None, lambda val: iter_items(val, info_app_map))),
         ])
 
+        info_app_map = OrderedDict([
+            ('id', (_('ID'), None)),
+            ('startup_time', (_('Serving since'), None)),
+            ('interpreter', (_('Interpreter'), None)),
+            ('modifier1', (_('Modifier 1'), None)),
+            ('mountpoint', (_('Mountpoint'), None)),
+            ('callable', (_('Callable'), None)),
+            ('chdir', (_('Directory'), None)),
+            ('requests', (_('Requests'), None)),
+            ('exceptions', (_('Exceptions'), None)),
+        ])
+
+        panels = OrderedDict()
         info_workers = OrderedDict()
-        unknown = object()
+        panels[''] = {'rows': info_workers}
 
-        for info_worker in uwsgi.workers_info:
-            for keyname, (name, func) in info_worker_map.items():
+        info_apps = OrderedDict()
 
-                value = info_worker.get(keyname, unknown)
-                if value is unknown:
-                    continue
+        def iter_items(info, mapping):
 
-                if func is not None:
-                    value = func(value)
+            unknown = set()
 
-                info_workers.setdefault(name, []).append(value)
+            for idx, info_item in enumerate(info):
+                for keyname, (name, func) in mapping.items():
 
-        context.update({
-            'panels': {
-                '': {'rows': info_workers},
-            },
-        })
+                    value = info_item.get(keyname, unknown)
+                    if value is unknown:
+                        continue
+
+                    if func is not None:
+                        value = func(value)
+
+                    yield idx, keyname, name, value
+
+        for idx_worker, keyname_worker, name_worker, value_worker in iter_items(uwsgi.workers_info, info_worker_map):
+
+            if keyname_worker == 'apps':
+                # Get info about applications served by worker,
+                for idx_app, keyname_app, name_app, value_app in value_worker:
+                    app_key = '%s %s. %s %s' % (_('Worker'), idx_worker + 1, _('Application'), idx_app)
+                    info_apps.setdefault(app_key, OrderedDict())[name_app] = [value_app]
+
+            else:
+                info_workers.setdefault(name_worker, []).append(value_worker)
+
+        # Add panel for every app on every worker.
+        for title, info in info_apps.items():
+            panels[title] = {'rows': info}
+
+        context.update({'panels': panels})
