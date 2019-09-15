@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.17.0
+-------
 ! Dropped QA for Python 2.
 ! Runtime. '.environ' module is deprecated in favor of '.platform'.
 ! Stub updated with return values.
