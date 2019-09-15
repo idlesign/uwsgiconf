@@ -262,6 +262,11 @@ class SectionMutator(object):
             safe=True,
         )
 
+        section.python.import_module(
+            'uwsgiconf.contrib.django.uwsgify.uwsgiinit',
+            shared=True,
+        )
+
         section.master_process.set_basic_params(
             fifo_file=self.get_fifo_filepath(),
         )
