@@ -8,7 +8,7 @@ from .settings import ENV_FORCE_STUB as __ENV_FORCE_STUB
 
 if False:  # pragma: nocover
     # Give IDEs a chance to load stub symbols.
-    pass
+    from .uwsgi_stub import *
 
 
 try:  # pragma: nocover
