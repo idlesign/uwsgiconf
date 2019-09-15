@@ -1,4 +1,8 @@
 
+is_stub = True  # type: bool
+"""Indicates whether stub is used instead of real `uwsgi` module."""
+
+
 SPOOL_IGNORE = 0
 """Spooler function result.
 
@@ -46,44 +50,51 @@ applications = None  # type: dict
 
 """
 
-buffer_size = None  # type: int
+buffer_size = 0  # type: int
 """The current configured buffer size in bytes."""
 
-cores = None  # type: int
+cores = 0  # type: int
 """Detected number of processor cores."""
 
-env = None  # type: dict
+env = {}  # type: dict
 """Request environment dictionary."""
 
-has_threads = None  # type: bool
+has_threads = False  # type: bool
 """Flag indicating whether thread support is enabled."""
 
-hostname = None  # type: str
+hostname = ''  # type: str
 """Current host name."""
 
-magic_table = None  # type: dict
+magic_table = {}  # type: dict
 """Current mapping of configuration file "magic" variables.
 
 * http://uwsgi.readthedocs.io/en/latest/Configuration.html#magic-variables
 
 """
 
-numproc = None  # type: int
+numproc = 0  # type: int
 """Number of workers (processes) currently running."""
 
 opt = {}  # type: dict
 """The current configuration options, including any custom placeholders."""
 
-started_on = 0  # type: int
-"""uWSGI's startup Unix timestamp."""
+
+post_fork_hook = lambda: None  # type: callable
+"""Function to be called after process fork (spawning a new worker/mule)."""
+
+sockets = []  # type: list[int]
+"""Current list of file descriptors for registered sockets."""
 
 start_response = None  # type: object
 """Callable spitting UWSGI response."""
 
-unbit = None  # type: bool
+started_on = 0  # type: int
+"""uWSGI's startup Unix timestamp."""
+
+unbit = False  # type: bool
 """Unbit internal flag."""
 
-version = None  # type: bytes
+version = '0.0.0'  # type: bytes
 """The uWSGI version string.
 
 .. warning:: Bytes are returned for Python 3.
@@ -91,15 +102,11 @@ version = None  # type: bytes
 :rtype: bytes|str
 """
 
-version_info = None  # type: tuple
+version_info = (0, 0, 0, 0, '')  # type: tuple
 """Five-elements version number tuple.
 
 :rtype: tuple[int, int, int, int, bytes|str]
 """
-
-post_fork_hook = lambda: None  # type: callable
-"""Function to be called after process fork (spawning a new worker/mule)."""
-
 
 # todo wait for install_mule_msg_hook merged in master and define here
 mule_msg_hook = lambda: None  # type: callable
@@ -575,28 +582,7 @@ def green_schedule():
 
     :type: bool
     """
-
-
-def suspend():
-    """Suspends handling of current coroutine/green thread and passes control
-    to the next async core.
-
-    * http://uwsgi.readthedocs.io/en/latest/Async.html#suspend-resume
-
-    :type: bool
-    """
-
-
-def i_am_the_lord(legion_name):
-    """Returns flag indicating whether you are the lord
-    of the given legion.
-
-    * http://uwsgi.readthedocs.io/en/latest/Legion.html#legion-api
-
-    :param str|unicode legion_name:
-
-    :rtype: bool
-    """
+    return False
 
 
 def i_am_the_spooler():
@@ -604,6 +590,7 @@ def i_am_the_spooler():
 
     :rtype: bool
     """
+    return False
 
 
 def in_farm(name):
@@ -614,6 +601,7 @@ def in_farm(name):
 
     :rtype: bool
     """
+    return False
 
 
 def is_a_reload():
@@ -621,6 +609,7 @@ def is_a_reload():
 
     :rtype: bool
     """
+    return False
 
 
 def is_connected(fd):
@@ -630,6 +619,7 @@ def is_connected(fd):
 
     :rtype: bool
     """
+    return False
 
 
 def is_locked(lock_num=0):
@@ -643,6 +633,7 @@ def is_locked(lock_num=0):
 
     :raises ValueError: For Spooler or invalid lock number
     """
+    return False
 
 
 def listen_queue(socket_num=0):
@@ -654,6 +645,7 @@ def listen_queue(socket_num=0):
 
     :raises ValueError: If socket is not found
     """
+    return 0
 
 
 def lock(lock_num=0):
@@ -676,6 +668,7 @@ def log(message):
 
     :rtype: bool
     """
+    return False
 
 
 def log_this_request():
@@ -690,6 +683,7 @@ def logsize():
 
     :rtype|long
     """
+    return 0
 
 
 def loop():
@@ -699,22 +693,12 @@ def loop():
     """
 
 
-def lord_scroll(legion_name):
-    """Returns a Lord scroll for the Legion.
-
-    * http://uwsgi.readthedocs.io/en/latest/Legion.html#lord-scroll-coming-soon
-
-    :param str|unicode legion_name:
-
-    :rtype: bool
-    """
-
-
 def masterpid():
     """Return the process identifier (PID) of the uWSGI master process.
 
     :rtype: int
     """
+    return -1
 
 
 def mem():
@@ -734,6 +718,7 @@ def metric_dec(key, value=1):
 
     :rtype: bool
     """
+    return False
 
 
 def metric_div(key, value=1):
@@ -744,6 +729,16 @@ def metric_div(key, value=1):
     :param int value:
 
     :rtype: bool
+    """
+    return False
+
+
+def metric_get(key):
+    """Returns metric value by key.
+
+    :param str|unicode key:
+
+    :rtype: int|long
     """
 
 
@@ -756,6 +751,7 @@ def metric_inc(key, value=1):
 
     :rtype: bool
     """
+    return False
 
 
 def metric_mul(key, value=1):
@@ -767,15 +763,7 @@ def metric_mul(key, value=1):
 
     :rtype: bool
     """
-
-
-def metric_get(key):
-    """Returns metric value by key.
-
-    :param str|unicode key:
-
-    :rtype: int|long
-    """
+    return False
 
 
 def metric_set(key, value):
@@ -787,6 +775,7 @@ def metric_set(key, value):
 
     :rtype: bool
     """
+    return False
 
 
 def metric_set_max(key, value):
@@ -798,6 +787,7 @@ def metric_set_max(key, value):
 
     :rtype: bool
     """
+    return False
 
 
 def metric_set_min(key, value):
@@ -809,6 +799,7 @@ def metric_set_min(key, value):
 
     :rtype: bool
     """
+    return False
 
 
 def micros():
@@ -816,6 +807,7 @@ def micros():
 
     :rtype|long
     """
+    return 0
 
 
 def mule_get_msg(signals=None, farms=None, buffer_size=65536, timeout=-1):
@@ -858,6 +850,7 @@ def mule_msg(message, mule_farm=None):
 
     :raises ValueError: If no mules, or mule ID or farm name is not recognized.
     """
+    return False
 
 
 def offload(filename):
@@ -889,6 +882,7 @@ def ready():
 
     :rtype: bool
     """
+    return False
 
 
 def ready_fd():
@@ -896,6 +890,7 @@ def ready_fd():
 
     :rtype: bool
     """
+    return False
 
 
 def recv(fd, maxsize=4096):
@@ -924,6 +919,7 @@ def register_rpc(name, func):
 
     :raises ValueError: If unable to register function
     """
+    return False
 
 
 def register_signal(number, target, func):
@@ -962,6 +958,7 @@ def reload():
 
     :rtype: bool
     """
+    return False
 
 
 def request_id():
@@ -969,6 +966,7 @@ def request_id():
 
     :rtype: int
     """
+    return 0
 
 
 def route(name, args_str):
@@ -1009,15 +1007,6 @@ def rpc_list():
     return tuple()
 
 
-def scrolls(legion_name):
-    """Returns a list of Legion scrolls defined on cluster.
-
-    :param str|unicode legion_name:
-
-    :rtype: list
-    """
-
-
 def send(fd_or_data, data=None):
     """Puts data into file descriptor.
 
@@ -1030,6 +1019,7 @@ def send(fd_or_data, data=None):
 
     :rtype: bool
     """
+    return False
 
 
 def sendfile(fd_or_name, chunk_size=0, start_pos=0, filesize=0):
@@ -1074,6 +1064,7 @@ def set_warning_message(message):
 
     :rtype: bool
     """
+    return False
 
 
 def setprocname(name):
@@ -1083,6 +1074,7 @@ def setprocname(name):
 
     :rtype: bool
     """
+    return False
 
 
 def signal(num, remote=''):
@@ -1137,13 +1129,6 @@ def signal_wait(num=None):
     """
 
 
-def sockets():
-    """Returns a current list file descriptors for registered sockets.
-
-    :rtype: list[int]
-    """
-
-
 def stop():
     """Stops uWSGI.
 
@@ -1151,11 +1136,23 @@ def stop():
     """
 
 
+def suspend():
+    """Suspends handling of current coroutine/green thread and passes control
+    to the next async core.
+
+    * http://uwsgi.readthedocs.io/en/latest/Async.html#suspend-resume
+
+    :type: bool
+    """
+    return False
+
+
 def total_requests():
     """Returns the total number of requests managed so far by the pool of uWSGI workers.
 
     :rtype: int
     """
+    return 0
 
 
 def unlock(lock_num=0):
@@ -1283,3 +1280,42 @@ def workers():
     :rtype: tuple[dict]
     """
     return tuple()
+
+
+##
+# Legion-related stuff:
+
+
+def i_am_the_lord(legion_name):
+    """Returns flag indicating whether you are the lord
+    of the given legion.
+
+    * http://uwsgi.readthedocs.io/en/latest/Legion.html#legion-api
+
+    :param str|unicode legion_name:
+
+    :rtype: bool
+    """
+    return False
+
+
+def lord_scroll(legion_name):
+    """Returns a Lord scroll for the Legion.
+
+    * http://uwsgi.readthedocs.io/en/latest/Legion.html#lord-scroll-coming-soon
+
+    :param str|unicode legion_name:
+
+    :rtype: bool
+    """
+    return False
+
+
+def scrolls(legion_name):
+    """Returns a list of Legion scrolls defined on cluster.
+
+    :param str|unicode legion_name:
+
+    :rtype: list
+    """
+    return []

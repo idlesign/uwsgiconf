@@ -9,4 +9,4 @@ def test_platform_stub():
     assert uwsgi.memory == (0, 0)
     assert not uwsgi.clock
     assert not uwsgi.get_listen_queue()
-    assert not uwsgi.get_version()
+    assert uwsgi.get_version() == '0.0.0'
