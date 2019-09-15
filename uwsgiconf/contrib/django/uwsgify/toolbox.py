@@ -249,22 +249,30 @@ class SectionMutator(object):
 
         main = section.main_process        
 
-        # The following should prevent possible segfaults in uwsgi_set_processname()'s memsets
-        # while embedded.
         if embedded:
+
+            # The following should prevent possible segfaults in uwsgi_set_processname()'s memsets
+            # while embedded.
             main.set_naming_params(autonaming=False)
+
+            # Applications registry is ready by now,
+            # we import base uwsgiinit in master process to bootstrap.
+            section.python.import_module(
+                'uwsgiconf.contrib.django.uwsgify.uwsgiinit',
+                shared=True,
+            )
+
         else:
             main.set_naming_params(prefix='[%s] ' % project_name)
+
+        section.print_out(
+            'Embedded mode: %s' % ('yes' if embedded else 'no'),
+            format_options='blue')
 
         main.set_pid_file(
             self.get_pid_filepath(),
             before_priv_drop=False,  # For vacuum to cleanup properly.
             safe=True,
-        )
-
-        section.python.import_module(
-            'uwsgiconf.contrib.django.uwsgify.uwsgiinit',
-            shared=True,
         )
 
         section.master_process.set_basic_params(

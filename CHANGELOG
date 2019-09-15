@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Django. Embedded mode support improved.
+
+
 v0.17.0
 -------
 ! Dropped QA for Python 2.

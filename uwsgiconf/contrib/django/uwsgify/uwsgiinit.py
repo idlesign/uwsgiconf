@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django import db
+from django.apps import apps
 from django.utils.module_loading import autodiscover_modules
 
 from uwsgiconf import uwsgi
@@ -34,10 +35,6 @@ def check_for_stub():
 check_for_stub()
 
 
-# Import uWSGI init modules from applications.
-autodiscover_modules(MODULE_INIT)
-
-
 from uwsgiconf.runtime.platform import uwsgi
 
 
@@ -45,3 +42,9 @@ from uwsgiconf.runtime.platform import uwsgi
 def db_close_connections():
     """Close db connections after fork()."""
     db.connections.close_all()
+
+
+if apps.apps_ready:
+    # Only for embedded mode. For non-embedded see UwsgifyConfig.ready()
+    # Import uWSGI init modules from applications.
+    autodiscover_modules(MODULE_INIT)
