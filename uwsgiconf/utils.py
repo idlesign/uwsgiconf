@@ -409,17 +409,18 @@ class UwsgiRunner(object):
         :param str|unicode filepath: Override configuration file path.
 
         :param bool replace: Whether a new process should replace current one.
-            If this mode is enabled uwsgiconf will try to use ``pyuwsgi`` first.
 
         :param bool embedded: Flag. Do not create a configuration file even if required,
-            translate all config parameters into command line arguments.
+            translate all config parameters into command line arguments and
+            pass it to ``pyuwsgi``.
 
         """
         args = ['uwsgi']
 
         if embedded:
+            import pyuwsgi
             args.extend(config.format(formatter='args'))
-            replace = True
+            pyuwsgi.run(args[1:])
 
         else:
             args.append('--ini')
@@ -438,20 +439,13 @@ class UwsgiRunner(object):
         if replace:
 
             try:
-                # Try to load .so module first.
-                import pyuwsgi
-                pyuwsgi.run(args[1:])
+                return os.execvp('uwsgi', args)
 
-            except ImportError:
-                # Try to run an executable.
-                try:
-                    return os.execvp('uwsgi', args)
+            except OSError:  # py3 - FileNotFoundError
 
-                except OSError:  # py3 - FileNotFoundError
-
-                    raise UwsgiconfException(
-                        'uWSGI executable not found. '
-                        'Please make sure it is installed and available.')
+                raise UwsgiconfException(
+                    'uWSGI executable not found. '
+                    'Please make sure it is installed and available.')
 
         return os.spawnvp(os.P_NOWAIT, 'uwsgi', args)
 

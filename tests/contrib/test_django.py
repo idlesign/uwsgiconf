@@ -71,7 +71,9 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
 
     Command().handle(compile=False, use_static_handler=True, embedded=False)
     Command().handle(compile=True, embedded=False)
-    Command().handle(compile=False, use_static_handler=True, embedded=True)
+
+    with pytest.raises(ImportError):  # py3 - ModuleNotFoundError
+        Command().handle(compile=False, use_static_handler=True, embedded=True)
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
