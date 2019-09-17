@@ -35,8 +35,26 @@ def get_last_received():
 
 
 class Signal(object):
-    """Represents uWSGI signal."""
+    """Represents uWSGI signal.
 
+    .. warning:: If you define a new function in worker1 and register
+        it as a signal handler, only worker1 can run it. The best way to register signals
+        is defining them in the master (.runtime.uwsgi.postfork_hooks.add), so all workers see them.
+
+    .. code-block:: python
+        signal = Signal()
+
+        @signal.register_handler()
+        def somefunc():
+            pass
+
+        # or the same:
+
+        @signal
+        def somefunc():
+            pass
+
+    """
     __slots__ = ['num']
 
     def __init__(self, num=None):
@@ -51,10 +69,22 @@ class Signal(object):
     def __int__(self):
         return self.num
 
+    def __call__(self, func):
+        # Allows using object as a decorator.
+        return self.register_handler()(func)
+
+    @property
+    def registered(self):
+        """Whether the signal is registered.
+
+        :rtype: bool
+        """
+        return uwsgi.signal_registered(self.num)
+
     def register_handler(self, target=None):
         """Decorator for a function to be used as a signal handler.
 
-        .. code-block::
+        .. code-block:: python
             signal = Signal()
 
             @signal.register_handler()
@@ -94,6 +124,9 @@ class Signal(object):
 
     def send(self, remote=None):
         """Sends the signal to master or remote.
+
+        When you send a signal, it is copied into the master's queue.
+        The master will then check the signal table and dispatch the messages.
 
         :param str|unicode|None remote: Remote address.
 
