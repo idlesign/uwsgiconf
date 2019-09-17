@@ -7,9 +7,6 @@ from ..exceptions import RuntimeConfigurationError
 from ..utils import string_types
 
 
-# todo: add_ms_timer
-
-
 def register_timer(period, target=None):
     """Add timer.
 
@@ -58,7 +55,8 @@ def register_timer_rb(period, repeat=None, target=None):
 
     :param int period: The interval (seconds) at which the signal is raised.
 
-    :param int repeat: How many times to repeat. Default: None - infinitely.
+    :param int repeat: How many times to send signal. Will stop after ther number is reached.
+        Default: None - infinitely.
 
     :param int|Signal|str|unicode target: Existing signal to raise
         or Signal Target to register signal implicitly.
@@ -82,6 +80,41 @@ def register_timer_rb(period, repeat=None, target=None):
     :raises ValueError: If unable to add timer.
     """
     return _automate_signal(target, func=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0))
+
+
+def register_timer_ms(period, target=None):
+    """Add a millisecond resolution timer.
+
+        .. code-block:: python
+
+            @register_timer_ms(300)
+            def repeat():
+                do()
+
+    :param int period: The interval (milliseconds) at which the signal is raised.
+
+    :param int|Signal|str|unicode target: Existing signal to raise
+        or Signal Target to register signal implicitly.
+
+        Available targets:
+
+            * ``workers``  - run the signal handler on all the workers
+            * ``workerN`` - run the signal handler only on worker N
+            * ``worker``/``worker0`` - run the signal handler on the first available worker
+            * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
+
+            * ``mules`` - run the signal handler on all of the mules
+            * ``muleN`` - run the signal handler on mule N
+            * ``mule``/``mule0`` - run the signal handler on the first available mule
+
+            * ``spooler`` - run the signal on the first available spooler
+            * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
+
+    :rtype: bool|callable
+
+    :raises ValueError: If unable to add timer.
+    """
+    return _automate_signal(target, func=lambda sig: uwsgi.add_ms_timer(int(sig), period))
 
 
 def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, target=None):
