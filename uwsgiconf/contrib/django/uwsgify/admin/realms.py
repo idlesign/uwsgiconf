@@ -14,6 +14,7 @@ class SummaryAdmin(OnePageAdmin):
         from uwsgiconf.runtime.logging import get_current_log_size
         from uwsgiconf.runtime.rpc import get_rpc_list
         from uwsgiconf.runtime.signals import registry_signals
+        from uwsgiconf.runtime.spooler import Spooler
 
         def get_func_name(func):
             """Returns a distinctive name for a given function.
@@ -57,6 +58,7 @@ class SummaryAdmin(OnePageAdmin):
             (_('RPC'), '\n'.join(get_rpc_list())),
             (_('Post fork hooks'), '\n'.join(map(get_func_name, uwsgi.postfork_hooks.funcs))),
             (_('Signals'), '\n'.join(get_signals_info(registry_signals))),
+            (_('Spoolers'), '\n'.join(map(str, Spooler.get_spoolers()))),
         ])
 
         context.update({
