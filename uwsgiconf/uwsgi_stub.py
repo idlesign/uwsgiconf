@@ -78,9 +78,11 @@ numproc = 0  # type: int
 opt = {}  # type: dict
 """The current configuration options, including any custom placeholders."""
 
-
 post_fork_hook = lambda: None  # type: callable
 """Function to be called after process fork (spawning a new worker/mule)."""
+
+spooler = lambda: None  # type: callable
+"""Function to be called for spooler messages processing."""
 
 sockets = []  # type: list[int]
 """Current list of file descriptors for registered sockets."""
@@ -161,11 +163,11 @@ def add_file_monitor(signal, filename):
 
 
 def add_ms_timer(signal, period):
-    """Add a microsecond resolution timer.
+    """Add a millisecond resolution timer.
 
     :param int signal: Signal to raise.
 
-    :param int period: The interval (microseconds) at which to raise the signal.
+    :param int period: The interval (milliseconds) at which to raise the signal.
 
     :rtype: None
 
@@ -180,7 +182,8 @@ def add_rb_timer(signal, period, repeat=0):
 
     :param int period: The interval (seconds) at which the signal is raised.
 
-    :param int repeat: How many times to repeat. Default: 0 - infinitely.
+    :param int repeat: How many times to send signal. Will stop after ther number is reached.
+        Default: 0 - infinitely.
 
     :rtype: None
 
@@ -1037,6 +1040,42 @@ def sendfile(fd_or_name, chunk_size=0, start_pos=0, filesize=0):
     """
 
 
+def send_to_spooler(message=None, **kwargs):
+    """Send data to the The uWSGI Spooler. Also known as spool().
+
+    .. warning:: Either `message` argument should contain a dictionary
+        this message dictionary will be constructed from `kwargs`.
+
+    :param dict[bytes, bytes] message: The message to spool. Keys and values are bytes.
+    :param dict kwargs:
+
+        Possible kwargs (these are also reserved `message` argument dictionary keys):
+
+            * spooler: The spooler (id or directory) to use.
+                Specify the ABSOLUTE path of the spooler that has to manage this task
+
+            * priority: Number. The priority of the message. Larger - less important.
+
+                .. warning:: This works only if you enable `order_tasks` option in `spooler.set_basic_params()`.
+
+                This will be the subdirectory in the spooler directory in which the task will be placed,
+                you can use that trick to give a good-enough prioritization to tasks.
+
+                .. note:: This is for systems with few resources. For better approach use multiple spoolers.
+
+            * at: Unix time at which the task must be executed.
+                The task will not be run until the 'at' time is passed.
+
+            * body: A binary body to add to the message,
+                in addition to the message dictionary itself.
+                Use this key for objects bigger than 64k, the blob will be appended
+                to the serialized uwsgi packet and passed back t
+                o the spooler function as the 'body' argument.
+
+    :rtype: str|None
+    """
+
+
 def set_logvar(name, value):
     """Sets log variable.
 
@@ -1046,6 +1085,15 @@ def set_logvar(name, value):
 
     :rtype: None
     """
+
+
+def set_spooler_frequency(seconds):
+    """Sets how often the spooler runs.
+
+    :param int seconds:
+    :rtype: bool
+    """
+    return False
 
 
 def set_user_harakiri(timeout=0):
@@ -1127,6 +1175,41 @@ def signal_wait(num=None):
 
     :raises SystemError: If something went wrong.
     """
+
+
+spool = send_to_spooler
+
+
+def spooler_get_task(path):
+    """Returns a spooler task information.
+
+    :param str path: The relative or absolute path to the task to read.
+    :rtype: dict|None
+    """
+
+
+def spooler_jobs():
+    """Returns a list of spooler jobs (filenames in spooler directory).
+
+    :rtype: list[str]
+    """
+    return []
+
+
+def spooler_pid():
+    """Returns first spooler process ID
+
+    :rtype: int
+    """
+    return -1
+
+
+def spooler_pids():
+    """Returns a list of all spooler processes IDs.
+
+    :rtype: list[int]
+    """
+    return []
 
 
 def stop():
