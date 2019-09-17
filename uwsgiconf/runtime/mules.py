@@ -30,7 +30,7 @@ def __offload(func_name, mule_or_farm, *args, **kwargs):
     # to run a function using given arguments,
     Mule(mule_or_farm).send(pickle.dumps(
         (
-            'uwcf',
+            'ucfg_off',
             func_name,
             args,
             kwargs,
@@ -72,7 +72,18 @@ class Mule(object):
         self.id = id
 
     def offload(self):
-        """Decorator. Allows to offload function execution on this mule."""
+        """Decorator. Allows to offload function execution on this mule.
+
+        .. code-block:: python
+
+            first_mule = Mule(1)
+
+            @first_mule.offload()
+            def for_mule(*args, **kwargs):
+                # This function will be offloaded to and handled by mule 1.
+                ...
+
+        """
         return mule_offload(self)
 
     @classmethod
@@ -141,7 +152,18 @@ class Farm(object):
         self.name = name
 
     def offload(self):
-        """Decorator. Allows to offload function execution on mules of this farm."""
+        """Decorator. Allows to offload function execution on mules of this farm.
+
+        .. code-block:: python
+
+            first_mule = Farm('myfarm')
+
+            @first_mule.offload()
+            def for_mule(*args, **kwargs):
+                # This function will be offloaded to farm `myfarm` and handled by any mule from that farm.
+                ...
+
+        """
         return mule_offload(self)
 
     @property
