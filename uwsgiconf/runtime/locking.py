@@ -39,9 +39,6 @@ class Lock(object):
     def __int__(self):
         return self.num
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.release()
-
     def __call__(self, func):
 
         @wraps(func)
@@ -83,6 +80,9 @@ class Lock(object):
         return True
 
     __enter__ = acquire
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.release()
 
 
 lock = Lock
