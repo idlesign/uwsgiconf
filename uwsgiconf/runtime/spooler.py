@@ -47,6 +47,8 @@ def _register_task(spooler_obj, spooler_cls):
             def task_call(*args, **kwargs):
                 # Redirect task (function call) into spooler.
 
+                print('Spooler calling: %s' % func_name)
+
                 return spooler_cls.send_message_raw(**SpoolerFunctionCallTask.build_message(
                     spooler=spooler_obj.name if spooler_obj else None,
                     priority=priority,
