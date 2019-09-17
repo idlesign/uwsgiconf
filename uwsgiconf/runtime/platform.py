@@ -31,8 +31,6 @@ _uwsgi.post_fork_hook = _PostForkHooks.run
 
 class _Platform(object):
 
-    # todo slots
-
     request = None  # type: _Request
     
     postfork_hooks = _PostForkHooks
