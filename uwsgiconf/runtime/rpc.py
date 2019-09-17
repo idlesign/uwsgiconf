@@ -9,13 +9,13 @@ def register_rpc(name=None):
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
 
-    Example:
+    .. code-block:: python
 
-        .. code-block:: python
+        @register_rpc()
+        def expose_me(arg1, arg2=15):
+            print('RPC called %s' % arg1)
 
-            @register_rpc()
-            def expose_me():
-                do()
+        make_rpc_call('expose_me', ['value1'])
 
 
     :param str|unicode name: RPC function name to associate
@@ -43,6 +43,8 @@ def make_rpc_call(func_name, args=None, remote=None):
 
     :param Iterable args: Function arguments.
 
+        .. warning:: Strings are expected.
+
     :param str|unicode remote:
 
     :rtype: bytes|str
@@ -52,6 +54,8 @@ def make_rpc_call(func_name, args=None, remote=None):
     """
     args = args or []
     args = [encode(str(arg)) for arg in args]
+
+    func_name = func_name.encode('utf-8')
 
     if remote:
         result = uwsgi.rpc(remote, func_name, *args)
