@@ -18,3 +18,8 @@ def test_spooler_basics(assert_lines):
     assert_lines([
         'spooler-external = home/two',
     ], Section().spooler.add('home/two', external=True))
+
+    assert_lines([
+        'spooler = /base/here/alias1',
+        'spooler = /base/here/alias2',
+    ], Section().spooler.set_basic_params(base_dir='/base/here').spooler.add(['alias1', 'alias2']))
