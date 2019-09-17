@@ -82,5 +82,5 @@ def test_spooler_tasks(monkeypatch):
 
     assert spooler1_func(100, 20) == ResultProcessed.code_uwsgi
     assert spooler2_func() == ResultProcessed.code_uwsgi
-    assert spooler2_func_fail() == ResultRescheduled.code_uwsgi
     assert spooler2_func_skip() == ResultSkipped.code_uwsgi
+    assert spooler2_func_fail() == ResultRescheduled.code_uwsgi
