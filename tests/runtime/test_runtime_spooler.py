@@ -1,5 +1,5 @@
 from datetime import timedelta
-from uwsgiconf.runtime.spooler import Spooler, ResultProcessed, ResultRescheduled, ResultSkipped
+from uwsgiconf.runtime.spooler import Spooler, ResultProcessed, ResultRescheduled, ResultSkipped, spooler_task_types
 
 
 class FakeUwsgi(object):
@@ -41,6 +41,8 @@ class FakeUwsgi(object):
 
 
 def test_spooler_basic(monkeypatch):
+
+    assert spooler_task_types
 
     monkeypatch.setattr('uwsgiconf.runtime.spooler.uwsgi', FakeUwsgi())
 

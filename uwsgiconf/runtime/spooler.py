@@ -15,9 +15,6 @@ _MSG_MAX_SIZE = 64 * 1024  # 64 Kb https://uwsgi-docs.readthedocs.io/en/latest/S
 
 _task_functions = {}
 
-spooler_task_types = {}
-"""Known task types handlers will store here runtime."""
-
 
 if not hasattr(uwsgi, 'send_to_spooler'):
     raise ConfigurationError(
@@ -46,8 +43,6 @@ def _register_task(spooler_obj, spooler_cls):
 
             def task_call(*args, **kwargs):
                 # Redirect task (function call) into spooler.
-
-                print('Spooler calling: %s' % func_name)
 
                 return spooler_cls.send_message_raw(**SpoolerFunctionCallTask.build_message(
                     spooler=spooler_obj.name if spooler_obj else None,
@@ -340,9 +335,6 @@ class SpoolerTask(object):
         self.message = message
         self.payload = payload
 
-    def __init_subclass__(cls):
-        spooler_task_types[cls.type_id] = cls
-
     def process(self):
         """Processes the task.
 
@@ -391,10 +383,11 @@ class SpoolerFunctionCallTask(SpoolerTask):
         return result
 
 
-if not PY3:
-    spooler_task_types = {task_type.type_id: task_type for task_type in [
-        SpoolerFunctionCallTask,
-    ]}
+# todo Py3.6+ use __init_subclass__
+spooler_task_types = {task_type.type_id: task_type for task_type in [
+    SpoolerFunctionCallTask,
+]}
+"""Known task types handlers will store here runtime."""
 
 
 def _msg_encode(msg):
