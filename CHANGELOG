@@ -2,11 +2,11 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.18.0
+-------
 + Runtime. Added Spooler-related stuff.
-+ Runtime. Signals. Signal objects now can be used as decorators.
 + Runtime. Scheduling. Added 'register_timer_ms()'.
++ Runtime. Signals. Signal objects now can be used as decorators.
 + Spooler. Introduced 'base_dir' for 'set_basic_params()'.
 * Django. Embedded mode support improved.
 * Runtime. RPC. Fixed 'make_rpc_call()'.
