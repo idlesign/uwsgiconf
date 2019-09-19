@@ -23,6 +23,7 @@ def test_cron():
     with pytest.raises(RuntimeConfigurationError):
         register_cron(hour='-%s/2')
 
+    # todo this test is flacky due on variable date. it needs the freezegun.
     now = datetime.now()
 
     @register_cron(hour='%s-%s/2' % (now.hour, now.hour+3), weekday='0-6')
