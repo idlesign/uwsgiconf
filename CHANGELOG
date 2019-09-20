@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Raise an exception when checking for a stub in 'uwsgiinit'.
+
+
 v0.18.0
 -------
 + Runtime. Added Spooler-related stuff.

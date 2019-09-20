@@ -22,14 +22,7 @@ def check_for_stub():
         'Please move uWSGI related stuff including such imports '
         'into %s.py modules of your apps.' % MODULE_INIT)
 
-    try:
-        import uwsgi as uwsgi_orig
-
-        uwsgi_orig.log('ERROR: ' + msg)
-        uwsgi_orig.stop()
-
-    except ImportError:
-        raise RuntimeConfigurationError(msg)
+    raise RuntimeConfigurationError(msg)
 
 
 check_for_stub()
