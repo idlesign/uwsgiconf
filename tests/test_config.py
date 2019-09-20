@@ -185,6 +185,7 @@ def test_configuration(capsys, assert_lines):
 def test_args_formatter(capsys, assert_lines):
 
     formatted = NiceSection().as_configuration().format(formatter='args')
+    assert '">   This configuration was automatically generated using"' in formatted
     assert '--master' in formatted
     assert 'true' not in formatted  # no values for bools
     assert '%k' not in formatted  # no config vars support for CLI

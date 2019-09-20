@@ -127,6 +127,12 @@ class ArgsFormatter(FormatterBase):
                     continue
 
                 else:
+
+                    # Primitive escape.
+                    # todo maybe use shlex/pipes.quote or something more solid
+                    if ' ' in value:
+                        value = '"%s"' % value
+
                     lines.extend(['--%s' % key, '%s' % value])
 
         return lines

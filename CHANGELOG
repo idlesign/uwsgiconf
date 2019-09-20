@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+* Args formatter now uses escaping.
 * Raise an exception when checking for a stub in 'uwsgiinit'.
 
 
