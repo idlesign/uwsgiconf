@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.18.1 [2019-09-22]
+--------------------
 * Args formatter now uses escaping.
 * Raise an exception when checking for a stub in 'uwsgiinit'.
 
