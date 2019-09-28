@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 """
 Trick demo. It shows how to use one file both for uWSGI configuration and application definition.
 
@@ -10,25 +9,24 @@ Trick demo. It shows how to use one file both for uWSGI configuration and applic
 from functools import partial
 
 from uwsgiconf.config import configure_uwsgi
-from uwsgiconf.utils import PY3
 
 
 def encode(data):
-    return map(partial(bytes, encoding='utf8'), data) if PY3 else data
+    return map(partial(bytes, encoding='utf8'), data)
 
 
 def app_1(env, start_response):
     """This is simple WSGI application that will be served by uWSGI."""
 
-    from uwsgiconf.runtime.environ import uwsgi_env
+    from uwsgiconf.runtime.platform import uwsgi
 
     start_response('200 OK', [('Content-Type','text/html')])
 
     data = [
         '<h1>uwsgiconf demo: one file</h1>',
 
-        '<div>uWSGI version: %s</div>' % uwsgi_env.get_version(),
-        '<div>uWSGI request ID: %s</div>' % uwsgi_env.request.id,
+        '<div>uWSGI version: %s</div>' % uwsgi.get_version(),
+        '<div>uWSGI request ID: %s</div>' % uwsgi.request.id,
     ]
 
     return encode(data)
