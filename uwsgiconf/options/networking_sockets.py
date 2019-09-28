@@ -128,6 +128,31 @@ class SocketHttps(Socket):
 
         self.args.extend(args)
 
+    @classmethod
+    def get_certbot_paths(cls, domain):
+        """Returns a tuple of paths for files (certificates_chain, private_key)
+        from Certbot https://certbot.eff.org
+
+        Those paths can be used to pass into Socket initializer.
+
+        .. note:: If files not found empty strings are returned.
+
+        :param str domain: Domain name to get filepaths for.
+
+        :rtype: tuple[str, str]
+
+        """
+        from pathlib import Path
+
+        certs_root = Path('/etc/letsencrypt/live/')
+        certs_chain = certs_root / domain / 'fullchain.pem'
+        certs_private = certs_root / domain / 'privkey.pem'
+
+        if certs_chain.exists() and certs_private.exists():
+            return str(certs_chain), str(certs_private)
+
+        return '', ''
+
 
 class SocketUwsgi(Socket):
     """uwSGI specific socket using ``uwsgi`` protocol."""
