@@ -128,6 +128,33 @@ class Section(_Section):
 
         return self
 
+    def configure_certbot_https(self, domain, webroot, address=None):
+        """Enables HTTPS using certificates from Certbot https://certbot.eff.org.
+
+        .. note:: This relies on ``webroot`` mechanism of Certbot - https://certbot.eff.org/docs/using.html#webroot
+
+            Sample command to get a certificate: ``certbot certonly --webroot -w /webroot/path/ -d mydomain.org``
+
+        :param str domain: Domain name certificates issued for
+            (the same as in ``-d`` option in the above command).
+
+        :param str webroot: Directory to store challenge files to get and renew the certificate
+            (the same as in ``-w`` option in the above command).
+
+        :param str address: Address to bind socket to.
+
+        """
+        address = address or ':443'
+
+        networking = self.networking
+
+        path_cert_chain, path_cert_private = networking.sockets.https.get_certbot_paths(domain)
+        path_cert_chain and networking.register_socket(
+            networking.sockets.https(address, cert=path_cert_chain, key=path_cert_private))
+
+        self.statics.register_static_map(
+            '/.well-known/', webroot, retain_resource_path=True)
+
 
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""

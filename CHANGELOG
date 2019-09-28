@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 + Added SocketHttps.get_certbot_paths() helper.
++ Preset Nice. Added '.configure_certbot_https()' helper.
 
 
 v0.18.1 [2019-09-22]

@@ -1,4 +1,10 @@
+from sys import version_info
+
+import pytest
+
 from uwsgiconf.presets.nice import Section, PythonSection
+
+PY2 = (version_info[0] == 2)
 
 
 def test_nice_section(assert_lines):
@@ -40,6 +46,21 @@ def test_nice_section(assert_lines):
     ], Section(log_dedicated=True, ignore_write_errors=True))
 
     assert '%(headers) headers in %(hsize) bytes' in Section().get_log_format_default()
+
+
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
+def test_configure_certbot_https(assert_lines, monkeypatch):
+
+    monkeypatch.setattr('pathlib.Path.exists', lambda self: True)
+
+    section = Section()
+    section.configure_certbot_https('mydomain.org', '/var/www/')
+
+    assert_lines([
+        'static-map2 = /.well-known/=/var/www/',
+        'https-socket = :443,/etc/letsencrypt/live/mydomain.org/fullchain.pem,'
+        '/etc/letsencrypt/live/mydomain.org/privkey.pem',
+    ], section)
 
 
 def test_nice_python(assert_lines):
