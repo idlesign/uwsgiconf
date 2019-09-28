@@ -71,7 +71,7 @@ def configure():
 
         alias = 'app_%s' % (idx + 1)
 
-        section = PythonSection. bootstrap(
+        section = PythonSection.bootstrap(
 
             'http://127.0.0.1:%s' % port,
 
