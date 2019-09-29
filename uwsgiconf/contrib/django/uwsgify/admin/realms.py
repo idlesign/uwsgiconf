@@ -15,6 +15,7 @@ class SummaryAdmin(OnePageAdmin):
         from uwsgiconf.runtime.rpc import get_rpc_list
         from uwsgiconf.runtime.signals import registry_signals
         from uwsgiconf.runtime.spooler import Spooler
+        from uwsgiconf.runtime.mules import Farm
 
         def get_func_name(func):
             """Returns a distinctive name for a given function.
@@ -48,7 +49,7 @@ class SummaryAdmin(OnePageAdmin):
             (_('Cores'), uwsgi.cores_count),
             (_('Workers'), uwsgi.workers_count),
             (_('Mules'), config.get('mules', 0)),
-            (_('Farms'), '\n'.join(config.get('farm', []))),
+            (_('Farms'), '\n'.join(map(str, Farm.get_farms()))),
             (_('Threads support'), '+' if uwsgi.threads_enabled else '-'),
             (_('Current worker'), uwsgi.worker_id),
             (_('Requests by worker'), uwsgi.request.id),

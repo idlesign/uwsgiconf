@@ -1,8 +1,8 @@
 from threading import local
 
-from .. import uwsgi as _uwsgi
 from .request import _Request
-from ..utils import decode
+from .. import uwsgi as _uwsgi
+from ..utils import decode_deep, decode
 
 
 class _PostForkHooks(object):
@@ -17,6 +17,7 @@ class _PostForkHooks(object):
         """
         def add_(func):
             cls.funcs.append(func)
+            return func
         return add_
 
     @classmethod
@@ -43,9 +44,6 @@ class _Platform(object):
         import it on server startup with `python.import_module()`.
 
     """
-    
-    hostname = _uwsgi.hostname  # type: str
-    """Current host name."""
 
     workers_count = _uwsgi.numproc  # type: int
     """Number of workers (processes) currently running."""
@@ -62,14 +60,35 @@ class _Platform(object):
     started_on = _uwsgi.started_on  # type: int
     """uWSGI's startup Unix timestamp."""
 
-    config_variables = _uwsgi.magic_table  # type: dict
-    """Current mapping of configuration file "magic" variables."""
-
-    config = _uwsgi.opt  # type: dict
-    """The current configuration options, including any custom placeholders."""
-
     apps_map = _uwsgi.applications  # type: dict
     """Applications dictionary mapping mountpoints to application callables."""
+
+    @property
+    def hostname(self):
+        """Current host name.
+
+        :rtype: str
+
+        """
+        return decode(_uwsgi.hostname)
+
+    @property
+    def config(self):
+        """The current configuration options, including any custom placeholders.
+
+        :rtype: dict
+
+        """
+        return decode_deep(_uwsgi.opt)
+
+    @property
+    def config_variables(self):
+        """Current mapping of configuration file "magic" variables.
+
+        :rtype: dict
+
+        """
+        return decode_deep(_uwsgi.magic_table)
 
     @property
     def worker_id(self):
@@ -87,7 +106,7 @@ class _Platform(object):
 
         :rtype: tuple[dict]
         """
-        return _uwsgi.workers()
+        return tuple(decode_deep(item) for item in _uwsgi.workers())
 
     @property
     def ready_for_requests(self):
