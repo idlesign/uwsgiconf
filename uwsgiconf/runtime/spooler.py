@@ -4,7 +4,7 @@ from calendar import timegm
 from datetime import datetime, timedelta
 
 from .. import uwsgi
-from ..utils import listify, get_logger, encode, decode
+from ..utils import listify, get_logger, encode, decode, decode_deep
 
 _LOG = get_logger(__name__)
 
@@ -12,6 +12,10 @@ _MSG_MAX_SIZE = 64 * 1024  # 64 Kb https://uwsgi-docs.readthedocs.io/en/latest/S
 
 
 _task_functions = {}
+
+
+def _get_spoolers():
+    return decode_deep(listify(uwsgi.opt.get('spooler', [])))
 
 
 def _register_task(spooler_obj, spooler_cls):
@@ -224,7 +228,7 @@ class Spooler(object):
 
         :rtype: list[Spooler]
         """
-        return [Spooler(spooler_dir) for spooler_dir in listify(uwsgi.opt.get('spooler', []))]
+        return [Spooler(spooler_dir) for spooler_dir in _get_spoolers()]
 
     @classmethod
     def get_by_basename(cls, name):
@@ -241,7 +245,7 @@ class Spooler(object):
         spooler = None
         basename = os.path.basename
 
-        for spooler_dir in listify(uwsgi.opt.get('spooler', [])):
+        for spooler_dir in _get_spoolers():
             if basename(spooler_dir) == name:
                 spooler = Spooler(spooler_dir)
                 break
