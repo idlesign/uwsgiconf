@@ -46,6 +46,28 @@ def decode(value):
     return value.decode('utf-8') if PY3 and isinstance(value, bytes) else value
 
 
+def decode_deep(value):
+    """Decodes object deep if required.
+
+    :param value:
+    :rtype: dict
+
+    """
+
+    if isinstance(value, dict):
+        out = {}
+        for key, val in value.items():
+            out[key] = decode_deep(val)
+
+    elif isinstance(value, (tuple, list)):
+        out = [decode_deep(item) for item in value]
+
+    else:
+        out = decode(value)
+
+    return out
+
+
 @contextmanager
 def output_capturing():
     """Temporarily captures/redirects stdout."""
