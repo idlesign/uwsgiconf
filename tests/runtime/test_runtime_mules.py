@@ -1,22 +1,45 @@
-from uwsgiconf.runtime.mules import *
+from uwsgiconf.runtime.mules import Mule, Farm, _mule_messages_hook
 
 
-def test_mule():
+def test_mule(monkeypatch):
 
-    current = Mule.get_current_id()
+    assert not Mule.get_message()
 
-    mule = Mule(1)
-    mule.send('ping')
-    msg = mule.get_message()
+    current_mule = Mule.get_current()
+    assert current_mule is None
+
+    monkeypatch.setattr('uwsgiconf.runtime.mules.Mule.get_current_id', lambda *args: 1)
+    current_mule = Mule.get_current()
+    assert str(current_mule) == '1'
+    current_mule.send('some')
+
+    @current_mule.offload()
+    def offloaded(add):
+        return 33 + add
+
+    def fake_send(self, message):
+        assert self.id is current_mule.id
+        return _mule_messages_hook(message)
+
+    monkeypatch.setattr('uwsgiconf.runtime.mules.Mule.send', fake_send)
+
+    assert offloaded(2) == 35
 
 
-def test_farm():
+def test_farm(monkeypatch):
 
-    current = Mule.get_current_id()
+    monkeypatch.setattr('uwsgiconf.runtime.mules.uwsgi.opt', {'farm': 'myfarm:1,2,3'})
 
-    farm = Farm('first')
+    farms = Farm.get_farms()
+    assert len(farms) == 1
 
+    farm = farms[0]
+    assert str(farm) == 'myfarm'
     assert not farm.is_mine
 
     farm.send('ping')
-    msg = farm.get_message()
+    assert not farm.get_message()
+
+    @farm.offload()
+    def offloaded():
+        return 44

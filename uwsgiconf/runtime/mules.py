@@ -2,9 +2,13 @@ import pickle
 from functools import partial
 
 from .. import uwsgi
-from ..utils import decode
+from ..utils import decode, decode_deep, listify
 
 __offloaded_functions = {}
+
+
+def _get_farms():
+    return decode_deep(listify(uwsgi.opt.get('farm', [])))
 
 
 def _mule_messages_hook(message):
@@ -28,7 +32,7 @@ uwsgi.mule_msg_hook = _mule_messages_hook
 def __offload(func_name, mule_or_farm, *args, **kwargs):
     # Sends a message to a mule/farm, instructing it
     # to run a function using given arguments,
-    Mule(mule_or_farm).send(pickle.dumps(
+    return Mule(mule_or_farm).send(pickle.dumps(
         (
             'ucfg_off',
             func_name,
@@ -46,6 +50,7 @@ def mule_offload(mule_or_farm=None):
     """
     if isinstance(mule_or_farm, Mule):
         mule_or_farm = mule_or_farm.id
+
     elif isinstance(mule_or_farm, Farm):
         mule_or_farm = mule_or_farm.name
 
@@ -70,6 +75,9 @@ class Mule(object):
 
         """
         self.id = id
+
+    def __str__(self):
+        return str(self.id)
 
     def offload(self):
         """Decorator. Allows to offload function execution on this mule.
@@ -142,14 +150,39 @@ class Mule(object):
 class Farm(object):
     """Represents uWSGI Mule Farm."""
 
-    __slots__ = ['name']
+    __slots__ = ['name', 'mules']
 
-    def __init__(self, name):
+    def __init__(self, name, mules=None):
         """
         :param str|unicode name: Mule farm name.
+        :param list[int] mules: Attached mules.
 
         """
         self.name = name
+        self.mules = tuple(Mule(mule_id) for mule_id in mules or [])
+
+    def __str__(self):
+        return '%s: %s' % (self.name, ', '.join(map(str, self.mules)))
+
+    @classmethod
+    def get_farms(cls):
+        """Returns a list of registered farm objects.
+
+        .. code-block:: python
+
+            farms = Farm.get_farms()
+            first_farm = farms[0]
+            first_farm_first_mule = first_farm.mules[0]
+
+        :rtype: list[Farm]
+
+        """
+        return [Farm._from_spec(farm_spec) for farm_spec in _get_farms()]
+
+    @classmethod
+    def _from_spec(cls, spec):
+        name, _, mules = spec.partition(':')
+        return Farm(name=name, mules=[int(mule_id) for mule_id in mules.split(',')])
 
     def offload(self):
         """Decorator. Allows to offload function execution on mules of this farm.

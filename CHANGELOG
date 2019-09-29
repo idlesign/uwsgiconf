@@ -6,6 +6,7 @@ Unreleased
 ----------
 + Added SocketHttps.get_certbot_paths() helper.
 + Preset Nice. Added '.configure_certbot_https()' helper.
++ Runtime. Added Farms introspection utilities.
 * Runtime. 'ConfigurationError' not raised on spooler import anymore.
 
 
