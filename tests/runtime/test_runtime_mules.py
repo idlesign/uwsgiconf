@@ -34,7 +34,7 @@ def test_farm(monkeypatch):
     assert len(farms) == 1
 
     farm = farms[0]
-    assert str(farm) == 'myfarm'
+    assert str(farm) == 'myfarm: 1, 2, 3'
     assert not farm.is_mine
 
     farm.send('ping')
