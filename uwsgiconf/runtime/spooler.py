@@ -4,9 +4,7 @@ from calendar import timegm
 from datetime import datetime, timedelta
 
 from .. import uwsgi
-from ..utils import listify, get_logger, PY3, encode, decode
-from ..exceptions import ConfigurationError
-
+from ..utils import listify, get_logger, encode, decode
 
 _LOG = get_logger(__name__)
 
@@ -16,19 +14,13 @@ _MSG_MAX_SIZE = 64 * 1024  # 64 Kb https://uwsgi-docs.readthedocs.io/en/latest/S
 _task_functions = {}
 
 
-if not hasattr(uwsgi, 'send_to_spooler'):
-    raise ConfigurationError(
-        'To access spoolers one needs to configure those in uWSGI config first.')
-
-
 def _register_task(spooler_obj, spooler_cls):
     """
 
     :param Spooler spooler_obj:
     :param Spooler spooler_cls:
-    :return:
-    """
 
+    """
     def _register_task_(priority=None, postpone=None):
         # This one is returned by `_HandlerRegisterer`
 
