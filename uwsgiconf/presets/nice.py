@@ -127,8 +127,9 @@ class Section(_Section):
         :param str response: Response to to give in maintenance mode.
 
             Supported:
-                * URLs starting with ``http`` - requests will be redirected there.
                 * File path - this file will be served in response.
+                * URLs starting with ``http`` - requests will be redirected there using 302.
+                  This is often discouraged, because it may have search ranking implications.
 
         """
         from pathlib import Path
