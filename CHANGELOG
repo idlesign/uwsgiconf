@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 + Added SocketHttps.get_certbot_paths() helper.
++ Django. Added static generic 503 page.
 + Preset Nice. Added '.configure_certbot_https()' helper.
 + Preset Nice. Added '.configure_maintenance_mode()' helper.
 + Runtime. Added Farms introspection utilities.
