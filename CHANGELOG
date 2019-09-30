@@ -8,6 +8,7 @@ Unreleased
 + Django. Added static generic 503 page.
 + Preset Nice. Added '.configure_certbot_https()' helper.
 + Preset Nice. Added '.configure_maintenance_mode()' helper.
++ Preset Nice. Added '.get_bundled_static_path()' helper.
 + Runtime. Added Farms introspection utilities.
 * 'RouteRule' 'subject' argument now defaults to 'None'. String subjects are considered to be path-info.
 * Runtime. 'ConfigurationError' not raised on spooler import anymore.

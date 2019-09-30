@@ -117,6 +117,24 @@ class Section(_Section):
 
         return format_default
 
+    @classmethod
+    def get_bundled_static_path(cls, filename):
+        """Returns a full path to a static HTML page file bundled with uwsgiconf.
+
+        :param str filename: File name to return path to.
+
+            Examples:
+                * 403.html
+                * 404.html
+                * 500.html
+                * 503.html
+
+        :rtype: str
+
+        """
+        from pathlib import Path
+        return str(Path(__file__).parent.parent / 'contrib/django/uwsgify/static/uwsgify' / filename)
+
     def configure_maintenance_mode(self, trigger, response):
         """Allows maintenance mode when a certain response
         is given for every request if a trigger is set.

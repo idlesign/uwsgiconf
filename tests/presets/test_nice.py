@@ -49,6 +49,13 @@ def test_nice_section(assert_lines):
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
+def test_get_bundled_static_path(assert_lines):
+
+    path = Section.get_bundled_static_path('503.html')
+    assert path.endswith('uwsgiconf/contrib/django/uwsgify/static/uwsgify/503.html')
+
+
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_maintenance_mode(assert_lines):
 
     section = Section()
