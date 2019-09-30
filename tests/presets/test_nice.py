@@ -49,6 +49,20 @@ def test_nice_section(assert_lines):
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
+def test_configure_maintenance_mode(assert_lines):
+
+    section = Section()
+    section.configure_maintenance_mode('/watch/that/file', '/serve/this/file')
+    section.configure_maintenance_mode('/watch/that/file/also', 'http://pythonz.net')
+
+    assert_lines([
+        'route-if = exists:/watch/that/file static:/serve/this/file',
+        'route-if = exists:/watch/that/file/also redirect-302:http://pythonz.net',
+
+    ], section)
+
+
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_certbot_https(assert_lines, monkeypatch):
 
     monkeypatch.setattr('pathlib.Path.exists', lambda self: True)

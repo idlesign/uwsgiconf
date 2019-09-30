@@ -117,6 +117,40 @@ class Section(_Section):
 
         return format_default
 
+    def configure_maintenance_mode(self, trigger, response):
+        """Allows maintenance mode when a certain response
+        is given for every request if a trigger is set.
+
+        :param str trigger: This triggers maintenance mode responses.
+            Should be a path to a file: if file exists, maintenance mode is on.
+
+        :param str response: Response to to give in maintenance mode.
+
+            Supported:
+                * URLs starting with ``http`` - requests will be redirected there.
+                * File path - this file will be served in response.
+
+        """
+        from pathlib import Path
+
+        routing = self.routing
+
+        rule = routing.route_rule
+
+        if response.startswith('http'):
+            action = rule.actions.redirect(response)
+
+        else:
+            action = rule.actions.serve_static(Path(response).absolute())
+
+        routing.register_route(
+            routing.route_rule(
+                subject=rule.subjects.custom(trigger).exists(),
+                action=action,
+            ))
+
+        return self
+
     def configure_owner(self, owner='www-data'):
         """Shortcut to set process owner data.
 
