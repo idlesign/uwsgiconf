@@ -80,6 +80,16 @@ def test_routing_rules(assert_lines):
             ~rule.subjects.custom(rule.vars.request('PATH_INFO')).eq('/bad'))
     ))
 
+    assert_lines([
+        'route = ^/redir redirect-302:http://here',
+
+    ], Section().routing.register_route(
+        rule(
+            rule.actions.redirect('http://here'),
+            subject='^/redir',
+        )
+    ))
+
 
 def test_routing_subject_custom():
 
@@ -440,7 +450,8 @@ def test_routing_goto_label(assert_lines):
                     subjects.http_user_agent('.*curl.*')
                 ),
                 rule(
-                    actions.do_continue()
+                    actions.do_continue(),
+                    subjects.path_info('(.*)')
                 ),
             ], label=label)
     )

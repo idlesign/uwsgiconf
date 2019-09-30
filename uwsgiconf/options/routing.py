@@ -7,7 +7,7 @@ from .routing_subjects import *
 from .routing_vars import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..utils import listify
+from ..utils import listify, string_types
 
 
 class RouteRule(object):
@@ -156,13 +156,16 @@ class RouteRule(object):
         # router_memcached: memcached, memcached-continue, memcachedstore
         # router_redis: redis, redis-continue, redisstore
 
-    def __init__(self, action, subject=subjects.path_info('(.*)'), stage=stages.REQUEST):
+    def __init__(self, action, subject=None, stage=stages.REQUEST):
         """
         :param RouteAction action: Action (or transformation) to perfrom.
             See ``.actions`` and ``.transforms``.
 
-        :param SubjectCustom|SubjectBuiltin subject: Subject to verify before action is performed.
+        :param SubjectCustom|SubjectBuiltin|str subject: Subject to verify before action is performed.
             See ``.subjects``.
+
+            * String values are automatically transformed into ``subjects.path_info``.
+            * If ``None`` action is performed always w/o subject check.
 
         :param str|unicode stage: Stage on which the action needs to be performed.
             See ``.stages``.
@@ -170,6 +173,9 @@ class RouteRule(object):
         """
         if subject is None:
             subject = 'run'  # always run the specified route action
+
+        elif isinstance(subject, string_types):
+            subject = self.subjects.path_info(subject)
 
         subject_rule = ''
 
