@@ -155,6 +155,8 @@ class Section(_Section):
         self.statics.register_static_map(
             '/.well-known/', webroot, retain_resource_path=True)
 
+        return self
+
 
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
