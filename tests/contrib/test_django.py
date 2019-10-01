@@ -108,7 +108,8 @@ def test_uwsgi_stop(patch_base_command):
 def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 
-    Command().handle(systype='systemd')
+    Command().handle(
+        systype='systemd', nostatic=True)
 
     out, err = capsys.readouterr()
 
@@ -126,7 +127,8 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
 def test_uwsgi_sysinit_upstart(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 
-    Command().handle(systype='upstart')
+    Command().handle(
+        systype='upstart', nostatic=True)
 
     out, err = capsys.readouterr()
 

@@ -17,6 +17,11 @@ class Command(BaseCommand):
 
         parser.add_argument(
             '--systype', dest='systype',
+            help='System type alias to make configuration for. E.g.: systemd, upstart.',
+        )
+
+        parser.add_argument(
+            '--nostatic', action='store_true', dest='nostatic',
             help='Tells uWSGI to NOT to serve static and media files.',
         )
 
@@ -24,11 +29,15 @@ class Command(BaseCommand):
         systype = options['systype'] or TYPE_SYSTEMD
 
         mutator = SectionMutator.spawn()
+        command = 'manage.py uwsgi_run'
+
+        if options['nostatic']:
+            command = command + ' --nostatic'
 
         config = get_config(
             systype,
             conf=mutator.section,
-            conf_path=path.join(mutator.dir_base, 'manage.py uwsgi_run --nostatic'),
+            conf_path=path.join(mutator.dir_base, command),
             runner=Finder.python(),
         )
 
