@@ -44,7 +44,8 @@ def get_tpl_systemd(conf):
 
         [Unit]
         Description={project} uWSGI Service
-        After=syslog.target
+        Wants=network-online.target
+        After=network-online.target
 
         [Service]
         Environment="PATH=%(path)s"

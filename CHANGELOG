@@ -15,6 +15,7 @@ Unreleased
 * Runtime. 'ConfigurationError' not raised on spooler import anymore.
 * Runtime. Improved values decoding for Py3.
 * Sysinit. Fixed 'install' command path.
+* Sysinit. Systemd. Changed Wants and After targets.
 
 
 v0.18.1 [2019-09-22]
