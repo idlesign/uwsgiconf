@@ -7,6 +7,7 @@ Unreleased
 + Added SocketHttps.get_certbot_paths() helper.
 + Django 'uwsgi_sysinit' management command now accepts --nostatic option.
 + Django. Added static generic 503 page.
++ Networking.sockets.from_dsn() now uses shared sockets for priviledged ports when non root.
 + Preset Nice. Added '.configure_certbot_https()' helper.
 + Preset Nice. Added '.configure_maintenance_mode()' helper.
 + Preset Nice. Added '.get_bundled_static_path()' helper.

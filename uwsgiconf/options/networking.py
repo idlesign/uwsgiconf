@@ -1,3 +1,4 @@
+from os import geteuid
 try:
     from urllib.parse import urlsplit, parse_qs
 except ImportError:
@@ -30,6 +31,9 @@ class Networking(OptionsGroup):
         def from_dsn(cls, dsn):
             """Constructs socket configuration object from DSN.
 
+            .. note:: This will also automatically use shared sockets
+                to bind to priviledged ports when non root.
+
             :param str|unicode dsn: Data source name, e.g:
                 * http://127.0.0.1:8000
                 * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
@@ -51,6 +55,12 @@ class Networking(OptionsGroup):
             }
             socket_kwargs.update({key: val[0] for key, val in parse_qs(split.query).items()})
             socket = sockets[split.scheme]
+
+            if split.port and split.port < 1024 and geteuid() != 0:
+                # Automatically use shared sockets to bind
+                # to priviledged ports when non root.
+                new_shared = cls.shared(socket_kwargs['address'])
+                socket_kwargs['address'] = new_shared
 
             try:
                 socket = socket(**socket_kwargs)

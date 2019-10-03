@@ -49,6 +49,17 @@ def test_bootstrap(assert_lines):
     section = NiceSection.bootstrap('http://1.1.1.1:2222')
     assert_lines('http-socket = 1.1.1.1:2222', section)
 
+    section = NiceSection.bootstrap([
+        'http://:80',
+        'https://:443?cert=/here/there.crt&key=/that/my.key',
+    ])
+    assert_lines([
+        'shared-socket = :80',
+        'shared-socket = :443',
+        'http-socket = =0',
+        'https-socket = =1,/here/there.crt,/that/my.key',
+    ], section)
+
 
 def test_section_embeddeding_plugins(assert_lines, mock_popen):
     # Embedded plugins handling.
