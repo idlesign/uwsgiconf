@@ -48,7 +48,7 @@ def get_tpl_systemd(conf):
 
         [Service]
         Environment="PATH=%(path)s"
-        ExecStartPre=-/bin/install -d -m 0755 -o %(user)s -g %(group)s %(runtime_dir)s
+        ExecStartPre=-/usr/bin/install -d -m 0755 -o %(user)s -g %(group)s %(runtime_dir)s
         ExecStart={command}
         Restart=on-failure
         KillSignal=SIGTERM
@@ -94,7 +94,7 @@ def get_tpl_upstart(conf):
         respawn
         
         env PATH=%(path)s
-        pre-start exec -/bin/install -d -m 0755 -o %(user)s -g %(group)s %(runtime_dir)s
+        pre-start exec -/usr/bin/install -d -m 0755 -o %(user)s -g %(group)s %(runtime_dir)s
         
         exec {command}
     '''
