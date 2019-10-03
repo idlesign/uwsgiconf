@@ -202,8 +202,10 @@ class Section(_Section):
         networking = self.networking
 
         path_cert_chain, path_cert_private = networking.sockets.https.get_certbot_paths(domain)
+
         path_cert_chain and networking.register_socket(
-            networking.sockets.https(address, cert=path_cert_chain, key=path_cert_private))
+            networking.sockets.from_dsn(
+                'https://%s?cert=%s&key=%s' % (address, path_cert_chain, path_cert_private)))
 
         self.statics.register_static_map(
             '/.well-known/', webroot, retain_resource_path=True)

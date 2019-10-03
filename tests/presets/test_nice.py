@@ -75,11 +75,22 @@ def test_configure_certbot_https(assert_lines, monkeypatch):
     monkeypatch.setattr('pathlib.Path.exists', lambda self: True)
 
     section = Section()
-    section.configure_certbot_https('mydomain.org', '/var/www/')
+    section.configure_certbot_https('mydomain.org', '/var/www/', address=':4443')
 
     assert_lines([
         'static-map2 = /.well-known/=/var/www/',
-        'https-socket = :443,/etc/letsencrypt/live/mydomain.org/fullchain.pem,'
+        'https-socket = :4443,/etc/letsencrypt/live/mydomain.org/fullchain.pem,'
+        '/etc/letsencrypt/live/mydomain.org/privkey.pem',
+    ], section)
+
+    section = Section.bootstrap(['http://:80'])
+    section.configure_certbot_https('mydomain.org', '/var/www/')
+
+    assert_lines([
+        'shared-socket = :80',
+        'shared-socket = :443',
+        'http-socket = =0',
+        'https-socket = =1,/etc/letsencrypt/live/mydomain.org/fullchain.pem,'
         '/etc/letsencrypt/live/mydomain.org/privkey.pem',
     ], section)
 
