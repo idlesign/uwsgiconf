@@ -557,7 +557,7 @@ class Section(OptionsGroup):
             return OrderedDict(descriptions)
 
     @classmethod
-    def bootstrap(cls, dsn, **init_kwargs):
+    def bootstrap(cls, dsn, allow_shared_sockets=None, **init_kwargs):
         """Constructs a section object performing it's basic (default) configuration.
 
         :param str|unicode|list[str|unicode] dsn: Data source name, e.g:
@@ -566,6 +566,10 @@ class Section(OptionsGroup):
 
                 .. note:: Some schemas:
                     fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
+
+        :param bool allow_shared_sockets: Allows using shared sockets to bind
+            to priviledged ports. If not provided automatic mode is enabled:
+            shared are allowed if current user is not root.
 
         :param init_kwargs: Additional initialization keyword arguments accepted by section type.
 
@@ -576,7 +580,7 @@ class Section(OptionsGroup):
         networking = section.networking
 
         for name in listify(dsn):
-            socket = networking.sockets.from_dsn(name)
+            socket = networking.sockets.from_dsn(name, allow_shared_sockets=allow_shared_sockets)
             networking.register_socket(socket)
 
         return section

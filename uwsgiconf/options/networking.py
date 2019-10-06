@@ -28,7 +28,7 @@ class Networking(OptionsGroup):
         zeromq = SocketZeromq
 
         @classmethod
-        def from_dsn(cls, dsn):
+        def from_dsn(cls, dsn, allow_shared_sockets=None):
             """Constructs socket configuration object from DSN.
 
             .. note:: This will also automatically use shared sockets
@@ -40,6 +40,10 @@ class Networking(OptionsGroup):
 
                 .. note:: Some schemas:
                     fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
+
+            :param bool allow_shared_sockets: Allows using shared sockets to bind
+                to priviledged ports. If not provided automatic mode is enabled:
+                shared are allowed if current user is not root.
 
             :rtype Socket
 
@@ -56,9 +60,8 @@ class Networking(OptionsGroup):
             socket_kwargs.update({key: val[0] for key, val in parse_qs(split.query).items()})
             socket = sockets[split.scheme]
 
-            if split.port and split.port < 1024 and geteuid() != 0:
-                # Automatically use shared sockets to bind
-                # to priviledged ports when non root.
+            allow_shared_sockets = allow_shared_sockets or (geteuid() != 0)
+            if split.port and split.port < 1024 and allow_shared_sockets:
                 new_shared = cls.shared(socket_kwargs['address'])
                 socket_kwargs['address'] = new_shared
 
