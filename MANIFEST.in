@@ -9,7 +9,9 @@ recursive-include docs *.rst
 recursive-include docs *.py
 recursive-include tests *
 
+recursive-include uwsgiconf/contrib/django/uwsgify/locale *
 recursive-include uwsgiconf/contrib/django/uwsgify/static *
+recursive-include uwsgiconf/contrib/django/uwsgify/templates *
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
