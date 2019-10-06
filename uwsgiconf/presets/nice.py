@@ -181,7 +181,7 @@ class Section(_Section):
 
         return self
 
-    def configure_certbot_https(self, domain, webroot, address=None):
+    def configure_certbot_https(self, domain, webroot, address=None, allow_shared_sockets=None):
         """Enables HTTPS using certificates from Certbot https://certbot.eff.org.
 
         .. note:: This relies on ``webroot`` mechanism of Certbot - https://certbot.eff.org/docs/using.html#webroot
@@ -196,6 +196,10 @@ class Section(_Section):
 
         :param str address: Address to bind socket to.
 
+        :param bool allow_shared_sockets: Allows using shared sockets to bind
+            to priviledged ports. If not provided automatic mode is enabled:
+            shared are allowed if current user is not root.
+
         """
         address = address or ':443'
 
@@ -205,7 +209,8 @@ class Section(_Section):
 
         path_cert_chain and networking.register_socket(
             networking.sockets.from_dsn(
-                'https://%s?cert=%s&key=%s' % (address, path_cert_chain, path_cert_private)))
+                'https://%s?cert=%s&key=%s' % (address, path_cert_chain, path_cert_private),
+                allow_shared_sockets=allow_shared_sockets))
 
         self.statics.register_static_map(
             '/.well-known/', webroot, retain_resource_path=True)
