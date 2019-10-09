@@ -684,7 +684,7 @@ def log_this_request():
 def logsize():
     """Returns current log size.
 
-    :rtype|long
+    :rtype: long
     """
     return 0
 
@@ -808,7 +808,7 @@ def metric_set_min(key, value):
 def micros():
     """Returns uWSGI clock microseconds.
 
-    :rtype|long
+    :rtype: long
     """
     return 0
 
@@ -1225,7 +1225,7 @@ def suspend():
 
     * http://uwsgi.readthedocs.io/en/latest/Async.html#suspend-resume
 
-    :type: bool
+    :rtype: bool
     """
     return False
 

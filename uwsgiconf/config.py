@@ -37,6 +37,7 @@ class Section(OptionsGroup):
         * section initializer using `params_` prefixed group name:
 
             .. code-block:: python
+
                 Section(
                     params_workers=dict(count=3),
                 )

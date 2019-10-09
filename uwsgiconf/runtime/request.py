@@ -2,6 +2,7 @@ from .. import uwsgi
 
 
 class _Request(object):
+    """Current request information."""
 
     __slots__ = []
 

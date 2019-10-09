@@ -32,8 +32,13 @@ _uwsgi.post_fork_hook = _PostForkHooks.run
 
 class _Platform(object):
 
-    request = None  # type: _Request
+    request = _Request  # type: _Request
+    """Current request information. 
     
+    .. note:: Object is attached runtime.
+    
+    """
+
     postfork_hooks = _PostForkHooks
     """uWSGI is a preforking server, so you might need 
     to execute a fixup tasks (hooks) after each fork(). 
@@ -136,7 +141,7 @@ class _Platform(object):
     def clock(self):
         """Returns uWSGI clock microseconds.
 
-        :rtype|long
+        :rtype: long
         """
         return _uwsgi.micros()
 
@@ -168,6 +173,9 @@ __THREAD_LOCAL = local()
 
 
 def __get_platform():
+    """
+    :rtype: _Platform
+    """
     platform = getattr(__THREAD_LOCAL, 'uwsgi_platform', None)
 
     if platform is None:
@@ -180,3 +188,4 @@ def __get_platform():
 
 
 uwsgi = __get_platform()
+"""This is a _Platform instance."""

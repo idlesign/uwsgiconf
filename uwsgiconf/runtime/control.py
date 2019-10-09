@@ -3,12 +3,32 @@ from .. import uwsgi
 
 
 stop = uwsgi.stop
+"""Stops uWSGI.
+
+:rtype: bool|None
+"""
 
 reload = uwsgi.reload
+"""Gracefully reloads uWSGI.
+
+* http://uwsgi.readthedocs.io/en/latest/Management.html#reloading-the-server
+
+:rtype: bool
+"""
 
 disconnect = uwsgi.disconnect
+"""Drops current connection.
+
+:rtype: None
+"""
 
 set_process_name = uwsgi.setprocname
+"""Sets current process name.
+
+:param str|unicode name:
+
+:rtype: bool
+"""
 
 
 class harakiri_imposed(object):

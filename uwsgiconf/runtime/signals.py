@@ -7,8 +7,11 @@ from ..utils import string_types, get_logger
 _LOG = get_logger(__name__)
 
 
-registry_signals = []
+registry_signals = []  # type: list[SignalDescription]
+"""Registered signals."""
+
 SignalDescription = namedtuple('SignalDescription', ['num', 'target', 'func'])
+"""Registered signal information."""
 
 
 def get_available_num():
@@ -42,6 +45,7 @@ class Signal(object):
         is defining them in the master (.runtime.uwsgi.postfork_hooks.add), so all workers see them.
 
     .. code-block:: python
+
         signal = Signal()
 
         @signal.register_handler()
@@ -85,6 +89,7 @@ class Signal(object):
         """Decorator for a function to be used as a signal handler.
 
         .. code-block:: python
+
             signal = Signal()
 
             @signal.register_handler()
