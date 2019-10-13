@@ -35,7 +35,7 @@ def get_tpl_systemd(conf):
     """
     tpl = '''
         # Place into:   /etc/systemd/system/{project}.service
-        # Setup:        sudo systemctl enable $PWD/{project}.service
+        # Setup:        sudo systemctl enable --now $PWD/{project}.service
         # Start:        sudo systemctl start {project}.service
         # Stop:         sudo systemctl stop {project}.service
         # Restart:      sudo systemctl restart {project}.service
@@ -56,6 +56,8 @@ def get_tpl_systemd(conf):
         Type=notify
         StandardError=syslog
         NotifyAccess=all
+        # Bind to priviledged ports.
+        AmbientCapabilities=CAP_NET_BIND_SERVICE
 
         [Install]
         WantedBy=multi-user.target
