@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.19.0 [2019-10-17]
+--------------------
 + Added SocketHttps.get_certbot_paths() helper.
 + Django 'uwsgi_sysinit' management command now accepts --nostatic option.
 + Django. Added static generic 503 page.
