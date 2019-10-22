@@ -60,10 +60,14 @@ class Networking(OptionsGroup):
             socket_kwargs.update({key: val[0] for key, val in parse_qs(split.query).items()})
             socket = sockets[split.scheme]
 
-            allow_shared_sockets = allow_shared_sockets or (geteuid() != 0)
-            if split.port and split.port < 1024 and allow_shared_sockets:
-                new_shared = cls.shared(socket_kwargs['address'])
-                socket_kwargs['address'] = new_shared
+            if split.port and split.port < 1024:
+
+                if allow_shared_sockets is None:
+                    allow_shared_sockets = (geteuid() != 0)
+
+                if allow_shared_sockets:
+                    new_shared = cls.shared(socket_kwargs['address'])
+                    socket_kwargs['address'] = new_shared
 
             try:
                 socket = socket(**socket_kwargs)
