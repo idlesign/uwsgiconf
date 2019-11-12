@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 * 'allow_shared_sockets' param of 'sockets.from_dns' and such now allows 'False'.
+* ArgsFormatter now doesn't drop every line starting with %.
 
 
 v0.19.0 [2019-10-17]

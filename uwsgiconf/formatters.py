@@ -122,7 +122,7 @@ class ArgsFormatter(FormatterBase):
                 if value == 'true':
                     lines.append('--%s' % key)
 
-                elif value.startswith('%'):
+                elif value.startswith('%') and len(value) == 2:
                     # No config var support is available in command line.
                     continue
 
