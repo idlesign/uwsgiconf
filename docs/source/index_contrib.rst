@@ -49,11 +49,10 @@ with the help of ``uwsgicfg.py`` (constructed in a usual for **uwsgiconf** manne
         from os.path import dirname, abspath, join
         from uwsgiconf.presets.nice import PythonSection
 
-        section = PythonSection(
-            wsgi_module=join(dirname(abspath(__file__)), 'wsgi.py')
 
-        ).networking.register_socket(
-            PythonSection.networking.sockets.http('127.0.0.1:8000')
+        section = PythonSection.bootstrap(
+            'http://127.0.0.1:8000',
+            wsgi_module=join(dirname(abspath(__file__)), 'wsgi.py')
         )
 
         ...
@@ -128,12 +127,9 @@ to start your Django project on system start.
     ; Dump config to file.
     $ ./manage.py uwsgi_sysinit > myapp.service
 
-    ; Copy config into standard location
-    $ sudo cp myapp.service /etc/systemd/system/
+    ; Wire up the service config into system directory and start service
+    $ sudo systemctl enable --now myapp.service
 
-    ; Reload available configs information and run service
-    $ sudo sh -c "systemctl daemon-reload; systemctl start myapp.service"
-
-    ; Watch application log realtime (if syslog is used)
-    $ journalctl -fu myapp.service
+    ; Watch application log realtime
+    $ sudo journalctl -fu myapp.service
     
