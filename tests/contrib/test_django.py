@@ -69,11 +69,17 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
 
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_run import Command
 
-    Command().handle(compile=False, use_static_handler=True, embedded=False)
+    Command().handle(
+        compile=False,
+        contribute_static=True,
+        contribute_runtimes=True,
+        contribute_errpages=True,
+        embedded=False,
+    )
     Command().handle(compile=True, embedded=False)
 
     with pytest.raises(ImportError):  # py3 - ModuleNotFoundError
-        Command().handle(compile=False, use_static_handler=True, embedded=True)
+        Command().handle(compile=False, contribute_static=True, embedded=True)
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
@@ -109,7 +115,7 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 
     Command().handle(
-        systype='systemd', nostatic=True)
+        systype='systemd', nostatic=True, noruntimes=True)
 
     out, err = capsys.readouterr()
 
@@ -120,7 +126,7 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     assert ('/run/user/%s/dummy' % uid) in out
     assert 'Description=dummy uWSGI Service' in out
     assert 'bin/python' in out
-    assert 'dummy/manage.py uwsgi_run' in out
+    assert 'dummy/manage.py uwsgi_run --nostatic --noruntimes\n' in out
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')

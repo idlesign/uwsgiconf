@@ -7,13 +7,21 @@ class Command(BaseCommand):
 
     help = 'Runs uWSGI to serve your project'
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser):  # pragma: nocover
 
         super(Command, self).add_arguments(parser)
 
         parser.add_argument(
-            '--nostatic', action='store_false', dest='use_static_handler',
-            help='Tells uWSGI to NOT to serve static and media files.',
+            '--nostatic', action='store_false', dest='contribute_static',
+            help='Do not serve static and media files.',
+        )
+        parser.add_argument(
+            '--noruntimes', action='store_false', dest='contribute_runtimes',
+            help='Do not automatically use a runtime directory to store pid and fifo files.',
+        )
+        parser.add_argument(
+            '--noerrpages', action='store_false', dest='contribute_errpages',
+            help='Do not to configure custom error pages (403, 404, 500).',
         )
         parser.add_argument(
             '--compile', action='store_true', dest='compile',

@@ -86,17 +86,22 @@ class SectionMutator(object):
         :rtype: SectionMutator
 
         """
-        options = options or {
+        options_all = {
             'compile': True,
             'embedded': False,
+
+            'contribute_static': False,
+            'contribute_runtimes': False,
+            'contribute_errpages': False,
         }
+        options_all.update(options or {})
 
         dir_base = os.path.abspath(dir_base or find_project_dir())
 
         name_module = ConfModule.default_name
         name_project = get_project_name(dir_base)
         path_conf = os.path.join(dir_base, name_module)
-        embedded = options.get('embedded')
+        embedded = options_all['embedded']
 
         # Read an existing config for further modification of first section.
         section = cls._get_section_existing(
@@ -111,7 +116,7 @@ class SectionMutator(object):
             section=section,
             dir_base=dir_base,
             project_name=name_project,
-            options=options)
+            options=options_all)
 
         mutator.mutate(embedded=embedded)
 
@@ -188,13 +193,6 @@ class SectionMutator(object):
 
     def contribute_static(self):
         """Contributes static and media file serving settings to an existing section."""
-
-        options = self.options
-        if options['compile'] or not options['use_static_handler']:
-            return
-
-        from django.core.management import call_command
-
         settings = self.settings
         statics = self.section.statics
 
@@ -205,6 +203,10 @@ class SectionMutator(object):
         for url, path in static_tuples:
             path and statics.register_static_map(url, path)
 
+        if self.options['compile']:
+            return
+
+        from django.core.management import call_command
         call_command('collectstatic', clear=True, interactive=False)
 
     def contribute_error_pages(self):
@@ -245,9 +247,7 @@ class SectionMutator(object):
 
         section.project_name = project_name
 
-        self.contribute_runtime_dir()
-
-        main = section.main_process        
+        main = section.main_process
 
         if embedded:
 
@@ -269,16 +269,6 @@ class SectionMutator(object):
             'Embedded mode: %s' % ('yes' if embedded else 'no'),
             format_options='blue')
 
-        main.set_pid_file(
-            self.get_pid_filepath(),
-            before_priv_drop=False,  # For vacuum to cleanup properly.
-            safe=True,
-        )
-
-        section.master_process.set_basic_params(
-            fifo_file=self.get_fifo_filepath(),
-        )
-
         # todo maybe autoreload in debug
 
         apps = section.applications
@@ -286,8 +276,27 @@ class SectionMutator(object):
             manage_script_name=True,
         )
 
-        self.contribute_error_pages()
-        self.contribute_static()
+        options = self.options
+
+        if options['contribute_runtimes']:
+
+            self.contribute_runtime_dir()
+
+            main.set_pid_file(
+                self.get_pid_filepath(),
+                before_priv_drop=False,  # For vacuum to cleanup properly.
+                safe=True,
+            )
+
+            section.master_process.set_basic_params(
+                fifo_file=self.get_fifo_filepath(),
+            )
+
+        if options['contribute_static']:
+            self.contribute_static()
+
+        if options['contribute_errpages']:
+            self.contribute_error_pages()
 
 
 def run_uwsgi(config_section, compile_only=False, embedded=False):

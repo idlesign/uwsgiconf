@@ -5,7 +5,7 @@ class Command(FifoCommand):
 
     help = 'Allows managing of uWSGI log related stuff'
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser):  # pragma: nocover
 
         super(Command, self).add_arguments(parser)
 

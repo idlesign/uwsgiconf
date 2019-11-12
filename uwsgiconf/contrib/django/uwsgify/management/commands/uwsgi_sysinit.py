@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
     help = 'Generates configuration files for Systemd, Upstart, etc.'
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser):  # pragma: nocover
 
         super(Command, self).add_arguments(parser)
 
@@ -19,10 +19,17 @@ class Command(BaseCommand):
             '--systype', dest='systype',
             help='System type alias to make configuration for. E.g.: systemd, upstart.',
         )
-
         parser.add_argument(
             '--nostatic', action='store_true', dest='nostatic',
-            help='Tells uWSGI to NOT to serve static and media files.',
+            help='Do not serve static and media files.',
+        )
+        parser.add_argument(
+            '--noruntimes', action='store_true', dest='noruntimes',
+            help='Do not automatically use a runtime directory to store pid and fifo files.',
+        )
+        parser.add_argument(
+            '--noerrpages', action='store_true', dest='noerrpages',
+            help='Do not to configure custom error pages (403, 404, 500).',
         )
 
     def handle(self, *args, **options):
@@ -31,8 +38,9 @@ class Command(BaseCommand):
         mutator = SectionMutator.spawn()
         command = 'manage.py uwsgi_run'
 
-        if options['nostatic']:
-            command = command + ' --nostatic'
+        for opt in ('nostatic', 'noruntimes', 'noerrpages'):
+            if options.get(opt, False):
+                command = command + ' --%s' % opt
 
         config = get_config(
             systype,
