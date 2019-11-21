@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.20.0 [2019-11-21]
+--------------------
 + Django. Added 'noruntimes' and 'noerrpages' switches for 'uwsgi_run' and 'uwsgi_sysinit' commands.
 * 'allow_shared_sockets' param of 'sockets.from_dns' and such now allows 'False'.
 * ArgsFormatter now doesn't drop every line starting with %.
