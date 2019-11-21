@@ -7,6 +7,7 @@ Unreleased
 + Django. Added 'noruntimes' and 'noerrpages' switches for 'uwsgi_run' and 'uwsgi_sysinit' commands.
 * 'allow_shared_sockets' param of 'sockets.from_dns' and such now allows 'False'.
 * ArgsFormatter now doesn't drop every line starting with %.
+* ArgsFormatter. Dropped automatic escaping as not compatible with 'pyuwsgi'.
 
 
 v0.19.0 [2019-10-17]
