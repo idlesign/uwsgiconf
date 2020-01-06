@@ -13,7 +13,7 @@ if False:  # pragma: nocover
 
 try:  # pragma: nocover
     if __env.get(__ENV_FORCE_STUB, False):
-        raise __DummyException('`UWSGI_FORCE_STUB` is found in env.')
+        raise __DummyException('`%s` is found in env.' % __ENV_FORCE_STUB)
 
     import uwsgi
 
