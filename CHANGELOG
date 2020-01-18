@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.20.1 [2020-01-18]
+--------------------
 * Django. 'check_for_stub()' made tests-friendly (respects UWSGICONF_FORCE_STUB).
 * Fixed uwsgify bundled uwsgiinit module loading when a custom UWSGIFY_MODULE_INIT is set.
 
