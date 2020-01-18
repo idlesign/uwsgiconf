@@ -7,6 +7,7 @@ from django.utils.module_loading import autodiscover_modules
 
 from uwsgiconf import uwsgi
 from uwsgiconf.exceptions import RuntimeConfigurationError
+from uwsgiconf.settings import FORCE_STUB
 from .settings import MODULE_INIT
 
 
@@ -15,6 +16,11 @@ def check_for_stub():
     stub module caching when embedded mode with pyuwsgi is used."""
 
     if not uwsgi.is_stub:
+        # Native uwsgi module.
+        return
+
+    if FORCE_STUB:
+        # Stub is used deliberately (e.g. in a test suite).
         return
 
     msg = (

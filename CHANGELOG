@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Django. 'check_for_stub()' made tests-friendly (respects UWSGICONF_FORCE_STUB).
+
+
 v0.20.0 [2019-11-21]
 --------------------
 + Django. Added 'noruntimes' and 'noerrpages' switches for 'uwsgi_run' and 'uwsgi_sysinit' commands.

@@ -1,10 +1,9 @@
 from __future__ import absolute_import
 
-from os import environ as __env
 from sys import modules as __modules
 
 from .exceptions import UwsgiconfException as __DummyException
-from .settings import ENV_FORCE_STUB as __ENV_FORCE_STUB
+from .settings import FORCE_STUB as __FORCE_STUB
 
 if False:  # pragma: nocover
     # Give IDEs a chance to load stub symbols.
@@ -12,8 +11,8 @@ if False:  # pragma: nocover
 
 
 try:  # pragma: nocover
-    if __env.get(__ENV_FORCE_STUB, False):
-        raise __DummyException('`%s` is found in env.' % __ENV_FORCE_STUB)
+    if __FORCE_STUB:
+        raise __DummyException('uWSGI stub instruction is found in env.')
 
     import uwsgi
 
