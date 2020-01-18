@@ -8,7 +8,7 @@ from django.utils.module_loading import autodiscover_modules
 from uwsgiconf import uwsgi
 from uwsgiconf.exceptions import RuntimeConfigurationError
 from uwsgiconf.settings import FORCE_STUB
-from .settings import MODULE_INIT
+from .settings import MODULE_INIT, MODULE_INIT_DEFAULT
 
 
 def check_for_stub():
@@ -44,6 +44,7 @@ def db_close_connections():
 
 
 if apps.apps_ready:
-    # Only for embedded mode. For non-embedded see UwsgifyConfig.ready()
-    # Import uWSGI init modules from applications.
-    autodiscover_modules(MODULE_INIT)
+
+    if MODULE_INIT != MODULE_INIT_DEFAULT:
+        # Import uWSGI init modules from applications.
+        autodiscover_modules(MODULE_INIT)

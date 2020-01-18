@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 * Django. 'check_for_stub()' made tests-friendly (respects UWSGICONF_FORCE_STUB).
+* Fixed uwsgify bundled uwsgiinit module loading when a custom UWSGIFY_MODULE_INIT is set.
 
 
 v0.20.0 [2019-11-21]
