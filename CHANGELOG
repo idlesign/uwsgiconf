@@ -6,6 +6,7 @@ Unreleased
 ----------
 ! Dropped support for Py 2.7 and 3.5.
 ! Removed deprecated runtime.async module.
+! Removed deprecated runtime.environ module.
 + Nice preset. Added .configure_https_redirect() shortcut.
 * Fixed 'tests' packaging.
 
