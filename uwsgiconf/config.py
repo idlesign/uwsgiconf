@@ -130,14 +130,14 @@ class Section(OptionsGroup):
 
             To use placeholder variables when using strict mode, use the ``set-placeholder`` option.
 
-        :param str|unicode name: Configuration section name.
+        :param str name: Configuration section name.
 
-        :param str|unicode runtime_dir: Directory to store runtime files.
+        :param str runtime_dir: Directory to store runtime files.
             See ``.replace_placeholders()``
 
             .. note:: This can be used to store PID files, sockets, master FIFO, etc.
 
-        :param str|unicode project_name: Project name (alias) to be used to differentiate projects.
+        :param str project_name: Project name (alias) to be used to differentiate projects.
             See ``.replace_placeholders()``.
 
         :param bool style_prints: Enables styling (e.g. colouring) for ``print_`` family methods.
@@ -186,8 +186,8 @@ class Section(OptionsGroup):
             * {project_name}
             * {runtime_dir}
 
-        :param str|unicode|list[str|unicode]|None value:
-        :rtype: None|str|unicode|list[str|unicode]
+        :param str|list[str]|None value:
+        :rtype: None|str|list[str]
 
         """
         if not value:
@@ -214,7 +214,7 @@ class Section(OptionsGroup):
     def project_name(self):
         """Project name (alias) to be used to differentiate projects. See ``.replace_placeholders()``.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         return self._project_name
 
@@ -230,7 +230,7 @@ class Section(OptionsGroup):
 
         :param bool default: Whether to return [system] default if not set.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         dir_ = self._runtime_dir
 
@@ -243,7 +243,7 @@ class Section(OptionsGroup):
     def set_runtime_dir(self, value):
         """Sets user-defined runtime directory value.
 
-        :param str|unicode value:
+        :param str value:
 
         """
         self._runtime_dir = value or ''
@@ -292,9 +292,9 @@ class Section(OptionsGroup):
 
         :param value:
 
-        :param str|unicode indent:
+        :param str indent:
 
-        :param dict|str|unicode format_options: text color
+        :param dict|str format_options: text color
 
         :param bool asap: Print as soon as possible.
 
@@ -341,9 +341,9 @@ class Section(OptionsGroup):
     def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None, required=False):
         """Sets plugin-related parameters.
 
-        :param list|str|unicode|OptionsGroup|list[OptionsGroup] plugins: uWSGI plugins to load
+        :param list|str|OptionsGroup|list[OptionsGroup] plugins: uWSGI plugins to load
 
-        :param list|str|unicode search_dirs: Directories to search for uWSGI plugins.
+        :param list|str search_dirs: Directories to search for uWSGI plugins.
 
         :param bool autoload: Try to automatically load plugins when unknown options are found.
 
@@ -370,7 +370,7 @@ class Section(OptionsGroup):
 
         Re-exec uWSGI with the specified config when exit code is 1.
 
-        :param str|unicode|Section target: File path or Section to include.
+        :param str|Section target: File path or Section to include.
         """
         if isinstance(target, Section):
             target = ':' + target.name
@@ -386,9 +386,9 @@ class Section(OptionsGroup):
         .. note:: These are accessible, like any uWSGI option, in your application code via
             ``.runtime.platform.uwsgi.config``.
 
-        :param str|unicode key:
+        :param str key:
 
-        :param str|unicode value:
+        :param str value:
 
         """
         self._set('set-placeholder', f'{key}={value}', multi=True)
@@ -400,7 +400,7 @@ class Section(OptionsGroup):
 
         If is not given in `set` mode value will be taken from current env.
 
-        :param str|unicode key:
+        :param str key:
 
         :param value:
 
@@ -426,7 +426,7 @@ class Section(OptionsGroup):
     def include(self, target):
         """Includes target contents into config.
 
-        :param str|unicode|Section|list target: File path or Section to include.
+        :param str|Section|list target: File path or Section to include.
         """
         for target_ in listify(target):
             if isinstance(target_, Section):
@@ -442,7 +442,7 @@ class Section(OptionsGroup):
 
         :param Section section: Section to derive from,
 
-        :param str|unicode name: New section name.
+        :param str name: New section name.
 
         :rtype: Section
         """
@@ -569,7 +569,7 @@ class Section(OptionsGroup):
     def bootstrap(cls, dsn, allow_shared_sockets=None, **init_kwargs):
         """Constructs a section object performing it's basic (default) configuration.
 
-        :param str|unicode|list[str|unicode] dsn: Data source name, e.g:
+        :param str|list[str] dsn: Data source name, e.g:
                 * http://127.0.0.1:8000
                 * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
 
@@ -611,7 +611,7 @@ class Configuration(object):
         :param bool autoinclude_sections: Whether to include
             in the first sections all subsequent sections.
 
-        :param str|unicode alias: Configuration alias.
+        :param str alias: Configuration alias.
             This will be used in ``tofile`` as file name.
 
         """
@@ -649,8 +649,8 @@ class Configuration(object):
 
         :param bool do_print: Whether to print out formatted config.
         :param bool stamp: Whether to add stamp data to the first configuration section.
-        :param str|unicode formatter: Formatter alias to format options. Default: ini.
-        :rtype: str|unicode|list
+        :param str formatter: Formatter alias to format options. Default: ini.
+        :rtype: str|list
         """
         if stamp and self.sections:
             self.sections[0].print_stamp()
@@ -666,7 +666,7 @@ class Configuration(object):
     def print_ini(self):
         """Print out this configuration as .ini.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         return self.format(do_print=True)
 
@@ -675,10 +675,10 @@ class Configuration(object):
 
         Convenience method.
 
-        :param str|unicode filepath: Filepath to save configuration into.
+        :param str filepath: Filepath to save configuration into.
             If not provided a temporary file will be automatically generated.
 
-        :rtype: str|unicode
+        :rtype: str
 
         """
         if filepath is None:

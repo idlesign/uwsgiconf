@@ -8,7 +8,7 @@ class MuleFarm(object):
 
     def __init__(self, name, mule_numbers):
         """
-        :param str|unicode name: Farm alias.
+        :param str name: Farm alias.
 
         :param int|list[int] mule_numbers: Total mules on farm count,
             or a list of mule numbers.
@@ -106,7 +106,7 @@ class Workers(OptionsGroup):
     def run_command_as_worker(self, command, after_post_fork_hook=False):
         """Run the specified command as worker.
 
-        :param str|unicode command:
+        :param str command:
 
         :param bool after_post_fork_hook: Whether to run it after `post_fork` hook.
 
@@ -368,13 +368,13 @@ class Workers(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Zerg.html
 
-        :param str|unicode socket: Unix socket to bind server to.
+        :param str socket: Unix socket to bind server to.
 
             Examples:
                 * unix socket - ``/var/run/mutalisk``
                 * Linux abstract namespace - ``@nydus``
 
-        :param str|unicode|list[str|unicode] clients_socket_pool: This enables Zerg Pools.
+        :param str|list[str] clients_socket_pool: This enables Zerg Pools.
 
             .. note:: Expects master process.
 
@@ -394,7 +394,7 @@ class Workers(OptionsGroup):
     def set_zerg_client_params(self, server_sockets, use_fallback_socket=None):
         """Zerg mode. Zergs params.
 
-        :param str|unicode|list[str|unicode] server_sockets: Attaches zerg to a zerg server.
+        :param str|list[str] server_sockets: Attaches zerg to a zerg server.
 
         :param bool use_fallback_socket: Fallback to normal sockets if the zerg server is not available
 

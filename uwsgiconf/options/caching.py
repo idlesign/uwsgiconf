@@ -42,11 +42,11 @@ class Caching(OptionsGroup):
         This is a commodity option (mainly useful for testing) allowing you
         to store an item in a uWSGI cache during startup.
 
-        :param str|unicode key:
+        :param str key:
 
         :param value:
 
-        :param str|unicode cache_name: If not set, default will be used.
+        :param str cache_name: If not set, default will be used.
 
         """
         cache_name = cache_name or ''
@@ -61,11 +61,11 @@ class Caching(OptionsGroup):
 
         .. note:: Items are stored with the filepath as is (relative or absolute) as the key.
 
-        :param str|unicode filepath:
+        :param str filepath:
 
         :param bool gzip: Use gzip compression.
 
-        :param str|unicode cache_name: If not set, default will be used.
+        :param str cache_name: If not set, default will be used.
 
         """
         command = 'load-file-in-cache'
@@ -94,7 +94,7 @@ class Caching(OptionsGroup):
             Its main purpose is deleting expired keys from the cache.
             If you want auto-expiring you need to enable the master.
 
-        :param str|unicode name: Set the name of the cache. Must be unique in an instance.
+        :param str name: Set the name of the cache. Must be unique in an instance.
 
         :param int max_items: Set the maximum number of cache items.
 
@@ -104,7 +104,7 @@ class Caching(OptionsGroup):
         :param bool no_expire: If ``True`` cache items won't expire even if instructed
             to do so by cache set method.
 
-        :param str|unicode store: Set the filename for the persistent storage.
+        :param str store: Set the filename for the persistent storage.
             If it doesn't exist, the system assumes an empty cache and the file will be created.
 
         :param int store_sync_interval: Set the number of seconds after which msync() is called
@@ -116,7 +116,7 @@ class Caching(OptionsGroup):
             Setting this option will make uWSGI delete the existing file upon mismatch
             and create a new one.
 
-        :param str|unicode hash_algo: Set the hash algorithm used in the hash table. Current options are:
+        :param str hash_algo: Set the hash algorithm used in the hash table. Current options are:
 
             * djb33x (default)
             * murmur2
@@ -129,9 +129,9 @@ class Caching(OptionsGroup):
 
         :param int key_size: Set the maximum size of a key, in bytes. Default: 2048.
 
-        :param str|unicode|list udp_clients: List of UDP servers which will receive UDP cache updates.
+        :param str|list udp_clients: List of UDP servers which will receive UDP cache updates.
 
-        :param str|unicode |list udp_servers: List of UDP addresses on which to bind the cache
+        :param str |list udp_servers: List of UDP addresses on which to bind the cache
             to wait for UDP updates.
 
         :param int block_size: Set the size (in bytes) of a single block.
@@ -141,7 +141,7 @@ class Caching(OptionsGroup):
         :param int block_count: Set the number of blocks in the cache. Useful only in bitmap mode,
             otherwise the number of blocks is equal to the maximum number of items.
 
-        :param str|unicode|list sync_from: List of uWSGI addresses which the cache subsystem will connect to
+        :param str|list sync_from: List of uWSGI addresses which the cache subsystem will connect to
             for getting a full dump of the cache. It can be used for initial cache synchronization.
             The first node sending a valid dump will stop the procedure.
             

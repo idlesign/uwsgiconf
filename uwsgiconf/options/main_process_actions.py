@@ -21,13 +21,13 @@ class ActionMount(HookAction):
     def __init__(self, mountpoint, fs=None, src=None, flags=None):
         """
 
-        :param str|unicode mountpoint:
+        :param str mountpoint:
 
-        :param str|unicode fs: Filesystem. Presence indicates mounting.
+        :param str fs: Filesystem. Presence indicates mounting.
 
-        :param str|unicode src: Presence indicates mounting.
+        :param str src: Presence indicates mounting.
 
-        :param str|unicode|list flags: Flags available for the operating system.
+        :param str|list flags: Flags available for the operating system.
             As an example on Linux you will options like: bind, recursive, readonly, rec, detach etc.
 
         """
@@ -71,7 +71,7 @@ class ActionCall(HookAction):
 
     def __init__(self, target, honour_exit_status=False, arg_int=False):
         """
-        :param str|unicode target: Symbol and args.
+        :param str target: Symbol and args.
 
         :param bool honour_exit_status: Expect an int return.
             Anything != 0 means failure.
@@ -177,9 +177,9 @@ class ActionFileWrite(HookAction):
     def __init__(self, target, text, append=False, newline=False):
         """
 
-        :param str|unicode target: File to write to.
+        :param str target: File to write to.
 
-        :param str|unicode text: Text to write into file.
+        :param str text: Text to write into file.
 
         :param bool append: Append text instead of rewrite.
 

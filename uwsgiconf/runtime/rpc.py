@@ -18,7 +18,7 @@ def register_rpc(name=None):
         make_rpc_call('expose_me', ['value1'])
 
 
-    :param str|unicode name: RPC function name to associate
+    :param str name: RPC function name to associate
         with decorated function.
 
     :rtype: callable
@@ -39,13 +39,13 @@ def register_rpc(name=None):
 def make_rpc_call(func_name, args=None, remote=None):
     """Performs an RPC function call (local or remote) with the given arguments.
 
-    :param str|unicode func_name: RPC function name to call.
+    :param str func_name: RPC function name to call.
 
     :param Iterable args: Function arguments.
 
         .. warning:: Strings are expected.
 
-    :param str|unicode remote:
+    :param str remote:
 
     :rtype: bytes|str
 

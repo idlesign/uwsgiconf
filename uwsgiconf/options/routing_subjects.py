@@ -16,7 +16,7 @@ class SubjectCustom(ParametrizedValue):
 
     def __init__(self, subject, negate=False):
         """
-        :param Var|str|unicode subject: Handwritten subject or a Var heir representing it.
+        :param Var|str subject: Handwritten subject or a Var heir representing it.
 
         :param bool negate: Use to negate subject for rule.
             .. note:: You can also use tilde (~) instead of this argument for nagation.

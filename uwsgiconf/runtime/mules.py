@@ -129,7 +129,7 @@ class Mule(object):
 
         :param int timeout: Seconds.
 
-        :rtype: str|unicode
+        :rtype: str
 
         :raises ValueError: If not in a mule.
         """
@@ -138,7 +138,7 @@ class Mule(object):
     def send(self, message):
         """Sends a message to a mule(s)/farm.
 
-        :param str|unicode message:
+        :param str message:
 
         :rtype: bool
 
@@ -154,7 +154,7 @@ class Farm(object):
 
     def __init__(self, name, mules=None):
         """
-        :param str|unicode name: Mule farm name.
+        :param str name: Mule farm name.
         :param list[int] mules: Attached mules.
 
         """
@@ -204,7 +204,7 @@ class Farm(object):
         """Returns flag indicating whether current mule belongs
         to this farm.
 
-        :param str|unicode name: Farm name.
+        :param str name: Farm name.
 
         :rtype: bool
         """
@@ -218,7 +218,7 @@ class Farm(object):
 
          .. warning:: Bytes are returned for Python 3.
 
-         :rtype: str|unicode|None
+         :rtype: str|None
 
          :raises ValueError: If not in a mule
          """
@@ -227,7 +227,7 @@ class Farm(object):
     def send(self, message):
         """Sends a message to the given farm.
 
-        :param str|unicode message:
+        :param str message:
 
         """
         return uwsgi.farm_msg(self.name, message)

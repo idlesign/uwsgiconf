@@ -76,7 +76,7 @@ class OptionsGroup(object):
     _section = None  # type: Section
     """Section this option group belongs to."""
 
-    plugin = False  # type: bool|str|unicode
+    plugin = False  # type: bool|str
     """Indication this option group belongs to a plugin."""
 
     name = None
@@ -124,7 +124,7 @@ class OptionsGroup(object):
     def _set(self, key, value, condition=True, cast=None, multi=False, plugin=None, priority=None):
         """
 
-        :param str|unicode key: Option name
+        :param str key: Option name
 
         :param value: Option value. Can be a lis if ``multi``.
 
@@ -136,7 +136,7 @@ class OptionsGroup(object):
 
         :param bool multi: Indicate that many options can use the same name.
 
-        :param str|unicode plugin: Plugin this option exposed by. Activated automatically.
+        :param str plugin: Plugin this option exposed by. Activated automatically.
 
         :param int priority: Option priority indicator. Options with lower numbers will come first.
 

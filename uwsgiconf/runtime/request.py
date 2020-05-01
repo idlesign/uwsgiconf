@@ -55,9 +55,9 @@ class _Request(object):
 
         Can be used for better integration with the internal routing subsystem.
 
-        :param str|unicode name:
+        :param str name:
 
-        :param str|unicode value:
+        :param str value:
 
         :rtype: bool
 

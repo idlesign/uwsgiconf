@@ -97,7 +97,7 @@ class ConfModule(object):
         If only one configuration found current process (uwsgiconf) is replaced with a new one (uWSGI),
         otherwise a number of new detached processes is spawned.
 
-        :param str|unicode only: Configuration alias to run from the module.
+        :param str only: Configuration alias to run from the module.
             If not set uWSGI will be spawned for every configuration found in the module.
 
         :rtype: list
@@ -141,7 +141,7 @@ class ConfModule(object):
     def load(cls, fpath):
         """Loads a module and returns its object.
 
-        :param str|unicode fpath:
+        :param str fpath:
         :rtype: module
         """
         module_name = os.path.splitext(os.path.basename(fpath))[0]
@@ -215,9 +215,9 @@ class KeyValue(object):
 
         :param list list_keys: Keys expecting lists.
 
-        :param str|unicode items_separator: String to use as items (chunks) separator.
+        :param str items_separator: String to use as items (chunks) separator.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         self.locals_dict = dict(locals_dict)
         self.keys = keys or sorted(filter_locals(locals_dict).keys())
@@ -249,10 +249,10 @@ class KeyValue(object):
 def get_output(cmd, args):
     """Runs a command and returns its output (stdout + stderr).
 
-    :param str|unicode cmd:
-    :param str|unicode|list[str|unicode] args:
+    :param str cmd:
+    :param str|list[str] args:
 
-    :rtype: str|unicode
+    :rtype: str
 
     """
     from subprocess import Popen, STDOUT, PIPE
@@ -273,7 +273,7 @@ class Finder(object):
     def uwsgiconf(cls):
         """Finds uwsgiconf executable location.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         return get_output('which', ['uwsgiconf']).strip()
 
@@ -281,7 +281,7 @@ class Finder(object):
     def python(cls):
         """Finds Python executable location.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         return sys.executable
 
@@ -291,7 +291,7 @@ class Fifo(object):
 
     def __init__(self, fifo_filepath):
         """
-        :param str|unicode fifo_filepath: Path to uWSGI Master FIFO file.
+        :param str fifo_filepath: Path to uWSGI Master FIFO file.
 
         """
         self.fifo = fifo_filepath
@@ -365,9 +365,9 @@ class UwsgiRunner(object):
     def get_output(self, command_args):
         """Runs a command and returns its output (stdout + stderr).
 
-        :param str|unicode|list[str|unicode] command_args:
+        :param str|list[str] command_args:
 
-        :rtype: str|unicode
+        :rtype: str
 
         """
         return get_output(self.binary_uwsgi, command_args)
@@ -385,7 +385,7 @@ class UwsgiRunner(object):
         """Returns PATH environment variable updated to run uwsgiconf in
         (e.g. for virtualenv).
 
-        :rtype: str|unicode
+        :rtype: str
         """
         return os.path.dirname(Finder.python()) + os.pathsep + os.environ['PATH']
 
@@ -395,7 +395,7 @@ class UwsgiRunner(object):
 
         This adds some virtualenv friendliness so that we try use uwsgi from it.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         os.environ['PATH'] = cls.get_env_path()
         return os.path.basename(Finder.python())
@@ -417,7 +417,7 @@ class UwsgiRunner(object):
 
         :param Configuration config: Configuration object to spawn uWSGI with.
 
-        :param str|unicode filepath: Override configuration file path.
+        :param str filepath: Override configuration file path.
 
         :param bool replace: Whether a new process should replace current one.
 
@@ -465,7 +465,7 @@ def parse_command_plugins_output(out):
     """Parses ``plugin-list`` command output from uWSGI
     and returns object containing lists of embedded plugin names.
 
-    :param str|unicode out:
+    :param str out:
 
     :rtype EmbeddedPlugins:
 

@@ -34,7 +34,7 @@ class Networking(OptionsGroup):
             .. note:: This will also automatically use shared sockets
                 to bind to priviledged ports when non root.
 
-            :param str|unicode dsn: Data source name, e.g:
+            :param str dsn: Data source name, e.g:
                 * http://127.0.0.1:8000
                 * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
 
@@ -101,7 +101,7 @@ class Networking(OptionsGroup):
 
             .. note:: Linux only.
 
-        :param str|unicode default_socket_type: Force the socket type as default.
+        :param str default_socket_type: Force the socket type as default.
             See ``.socket_types``.
 
         """
@@ -150,9 +150,9 @@ class Networking(OptionsGroup):
             would otherwise have no access to the uWSGI socket. When used without a parameter,
             the permissions will be set to 666. Otherwise the specified chmod value will be used.
 
-        :param str|unicode owner: Chown UNIX sockets.
+        :param str owner: Chown UNIX sockets.
 
-        :param str|unicode umask: Set UNIX socket umask.
+        :param str umask: Set UNIX socket umask.
 
         """
         self._set('abstract-socket', abstract, cast=bool)
@@ -223,7 +223,7 @@ class Networking(OptionsGroup):
 
         :param bool verbose_errors: Be verbose about SSL errors.
 
-        :param str|unicode|bool sessions_cache: Use uWSGI cache for ssl sessions storage.
+        :param str|bool sessions_cache: Use uWSGI cache for ssl sessions storage.
 
             Accepts either bool or cache name string.
 
@@ -233,7 +233,7 @@ class Networking(OptionsGroup):
 
         :param int sessions_timeout: Set SSL sessions timeout in seconds. Default: 300.
 
-        :param str|unicode session_context: Session context identifying string. Can be set to static shared value
+        :param str session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
             Default: a value built from the HTTP server address.
@@ -242,9 +242,9 @@ class Networking(OptionsGroup):
 
         :param int|list[int] raw_options: Set a raw ssl option by its numeric value.
 
-        :param str|unicode dir_tmp: Store ssl-related temp files (e.g. pem data) in the specified directory.
+        :param str dir_tmp: Store ssl-related temp files (e.g. pem data) in the specified directory.
 
-        :param str|unicode client_cert_var: Export uWSGI variable ``HTTPS_CC`` containing the raw client certificate.
+        :param str client_cert_var: Export uWSGI variable ``HTTPS_CC`` containing the raw client certificate.
 
         """
         self._set('ssl-verbose', verbose_errors, cast=bool)
@@ -266,13 +266,13 @@ class Networking(OptionsGroup):
 
         * http://uwsgi.readthedocs.io/en/latest/SNI.html
 
-        :param str|unicode name: Node/server/host name.
+        :param str name: Node/server/host name.
 
-        :param str|unicode cert: Certificate file.
+        :param str cert: Certificate file.
 
-        :param str|unicode key: Private key file.
+        :param str key: Private key file.
 
-        :param str|unicode ciphers: Ciphers [alias] string.
+        :param str ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -281,7 +281,7 @@ class Networking(OptionsGroup):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str|unicode client_ca: Client CA file for client-based auth.
+        :param str client_ca: Client CA file for client-based auth.
 
             .. note: You can prepend ! (exclamation mark) to make client certificate
                 authentication mandatory.
@@ -311,9 +311,9 @@ class Networking(OptionsGroup):
 
         * http://uwsgi.readthedocs.io/en/latest/SNI.html#massive-sni-hosting
 
-        :param str|unicode dir:
+        :param str dir:
 
-        :param str|unicode ciphers: Ciphers [alias] string.
+        :param str ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT

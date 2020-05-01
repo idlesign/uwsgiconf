@@ -154,7 +154,7 @@ def add_file_monitor(signal, filename):
 
     :param int signal: Signal to raise.
 
-    :param str|unicode filename: File or a directory to watch for its modification.
+    :param str filename: File or a directory to watch for its modification.
 
     :rtype: None
 
@@ -209,9 +209,9 @@ def add_var(name, value):
 
     Can be used for better integration with the internal routing subsystem.
 
-    :param str|unicode name:
+    :param str name:
 
-    :param str|unicode value:
+    :param str value:
 
     :rtype: bool
 
@@ -222,9 +222,9 @@ def add_var(name, value):
 def alarm(name, message):
     """Issues the given alarm with the given message.
 
-    :param str|unicode name:
+    :param str name:
 
-    :param str|unicode message: Message to pass to alarm.
+    :param str message: Message to pass to alarm.
 
     :rtype: None
     """
@@ -235,7 +235,7 @@ def async_connect(socket):
 
     * http://uwsgi.readthedocs.io/en/latest/Async.html
 
-    :param str|unicode socket:
+    :param str socket:
 
     :rtype: int
     """
@@ -255,7 +255,7 @@ def async_sleep(seconds):
 def cache_clear(cache):
     """Clears cache with the given name.
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: None
     """
@@ -266,13 +266,13 @@ def cache_dec(key, value=1, expires=None, cache=None):
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
     :param int expires: Expire timeout (seconds).
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -282,9 +282,9 @@ def cache_dec(key, value=1, expires=None, cache=None):
 def cache_del(key, cache=None):
     """Deletes the given cached key from the cache.
 
-    :param str|unicode key: The cache key to delete.
+    :param str key: The cache key to delete.
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: None
     """
@@ -296,13 +296,13 @@ def cache_div(key, value=2, expires=None, cache=None):
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
     :param int expires: Expire timeout (seconds).
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -312,9 +312,9 @@ def cache_div(key, value=2, expires=None, cache=None):
 def cache_exists(key, cache=None):
     """Checks whether there is a value in the cache associated with the given key.
 
-    :param str|unicode key: The cache key to check.
+    :param str key: The cache key to check.
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -326,9 +326,9 @@ def cache_get(key, cache=None):
 
     .. warning:: Bytes are returned for Python 3.
 
-    :param str|unicode key: The cache key to get value for.
+    :param str key: The cache key to get value for.
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bytes|str|None
     """
@@ -339,13 +339,13 @@ def cache_inc(key, value=1, expires=None, cache=None):
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
     :param int expires: Expire timeout (seconds).
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -355,7 +355,7 @@ def cache_inc(key, value=1, expires=None, cache=None):
 def cache_keys(cache=None):
     """Returns a list of keys available in cache.
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: list
 
@@ -369,13 +369,13 @@ def cache_mul(key, value=2, expires=None, cache=None):
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
     :param int expires: Expire timeout (seconds).
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -387,9 +387,9 @@ def cache_num(key, cache=None):
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
 
-    :param str|unicode key: The cache key to get value for.
+    :param str key: The cache key to get value for.
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: int|long|None
     """
@@ -398,13 +398,13 @@ def cache_num(key, cache=None):
 def cache_set(key, value, expires=None, cache=None):
     """Sets the specified key value.
 
-    :param str|unicode key:
+    :param str key:
 
-    :param str|unicode value:
+    :param str value:
 
     :param int expires: Expire timeout (seconds).
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -414,13 +414,13 @@ def cache_set(key, value, expires=None, cache=None):
 def cache_update(key, value, expires=None, cache=None):
     """Updates the specified key value.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
     :param int expires: Expire timeout (seconds).
 
-    :param str|unicode cache: Cache name with optional address (if @-syntax is used).
+    :param str cache: Cache name with optional address (if @-syntax is used).
 
     :rtype: bool
     """
@@ -432,7 +432,7 @@ def call(func_name, *args):
 
     .. warning:: Bytes are returned for Python 3.
 
-    :param str|unicode func_name: Function name to call
+    :param str func_name: Function name to call
         with optional address (if @-syntax is used).
 
     :param list[str|bytes] args:
@@ -491,7 +491,7 @@ def close(fd):
 def connect(socket, timeout=0):
     """Connects to the socket.
 
-    :param str|unicode socket: Socket name.
+    :param str socket: Socket name.
 
     :param int timeout: Timeout (seconds).
 
@@ -520,7 +520,7 @@ def embedded_data(symbol_name):
 
     .. warning:: Bytes are returned for Python 3.
 
-    :param str|unicode symbol_name: The symbol name to extract.
+    :param str symbol_name: The symbol name to extract.
 
     :rtype: bytes|str
 
@@ -533,7 +533,7 @@ def extract(fname):
 
     .. warning:: Bytes are returned for Python 3.
 
-    :param str|unicode fname:
+    :param str fname:
 
     :rtype: bytes|str
     """
@@ -555,9 +555,9 @@ def farm_get_msg():
 def farm_msg(farm, message):
     """Sends a message to the given farm.
 
-    :param str|unicode farm: Farm name to send message to.
+    :param str farm: Farm name to send message to.
 
-    :param str|unicode message:
+    :param str message:
 
     :rtype: None
     """
@@ -570,7 +570,7 @@ def get_logvar(name):
 
     .. warning:: Bytes are returned for Python 3.
 
-    :param str|unicode name:
+    :param str name:
 
     :rtype: bytes|str
     """
@@ -600,7 +600,7 @@ def in_farm(name):
     """Returns flag indicating whether you are (mule) belong
     to the given farm.
 
-    :param str|unicode name: Farm name.
+    :param str name: Farm name.
 
     :rtype: bool
     """
@@ -667,7 +667,7 @@ def lock(lock_num=0):
 def log(message):
     """Logs a message.
 
-    :param str|unicode message:
+    :param str message:
 
     :rtype: bool
     """
@@ -692,7 +692,7 @@ def logsize():
 def loop():
     """Returns current event loop name or None if loop is not set.
 
-    :rtype: st|unicode|None
+    :rtype: str|None
     """
 
 
@@ -715,7 +715,7 @@ def mem():
 def metric_dec(key, value=1):
     """Decrements the specified metric key value by the specified value.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
@@ -727,7 +727,7 @@ def metric_dec(key, value=1):
 def metric_div(key, value=1):
     """Divides the specified metric key value by the specified value.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
@@ -739,7 +739,7 @@ def metric_div(key, value=1):
 def metric_get(key):
     """Returns metric value by key.
 
-    :param str|unicode key:
+    :param str key:
 
     :rtype: int|long
     """
@@ -748,7 +748,7 @@ def metric_get(key):
 def metric_inc(key, value=1):
     """Increments the specified metric key value by the specified value.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
@@ -760,7 +760,7 @@ def metric_inc(key, value=1):
 def metric_mul(key, value=1):
     """Multiplies the specified metric key value by the specified value.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int value:
 
@@ -772,7 +772,7 @@ def metric_mul(key, value=1):
 def metric_set(key, value):
     """Sets metric value.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int|long value:
 
@@ -784,7 +784,7 @@ def metric_set(key, value):
 def metric_set_max(key, value):
     """Sets metric value if it is greater that the current one.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int|long value:
 
@@ -796,7 +796,7 @@ def metric_set_max(key, value):
 def metric_set_min(key, value):
     """Sets metric value if it is less that the current one.
 
-    :param str|unicode key:
+    :param str key:
 
     :param int|long value:
 
@@ -845,7 +845,7 @@ def mule_id():
 def mule_msg(message, mule_farm=None):
     """Sends a message to a mule(s)/farm.
 
-    :param str|unicode message:
+    :param str message:
 
     :param mule_farm: Mule ID, or farm name.
 
@@ -874,7 +874,7 @@ def parsefile(fpath):
 
     Currently implemented only Spooler file parsing.
 
-    :param str|unicode fpath:
+    :param str fpath:
 
     :rtype: None
     """
@@ -914,7 +914,7 @@ def register_rpc(name, func):
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
 
-    :param str|unicode name:
+    :param str name:
 
     :param callable func:
 
@@ -930,7 +930,7 @@ def register_signal(number, target, func):
 
     :param int number: Signal number.
 
-    :param str|unicode target:
+    :param str target:
 
         * ``workers``  - run the signal handler on all the workers
         * ``workerN`` - run the signal handler only on worker N
@@ -990,9 +990,9 @@ def rpc(address, func_name, *args):
 
     .. warning:: Bytes are returned for Python 3.
 
-    :param str|unicode address:
+    :param str address:
 
-    :param str|unicode func_name: Function name to call.
+    :param str func_name: Function name to call.
 
     :param list[str|bytes] args:
 
@@ -1028,7 +1028,7 @@ def send(fd_or_data, data=None):
 def sendfile(fd_or_name, chunk_size=0, start_pos=0, filesize=0):
     """Runs a sendfile.
 
-    :param int|str|unicode fd_or_name: File path or descriptor number.
+    :param int|str fd_or_name: File path or descriptor number.
 
     :param int chunk_size: Not used.
 
@@ -1079,9 +1079,9 @@ def send_to_spooler(message=None, **kwargs):
 def set_logvar(name, value):
     """Sets log variable.
 
-    :param str|unicode name:
+    :param str name:
 
-    :param str|unicode value:
+    :param str value:
 
     :rtype: None
     """
@@ -1108,7 +1108,7 @@ def set_user_harakiri(timeout=0):
 def set_warning_message(message):
     """Sets a warning. This will be reported by pingers.
 
-    :param str|unicode message:
+    :param str message:
 
     :rtype: bool
     """
@@ -1118,7 +1118,7 @@ def set_warning_message(message):
 def setprocname(name):
     """Sets current process name.
 
-    :param str|unicode name:
+    :param str name:
 
     :rtype: bool
     """
@@ -1130,7 +1130,7 @@ def signal(num, remote=''):
 
     :param num: Signal number.
 
-    :param str|unicode remote: Remote address.
+    :param str remote: Remote address.
 
     :rtype: None
 
@@ -1171,7 +1171,7 @@ def signal_wait(num=None):
 
     :param int num:
 
-    :rtype: str|unicode
+    :rtype: str
 
     :raises SystemError: If something went wrong.
     """
@@ -1291,11 +1291,11 @@ def wait_fd_write(fd, timeout=None):
 def websocket_handshake(security_key=None, origin=None, proto=None):
     """Waits for websocket handshake.
 
-    :param str|unicode security_key: Websocket security key to use.
+    :param str security_key: Websocket security key to use.
 
-    :param str|unicode origin: Override ``Sec-WebSocket-Origin``.
+    :param str origin: Override ``Sec-WebSocket-Origin``.
 
-    :param str|unicode proto: Override ``Sec-WebSocket-Protocol``.
+    :param str proto: Override ``Sec-WebSocket-Protocol``.
 
     :rtype: None
 
@@ -1375,7 +1375,7 @@ def i_am_the_lord(legion_name):
 
     * http://uwsgi.readthedocs.io/en/latest/Legion.html#legion-api
 
-    :param str|unicode legion_name:
+    :param str legion_name:
 
     :rtype: bool
     """
@@ -1387,7 +1387,7 @@ def lord_scroll(legion_name):
 
     * http://uwsgi.readthedocs.io/en/latest/Legion.html#lord-scroll-coming-soon
 
-    :param str|unicode legion_name:
+    :param str legion_name:
 
     :rtype: bool
     """
@@ -1397,7 +1397,7 @@ def lord_scroll(legion_name):
 def scrolls(legion_name):
     """Returns a list of Legion scrolls defined on cluster.
 
-    :param str|unicode legion_name:
+    :param str legion_name:
 
     :rtype: list
     """

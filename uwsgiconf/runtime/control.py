@@ -25,7 +25,7 @@ disconnect = uwsgi.disconnect
 set_process_name = uwsgi.setprocname
 """Sets current process name.
 
-:param str|unicode name:
+:param str name:
 
 :rtype: bool
 """

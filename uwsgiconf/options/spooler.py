@@ -31,7 +31,7 @@ class Spooler(OptionsGroup):
             cheap=None, base_dir=None):
         """
 
-        :param str|unicode|list touch_reload: reload spoolers if the specified file is modified/touched
+        :param str|list touch_reload: reload spoolers if the specified file is modified/touched
 
         :param bool quiet: Do not log spooler related messages.
 
@@ -44,7 +44,7 @@ class Spooler(OptionsGroup):
 
         :param int harakiri: Set harakiri timeout for spooler tasks.
 
-        :param str|unicode change_dir: chdir() to specified directory before each spooler task.
+        :param str change_dir: chdir() to specified directory before each spooler task.
 
         :param int poll_interval: Spooler poll frequency in seconds. Default: 30.
 
@@ -76,7 +76,7 @@ class Spooler(OptionsGroup):
     def add(self, work_dir, external=False):
         """Run a spooler on the specified directory.
 
-        :param str|unicode|list[str|unicode] work_dir: Spooler working directory path or it's name if
+        :param str|list[str] work_dir: Spooler working directory path or it's name if
             `base_dir` argument of `spooler.set_basic_params()` is set.
 
             .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}/spool/

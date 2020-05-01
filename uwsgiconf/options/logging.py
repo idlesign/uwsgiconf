@@ -66,12 +66,12 @@ class Logging(OptionsGroup):
         :param bool no_requests: Disable requests logging - only uWSGI internal messages
             and errors will be logged.
 
-        :param str|unicode template: Set advanced format for request logging.
+        :param str template: Set advanced format for request logging.
             This template string can use variables from ``Logging.Vars``.
 
-        :param str|unicode prefix: Prefix log items with a string.
+        :param str prefix: Prefix log items with a string.
 
-        :param str|unicode|bool prefix_date: Prefix log items with date string.
+        :param str|bool prefix_date: Prefix log items with date string.
         
             .. note:: This can be ``True`` or contain formatting placeholders (e.g. %Y-%m-%d %H:%M:%S) 
                if used with ``apply_strftime``.
@@ -111,7 +111,7 @@ class Logging(OptionsGroup):
         .. note:: This doesn't require any Logger plugin and can be used
             if no log routing is required.
 
-        :param str|unicode target: Filepath or UDP address.
+        :param str target: Filepath or UDP address.
 
         :param bool before_priv_drop: Whether to log data before or after privileges drop.
 
@@ -136,20 +136,20 @@ class Logging(OptionsGroup):
 
         :param int max_size: Set maximum logfile size in bytes after which log should be rotated.
 
-        :param str|unicode rotation_fname: Set log file name after rotation.
+        :param str rotation_fname: Set log file name after rotation.
 
-        :param str|unicode|list touch_reopen: Trigger log reopen if the specified file
+        :param str|list touch_reopen: Trigger log reopen if the specified file
             is modified/touched.
 
             .. note:: This can be set to a file touched by ``postrotate`` script of ``logrotate``
                 to implement rotation.
 
-        :param str|unicode|list touch_rotate: Trigger log rotation if the specified file
+        :param str|list touch_rotate: Trigger log rotation if the specified file
             is modified/touched.
 
-        :param str|unicode owner: Set owner chown() for logs.
+        :param str owner: Set owner chown() for logs.
         
-        :param str|unicode mode: Set mode chmod() for logs.
+        :param str mode: Set mode chmod() for logs.
 
         """
         self._set('log-reopen', reopen_on_reload, cast=bool)
@@ -168,11 +168,11 @@ class Logging(OptionsGroup):
     def set_filters(self, include=None, exclude=None, write_errors=None, write_errors_tolerance=None, sigpipe=None):
         """Set various log data filters.
 
-        :param str|unicode|list include: Show only log lines matching the specified regexp.
+        :param str|list include: Show only log lines matching the specified regexp.
 
             .. note:: Requires enabled PCRE support.
 
-        :param str|unicode|list exclude: Do not show log lines matching the specified regexp.
+        :param str|list exclude: Do not show log lines matching the specified regexp.
 
             .. note:: Requires enabled PCRE support.
 
@@ -283,7 +283,7 @@ class Logging(OptionsGroup):
     def add_logger(self, logger, requests_only=False, for_single_worker=False):
         """Set/add a common logger or a request requests only.
 
-        :param str|unicode|list|Logger|list[Logger] logger:
+        :param str|list|Logger|list[Logger] logger:
 
         :param bool requests_only: Logger used only for requests information messages.
 
@@ -304,9 +304,9 @@ class Logging(OptionsGroup):
     def add_logger_route(self, logger, matcher, requests_only=False):
         """Log to the specified named logger if regexp applied on log item matches.
 
-        :param str|unicode|list|Logger|list[Logger] logger: Logger to associate route with.
+        :param str|list|Logger|list[Logger] logger: Logger to associate route with.
 
-        :param str|unicode matcher: Regular expression to apply to log item.
+        :param str matcher: Regular expression to apply to log item.
 
         :param bool requests_only: Matching should be used only for requests information messages.
 
@@ -328,9 +328,9 @@ class Logging(OptionsGroup):
             .. note:: For best performance consider allocating a thread
                 for log sending with ``dedicate_thread``.
 
-        :param str|unicode|list|Encoder encoder: Encoder (or a list) to add into processing.
+        :param str|list|Encoder encoder: Encoder (or a list) to add into processing.
 
-        :param str|unicode|Logger logger: Logger apply associate encoders to.
+        :param str|Logger logger: Logger apply associate encoders to.
 
         :param bool requests_only: Encoder to be used only for requests information messages.
 

@@ -24,19 +24,19 @@ class Empire(OptionsGroup):
             emperor reloads are a bit drastic, reloading all vassals at once.
             Instead vassals should be reloaded individually when needed, in the manner of the imperial monitor in use.
 
-        :param str|unicode|list[str|unicode] vassals_home: Set vassals home and enable Emperor mode.
+        :param str|list[str] vassals_home: Set vassals home and enable Emperor mode.
 
-        :param str|unicode name: Set the Emperor process name.
+        :param str name: Set the Emperor process name.
 
         :param int scan_interval: Set the Emperor scan frequency. Default: 3 seconds.
 
-        :param str|unicode pid_file: Write the Emperor pid in the specified file.
+        :param str pid_file: Write the Emperor pid in the specified file.
 
         :param bool spawn_asap: Spawn the Emperor as soon as possible.
 
-        :param str|unicode stats_address: Run the Emperor stats server on specified address.
+        :param str stats_address: Run the Emperor stats server on specified address.
 
-        :param str|unicode trigger_socket: Enable the Emperor trigger socket.
+        :param str trigger_socket: Enable the Emperor trigger socket.
 
         :param bool links_no_follow: Do not follow symlinks when checking for mtime.
 
@@ -66,12 +66,12 @@ class Empire(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/tutorials/EmperorSubscriptions.html
 
-        :param str|unicode command_socket: Enable the Emperor command socket.
+        :param str command_socket: Enable the Emperor command socket.
             It is a channel allowing external process to govern vassals.
 
         :param bool wait_for_command: Always wait for a 'spawn' Emperor command before starting a vassal.
 
-        :param str|unicode|list[str|unicode] wait_for_command_exclude: Vassals that will ignore ``wait_for_command``.
+        :param str|list[str] wait_for_command_exclude: Vassals that will ignore ``wait_for_command``.
 
         """
         self._set('emperor-command-socket', command_socket)
@@ -83,11 +83,11 @@ class Empire(OptionsGroup):
     def set_vassals_wrapper_params(self, wrapper=None, overrides=None, fallbacks=None):
         """Binary wrapper for vassals parameters.
 
-        :param str|unicode wrapper: Set a binary wrapper for vassals.
+        :param str wrapper: Set a binary wrapper for vassals.
 
-        :param str|unicode|list[str|unicode] overrides: Set a binary wrapper for vassals to try before the default one
+        :param str|list[str] overrides: Set a binary wrapper for vassals to try before the default one
 
-        :param str|unicode|list[str|unicode] fallbacks: Set a binary wrapper for vassals to try as a last resort.
+        :param str|list[str] fallbacks: Set a binary wrapper for vassals to try as a last resort.
             Allows you to specify an alternative binary to execute when running a vassal
             and the default binary_path is not found (or returns an error).
 

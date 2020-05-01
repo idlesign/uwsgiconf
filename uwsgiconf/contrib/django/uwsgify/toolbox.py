@@ -15,7 +15,7 @@ def find_project_dir():
     """Runs up the stack to find the location of manage.py
     which will be considered a project base path.
 
-    :rtype: str|unicode
+    :rtype: str
     """
     frame = inspect.currentframe()
 
@@ -32,8 +32,8 @@ def find_project_dir():
 def get_project_name(project_dir):
     """Return project name from project directory.
 
-    :param str|unicode project_dir:
-    :rtype: str|unicode
+    :param str project_dir:
+    :rtype: str
     """
     return os.path.basename(project_dir)
 
@@ -62,8 +62,8 @@ class SectionMutator(object):
     def get_pid_filepath(self):
         """Return pidfile path for the given project.
 
-        :param str|unicode project_name:
-        :rtype: str|unicode
+        :param str project_name:
+        :rtype: str
 
         """
         return os.path.join(self.runtime_dir, 'uwsgi.pid')
@@ -71,8 +71,8 @@ class SectionMutator(object):
     def get_fifo_filepath(self):
         """Return master FIFO path for the given project.
 
-        :param str|unicode project_name:
-        :rtype: str|unicode
+        :param str project_name:
+        :rtype: str
 
         """
         return os.path.join(self.runtime_dir, 'uwsgi.fifo')
@@ -82,7 +82,7 @@ class SectionMutator(object):
         """Alternative constructor. Creates a mutator and returns section object.
 
         :param dict options:
-        :param str|unicode dir_base:
+        :param str dir_base:
 
         :rtype: SectionMutator
 
@@ -127,9 +127,9 @@ class SectionMutator(object):
     def _get_section_existing(self, path_conf, name_module, name_project, embedded=False):
         """Loads config section from existing configuration file (aka uwsgicfg.py)
 
-        :param str|unicode path_conf: Path containing configuration module.
-        :param str|unicode name_module: Configuration module name.
-        :param str|unicode name_project: Project (package) name.
+        :param str path_conf: Path containing configuration module.
+        :param str name_module: Configuration module name.
+        :param str name_project: Project (package) name.
         :param bool embedded: Flag. Do not try to load module file from file system manually,
             but try to import the module.
 
@@ -167,7 +167,7 @@ class SectionMutator(object):
     def _get_section_new(cls, dir_base):
         """Creates a new section with default settings.
 
-        :param str|unicode dir_base:
+        :param str dir_base:
         :rtype: Section
 
         """

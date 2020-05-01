@@ -6,7 +6,7 @@ connect = uwsgi.async_connect
 
 * http://uwsgi.readthedocs.io/en/latest/Async.html
 
-:param str|unicode socket:
+:param str socket:
 
 :rtype: int
 """
@@ -33,7 +33,7 @@ to the next async core.
 get_loop_name = uwsgi.loop
 """Returns current event loop name or None if loop is not set.
 
-:rtype: st|unicode|None
+:rtype: str|None
 """
 
 wait_for_fd_read = uwsgi.wait_fd_read

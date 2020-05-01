@@ -17,7 +17,7 @@ class Locks(OptionsGroup):
 
             http://uwsgi.readthedocs.io/en/latest/articles/SerializingAccept.html
 
-        :param str|unicode lock_engine: Set the lock engine.
+        :param str lock_engine: Set the lock engine.
 
             Example:
                 - ipcsem
@@ -32,7 +32,7 @@ class Locks(OptionsGroup):
     def set_ipcsem_params(self, ftok=None, persistent=None):
         """Sets ipcsem lock engine params.
 
-        :param str|unicode ftok: Set the ipcsem key via ftok() for avoiding duplicates.
+        :param str ftok: Set the ipcsem key via ftok() for avoiding duplicates.
 
         :param bool persistent: Do not remove ipcsem's on shutdown.
 
@@ -45,7 +45,7 @@ class Locks(OptionsGroup):
     def lock_file(self, fpath, after_setup=False, wait=False):
         """Locks the specified file.
 
-        :param str|unicode fpath: File path.
+        :param str fpath: File path.
 
         :param bool after_setup:
             True  - after logging/daemon setup

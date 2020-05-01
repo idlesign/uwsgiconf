@@ -41,7 +41,7 @@ class CollectorFile(Collector):
 
     def __init__(self, fpath, get_slot=None):
         """
-        :param str|unicode fpath: File path.
+        :param str fpath: File path.
 
         :param int get_slot: Get value from the given slot number.
             Slots: the content is split (using \\n, \\t, spaces, \\r and zero as separator)
@@ -68,7 +68,7 @@ class CollectorFunction(Collector):
 
     def __init__(self, func):
         """
-        :param str|unicode func: Function to call.
+        :param str func: Function to call.
         """
         value = KeyValue(locals(), aliases={'func': 'arg1'})
 

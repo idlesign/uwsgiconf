@@ -13,7 +13,7 @@ class Cache(object):
 
     def __init__(self, name=None, timeout=None):
         """
-        :param str|unicode name: Cache name with optional address (if @-syntax is used).
+        :param str name: Cache name with optional address (if @-syntax is used).
 
         :param int timeout: Expire timeout (seconds).
             Default: 300 (5 minutes). Use 0 to not to set a timeout (not to expire).
@@ -27,7 +27,7 @@ class Cache(object):
     def __contains__(self, key):
         """Checks whether there is a value in the cache associated with the given key.
 
-        :param str|unicode key: The cache key to check.
+        :param str key: The cache key to check.
 
         :rtype: bool
         """
@@ -50,7 +50,7 @@ class Cache(object):
     def get(self, key, default=None, as_int=False, setter=None):
         """Gets a value from the cache.
 
-        :param str|unicode key: The cache key to get value for.
+        :param str key: The cache key to get value for.
 
         :param default: Value to return if none found in cache.
 
@@ -60,7 +60,7 @@ class Cache(object):
             value if not already cached. Required to accept a key and return
             a value that will be cached.
 
-        :rtype: str|unicode|int
+        :rtype: str|int
 
         """
         if as_int:
@@ -87,9 +87,9 @@ class Cache(object):
     def set(self, key, value, timeout=None):
         """Sets the specified key value.
 
-        :param str|unicode key:
+        :param str key:
 
-        :param str|unicode value:
+        :param str value:
 
         :param int timeout: 0 to not to expire. Object default is used if not set.
 
@@ -105,7 +105,7 @@ class Cache(object):
     def delete(self, key):
         """Deletes the given cached key from the cache.
 
-        :param str|unicode key: The cache key to delete.
+        :param str key: The cache key to delete.
 
         :rtype: None
         """
@@ -116,7 +116,7 @@ class Cache(object):
     def incr(self, key, delta=1):
         """Increments the specified key value by the specified value.
        
-        :param str|unicode key:
+        :param str key:
     
         :param int delta:
 
@@ -127,7 +127,7 @@ class Cache(object):
     def decr(self, key, delta=1):
         """Decrements the specified key value by the specified value.
 
-        :param str|unicode key:
+        :param str key:
 
         :param int delta:
 
@@ -138,7 +138,7 @@ class Cache(object):
     def mul(self, key, value=2):
         """Multiplies the specified key value by the specified value.
 
-        :param str|unicode key:
+        :param str key:
 
         :param int value:
 
@@ -149,7 +149,7 @@ class Cache(object):
     def div(self, key, value=2):
         """Divides the specified key value by the specified value.
 
-        :param str|unicode key:
+        :param str key:
 
         :param int value:
 

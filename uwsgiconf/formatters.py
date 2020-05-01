@@ -5,10 +5,10 @@ def format_print_text(text, color_fg=None, color_bg=None):
 
     Could be useful gfor print command.
 
-    :param str|unicode text:
-    :param str|unicode color_fg: text (foreground) color
-    :param str|unicode color_bg: text (background) color
-    :rtype: str|unicode
+    :param str text:
+    :param str color_fg: text (foreground) color
+    :param str color_bg: text (background) color
+    :rtype: str
     """
     from .config import Section
 

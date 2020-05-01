@@ -105,7 +105,7 @@ class Monitoring(OptionsGroup):
 
         :param bool enable: Enables the subsystem.
 
-        :param str|unicode store_dir: Directory to store metrics.
+        :param str store_dir: Directory to store metrics.
             The metrics subsystem can expose all of its metrics in the form
             of text files in a directory. The content of each file is the value
             of the metric (updated in real time).
@@ -131,7 +131,7 @@ class Monitoring(OptionsGroup):
     def set_metrics_threshold(self, name, value, check_interval=None, reset_to=None, alarm=None, alarm_message=None):
         """Sets metric threshold parameters.
 
-        :param str|unicode name: Metric name.
+        :param str name: Metric name.
 
         :param int value: Threshold value.
 
@@ -139,9 +139,9 @@ class Monitoring(OptionsGroup):
 
         :param int check_interval: Threshold check interval in seconds.
 
-        :param str|unicode|AlarmType alarm: Alarm to trigger when threshold is reached.
+        :param str|AlarmType alarm: Alarm to trigger when threshold is reached.
 
-        :param str|unicode alarm_message: Message to pass to alarm. If not set metrics name is passed.
+        :param str alarm_message: Message to pass to alarm. If not set metrics name is passed.
 
         """
         if alarm is not None and isinstance(alarm, AlarmType):
@@ -169,7 +169,7 @@ class Monitoring(OptionsGroup):
 
         * http://uwsgi.readthedocs.io/en/latest/StatsServer.html
 
-        :param str|unicode address: Address/socket to make stats available on.
+        :param str address: Address/socket to make stats available on.
 
             Examples:
                 * 127.0.0.1:1717
@@ -220,13 +220,13 @@ class Monitoring(OptionsGroup):
             If you want it to listen on a privileged port, you can either use Capabilities on Linux,
             or use the ``as-root`` option to run the master process as root.
 
-        :param str|unicode address: UDP address to bind to.
+        :param str address: UDP address to bind to.
 
             Examples:
 
                 * 192.168.1.1:2222
 
-        :param str|unicode community_string: SNMP instance identifier to address it.
+        :param str community_string: SNMP instance identifier to address it.
 
         """
         self._set('snmp', address)

@@ -19,7 +19,7 @@ class Queue(OptionsGroup):
 
         :param int block_size: Block size in bytes. Default: 8 KiB.
 
-        :param str|unicode store: Persist the queue into file.
+        :param str store: Persist the queue into file.
 
         :param int store_sync_interval: Store sync interval in master cycles (usually seconds).
 

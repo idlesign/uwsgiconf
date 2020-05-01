@@ -14,7 +14,7 @@ class EncoderPrefix(Encoder):
     def __init__(self, value):
         """
 
-        :param str|unicode value: Value to be used as affix
+        :param str value: Value to be used as affix
 
         """
         super(EncoderPrefix, self).__init__(value)
@@ -52,7 +52,7 @@ class EncoderFormat(Encoder):
     def __init__(self, template):
         """
 
-        :param str|unicode template: Template string.
+        :param str template: Template string.
             Available variables are listed in ``FormatEncoder.Vars``.
 
         """

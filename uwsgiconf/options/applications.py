@@ -49,14 +49,14 @@ class Applications(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Nginx.html#hosting-multiple-apps-in-the-same-process-aka-managing-script-name-and-path-info
 
-        :param str|unicode mountpoint: URL part, or variable value.
+        :param str mountpoint: URL part, or variable value.
 
             .. note:: In case of URL part you may also want to set ``manage_script_name`` basic param to ``True``.
 
             .. warning:: In case of URL part a trailing slash may case problems in some cases
                 (e.g. with Django based projects).
 
-        :param str|unicode app: App module/file.
+        :param str app: App module/file.
 
         :param bool into_worker: Load application under mountpoint
             in the specified worker or after workers spawn.

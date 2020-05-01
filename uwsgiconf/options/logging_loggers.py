@@ -18,9 +18,9 @@ class LoggerFile(Logger):
 
     def __init__(self, filepath, alias=None):
         """
-        :param str|unicode filepath: File path.
+        :param str filepath: File path.
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerFile, self).__init__(alias, filepath)
@@ -35,13 +35,13 @@ class LoggerSocket(Logger):
     def __init__(self, addr_or_path, alias=None):
         """
 
-        :param str|unicode addr_or_path: Remote address or filepath.
+        :param str addr_or_path: Remote address or filepath.
 
             Examples:
                 * /tmp/uwsgi.logsock
                 * 192.168.173.19:5050
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerSocket, self).__init__(alias, addr_or_path)
@@ -56,13 +56,13 @@ class LoggerSyslog(Logger):
     def __init__(self, app_name=None, facility=None, alias=None):
         """
 
-        :param str|unicode app_name:
+        :param str app_name:
 
-        :param str|unicode facility:
+        :param str facility:
 
             * https://en.wikipedia.org/wiki/Syslog#Facility
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerSyslog, self).__init__(alias, app_name, facility)
@@ -77,11 +77,11 @@ class LoggerRsyslog(LoggerSyslog):
     def __init__(self, app_name=None, host=None, facility=None, split=None, packet_size=None, alias=None):
         """
 
-        :param str|unicode app_name:
+        :param str app_name:
 
-        :param str|unicode host: Address (host and port) or UNIX socket path.
+        :param str host: Address (host and port) or UNIX socket path.
 
-        :param str|unicode facility:
+        :param str facility:
 
             * https://en.wikipedia.org/wiki/Syslog#Facility
 
@@ -92,7 +92,7 @@ class LoggerRsyslog(LoggerSyslog):
 
             .. warning:: using packets > 1024 breaks RFC 3164 (#4.1)
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerRsyslog, self).__init__(app_name, facility, alias=alias)
@@ -116,17 +116,17 @@ class LoggerRedis(Logger):
     def __init__(self, host=None, command=None, prefix=None, alias=None):
         """
 
-        :param str|unicode host: Default: 127.0.0.1:6379
+        :param str host: Default: 127.0.0.1:6379
 
-        :param str|unicode command: Command to be used. Default: publish uwsgi
+        :param str command: Command to be used. Default: publish uwsgi
 
             Examples:
                 * publish foobar
                 * rpush foo
 
-        :param str|unicode prefix: Default: <empty>
+        :param str prefix: Default: <empty>
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerRedis, self).__init__(alias, host, command, prefix)
@@ -145,14 +145,14 @@ class LoggerMongo(Logger):
     def __init__(self, host=None, collection=None, node=None, alias=None):
         """
 
-        :param str|unicode host: Default: 127.0.0.1:27017
+        :param str host: Default: 127.0.0.1:27017
 
-        :param str|unicode collection: Command to be used. Default: uwsgi.logs
+        :param str collection: Command to be used. Default: uwsgi.logs
 
-        :param str|unicode node: An identification string for the instance
+        :param str node: An identification string for the instance
             sending logs Default: <server hostname>
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerMongo, self).__init__(alias, host, collection, node)
@@ -167,12 +167,12 @@ class LoggerZeroMq(Logger):
     def __init__(self, connection_str, alias=None):
         """
 
-        :param str|unicode connection_str:
+        :param str connection_str:
 
             Examples:
                 * tcp://192.168.173.18:9191
 
-        :param str|unicode alias: Logger alias.
+        :param str alias: Logger alias.
 
         """
         super(LoggerZeroMq, self).__init__(alias, connection_str)

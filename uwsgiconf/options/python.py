@@ -24,25 +24,25 @@ class Python(OptionsGroup):
             optimization_level=None):
         """
 
-        :param str|unicode|int version: Python version plugin supports.
+        :param str|int version: Python version plugin supports.
 
             Example:
                 * 3 - version 3
                 * <empty> - version 2
                 * <default> - version deduced by uwsgiconf
 
-        :param str|unicode python_home: Set python executable directory - PYTHONHOME/virtualenv.
+        :param str python_home: Set python executable directory - PYTHONHOME/virtualenv.
 
-        :param str|unicode search_path: Add directory (or an .egg or a glob) to the Python search path.
+        :param str search_path: Add directory (or an .egg or a glob) to the Python search path.
 
             .. note:: This can be specified up to 64 times.
 
-        :param str|unicode python_binary: Set python program name.
+        :param str python_binary: Set python program name.
 
-        :param str|unicode tracebacker_path: Enable the uWSGI Python tracebacker.
+        :param str tracebacker_path: Enable the uWSGI Python tracebacker.
             http://uwsgi-docs.readthedocs.io/en/latest/Tracebacker.html
 
-        :param str|unicode plugin_dir: Directory to search for plugin.
+        :param str plugin_dir: Directory to search for plugin.
 
         :param bool enable_threads: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
@@ -111,7 +111,7 @@ class Python(OptionsGroup):
     def set_wsgi_params(self, module=None, callable_name=None, env_strategy=None):
         """Set wsgi related parameters.
 
-        :param str|unicode module:
+        :param str module:
             * load .wsgi file as the Python application
             * load a WSGI module as the application.
 
@@ -121,9 +121,9 @@ class Python(OptionsGroup):
                 * mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 * mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
-        :param str|unicode callable_name: Set WSGI callable name. Default: application.
+        :param str callable_name: Set WSGI callable name. Default: application.
 
-        :param str|unicode env_strategy: Strategy for allocating/deallocating
+        :param str env_strategy: Strategy for allocating/deallocating
             the WSGI env, can be:
 
             * ``cheat`` - preallocates the env dictionary on uWSGI startup and clears it
@@ -149,7 +149,7 @@ class Python(OptionsGroup):
     def eval_wsgi_entrypoint(self, code):
         """Evaluates Python code as WSGI entry point.
 
-        :param str|unicode code:
+        :param str code:
         """
         self._set('eval', code)
 
@@ -162,7 +162,7 @@ class Python(OptionsGroup):
 
             .. warning:: Use only in development.
 
-        :param list|st|unicode ignore_modules: Ignore the specified module during auto-reload scan.
+        :param list|str ignore_modules: Ignore the specified module during auto-reload scan.
 
         """
         self._set('py-auto-reload', scan_interval)
@@ -175,8 +175,8 @@ class Python(OptionsGroup):
 
         http://uwsgi-docs.readthedocs.io/en/latest/PythonModuleAlias.html
 
-        :param str|unicode alias:
-        :param str|unicode module_path:
+        :param str alias:
+        :param str module_path:
         :param bool after_init: add a python module alias after uwsgi module initialization
         """
         command = 'post-pymodule-alias' if after_init else 'pymodule-alias'
@@ -187,7 +187,7 @@ class Python(OptionsGroup):
     def import_module(self, modules, shared=False, into_spooler=False):
         """Imports a python module.
 
-        :param list|str|unicode modules:
+        :param list|str modules:
 
         :param bool shared: If shared import is done once in master process.
             Otherwise import a python module in all of the processes.
@@ -212,7 +212,7 @@ class Python(OptionsGroup):
     def run_module(self, module):
         """Runs a Python script in the uWSGI environment.
 
-        :param str|unicode module:
+        :param str module:
 
         """
         self._set('pyrun', module)

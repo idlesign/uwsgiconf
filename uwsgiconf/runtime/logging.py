@@ -4,9 +4,9 @@ from .. import uwsgi
 variable_set = uwsgi.set_logvar
 """Sets log variable.
 
-:param str|unicode name:
+:param str name:
 
-:param str|unicode value:
+:param str value:
 
 :rtype: None
 """
@@ -18,7 +18,7 @@ variable_get = uwsgi.get_logvar
 
 .. warning:: Bytes are returned for Python 3.
 
-:param str|unicode name:
+:param str name:
 
 :rtype: bytes|str
 """
@@ -26,7 +26,7 @@ variable_get = uwsgi.get_logvar
 log_message = uwsgi.log
 """Logs a message.
 
-:param str|unicode message:
+:param str message:
 
 :rtype: bool
 """

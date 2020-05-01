@@ -16,7 +16,7 @@ class RouterBase(OptionsGroup):
 
     def __init__(self, on=None):
         """
-        :param SocketShared|str|unicode on: Activates the router on the given address.
+        :param SocketShared|str on: Activates the router on the given address.
         """
         self._make_section_like()
 
@@ -60,9 +60,9 @@ class _RouterCommon(RouterBase):
 
         :param int workers: Number of worker processes to spawn.
 
-        :param str|unicode zerg_server: Attach the router to a zerg server.
+        :param str zerg_server: Attach the router to a zerg server.
 
-        :param str|unicode fallback_node: Fallback to the specified node in case of error.
+        :param str fallback_node: Fallback to the specified node in case of error.
 
         :param int concurrent_events: Set the maximum number of concurrent events router can manage.
 
@@ -73,7 +73,7 @@ class _RouterCommon(RouterBase):
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
         """
         self._set_aliased('workers', workers)
@@ -124,7 +124,7 @@ class ForwarderPath(Forwarder):
 
     def __init__(self, sockets_dir):
         """
-        :param str|unicode sockets_dir: UNIX sockets directory.
+        :param str sockets_dir: UNIX sockets directory.
             Allows %s to denote key (domain).
 
         """
@@ -151,9 +151,9 @@ class ForwarderCode(Forwarder):
 
     def __init__(self, script, func, modifier=None):
         """
-        :param str|unicode script: Script (module for Python) name to get function from.
+        :param str script: Script (module for Python) name to get function from.
 
-        :param str|unicode func:  Function name.
+        :param str func:  Function name.
 
         :param Modifier modifier: Routing modifier.
 
@@ -172,7 +172,7 @@ class ForwarderCache(Forwarder):
 
     def __init__(self, cache_name=None):
         """
-        :param str|unicode cache_name: Cache name to use.
+        :param str cache_name: Cache name to use.
         """
         super(ForwarderCache, self).__init__(cache_name)
 
@@ -184,7 +184,7 @@ class ForwarderSocket(Forwarder):
 
     def __init__(self, socket):
         """
-        :param str|unicode socket: Socket filepath.
+        :param str socket: Socket filepath.
         """
         super(ForwarderSocket, self).__init__(socket)
 
@@ -203,7 +203,7 @@ class ForwarderSubscriptionServer(Forwarder):
 
     def __init__(self, address):
         """
-        :param str|unicode address: Address (including port) to run the subscription server on.
+        :param str address: Address (including port) to run the subscription server on.
         """
         super(ForwarderSubscriptionServer, self).__init__(address)
 
@@ -224,9 +224,9 @@ class _RouterWithForwarders(_RouterCommon):
     def __init__(self, on=None, forward_to=None):
         """Activates the router on the given address.
 
-        :param SocketShared|str|unicode on: Activates the router on the given address.
+        :param SocketShared|str on: Activates the router on the given address.
 
-        :param Forwarder|str|unicode|list[str|unicode] forward_to: Where to forward requests.
+        :param Forwarder|str|list[str] forward_to: Where to forward requests.
             Expects a forwarder instance or one or more node names.
 
         """
@@ -248,9 +248,9 @@ class _RouterWithForwarders(_RouterCommon):
 
         :param int workers: Number of worker processes to spawn.
 
-        :param str|unicode zerg_server: Attach the router to a zerg server.
+        :param str zerg_server: Attach the router to a zerg server.
 
-        :param str|unicode fallback_node: Fallback to the specified node in case of error.
+        :param str fallback_node: Fallback to the specified node in case of error.
 
         :param int concurrent_events: Set the maximum number of concurrent events router can manage.
 
@@ -261,7 +261,7 @@ class _RouterWithForwarders(_RouterCommon):
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
         :param bool quiet: Do not report failed connections to instances.
 
@@ -323,9 +323,9 @@ class RouterHttp(_RouterWithForwarders):
         """
         :param int workers: Number of worker processes to spawn.
 
-        :param str|unicode zerg_server: Attach the router to a zerg server.
+        :param str zerg_server: Attach the router to a zerg server.
 
-        :param str|unicode fallback_node: Fallback to the specified node in case of error.
+        :param str fallback_node: Fallback to the specified node in case of error.
 
         :param int concurrent_events: Set the maximum number of concurrent events router can manage.
 
@@ -336,7 +336,7 @@ class RouterHttp(_RouterWithForwarders):
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
         :param bool quiet: Do not report failed connections to instances.
 
@@ -348,7 +348,7 @@ class RouterHttp(_RouterWithForwarders):
 
             .. note:: See http11 socket type for an alternative.
 
-        :param str|unicode|list[str|unicode] resubscribe_addresses: Forward subscriptions
+        :param str|list[str] resubscribe_addresses: Forward subscriptions
             to the specified subscription server.
 
 
@@ -436,9 +436,9 @@ class RouterHttp(_RouterWithForwarders):
     def set_owner_params(self, uid=None, gid=None):
         """Drop http router privileges to specified user and group.
 
-        :param str|unicode|int uid: Set uid to the specified username or uid.
+        :param str|int uid: Set uid to the specified username or uid.
 
-        :param str|unicode|int gid: Set gid to the specified groupname or gid.
+        :param str|int gid: Set gid to the specified groupname or gid.
 
         """
         self._set_aliased('uid', uid)
@@ -470,13 +470,13 @@ class RouterHttps(RouterHttp):
             export_cert_var=None):
         """Binds https router to run on the given address.
 
-        :param SocketShared|str|unicode on: Activates the router on the given address.
+        :param SocketShared|str on: Activates the router on the given address.
 
-        :param str|unicode cert: Certificate file.
+        :param str cert: Certificate file.
 
-        :param str|unicode key: Private key file.
+        :param str key: Private key file.
 
-        :param str|unicode ciphers: Ciphers [alias] string.
+        :param str ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -485,12 +485,12 @@ class RouterHttps(RouterHttp):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str|unicode client_ca: Client CA file for client-based auth.
+        :param str client_ca: Client CA file for client-based auth.
 
             .. note: You can prepend ! (exclamation mark) to make client certificate
                 authentication mandatory.
 
-        :param str|unicode session_context: Session context identifying string. Can be set to static shared value
+        :param str session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
             Default: a value built from the HTTP server address.
@@ -526,16 +526,16 @@ class RouterSsl(_RouterWithForwarders):
     def __init__(self, on, cert, key, forward_to=None, ciphers=None, client_ca=None, session_context=None, use_sni=None):
         """Activates the router on the given address.
 
-        :param SocketShared|str|unicode on: Activates the router on the given address.
+        :param SocketShared|str on: Activates the router on the given address.
 
-        :param str|unicode cert: Certificate file.
+        :param str cert: Certificate file.
 
-        :param str|unicode key: Private key file.
+        :param str key: Private key file.
 
-        :param Forwarder|str|unicode|list[str|unicode] forward_to: Where to forward requests.
+        :param Forwarder|str|list[str] forward_to: Where to forward requests.
             Expects a forwarder instance or one or more node names.
 
-        :param str|unicode ciphers: Ciphers [alias] string.
+        :param str ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -544,9 +544,9 @@ class RouterSsl(_RouterWithForwarders):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str|unicode client_ca: Client CA file for client-based auth.
+        :param str client_ca: Client CA file for client-based auth.
 
-        :param str|unicode session_context: Session context identifying string. Can be set to static shared value
+        :param str session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
             Default: a value built from the HTTP server address.
@@ -603,9 +603,9 @@ class RouterFast(_RouterWithForwarders):
         """
         :param int workers: Number of worker processes to spawn.
 
-        :param str|unicode zerg_server: Attach the router to a zerg server.
+        :param str zerg_server: Attach the router to a zerg server.
 
-        :param str|unicode fallback_node: Fallback to the specified node in case of error.
+        :param str fallback_node: Fallback to the specified node in case of error.
 
         :param int concurrent_events: Set the maximum number of concurrent events router can manage.
 
@@ -616,7 +616,7 @@ class RouterFast(_RouterWithForwarders):
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
         :param bool quiet: Do not report failed connections to instances.
 
@@ -624,9 +624,9 @@ class RouterFast(_RouterWithForwarders):
 
         :param bool fallback_nokey: Move to fallback node even if a subscription key is not found.
 
-        :param str|unicode subscription_key: Skip uwsgi parsing and directly set a key.
+        :param str subscription_key: Skip uwsgi parsing and directly set a key.
 
-        :param str|unicode emperor_command_socket: Set the emperor command socket that will receive spawn commands.
+        :param str emperor_command_socket: Set the emperor command socket that will receive spawn commands.
 
             See `.empire.set_emperor_command_params()`.
 
@@ -651,9 +651,9 @@ class RouterFast(_RouterWithForwarders):
 
         * http://uwsgi.readthedocs.io/en/latest/Changelog-2.0.1.html#resubscriptions
 
-        :param str|unicode|list[str|unicode] addresses: Forward subscriptions to the specified subscription server.
+        :param str|list[str] addresses: Forward subscriptions to the specified subscription server.
 
-        :param str|unicode|list[str|unicode] bind_to: Bind to the specified address when re-subscribing.
+        :param str|list[str] bind_to: Bind to the specified address when re-subscribing.
 
         """
         self._set_aliased('resubscribe', addresses, multi=True)
@@ -692,7 +692,7 @@ class RouterFast(_RouterWithForwarders):
         :param int size: The size (in bytes) of the request body after which the body will
             be stored to disk (as a temporary file) instead of memory.
 
-        :param str|unicode store_dir: Put buffered files to the specified directory. Default: TMPDIR, /tmp/
+        :param str store_dir: Put buffered files to the specified directory. Default: TMPDIR, /tmp/
 
         """
         self._set_aliased('post-buffering', size)
@@ -703,9 +703,9 @@ class RouterFast(_RouterWithForwarders):
     def set_owner_params(self, uid=None, gid=None):
         """Drop http router privileges to specified user and group.
 
-        :param str|unicode|int uid: Set uid to the specified username or uid.
+        :param str|int uid: Set uid to the specified username or uid.
 
-        :param str|unicode|int gid: Set gid to the specified groupname or gid.
+        :param str|int gid: Set gid to the specified groupname or gid.
 
         """
         self._set_aliased('uid', uid)
@@ -765,7 +765,7 @@ class RouterForkPty(_RouterCommon):
     def __init__(self, on=None, undeferred=False):
         """Binds router to run on the given address.
 
-        :param SocketShared|str|unicode on: Activates the router on the given address.
+        :param SocketShared|str on: Activates the router on the given address.
 
         :param bool undeferred: Run router in undeferred mode.
 
@@ -786,9 +786,9 @@ class RouterForkPty(_RouterCommon):
 
         :param int workers: Number of worker processes to spawn.
 
-        :param str|unicode zerg_server: Attach the router to a zerg server.
+        :param str zerg_server: Attach the router to a zerg server.
 
-        :param str|unicode fallback_node: Fallback to the specified node in case of error.
+        :param str fallback_node: Fallback to the specified node in case of error.
 
         :param int concurrent_events: Set the maximum number of concurrent events router can manage.
 
@@ -799,9 +799,9 @@ class RouterForkPty(_RouterCommon):
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
-        :param str|unicode run_command: Run the specified command
+        :param str run_command: Run the specified command
             on every connection. Default: /bin/sh.
 
         """
@@ -860,13 +860,13 @@ class RouterTunTap(RouterBase):
     def __init__(self, on=None, device=None, stats_server=None, gateway=None):
         """Passing params will create a router device.
 
-        :param str|unicode on: Socket file.
+        :param str on: Socket file.
 
-        :param str|unicode device: Device name.
+        :param str device: Device name.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
-        :param str|unicode gateway: Gateway address.
+        :param str gateway: Gateway address.
 
         """
         super(RouterTunTap, self).__init__()
@@ -884,9 +884,9 @@ class RouterTunTap(RouterBase):
 
     def set_basic_params(self, use_credentials=None, stats_server=None):
         """
-        :param str|unicode use_credentials: Enable check of SCM_CREDENTIALS for tuntap client/server.
+        :param str use_credentials: Enable check of SCM_CREDENTIALS for tuntap client/server.
 
-        :param str|unicode stats_server: Router stats server address to run at.
+        :param str stats_server: Router stats server address to run at.
 
         """
         self._set_aliased('use-credentials', use_credentials)
@@ -897,11 +897,11 @@ class RouterTunTap(RouterBase):
     def register_route(self, src, dst, gateway):
         """Adds a routing rule to the tuntap router.
 
-        :param str|unicode src: Source/mask.
+        :param str src: Source/mask.
 
-        :param str|unicode dst: Destination/mask.
+        :param str dst: Destination/mask.
 
-        :param str|unicode gateway: Gateway address.
+        :param str gateway: Gateway address.
 
         """
         self._set_aliased('router-route', ' '.join((src, dst, gateway)), multi=True)
@@ -913,11 +913,11 @@ class RouterTunTap(RouterBase):
 
         To be used in a vassal.
 
-        :param str|unicode socket: Router socket.
+        :param str socket: Router socket.
 
             Example: `/run/tuntap_router.socket`.
 
-        :param str|unicode device_name: Device.
+        :param str device_name: Device.
 
             Example: `uwsgi0`.
 
@@ -931,23 +931,23 @@ class RouterTunTap(RouterBase):
 
         To be used in a vassal.
 
-        :param str|unicode direction: Direction:
+        :param str direction: Direction:
 
             * in
             * out.
 
-        :param str|unicode action: Action:
+        :param str action: Action:
 
             * allow
             * deny
             * route
             * gateway.
 
-        :param str|unicode src: Source/mask.
+        :param str src: Source/mask.
 
-        :param str|unicode dst: Destination/mask.
+        :param str dst: Destination/mask.
 
-        :param str|unicode target: Depends on action.
+        :param str target: Depends on action.
 
             * Route / Gateway: Accept addr:port
 
@@ -967,19 +967,19 @@ class RouterTunTap(RouterBase):
         The TunTap router includes a very simple firewall for governing vassal's traffic.
         The first matching rule stops the chain, if no rule applies, the policy is "allow".
 
-        :param str|unicode direction: Direction:
+        :param str direction: Direction:
 
             * in
             * out
 
-        :param str|unicode action: Action:
+        :param str action: Action:
 
             * allow
             * deny
 
-        :param str|unicode src: Source/mask.
+        :param str src: Source/mask.
 
-        :param str|unicode dst: Destination/mask
+        :param str dst: Destination/mask
 
         """
         value = [action]

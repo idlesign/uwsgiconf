@@ -96,7 +96,7 @@ class Signal(object):
             def somefunc():
                 pass
 
-        :param str|unicode target: Where this signal will be delivered to. Default: ``worker``.
+        :param str target: Where this signal will be delivered to. Default: ``worker``.
 
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
@@ -133,7 +133,7 @@ class Signal(object):
         When you send a signal, it is copied into the master's queue.
         The master will then check the signal table and dispatch the messages.
 
-        :param str|unicode|None remote: Remote address.
+        :param str|None remote: Remote address.
 
         :rtype: None
 

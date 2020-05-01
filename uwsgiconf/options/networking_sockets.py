@@ -13,9 +13,9 @@ class Socket(ParametrizedValue):
 
     def __init__(self, address, bound_workers=None, modifier=None):
         """
-        :param str|unicode|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -62,7 +62,7 @@ class SocketHttp(Socket):
 
     def __init__(self, address, http11=False, bound_workers=None, modifier=None):
         """
-        :param str|unicode|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
         :param bool http11: Keep-Alive support. If set the server will try to maintain
             the connection opened if a bunch of rules are respected.
@@ -72,7 +72,7 @@ class SocketHttp(Socket):
 
             This has been added to support RTSP protocol for video streaming.
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -93,13 +93,13 @@ class SocketHttps(Socket):
 
     def __init__(self, address, cert, key, ciphers=None, client_ca=None, bound_workers=None, modifier=None):
         """
-        :param str|unicode|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
-        :param str|unicode cert: Certificate file.
+        :param str cert: Certificate file.
 
-        :param str|unicode key: Private key file.
+        :param str key: Private key file.
 
-        :param str|unicode ciphers: Ciphers [alias] string.
+        :param str ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -108,12 +108,12 @@ class SocketHttps(Socket):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str|unicode client_ca: Client CA file for client-based auth.
+        :param str client_ca: Client CA file for client-based auth.
 
             .. note: You can prepend ! (exclamation mark) to make client certificate
                 authentication mandatory.
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -161,11 +161,11 @@ class SocketUwsgi(Socket):
 
     def __init__(self, address, persistent=False, bound_workers=None, modifier=None):
         """
-        :param str|unicode|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
         :param bool persistent: Use persistent uwsgi protocol (puwsgi).
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -201,12 +201,12 @@ class SocketFastcgi(Socket):
 
     def __init__(self, address, nph=False, bound_workers=None, modifier=None):
         """
-        :param str|unicode|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
         :param bool nph: Use NPH mode ("no-parsed-header" - bypass the server completely by sending
             the complete HTTP header directly to the browser).
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -227,12 +227,12 @@ class SocketScgi(Socket):
 
     def __init__(self, address, nph=False, bound_workers=None, modifier=None):
         """
-        :param str|unicode|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
         :param bool nph: Use NPH mode ("no-parsed-header" - bypass the server completely by sending
             the complete HTTP header directly to the browser).
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -278,11 +278,11 @@ class SocketShared(Socket):
 
     def __init__(self, address, undeferred=False, bound_workers=None, modifier=None):
         """
-        :param str|unicode address: Address ([host]:port or socket file) to bind socket to.
+        :param str address: Address ([host]:port or socket file) to bind socket to.
 
         :param bool undeferred: Use shared socket undeferred mode.
 
-        :param  str|unicode|int|list bound_workers: Map socket to specific workers.
+        :param  str|int|list bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.

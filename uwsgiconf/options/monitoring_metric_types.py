@@ -14,13 +14,13 @@ class Metric(ParametrizedValue):
             initial_value=None, collect_interval=None, reset_after_push=None):
         """
 
-        :param str|unicode name: Metric name.
+        :param str name: Metric name.
 
             .. note:: Only numbers, letters, underscores, dashes and dots.
 
-        :param str|unicode alias_for: If set metric will be a simple alias for the specified one.
+        :param str alias_for: If set metric will be a simple alias for the specified one.
 
-        :param str|unicode oid: Metric OID.
+        :param str oid: Metric OID.
 
             Required for SNMP.
 

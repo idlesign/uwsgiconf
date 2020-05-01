@@ -21,7 +21,7 @@ class MasterProcess(OptionsGroup):
 
         :param bool enable: Enable uWSGI master process.
 
-        :param str|unicode master_enabled: Set master process name to given value.
+        :param str master_enabled: Set master process name to given value.
 
         :param bool no_orphans: Automatically kill workers if master dies (can be dangerous for availability).
 
@@ -32,7 +32,7 @@ class MasterProcess(OptionsGroup):
 
             .. warning:: You can increase this time if you need to, but it's DISCOURAGED.
 
-        :param str|unicode fifo_file: Enables the master FIFO.
+        :param str fifo_file: Enables the master FIFO.
 
             .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}.fifo
               See ``Section.project_name`` and ``Section.runtime_dir``.
@@ -80,7 +80,7 @@ class MasterProcess(OptionsGroup):
     def set_exception_handling_params(self, handler=None, catch=None, no_write_exception=None):
         """Exception handling related params.
 
-        :param str|unicode|list[str|unicode] handler: Register one or more exception handling C-functions.
+        :param str|list[str] handler: Register one or more exception handling C-functions.
 
         :param bool catch: Catch exceptions and report them as http output (including stack trace and env params).
 
@@ -141,21 +141,21 @@ class MasterProcess(OptionsGroup):
 
         .. note:: We use cron2 option available since 1.9.11.
 
-        :param str|unicode command: Command to execute on schedule (with or without path).
+        :param str command: Command to execute on schedule (with or without path).
 
-        :param int|str|unicode weekday: Day of a the week number. Defaults to `each`.
+        :param int|str weekday: Day of a the week number. Defaults to `each`.
             0 - Sunday  1 - Monday  2 - Tuesday  3 - Wednesday
             4 - Thursday  5 - Friday  6 - Saturday
 
-        :param int|str|unicode month: Month number 1-12. Defaults to `each`.
+        :param int|str month: Month number 1-12. Defaults to `each`.
 
-        :param int|str|unicode day: Day of the month number 1-31. Defaults to `each`.
+        :param int|str day: Day of the month number 1-31. Defaults to `each`.
 
-        :param int|str|unicode hour: Hour 0-23. Defaults to `each`.
+        :param int|str hour: Hour 0-23. Defaults to `each`.
 
-        :param int|str|unicode minute: Minute 0-59. Defaults to `each`.
+        :param int|str minute: Minute 0-59. Defaults to `each`.
 
-        :param str|unicode legion: Set legion (cluster) name to use this cron command against.
+        :param str legion: Set legion (cluster) name to use this cron command against.
             Such commands are only executed by legion lord node.
 
         :param bool unique: Marks command as unique. Default to not unique.
@@ -188,7 +188,7 @@ class MasterProcess(OptionsGroup):
 
         http://uwsgi-docs.readthedocs.io/en/latest/AttachingDaemons.html
 
-        :param str|unicode command_or_pid_path:
+        :param str command_or_pid_path:
 
         :param bool background: Must indicate whether process is in background.
 
@@ -239,7 +239,7 @@ class MasterProcess(OptionsGroup):
 
         http://uwsgi-docs.readthedocs.io/en/latest/AttachingDaemons.html
 
-        :param str|unicode command: The command line to execute.
+        :param str command: The command line to execute.
 
         :param bool for_legion: Legion daemons will be executed only on the legion lord node,
             so there will always be a single daemon instance running in each legion.
@@ -247,14 +247,14 @@ class MasterProcess(OptionsGroup):
 
         :param int broken_counter: Maximum attempts before considering a daemon "broken".
 
-        :param str|unicode pidfile: The pidfile path to check (enable smart mode).
+        :param str pidfile: The pidfile path to check (enable smart mode).
 
         :param bool control: If True, the daemon becomes a `control` one:
             if it dies the whole uWSGI instance dies.
 
         :param bool daemonize: Daemonize the process (enable smart2 mode).
 
-        :param list|str|unicode touch_reload: List of files to check:
+        :param list|str touch_reload: List of files to check:
             whenever they are 'touched', the daemon is restarted
 
         :param int signal_stop: The signal number to send to the daemon when uWSGI is stopped.
@@ -263,11 +263,11 @@ class MasterProcess(OptionsGroup):
 
         :param bool honour_stdin: The signal number to send to the daemon when uWSGI is reloaded.
 
-        :param str|unicode|int uid: Drop privileges to the specified uid.
+        :param str|int uid: Drop privileges to the specified uid.
 
             .. note:: Requires master running as root.
 
-        :param str|unicode|int gid: Drop privileges to the specified gid.
+        :param str|int gid: Drop privileges to the specified gid.
 
             .. note:: Requires master running as root.
 
@@ -277,7 +277,7 @@ class MasterProcess(OptionsGroup):
 
             .. note:: Linux only.
 
-        :param str|unicode change_dir: Use chdir() to the specified directory
+        :param str change_dir: Use chdir() to the specified directory
             before running the command.
 
         """

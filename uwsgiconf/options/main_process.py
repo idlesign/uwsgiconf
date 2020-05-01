@@ -189,7 +189,7 @@ class MainProcess(OptionsGroup):
         :param bool vacuum: Try to remove all of the generated files/sockets
             (UNIX sockets and pidfiles) upon exit.
 
-        :param str|unicode binary_path: Force uWSGI binary path.
+        :param str binary_path: Force uWSGI binary path.
             If you do not have uWSGI in the system path you can force its path with this option
             to permit the reloading system and the Emperor to easily find the binary to execute.
 
@@ -227,7 +227,7 @@ class MainProcess(OptionsGroup):
     def daemonize(self, log_into, after_app_loading=False):
         """Daemonize uWSGI.
 
-        :param str|unicode log_into: Logging destination:
+        :param str log_into: Logging destination:
 
             * File: /tmp/mylog.log
 
@@ -237,7 +237,7 @@ class MainProcess(OptionsGroup):
                     Use ``networking.register_socket('192.168.1.2:1717, type=networking.SOCK_UDP)``
                     to start uWSGI UDP server.
 
-        :param str|unicode bool after_app_loading: Whether to daemonize after
+        :param str bool after_app_loading: Whether to daemonize after
             or before applications loading.
 
         """
@@ -248,7 +248,7 @@ class MainProcess(OptionsGroup):
     def change_dir(self, to, after_app_loading=False):
         """Chdir to specified directory before or after apps loading.
 
-        :param str|unicode to: Target directory.
+        :param str to: Target directory.
 
         :param bool after_app_loading:
                 *True* - after load
@@ -262,11 +262,11 @@ class MainProcess(OptionsGroup):
     def set_owner_params(self, uid=None, gid=None, add_gids=None, set_asap=False):
         """Set process owner params - user, group.
 
-        :param str|unicode|int uid: Set uid to the specified username or uid.
+        :param str|int uid: Set uid to the specified username or uid.
 
-        :param str|unicode|int gid: Set gid to the specified groupname or gid.
+        :param str|int gid: Set gid to the specified groupname or gid.
 
-        :param list|str|unicode|int add_gids: Add the specified group id to the process credentials.
+        :param list|str|int add_gids: Add the specified group id to the process credentials.
             This options allows you to add additional group ids to the current process.
             You can specify it multiple times.
 
@@ -305,9 +305,9 @@ class MainProcess(OptionsGroup):
     def set_hook(self, phase, action):
         """Allows setting hooks (attaching actions) for various uWSGI phases.
 
-        :param str|unicode phase: See constants in ``.phases``.
+        :param str phase: See constants in ``.phases``.
 
-        :param str|unicode|list|HookAction|list[HookAction] action:
+        :param str|list|HookAction|list[HookAction] action:
 
         """
         self._set(f'hook-{phase}', action, multi=True)
@@ -317,9 +317,9 @@ class MainProcess(OptionsGroup):
     def set_hook_touch(self, fpath, action):
         """Allows running certain action when the specified file is touched.
 
-        :param str|unicode fpath: File path.
+        :param str fpath: File path.
 
-        :param str|unicode|list|HookAction|list[HookAction] action:
+        :param str|list|HookAction|list[HookAction] action:
 
         """
         self._set('hook-touch', f'{fpath} {action}', multi=True)
@@ -329,7 +329,7 @@ class MainProcess(OptionsGroup):
     def set_hook_after_request(self, func):
         """Run the specified function/symbol (C level) after each request.
 
-        :param str|unicode func:
+        :param str func:
 
         """
         self._set('after-request-hook', func, multi=True)
@@ -360,9 +360,9 @@ class MainProcess(OptionsGroup):
     def run_command_on_event(self, command, phase=phases.ASAP):
         """Run the given command on a given phase.
 
-        :param str|unicode command:
+        :param str command:
 
-        :param str|unicode phase: See constants in ``Phases`` class.
+        :param str phase: See constants in ``Phases`` class.
 
         """
         self._set(f'exec-{phase}', command, multi=True)
@@ -372,9 +372,9 @@ class MainProcess(OptionsGroup):
     def run_command_on_touch(self, command, target):
         """Run command when the specified file is modified/touched.
 
-        :param str|unicode command:
+        :param str command:
 
-        :param str|unicode target: File path.
+        :param str target: File path.
 
         """
         self._set('touch-exec', f'{target} {command}', multi=True)
@@ -384,7 +384,7 @@ class MainProcess(OptionsGroup):
     def set_pid_file(self, fpath, before_priv_drop=True, safe=False):
         """Creates pidfile before or after privileges drop.
 
-        :param str|unicode fpath: File path.
+        :param str fpath: File path.
 
         :param bool before_priv_drop: Whether to create pidfile before privileges are dropped.
 
@@ -415,11 +415,11 @@ class MainProcess(OptionsGroup):
         :param bool autonaming: Automatically set process name to something meaningful.
             Generated process names may be 'uWSGI Master', 'uWSGI Worker #', etc.
 
-        :param str|unicode prefix: Add prefix to process names.
+        :param str prefix: Add prefix to process names.
 
-        :param str|unicode suffix: Append string to process names.
+        :param str suffix: Append string to process names.
 
-        :param str|unicode name: Set process names to given static value.
+        :param str name: Set process names to given static value.
 
         """
         self._set('auto-procname', autonaming, cast=bool)

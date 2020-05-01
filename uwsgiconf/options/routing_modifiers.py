@@ -19,7 +19,7 @@ class Modifier(object):
     def _get_code_str(cls, src):
         """
         :param src:
-        :rtype: str|unicode
+        :rtype: str
         """
         return str(src) if src is not None else ''
 
@@ -30,7 +30,7 @@ class Modifier(object):
     def submod(self):
         """Modifier 2 value.
 
-        :rtype: str|unicode
+        :rtype: str
         """
         return self._get_code_str(self._submod)
 

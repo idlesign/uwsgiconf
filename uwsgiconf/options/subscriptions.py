@@ -34,7 +34,7 @@ class Subscriptions(OptionsGroup):
             tolerance=None, tolerance_inactive=None, key_dot_split=None):
         """Sets subscription server related params.
 
-        :param str|unicode client_notify_address: Set the notification socket for subscriptions.
+        :param str client_notify_address: Set the notification socket for subscriptions.
             When you subscribe to a server, you can ask it to "acknowledge" the acceptance of your request.
             pointing address (Unix socket or UDP), on which your instance will bind and
             the subscription server will send acknowledgements to.
@@ -70,21 +70,21 @@ class Subscriptions(OptionsGroup):
 
         These are for secured subscriptions.
 
-        :param str|unicode digest_algo: Digest algorithm. Example: SHA1
+        :param str digest_algo: Digest algorithm. Example: SHA1
 
             .. note:: Also requires ``dir_cert`` to be set.
 
-        :param str|unicode dir_cert: Certificate directory.
+        :param str dir_cert: Certificate directory.
 
             .. note:: Also requires ``digest_algo`` to be set.
 
         :param int tolerance: Maximum tolerance (in seconds) of clock skew for secured subscription system.
             Default: 24h.
 
-        :param str|unicode|int|list[str|unicode|int] no_check_uid: Skip signature check for the specified uids
+        :param str|int|list[str|int] no_check_uid: Skip signature check for the specified uids
             when using unix sockets credentials.
 
-        :param str|unicode|list[str|unicode] dir_credentials: Directories to search for subscriptions
+        :param str|list[str] dir_credentials: Directories to search for subscriptions
             key credentials.
 
         :param bool pass_unix_credentials: Enable management of SCM_CREDENTIALS in subscriptions UNIX sockets.
@@ -128,22 +128,22 @@ class Subscriptions(OptionsGroup):
             sni_cert=None, sni_key=None, sni_client_ca=None):
         """Registers a subscription intent.
 
-        :param str|unicode server: Subscription server address (UDP or UNIX socket).
+        :param str server: Subscription server address (UDP or UNIX socket).
 
             Examples:
                 * 127.0.0.1:7171
 
-        :param str|unicode key: Key to subscribe. Generally the domain name (+ optional '/< mountpoint>').
+        :param str key: Key to subscribe. Generally the domain name (+ optional '/< mountpoint>').
             Examples:
                 * mydomain.it/foo
                 * mydomain.it/foo/bar (requires ``mountpoints_depth=2``)
                 * mydomain.it
                 * ubuntu64.local:9090
 
-        :param str|unicode|int address: Address to subscribe (the value for the key)
+        :param str|int address: Address to subscribe (the value for the key)
             or zero-based internal socket number (integer).
 
-        :param str|unicode address: Vassal node address.
+        :param str address: Vassal node address.
 
         :param int balancing_weight: Load balancing value. Default: 1.
 
@@ -158,21 +158,21 @@ class Subscriptions(OptionsGroup):
             Examples:
                 * SHA1:idlessh001
 
-        :param str|unicode check_file: If this file exists the subscription packet is sent,
+        :param str check_file: If this file exists the subscription packet is sent,
             otherwise it is skipped.
 
-        :param str|unicode protocol: the protocol to use, by default it is ``uwsgi``.
+        :param str protocol: the protocol to use, by default it is ``uwsgi``.
             See ``.networking.socket_types``.
 
             .. note:: Since 2.1
 
-        :param str|unicode sni_cert: Certificate file to use for SNI proxy management.
+        :param str sni_cert: Certificate file to use for SNI proxy management.
             * http://uwsgi.readthedocs.io/en/latest/SNI.html#subscription-system-and-sni
 
-        :param str|unicode sni_key: sni_key Key file to use for SNI proxy management.
+        :param str sni_key: sni_key Key file to use for SNI proxy management.
             * http://uwsgi.readthedocs.io/en/latest/SNI.html#subscription-system-and-sni
 
-        :param str|unicode sni_client_ca: Ca file to use for SNI proxy management.
+        :param str sni_client_ca: Ca file to use for SNI proxy management.
             * http://uwsgi.readthedocs.io/en/latest/SNI.html#subscription-system-and-sni
 
         """

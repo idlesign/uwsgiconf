@@ -11,7 +11,7 @@ class Section(_Section):
             **kwargs):
         """
 
-        :param str|unicode name: Section name.
+        :param str name: Section name.
 
         :param str|list touch_reload: Reload uWSGI if the specified file or directory is modified/touched.
 
@@ -22,14 +22,14 @@ class Section(_Section):
 
         :param int mules: Number of mules to spawn.
 
-        :param str|unicode owner: Set process owner user and group.
+        :param str owner: Set process owner user and group.
 
-        :param str|unicode log_into: Filepath or UDP address to send logs into.
+        :param str log_into: Filepath or UDP address to send logs into.
 
         :param bool log_dedicated: If ``True`` all logging will be handled with a separate
             thread in master process.
 
-        :param str|unicode process_prefix: Add prefix to process names.
+        :param str process_prefix: Add prefix to process names.
 
         :param bool ignore_write_errors: If ``True`` no annoying SIGPIPE/write/writev errors
             will be logged, and no related exceptions will be raised.
@@ -158,7 +158,7 @@ class Section(_Section):
     def configure_owner(self, owner='www-data'):
         """Shortcut to set process owner data.
 
-        :param str|unicode owner: Sets user and group. Default: ``www-data``.
+        :param str owner: Sets user and group. Default: ``www-data``.
 
         """
         if owner is not None:
@@ -223,17 +223,17 @@ class PythonSection(Section):
             embedded_plugins=True, require_app=True, threads=True, **kwargs):
         """
 
-        :param str|unicode name: Section name.
+        :param str name: Section name.
 
         :param dict params_python: See Python plugin basic params.
 
-        :param str|unicode wsgi_module: WSGI application module path or filepath.
+        :param str wsgi_module: WSGI application module path or filepath.
 
             Example:
                 mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
-        :param str|unicode|callable wsgi_callable: WSGI application callable name. Default: application.
+        :param str|callable wsgi_callable: WSGI application callable name. Default: application.
 
         :param bool|None embedded_plugins: This indicates whether plugins were embedded into uWSGI,
             which is the case if you have uWSGI from PyPI.

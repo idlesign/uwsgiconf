@@ -52,23 +52,23 @@ class Statics(OptionsGroup):
             self, static_dir=None, index_file=None, mime_file=None, skip_ext=None, transfer_mode=None):
         """
 
-        :param str|unicode|list[str|unicode] static_dir: Check for static files in the specified directory.
+        :param str|list[str] static_dir: Check for static files in the specified directory.
 
             .. note:: Use ``DIR_DOCUMENT_ROOT`` constant to serve files under ``DOCUMENT_ROOT``.
 
-        :param str|unicode|list[str|unicode] index_file: Search for specified file if a directory is requested.
+        :param str|list[str] index_file: Search for specified file if a directory is requested.
 
             Example: ``index.html``
 
-        :param str|unicode|list[str|unicode] mime_file: Set mime types file path to extend uWSGI builtin list.
+        :param str|list[str] mime_file: Set mime types file path to extend uWSGI builtin list.
 
             Default: ``/etc/mime.types`` or ``/etc/apache2/mime.types``.
 
-        :param str|unicode|list[str|unicode] skip_ext: Skip specified extension from static file checks.
+        :param str|list[str] skip_ext: Skip specified extension from static file checks.
 
             Example: add ``.php`` to not serve it as static.
 
-        :param str|unicode transfer_mode: Set static file serving (transfer) mode.
+        :param str transfer_mode: Set static file serving (transfer) mode.
 
             See ``.transfer_modes``.
 
@@ -94,9 +94,9 @@ class Statics(OptionsGroup):
 
         * http://uwsgi.readthedocs.io/en/latest/StaticFiles.html#mode-3-using-static-file-mount-points
 
-        :param str|unicode mountpoint:
+        :param str mountpoint:
 
-        :param str|unicode target:
+        :param str target:
 
         :param bool retain_resource_path: Append the requested resource to the docroot.
 
@@ -129,11 +129,11 @@ class Statics(OptionsGroup):
     def add_expiration_rule(self, criterion, value, timeout, use_mod_time=False):
         """Adds statics expiration rule based on a criterion.
 
-        :param str|unicode criterion: Criterion (subject) to base expiration on.
+        :param str criterion: Criterion (subject) to base expiration on.
 
             See ``.expiration_criteria``.
 
-        :param str|unicode|list[str|unicode] value: Value to test criteria upon.
+        :param str|list[str] value: Value to test criteria upon.
 
             .. note:: Usually a regular expression.
 
@@ -172,7 +172,7 @@ class Statics(OptionsGroup):
 
         :param int timeout: Amount of seconds to put resolved paths in the uWSGI cache.
 
-        :param str|unicode cache_name: Cache name to use for static paths.
+        :param str cache_name: Cache name to use for static paths.
 
         """
         self._set('static-cache-paths', timeout)

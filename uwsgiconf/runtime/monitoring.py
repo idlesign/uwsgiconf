@@ -5,9 +5,9 @@ from .. import uwsgi
 def register_file_monitor(filename, target=None):
     """Maps a specific file/directory modification event to a signal.
 
-    :param str|unicode filename: File or a directory to watch for its modification.
+    :param str filename: File or a directory to watch for its modification.
 
-    :param int|Signal|str|unicode target: Existing signal to raise
+    :param int|Signal|str target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -34,7 +34,7 @@ class Metric(object):
 
     def __init__(self, name):
         """
-        :param str|unicode name: Metric name.
+        :param str name: Metric name.
 
         """
         self.name = name
@@ -52,7 +52,7 @@ class Metric(object):
 
         :param int|long value: New value.
 
-        :param str|unicode mode: Update mode.
+        :param str mode: Update mode.
 
             * None - Unconditional update.
             * max - Sets metric value if it is greater that the current one.

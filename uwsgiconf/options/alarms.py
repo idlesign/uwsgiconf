@@ -70,7 +70,7 @@ class Alarms(OptionsGroup):
 
         :param AlarmType|list[AlarmType] alarm: Alarm.
 
-        :param str|unicode matcher: Regular expression to match log line.
+        :param str matcher: Regular expression to match log line.
 
         :param bool skip:
 
@@ -93,9 +93,9 @@ class Alarms(OptionsGroup):
 
         :param AlarmType|list[AlarmType] alarm: Alarm.
 
-        :param str|unicode fd: File descriptor.
+        :param str fd: File descriptor.
 
-        :param str|unicode message: Message to send.
+        :param str message: Message to send.
 
         :param int byte_count: Files to read. Default: 1 byte.
 

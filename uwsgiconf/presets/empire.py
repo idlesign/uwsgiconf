@@ -20,11 +20,11 @@ class Broodlord(object):
             zerg_count=None, vassal_overload_sos_interval=None, vassal_queue_items_sos=None,
             section_emperor=None, section_zerg=None):
         """
-        :param str|unicode zerg_socket: Unix socket to bind server to.
+        :param str zerg_socket: Unix socket to bind server to.
 
         :param int zerg_die_on_idle: A number of seconds after which an idle zerg will be destroyed.
 
-        :param str|unicode|list[str|unicode] vassals_home: Set vassals home.
+        :param str|list[str] vassals_home: Set vassals home.
 
         :param int zerg_count: Maximum number of zergs to spawn.
 

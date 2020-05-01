@@ -19,7 +19,7 @@ def register_timer(period, target=None):
 
     :param int period: The interval (seconds) at which to raise the signal.
 
-    :param int|Signal|str|unicode target: Existing signal to raise
+    :param int|Signal|str target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -57,7 +57,7 @@ def register_timer_rb(period, repeat=None, target=None):
     :param int repeat: How many times to send signal. Will stop after ther number is reached.
         Default: None - infinitely.
 
-    :param int|Signal|str|unicode target: Existing signal to raise
+    :param int|Signal|str target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -92,7 +92,7 @@ def register_timer_ms(period, target=None):
 
     :param int period: The interval (milliseconds) at which the signal is raised.
 
-    :param int|Signal|str|unicode target: Existing signal to raise
+    :param int|Signal|str target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -135,19 +135,19 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, ta
         Keep in mind, that your actual function will be wrapped into another one, which will check
         whether it is time to call your function.
 
-    :param int|str|unicode weekday: Day of a the week number. Defaults to `each`.
+    :param int|str weekday: Day of a the week number. Defaults to `each`.
         0 - Sunday  1 - Monday  2 - Tuesday  3 - Wednesday
         4 - Thursday  5 - Friday  6 - Saturday
 
-    :param int|str|unicode month: Month number 1-12. Defaults to `each`.
+    :param int|str month: Month number 1-12. Defaults to `each`.
 
-    :param int|str|unicode day: Day of the month number 1-31. Defaults to `each`.
+    :param int|str day: Day of the month number 1-31. Defaults to `each`.
 
-    :param int|str|unicode hour: Hour 0-23. Defaults to `each`.
+    :param int|str hour: Hour 0-23. Defaults to `each`.
 
-    :param int|str|unicode minute: Minute 0-59. Defaults to `each`.
+    :param int|str minute: Minute 0-59. Defaults to `each`.
 
-    :param int|Signal|str|unicode target: Existing signal to raise
+    :param int|Signal|str target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:

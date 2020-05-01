@@ -167,7 +167,7 @@ class RouteRule(object):
             * String values are automatically transformed into ``subjects.path_info``.
             * If ``None`` action is performed always w/o subject check.
 
-        :param str|unicode stage: Stage on which the action needs to be performed.
+        :param str stage: Stage on which the action needs to be performed.
             See ``.stages``.
 
         """
@@ -291,7 +291,7 @@ class Routing(OptionsGroup):
 
         :param RouteRule|list[RouteRule] route_rules:
 
-        :param str|unicode label: Label to mark the given set of rules.
+        :param str label: Label to mark the given set of rules.
             This can be used in conjunction with ``do_goto`` rule action.
 
             * http://uwsgi.readthedocs.io/en/latest/InternalRouting.html#goto
@@ -319,7 +319,7 @@ class Routing(OptionsGroup):
 
         :param int status: HTTP status code.
 
-        :param str|unicode html_fpath: HTML page file path.
+        :param str html_fpath: HTML page file path.
 
         """
         statuses = [403, 404, 500]
@@ -345,7 +345,7 @@ class Routing(OptionsGroup):
 
             If not set, filename containing status code is presumed: 400.html, 500.html, etc.
 
-        :param str|unicode common_prefix: Common path (prefix) for all files.
+        :param str common_prefix: Common path (prefix) for all files.
 
         """
         statuses = [403, 404, 500]
@@ -367,9 +367,9 @@ class Routing(OptionsGroup):
 
         * http://uwsgi.readthedocs.io/en/latest/GeoIP.html
 
-        :param str|unicode db_country: Country database file path.
+        :param str db_country: Country database file path.
 
-        :param str|unicode db_city: City database file path. Example: ``GeoLiteCity.dat``.
+        :param str db_city: City database file path. Example: ``GeoLiteCity.dat``.
 
         """
         self._set('geoip-country', db_country, plugin='geoip')
@@ -380,9 +380,9 @@ class Routing(OptionsGroup):
     def header_add(self, name, value):
         """Automatically add HTTP headers to response.
 
-        :param str|unicode name:
+        :param str name:
 
-        :param str|unicode value:
+        :param str value:
 
         """
         self._set('add-header', f'{name}: {value}', multi=True)
@@ -392,7 +392,7 @@ class Routing(OptionsGroup):
     def header_remove(self, value):
         """Automatically remove specified HTTP header from the response.
 
-        :param str|unicode value:
+        :param str value:
 
         """
         self._set('del-header', value, multi=True)
@@ -403,9 +403,9 @@ class Routing(OptionsGroup):
         """Store the specified response header in a request var
         (optionally removing it from the response).
 
-        :param str|unicode name:
+        :param str name:
 
-        :param str|unicode target_var:
+        :param str target_var:
 
         :param bool pull: Whether to remove header from response.
 

@@ -30,7 +30,7 @@ def get_tpl_systemd(conf):
         * journalctl -fu my.service
 
     :param Section conf: Section object.
-    :rtype: str|unicode
+    :rtype: str
 
     """
     tpl = '''
@@ -80,7 +80,7 @@ def get_tpl_upstart(conf):
     """
 
     :param Section conf: Section object.
-    :rtype: str|unicode
+    :rtype: str
 
     """
     tpl = '''
@@ -123,12 +123,12 @@ TEMPLATES = {
 def get_config(systype, conf, conf_path, runner=None, project_name=None):
     """Returns init system configuration file contents.
 
-    :param str|unicode systype: System type alias, e.g. systemd, upstart
+    :param str systype: System type alias, e.g. systemd, upstart
     :param Section|Configuration conf: Configuration/Section object.
-    :param str|unicode conf_path: File path to a configuration file or a command producing such a configuration.
-    :param str|unicode runner: Runner command to execute conf_path. Defaults to ``uwsgiconf`` runner.
-    :param str|unicode project_name: Project name to override.
-    :rtype: str|unicode
+    :param str conf_path: File path to a configuration file or a command producing such a configuration.
+    :param str runner: Runner command to execute conf_path. Defaults to ``uwsgiconf`` runner.
+    :param str project_name: Project name to override.
+    :rtype: str
 
     """
     runner = runner or f'{Finder.uwsgiconf()} run'

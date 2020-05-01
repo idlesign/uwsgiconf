@@ -19,9 +19,9 @@ class PusherSocket(Pusher):
 
     def __init__(self, address, prefix=None):
         """
-        :param str|unicode address:
+        :param str address:
 
-        :param str|unicode prefix: Arbitrary prefix to differentiate sender.
+        :param str prefix: Arbitrary prefix to differentiate sender.
         """
         super(PusherSocket, self).__init__(address, prefix)
 
@@ -37,9 +37,9 @@ class PusherRrdtool(Pusher):
 
     def __init__(self, target_dir, library=None, push_interval=None):
         """
-        :param str|unicode target_dir: Directory to store rrd files into.
+        :param str target_dir: Directory to store rrd files into.
 
-        :param str|unicode library: Set the name of rrd library. Default: librrd.so.
+        :param str library: Set the name of rrd library. Default: librrd.so.
 
         :param int push_interval: Set push frequency.
 
@@ -58,9 +58,9 @@ class PusherStatsd(Pusher):
 
     def __init__(self, address, prefix=None, no_workers=None, all_gauges=None):
         """
-        :param str|unicode address:
+        :param str address:
 
-        :param str|unicode prefix: Arbitrary prefix to differentiate sender.
+        :param str prefix: Arbitrary prefix to differentiate sender.
 
         :param bool no_workers: Disable generation of single worker metrics.
 
@@ -90,17 +90,17 @@ class PusherCarbon(Pusher):
             use_metrics=None, no_workers=None, timeout=None, retries=None, retries_delay=None,
             hostname_dots_replacer=None):
         """
-        :param str|unicode|list[str|unicode] address: Host and port. Example: 127.0.0.1:2004
+        :param str|list[str] address: Host and port. Example: 127.0.0.1:2004
 
-        :param str|unicode node_realm: Set carbon metrics realm node.
+        :param str node_realm: Set carbon metrics realm node.
 
-        :param str|unicode node_root: Set carbon metrics root node. Default: uwsgi.
+        :param str node_root: Set carbon metrics root node. Default: uwsgi.
 
         :param int push_interval: Set carbon push frequency in seconds. Default: 60.
 
         :param bool no_workers: Disable generation of single worker metrics.
 
-        :param str|unicode idle_avg_source: Average values source during idle period (no requests).
+        :param str idle_avg_source: Average values source during idle period (no requests).
 
             Variants:
                 * last (default)
@@ -118,7 +118,7 @@ class PusherCarbon(Pusher):
 
         :param int retries_delay: Set connection retry delay in seconds. Default: 7.
 
-        :param str|unicode hostname_dots_replacer: Set char to use as a replacement for
+        :param str hostname_dots_replacer: Set char to use as a replacement for
             dots in hostname in `<node_root>.hostname.<node_realm>.metrics_data``
 
             This affects Graphite aggregation mechanics.
@@ -151,11 +151,11 @@ class PusherZabbix(Pusher):
 
     def __init__(self, address, prefix=None, template=None):
         """
-        :param str|unicode address:
+        :param str address:
 
-        :param str|unicode prefix: Arbitrary prefix to differentiate sender.
+        :param str prefix: Arbitrary prefix to differentiate sender.
 
-        :param str|unicode template: Print (or store to a file) the zabbix template
+        :param str template: Print (or store to a file) the zabbix template
             for the current metrics setup.
 
         """
@@ -172,9 +172,9 @@ class PusherMongo(Pusher):
 
     def __init__(self, address=None, collection=None, push_interval=None):
         """
-        :param str|unicode address: Default: 127.0.0.1:27017
+        :param str address: Default: 127.0.0.1:27017
 
-        :param str|unicode collection: MongoDB colection to write into. Default: uwsgi.statistics
+        :param str collection: MongoDB colection to write into. Default: uwsgi.statistics
 
         :param int push_interval: Write interval in seconds.
         """
@@ -194,9 +194,9 @@ class PusherFile(Pusher):
 
     def __init__(self, fpath=None, separator=None, push_interval=None):
         """
-        :param str|unicode fpath: File path. Default: uwsgi.stats
+        :param str fpath: File path. Default: uwsgi.stats
 
-        :param str|unicode separator: New entry separator. Default: \n\n
+        :param str separator: New entry separator. Default: \n\n
 
         :param int push_interval: Write interval in seconds.
         """

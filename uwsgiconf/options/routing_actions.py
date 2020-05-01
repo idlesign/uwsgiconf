@@ -131,7 +131,7 @@ class ActionLog(RouteAction):
     def __init__(self, message):
         """
 
-        :param str|unicode|None message: Message to add into log.
+        :param str|None message: Message to add into log.
             If ``None`` logging will be disabled for this request.
 
         """
@@ -157,7 +157,7 @@ class ActionAddVarLog(RouteAction):
 
     def __init__(self, name, val):
         """
-        :param str|unicode name: Variable name.
+        :param str name: Variable name.
 
         :param val: Variable value.
         """
@@ -171,7 +171,7 @@ class ActionDoGoto(RouteAction):
 
     def __init__(self, where):
         """
-        :param str|unicode|int where: Rule number of label to go to.
+        :param str|int where: Rule number of label to go to.
         """
         super(ActionDoGoto, self).__init__(where)
 
@@ -183,7 +183,7 @@ class ActionAddVarCgi(RouteAction):
 
     def __init__(self, name, val):
         """
-        :param str|unicode name: Variable name.
+        :param str name: Variable name.
 
         :param val: Variable value.
         """
@@ -197,7 +197,7 @@ class ActionHeaderAdd(RouteAction):
 
     def __init__(self, name, val):
         """
-        :param str|unicode name: Header name.
+        :param str name: Header name.
 
         :param val: Header value.
         """
@@ -213,7 +213,7 @@ class ActionHeaderRemove(RouteAction):
 
     def __init__(self, name):
         """
-        :param str|unicode name: Header name.
+        :param str name: Header name.
         """
         super(ActionHeaderRemove, self).__init__(name)
 
@@ -278,7 +278,7 @@ class ActionRedirect(RouteAction):
 
     def __init__(self, url, permanent=False):
         """
-        :param str| unicode url: URL to redirect to.
+        :param str url: URL to redirect to.
         :param bool permanent: If ``True`` use 301, otherwise 302.
         """
         if permanent:
@@ -299,7 +299,7 @@ class ActionRewrite(RouteAction):
 
     def __init__(self, rule, do_continue=False):
         """
-        :param str|unicode rule: A rewrite rule.
+        :param str rule: A rewrite rule.
 
         :param bool do_continue: Stop request processing
             and continue to the selected request handler.
@@ -322,9 +322,9 @@ class ActionRouteUwsgi(RouteAction):
 
     def __init__(self, external_address='', modifier='', app=''):
         """
-        :param str|unicode external_address: External uWSGI server address (host:port).
+        :param str external_address: External uWSGI server address (host:port).
         :param Modifier modifier: Set request modifier.
-        :param str|unicode app: Set ``UWSGI_APPID``.
+        :param str app: Set ``UWSGI_APPID``.
         """
         super(ActionRouteUwsgi, self).__init__(external_address, modifier, modifier.submod, app)
 
@@ -338,9 +338,9 @@ class ActionRouteExternal(RouteAction):
 
     def __init__(self, address, host_header=None):
         """
-        :param str|unicode address: External HTTP address (host:port)
+        :param str address: External HTTP address (host:port)
 
-        :param str|unicode host_header: HOST header value.
+        :param str host_header: HOST header value.
         """
         super(ActionRouteExternal, self).__init__(address, host_header)
 
@@ -355,9 +355,9 @@ class ActionAlarm(RouteAction):
 
     def __init__(self, name, message):
         """
-        :param str|unicode name: Alarm name
+        :param str name: Alarm name
 
-        :param str|unicode message: Message to pass into alarm.
+        :param str message: Message to pass into alarm.
         """
         super(ActionAlarm, self).__init__(name, message)
 
@@ -370,7 +370,7 @@ class ActionServeStatic(RouteAction):
 
     def __init__(self, fpath):
         """
-        :param str|unicode fpath: Static file path.
+        :param str fpath: Static file path.
         """
         super(ActionServeStatic, self).__init__(fpath)
 
@@ -384,11 +384,11 @@ class ActionAuthBasic(RouteAction):
 
     def __init__(self, realm, user=None, password=None, do_next=False):
         """
-        :param str|unicode realm:
+        :param str realm:
 
-        :param str|unicode user:
+        :param str user:
 
-        :param str|unicode password: Password or htpasswd-like file.
+        :param str password: Password or htpasswd-like file.
 
         :param bool do_next: Allow next rule.
         """
@@ -420,22 +420,22 @@ class AuthLdap(RouteAction):
             do_next=False):
         """
 
-        :param str|unicode realm:
+        :param str realm:
 
-        :param str|unicode address: LDAP server URI
+        :param str address: LDAP server URI
 
-        :param str|unicode base_dn: Base DN used when searching for users.
+        :param str base_dn: Base DN used when searching for users.
 
-        :param str|unicode bind_dn: DN used for binding.
+        :param str bind_dn: DN used for binding.
             Required if the LDAP server does not allow anonymous searches.
 
-        :param str|unicode bind_password: Password for the ``bind_dn`` user.
+        :param str bind_password: Password for the ``bind_dn`` user.
 
-        :param str|unicode filter: Filter used when searching for users. Default: ``(objectClass=*)``
+        :param str filter: Filter used when searching for users. Default: ``(objectClass=*)``
 
-        :param str|unicode login_attr: LDAP attribute that holds user login. Default: ``uid``.
+        :param str login_attr: LDAP attribute that holds user login. Default: ``uid``.
 
-        :param str|unicode log_level: Log level.
+        :param str log_level: Log level.
 
             Supported values:
                 * 0 - don't log any binds
@@ -482,7 +482,7 @@ class ActionDirChange(RouteAction):
 
     def __init__(self, dir):
         """
-        :param str|unicode dir: Directory to change into.
+        :param str dir: Directory to change into.
         """
         super(ActionDirChange, self).__init__(dir)
 
@@ -501,7 +501,7 @@ class ActionSetVarUwsgiAppid(RouteAction):
 
     def __init__(self, app):
         """
-        :param str|unicode app: Application ID.
+        :param str app: Application ID.
         """
         super(ActionSetVarUwsgiAppid, self).__init__(app)
 
@@ -513,7 +513,7 @@ class ActionSetVarRemoteUser(RouteAction):
 
     def __init__(self, user):
         """
-        :param str|unicode user: Username.
+        :param str user: Username.
         """
         super(ActionSetVarRemoteUser, self).__init__(user)
 
@@ -525,7 +525,7 @@ class ActionSetVarUwsgiHome(RouteAction):
 
     def __init__(self, dir):
         """
-        :param str|unicode dir: Directory to make a new home.
+        :param str dir: Directory to make a new home.
         """
         super(ActionSetVarUwsgiHome, self).__init__(dir)
 
@@ -543,7 +543,7 @@ class ActionSetVarUwsgiScheme(RouteAction):
 
     def __init__(self, value):
         """
-        :param str|unicode value:
+        :param str value:
         """
         super(ActionSetVarUwsgiScheme, self).__init__(value)
 
@@ -555,7 +555,7 @@ class ActionSetVarScriptName(RouteAction):
 
     def __init__(self, name):
         """
-        :param str|unicode name: Script name
+        :param str name: Script name
         """
         super(ActionSetVarScriptName, self).__init__(name)
 
@@ -567,7 +567,7 @@ class ActionSetVarRequestMethod(RouteAction):
 
     def __init__(self, name):
         """
-        :param str|unicode name: Method name.
+        :param str name: Method name.
         """
         super(ActionSetVarRequestMethod, self).__init__(name)
 
@@ -579,7 +579,7 @@ class ActionSetVarRequestUri(RouteAction):
 
     def __init__(self, value):
         """
-        :param str|unicode value: URI
+        :param str value: URI
         """
         super(ActionSetVarRequestUri, self).__init__(value)
 
@@ -591,7 +591,7 @@ class ActionSetVarRemoteAddr(RouteAction):
 
     def __init__(self, value):
         """
-        :param str|unicode value: Address.
+        :param str value: Address.
         """
         super(ActionSetVarRemoteAddr, self).__init__(value)
 
@@ -603,7 +603,7 @@ class ActionSetVarPathInfo(RouteAction):
 
     def __init__(self, value):
         """
-        :param str|unicode value: New info.
+        :param str value: New info.
         """
         super(ActionSetVarPathInfo, self).__init__(value)
 
@@ -615,7 +615,7 @@ class ActionSetVarDocumentRoot(RouteAction):
 
     def __init__(self, value):
         """
-        :param str|unicode value:
+        :param str value:
         """
         super(ActionSetVarDocumentRoot, self).__init__(value)
 
@@ -627,7 +627,7 @@ class ActionSetUwsgiProcessName(RouteAction):
 
     def __init__(self, name):
         """
-        :param str|unicode name: New process name.
+        :param str name: New process name.
         """
         super(ActionSetUwsgiProcessName, self).__init__(name)
 
@@ -657,6 +657,6 @@ class ActionSetScriptFile(RouteAction):
 
     def __init__(self, fpath):
         """
-        :param str|unicode fpath: File path.
+        :param str fpath: File path.
         """
         super(ActionSetScriptFile, self).__init__(fpath)
