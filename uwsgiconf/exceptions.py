@@ -1,11 +1,11 @@
 
 class UwsgiconfException(Exception):
-    pass
+    """Base for exceptions."""
 
 
 class ConfigurationError(UwsgiconfException):
-    pass
+    """Configuration related error."""
 
 
 class RuntimeConfigurationError(ConfigurationError):
-    pass
+    """Runtime configuration related error."""

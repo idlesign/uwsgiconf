@@ -1,23 +1,21 @@
 from os.path import dirname, basename, abspath
 from textwrap import dedent
+from typing import List, Dict, Callable, Union
 
-from .config import Configuration
+from .config import Configuration, Section
 from .utils import Finder, UwsgiRunner
-
-if False:  # pragma: nocover
-    from .config import Section
 
 
 TYPE_UPSTART = 'upstart'
 TYPE_SYSTEMD = 'systemd'
 
-TYPES = [
+TYPES: List[str] = [
     TYPE_UPSTART,
     TYPE_SYSTEMD,
 ]
 
 
-def get_tpl_systemd(conf):
+def get_tpl_systemd(conf: 'Section') -> str:
     """
 
     Some Systemd hints:
@@ -29,8 +27,7 @@ def get_tpl_systemd(conf):
 
         * journalctl -fu my.service
 
-    :param Section conf: Section object.
-    :rtype: str
+    :param conf: Section object.
 
     """
     tpl = '''
@@ -76,11 +73,10 @@ def get_tpl_systemd(conf):
     return tpl
 
 
-def get_tpl_upstart(conf):
+def get_tpl_upstart(conf: 'Section') -> str:
     """
 
-    :param Section conf: Section object.
-    :rtype: str
+    :param conf: Section object.
 
     """
     tpl = '''
@@ -114,21 +110,26 @@ def get_tpl_upstart(conf):
     return tpl
 
 
-TEMPLATES = {
+TEMPLATES: Dict[str, Callable] = {
     TYPE_SYSTEMD: get_tpl_systemd,
     TYPE_UPSTART: get_tpl_upstart,
 }
 
 
-def get_config(systype, conf, conf_path, runner=None, project_name=None):
+def get_config(
+        systype: str,
+        conf: Union[Configuration, Section],
+        conf_path: str,
+        runner: str = None,
+        project_name: str = None
+) -> str:
     """Returns init system configuration file contents.
 
-    :param str systype: System type alias, e.g. systemd, upstart
-    :param Section|Configuration conf: Configuration/Section object.
-    :param str conf_path: File path to a configuration file or a command producing such a configuration.
-    :param str runner: Runner command to execute conf_path. Defaults to ``uwsgiconf`` runner.
-    :param str project_name: Project name to override.
-    :rtype: str
+    :param systype: System type alias, e.g. systemd, upstart
+    :param conf: Configuration/Section object.
+    :param conf_path: File path to a configuration file or a command producing such a configuration.
+    :param runner: Runner command to execute conf_path. Defaults to ``uwsgiconf`` runner.
+    :param project_name: Project name to override.
 
     """
     runner = runner or f'{Finder.uwsgiconf()} run'

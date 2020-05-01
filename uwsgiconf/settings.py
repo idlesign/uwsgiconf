@@ -8,3 +8,4 @@ ENV_FORCE_STUB = 'UWSGICONF_FORCE_STUB'
 
 
 FORCE_STUB = int(environ.get(ENV_FORCE_STUB, 0))
+"""Forces using stub instead of uwsgi real module."""

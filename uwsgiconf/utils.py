@@ -4,45 +4,42 @@ import sys
 from collections import namedtuple
 from contextlib import contextmanager
 from importlib import import_module
+from io import StringIO
+from types import ModuleType
+from typing import Union, Any, List, Tuple, Dict
 
-try:  # pragma: nocover
-    from StringIO import StringIO
-except ImportError:  # pragma: nocover
-    from io import StringIO
-
-from .settings import CONFIGS_MODULE_ATTR
 from .exceptions import UwsgiconfException
+from .settings import CONFIGS_MODULE_ATTR
+from .typehints import StrList
 
 if False:  # pragma: nocover
-    from uwsgiconf.config import Configuration
+    from .config import Configuration  # noqa
 
 
 EmbeddedPlugins = namedtuple('EmbeddedPlugins', ['generic', 'request'])
 
 
-def get_logger(name):
+def get_logger(name: str):
     # Here to mitigate module name clashing.
     return logging.getLogger(name)
 
 
-def encode(value):
+def encode(value: Union[str, bytes]) -> bytes:
     """Encodes str into bytes if required."""
     return value.encode('utf-8') if isinstance(value, str) else value
 
 
-def decode(value):
+def decode(value: Union[str, bytes]) -> str:
     """Decodes bytes into str if required."""
     return value.decode('utf-8') if isinstance(value, bytes) else value
 
 
-def decode_deep(value):
+def decode_deep(value: Any) -> dict:
     """Decodes object deep if required.
 
     :param value:
-    :rtype: dict
 
     """
-
     if isinstance(value, dict):
         out = {}
         for key, val in value.items():
@@ -77,18 +74,19 @@ class ConfModule:
     Allows reading configurations from .py files.
 
     """
-    default_name = 'uwsgicfg.py'
+    default_name: str = 'uwsgicfg.py'
 
-    def __init__(self, fpath):
+    def __init__(self, fpath: str):
         """Module filepath.
 
         :param fpath:
+
         """
         fpath = os.path.abspath(fpath)
         self.fpath = fpath
         self._confs = None
 
-    def spawn_uwsgi(self, only=None):
+    def spawn_uwsgi(self, only: str = None) -> List[Tuple[str, int]]:
         """Spawns uWSGI process(es) which will use configuration(s) from the module.
 
         Returns list of tuples:
@@ -97,10 +95,9 @@ class ConfModule:
         If only one configuration found current process (uwsgiconf) is replaced with a new one (uWSGI),
         otherwise a number of new detached processes is spawned.
 
-        :param str only: Configuration alias to run from the module.
+        :param only: Configuration alias to run from the module.
             If not set uWSGI will be spawned for every configuration found in the module.
 
-        :rtype: list
         """
         spawned = []
         configs = self.configurations
@@ -112,7 +109,7 @@ class ConfModule:
             spawned.append((alias, os.getpid()))
 
         else:
-            for config in configs:  # type: Configuration
+            for config in configs:
                 alias = config.alias
 
                 if only is None or alias == only:
@@ -122,7 +119,7 @@ class ConfModule:
         return spawned
 
     @property
-    def configurations(self):
+    def configurations(self) -> List['Configuration']:
         """Configurations from uwsgiconf module."""
 
         if self._confs is not None:
@@ -138,11 +135,11 @@ class ConfModule:
         return confs
 
     @classmethod
-    def load(cls, fpath):
+    def load(cls, fpath: str) -> ModuleType:
         """Loads a module and returns its object.
 
-        :param str fpath:
-        :rtype: module
+        :param fpath:
+
         """
         module_name = os.path.splitext(os.path.basename(fpath))[0]
 
@@ -156,11 +153,10 @@ class ConfModule:
         return module
 
 
-def listify(src):
+def listify(src: Any) -> List[Any]:
     """Make a list with source object if not already a list.
 
     :param src:
-    :rtype: list
 
     """
     if not isinstance(src, list):
@@ -169,16 +165,19 @@ def listify(src):
     return src
 
 
-def filter_locals(locals_dict, drop=None, include=None):
+def filter_locals(
+        locals_dict: Dict[str, Any],
+        drop: List[str] = None,
+        include: List[str] = None
+) -> Dict[str, Any]:
     """Filters a dictionary produced by locals().
 
-    :param dict locals_dict:
+    :param locals_dict:
 
-    :param list drop: Keys to drop from dict.
+    :param drop: Keys to drop from dict.
 
-    :param list include: Keys to include into dict.
+    :param include: Keys to include into dict.
 
-    :rtype: dict
     """
     drop = drop or []
     drop.extend([
@@ -199,25 +198,31 @@ class KeyValue:
     """Allows lazy flattening the given dictionary into a key-value string."""
 
     def __init__(
-            self, locals_dict, keys=None, aliases=None, bool_keys=None, list_keys=None,
-            items_separator=','):
+            self,
+            locals_dict: Dict[str, Any],
+            keys: List[str] = None,
+            aliases: Dict[str, str] = None,
+            bool_keys: List[str] = None,
+            list_keys: List[str] = None,
+            items_separator: str = ','
+    ):
         """
-        :param dict locals_dict: Dictionary produced by locals().
 
-        :param list keys: Relevant keys from dictionary.
+        :param locals_dict: Dictionary produced by locals().
+
+        :param keys: Relevant keys from dictionary.
             If not defined - all keys are relevant.
             If defined keys will flattened into string using given order.
 
-        :param dict aliases: Mapping key names from locals_dict into names
+        :param aliases: Mapping key names from locals_dict into names
             they should be replaced with.
 
-        :param list bool_keys: Keys to consider their values bool.
+        :param bool_keys: Keys to consider their values bool.
 
-        :param list list_keys: Keys expecting lists.
+        :param list_keys: Keys expecting lists.
 
-        :param str items_separator: String to use as items (chunks) separator.
+        :param items_separator: String to use as items (chunks) separator.
 
-        :rtype: str
         """
         self.locals_dict = dict(locals_dict)
         self.keys = keys or sorted(filter_locals(locals_dict).keys())
@@ -246,13 +251,11 @@ class KeyValue:
         return self.items_separator.join(value_chunks).strip()
 
 
-def get_output(cmd, args):
+def get_output(cmd: str, args: StrList) -> str:
     """Runs a command and returns its output (stdout + stderr).
 
-    :param str cmd:
-    :param str|list[str] args:
-
-    :rtype: str
+    :param cmd:
+    :param args:
 
     """
     from subprocess import Popen, STDOUT, PIPE
@@ -270,37 +273,31 @@ class Finder:
     """Finds various entities."""
 
     @classmethod
-    def uwsgiconf(cls):
-        """Finds uwsgiconf executable location.
-
-        :rtype: str
-        """
+    def uwsgiconf(cls) -> str:
+        """Finds uwsgiconf executable location."""
         return get_output('which', ['uwsgiconf']).strip()
 
     @classmethod
-    def python(cls):
-        """Finds Python executable location.
-
-        :rtype: str
-        """
+    def python(cls) -> str:
+        """Finds Python executable location."""
         return sys.executable
 
 
 class Fifo:
     """uWSGI Master FIFO interface."""
 
-    def __init__(self, fifo_filepath):
+    def __init__(self, fifo_filepath: str):
         """
-        :param str fifo_filepath: Path to uWSGI Master FIFO file.
+        :param fifo_filepath: Path to uWSGI Master FIFO file.
 
         """
         self.fifo = fifo_filepath
 
-    def cmd_log(self, reopen=False, rotate=False):
+    def cmd_log(self, reopen: bool = False, rotate: bool = False):
         """Allows managing of uWSGI log related stuff
 
-        :param bool reopen: Reopen log file. Could be required after third party rotation.
-        :param bool rotate: Trigger built-in log rotation.
+        :param reopen: Reopen log file. Could be required after third party rotation.
+        :param rotate: Trigger built-in log rotation.
 
         """
         cmd = b''
@@ -317,20 +314,20 @@ class Fifo:
         """Dump uWSGI configuration and current stats into the log."""
         return self.send_command(b's')
 
-    def cmd_stop(self, force=False):
+    def cmd_stop(self, force: bool = False):
         """Shutdown uWSGI instance.
 
-        :param bool force: Use forced (brutal) shutdown instead of a graceful one.
+        :param force: Use forced (brutal) shutdown instead of a graceful one.
 
         """
         return self.send_command(b'Q' if force else b'q')
 
-    def cmd_reload(self, force=False, workers_only=False, workers_chain=False):
+    def cmd_reload(self, force: bool = False, workers_only: bool = False, workers_chain: bool = False):
         """Reloads uWSGI master process, workers.
 
-        :param bool force: Use forced (brutal) reload instead of a graceful one.
-        :param bool workers_only: Reload only workers.
-        :param bool workers_chain: Run chained workers reload (one after another,
+        :param force: Use forced (brutal) reload instead of a graceful one.
+        :param workers_only: Reload only workers.
+        :param workers_chain: Run chained workers reload (one after another,
             instead of destroying all of them in bulk).
 
         """
@@ -342,10 +339,10 @@ class Fifo:
 
         return self.send_command(b'R' if force else b'r')
 
-    def send_command(self, cmd):
+    def send_command(self, cmd: bytes):
         """Sends a generic command into FIFO.
 
-        :param bytes cmd: Command chars to send into FIFO.
+        :param cmd: Command chars to send into FIFO.
 
         """
         if not cmd:
@@ -358,49 +355,48 @@ class Fifo:
 class UwsgiRunner:
     """Exposes methods to run uWSGI."""
 
-    def __init__(self, binary_path=None):
+    def __init__(self, binary_path: str = None):
         self.binary_uwsgi = binary_path or 'uwsgi'
         self.binary_python = self.prepare_env()
 
-    def get_output(self, command_args):
+    def get_output(self, command_args: StrList) -> str:
         """Runs a command and returns its output (stdout + stderr).
 
-        :param str|list[str] command_args:
-
-        :rtype: str
+        :param command_args:
 
         """
         return get_output(self.binary_uwsgi, command_args)
 
-    def get_plugins(self):
-        """Returns ``EmbeddedPlugins`` object with
-
-        :rtype EmbeddedPlugins:
-        """
+    def get_plugins(self) -> EmbeddedPlugins:
+        """Returns ``EmbeddedPlugins`` object with."""
         out = self.get_output('--plugin-list')
         return parse_command_plugins_output(out)
 
     @classmethod
-    def get_env_path(cls):
-        """Returns PATH environment variable updated to run uwsgiconf in
-        (e.g. for virtualenv).
+    def get_env_path(cls) -> str:
+        """Returns PATH environment variable updated
+        to run uwsgiconf in (e.g. for virtualenv).
 
-        :rtype: str
         """
         return os.path.dirname(Finder.python()) + os.pathsep + os.environ['PATH']
 
     @classmethod
-    def prepare_env(cls):
+    def prepare_env(cls) -> str:
         """Prepares current environment and returns Python binary name.
 
         This adds some virtualenv friendliness so that we try use uwsgi from it.
 
-        :rtype: str
         """
         os.environ['PATH'] = cls.get_env_path()
         return os.path.basename(Finder.python())
 
-    def spawn(self, config, replace=False, filepath=None, embedded=False):
+    def spawn(
+            self,
+            config: 'Configuration',
+            replace: bool = False,
+            filepath: str = None,
+            embedded: bool = False
+    ):
         """Spawns uWSGI using the given configuration module.
 
         .. note::
@@ -415,13 +411,13 @@ class UwsgiRunner:
             Loading in config:
                 foo = @(sym://uwsgi_funny_function)
 
-        :param Configuration config: Configuration object to spawn uWSGI with.
+        :param config: Configuration object to spawn uWSGI with.
 
-        :param str filepath: Override configuration file path.
+        :param filepath: Override configuration file path.
 
-        :param bool replace: Whether a new process should replace current one.
+        :param replace: Whether a new process should replace current one.
 
-        :param bool embedded: Flag. Do not create a configuration file even if required,
+        :param embedded: Flag. Do not create a configuration file even if required,
             translate all config parameters into command line arguments and
             pass it to ``pyuwsgi``.
 
@@ -429,7 +425,7 @@ class UwsgiRunner:
         args = ['uwsgi']
 
         if embedded:
-            import pyuwsgi
+            import pyuwsgi  # noqa
             args.extend(config.format(formatter='args'))
             pyuwsgi.run(args[1:])
 
@@ -461,13 +457,11 @@ class UwsgiRunner:
         return os.spawnvp(os.P_NOWAIT, 'uwsgi', args)
 
 
-def parse_command_plugins_output(out):
+def parse_command_plugins_output(out: str) -> EmbeddedPlugins:
     """Parses ``plugin-list`` command output from uWSGI
     and returns object containing lists of embedded plugin names.
 
-    :param str out:
-
-    :rtype EmbeddedPlugins:
+    :param out:
 
     """
     out = out.split('--- end of plugins list ---')[0]
@@ -496,17 +490,15 @@ def parse_command_plugins_output(out):
     return plugins
 
 
-def get_uwsgi_stub_attrs_diff():
+def get_uwsgi_stub_attrs_diff() -> Tuple[List[str], List[str]]:
     """Returns attributes difference two elements tuple between
     real uwsgi module and its stub.
 
     Might be of use while describing in stub new uwsgi functions.
 
-    :return: (uwsgi_only_attrs, stub_only_attrs)
+    Returns (uwsgi_only_attrs, stub_only_attrs)
 
-    :rtype: tuple
     """
-
     try:
         import uwsgi
 

@@ -1,14 +1,20 @@
+from typing import List, Generator, Tuple, Any, Dict
+
+from .typehints import StrList
+
+if False:  # pragma: nocover
+    from .config import Section  # noqa
 
 
-def format_print_text(text, color_fg=None, color_bg=None):
+def format_print_text(text: str, color_fg: str = None, color_bg: str = None) -> str:
     """Format given text using ANSI formatting escape sequences.
 
     Could be useful gfor print command.
 
-    :param str text:
-    :param str color_fg: text (foreground) color
-    :param str color_bg: text (background) color
-    :rtype: str
+    :param text:
+    :param color_fg: text (foreground) color
+    :param color_bg: text (background) color
+
     """
     from .config import Section
 
@@ -69,28 +75,28 @@ def format_print_text(text, color_fg=None, color_bg=None):
 class FormatterBase:
     """Base class for configuration formatters."""
 
-    alias = None
+    alias: str = None
 
-    def __init__(self, sections):
+    def __init__(self, sections: List['Section']):
         self.sections = sections
 
-    def iter_options(self):
+    def iter_options(self) -> Generator[Tuple[str, str, Any], None, None]:
         """Iterates configuration sections groups options."""
         for section in self.sections:
             name = str(section)
             for key, value in section._get_options():
                 yield name, key, value
 
-    def format(self):
+    def format(self) -> StrList:
         raise NotImplementedError()  # pragma: nocover
 
 
 class IniFormatter(FormatterBase):
     """Translates a configuration as INI file."""
 
-    alias = 'ini'
+    alias: str = 'ini'
 
-    def format(self):
+    def format(self) -> str:
         lines = []
         last_section = ''
 
@@ -102,16 +108,15 @@ class IniFormatter(FormatterBase):
 
             lines.append(f'{key} = {str(value).strip()}')
 
-        lines = '\n'.join(lines)
-        return lines
+        return '\n'.join(lines)
 
 
 class ArgsFormatter(FormatterBase):
     """Translates a configuration to command line arguments."""
 
-    alias = 'args'
+    alias: str = 'args'
 
-    def format(self):
+    def format(self) -> List[str]:
         lines = []
 
         for section_name, key, value in self.iter_options():
@@ -132,7 +137,7 @@ class ArgsFormatter(FormatterBase):
         return lines
 
 
-FORMATTERS = {formatter.alias: formatter for formatter in (
+FORMATTERS: Dict[str, FormatterBase] = {formatter.alias: formatter for formatter in (
     ArgsFormatter,
     IniFormatter,
 )}

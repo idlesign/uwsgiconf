@@ -5,11 +5,13 @@ from datetime import datetime
 from functools import partial
 from itertools import chain
 from tempfile import NamedTemporaryFile
+from typing import List, Union, Callable, Optional, Any, Tuple, Dict
 
 from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
 from .formatters import FORMATTERS, format_print_text
 from .options import *
+from .typehints import StrList
 from .utils import listify, UwsgiRunner
 
 
@@ -42,61 +44,61 @@ class Section(OptionsGroup):
                 )
 
     """
-    alarms = Options(Alarms)  # type: Alarms
+    alarms: Alarms = Options(Alarms)
     """Alarms options group."""
 
-    applications = Options(Applications)  # type: Applications
+    applications: Applications = Options(Applications)
     """Applications options group."""
 
-    caching = Options(Caching)  # type: Caching
+    caching: Caching = Options(Caching)
     """Caching options group."""
 
-    cheapening = Options(Cheapening)  # type: Cheapening
+    cheapening: Cheapening = Options(Cheapening)
     """Cheapening options group."""
 
-    empire = Options(Empire)  # type: Empire
+    empire: Empire = Options(Empire)
     """Emperor and vassals options group."""
 
-    locks = Options(Locks)  # type: Locks
+    locks: Locks = Options(Locks)
     """Locks options group."""
 
-    logging = Options(Logging)  # type: Logging
+    logging: Logging = Options(Logging)
     """Logging options group."""
 
-    main_process = Options(MainProcess)  # type: MainProcess
+    main_process: MainProcess = Options(MainProcess)
     """Main process options group."""
 
-    master_process = Options(MasterProcess)  # type: MasterProcess
+    master_process: MasterProcess = Options(MasterProcess)
     """Master process options group."""
 
-    monitoring = Options(Monitoring)  # type: Monitoring
+    monitoring: Monitoring = Options(Monitoring)
     """Monitoring options group."""
 
-    networking = Options(Networking)  # type: Networking
+    networking: Networking = Options(Networking)
     """Networking options group."""
 
-    queue = Options(Queue)  # type: Queue
+    queue: Queue = Options(Queue)
     """Queue options group."""
 
-    routing = Options(Routing)  # type: Routing
+    routing: Routing = Options(Routing)
     """Routing related options group."""
 
-    spooler = Options(Spooler)  # type: Spooler
+    spooler: Spooler = Options(Spooler)
     """Spooler options group."""
 
-    statics = Options(Statics)  # type: Statics
+    statics: Statics = Options(Statics)
     """Static file serving options group."""
 
-    subscriptions = Options(Subscriptions)  # type: Subscriptions
+    subscriptions: Subscriptions = Options(Subscriptions)
     """Subscription services options group."""
 
-    workers = Options(Workers)  # type: Workers
+    workers: Workers = Options(Workers)
     """Workers options group."""
 
-    python = Options(Python)  # type: Python
+    python: Python = Options(Python)
     """Python options group."""
 
-    class embedded_plugins_presets:
+    class embedded_plugins_presets:  # noqa
         """These are plugin presets that can be used as ``embedded_plugins`` values."""
 
         BASIC = [plugin.strip() for plugin in (
@@ -110,39 +112,45 @@ class Section(OptionsGroup):
         """Basic set of embedded plugins. This set is used in uWSGI package from PyPI."""
 
         @staticmethod
-        def PROBE(uwsgi_binary=None):
+        def PROBE(uwsgi_binary: str = None):  # noqa
             """This preset allows probing real uWSGI to get actual embedded plugin list."""
 
-            def probe():
+            def probe() -> List[str]:
                 return list(chain.from_iterable(UwsgiRunner(uwsgi_binary).get_plugins()))
 
             return probe
 
     def __init__(
-            self, name=None, runtime_dir=None, project_name=None, strict_config=None, style_prints=False,
-            embedded_plugins=None, **kwargs):
+            self,
+            name: str = None,
+            runtime_dir: str = None,
+            project_name: str = None,
+            strict_config: bool = None,
+            style_prints: bool = False,
+            embedded_plugins: Union[Callable, List[str]] = None,
+            **kwargs
+    ):
         """
+        :param name: Configuration section name.
 
-        :param bool strict_config: Enable strict configuration parsing.
+        :param runtime_dir: Directory to store runtime files.
+            See ``.replace_placeholders()``
+
+            .. note:: This can be used to store PID files, sockets, master FIFO, etc.
+
+        :param project_name: Project name (alias) to be used to differentiate projects.
+            See ``.replace_placeholders()``.
+
+        :param strict_config: Enable strict configuration parsing.
             If any unknown option is encountered in a configuration file,
             an error is shown and uWSGI quits.
 
             To use placeholder variables when using strict mode, use the ``set-placeholder`` option.
 
-        :param str name: Configuration section name.
-
-        :param str runtime_dir: Directory to store runtime files.
-            See ``.replace_placeholders()``
-
-            .. note:: This can be used to store PID files, sockets, master FIFO, etc.
-
-        :param str project_name: Project name (alias) to be used to differentiate projects.
-            See ``.replace_placeholders()``.
-
-        :param bool style_prints: Enables styling (e.g. colouring) for ``print_`` family methods.
+        :param style_prints: Enables styling (e.g. colouring) for ``print_`` family methods.
             Could be nice for console and distracting in logs.
 
-        :param list|callable embedded_plugins: List of embedded plugins. Plugins from that list will
+        :param embedded_plugins: List of embedded plugins. Plugins from that list will
             be considered already loaded so uwsgiconf won't instruct uWSGI to load it if required.
 
             See ``.embedded_plugins_presets`` for shortcuts.
@@ -177,7 +185,7 @@ class Section(OptionsGroup):
         self._set_basic_params_from_dict(kwargs)
         self.set_basic_params(strict_config=strict_config)
 
-    def replace_placeholders(self, value):
+    def replace_placeholders(self, value: Optional[StrList]) -> Optional[StrList]:
         """Replaces placeholders that can be used e.g. in filepaths.
 
         Supported placeholders:
@@ -185,8 +193,7 @@ class Section(OptionsGroup):
             * {project_name}
             * {runtime_dir}
 
-        :param str|list[str]|None value:
-        :rtype: None|str|list[str]
+        :param value:
 
         """
         if not value:
@@ -210,26 +217,22 @@ class Section(OptionsGroup):
         return value
 
     @property
-    def project_name(self):
-        """Project name (alias) to be used to differentiate projects. See ``.replace_placeholders()``.
-
-        :rtype: str
-        """
+    def project_name(self) -> str:
+        """Project name (alias) to be used to differentiate projects. See ``.replace_placeholders()``."""
         return self._project_name
 
     @project_name.setter
-    def project_name(self, value):
+    def project_name(self, value: str):
         self._project_name = value or ''
 
-    def get_runtime_dir(self, default=True):
+    def get_runtime_dir(self, default: bool = True) -> str:
         """Directory to store runtime files.
         See ``.replace_placeholders()``
 
         .. note:: This can be used to store PID files, sockets, master FIFO, etc.
 
-        :param bool default: Whether to return [system] default if not set.
+        :param default: Whether to return [system] default if not set.
 
-        :rtype: str
         """
         dir_ = self._runtime_dir
 
@@ -247,18 +250,17 @@ class Section(OptionsGroup):
         """
         self._runtime_dir = value or ''
 
-    def set_basic_params(self, strict_config=None, **kwargs):
+    def set_basic_params(self, strict_config: bool = None, **kwargs):
 
         self._set('strict', strict_config, cast=bool)
 
         return self
 
-    def as_configuration(self, **kwargs):
+    def as_configuration(self, **kwargs) -> 'Configuration':
         """Returns configuration object including only one (this very) section.
 
         :param kwargs: Configuration objects initializer arguments.
         
-        :rtype: Configuration
         """
         return Configuration([self], **kwargs)
 
@@ -286,16 +288,22 @@ class Section(OptionsGroup):
 
         return self
 
-    def print_out(self, value, indent=None, format_options=None, asap=False):
+    def print_out(
+            self,
+            value: Any,
+            indent: str = None,
+            format_options: Union[dict, str] = None,
+            asap: bool = False
+    ):
         """Prints out the given value.
 
         :param value:
 
-        :param str indent:
+        :param indent:
 
-        :param dict|str format_options: text color
+        :param format_options: text color
 
-        :param bool asap: Print as soon as possible.
+        :param asap: Print as soon as possible.
 
         """
         if indent is None:
@@ -337,16 +345,22 @@ class Section(OptionsGroup):
 
         return self
 
-    def set_plugins_params(self, plugins=None, search_dirs=None, autoload=None, required=False):
+    def set_plugins_params(
+            self,
+            plugins: Union[List[str], List[OptionsGroup], str, OptionsGroup] = None,
+            search_dirs: StrList = None,
+            autoload: bool = None,
+            required: bool = False
+    ):
         """Sets plugin-related parameters.
 
-        :param list|str|OptionsGroup|list[OptionsGroup] plugins: uWSGI plugins to load
+        :param plugins: uWSGI plugins to load
 
-        :param list|str search_dirs: Directories to search for uWSGI plugins.
+        :param search_dirs: Directories to search for uWSGI plugins.
 
-        :param bool autoload: Try to automatically load plugins when unknown options are found.
+        :param autoload: Try to automatically load plugins when unknown options are found.
 
-        :param bool required: Load uWSGI plugins and exit on error.
+        :param required: Load uWSGI plugins and exit on error.
 
         """
         plugins = plugins or []
@@ -364,12 +378,13 @@ class Section(OptionsGroup):
 
         return self
 
-    def set_fallback(self, target):
+    def set_fallback(self, target: Union[str, 'Section']):
         """Sets a fallback configuration for section.
 
         Re-exec uWSGI with the specified config when exit code is 1.
 
-        :param str|Section target: File path or Section to include.
+        :param target: File path or Section to include.
+
         """
         if isinstance(target, Section):
             target = ':' + target.name
@@ -378,34 +393,34 @@ class Section(OptionsGroup):
 
         return self
 
-    def set_placeholder(self, key, value):
+    def set_placeholder(self, key: str, value: str):
         """Placeholders are custom magic variables defined during configuration
         time.
 
         .. note:: These are accessible, like any uWSGI option, in your application code via
             ``.runtime.platform.uwsgi.config``.
 
-        :param str key:
+        :param key:
 
-        :param str value:
+        :param value:
 
         """
         self._set('set-placeholder', f'{key}={value}', multi=True)
 
         return self
 
-    def env(self, key, value=None, unset=False, asap=False):
+    def env(self, key: str, value: Any = None, unset: bool = False, asap: bool = False):
         """Processes (sets/unsets) environment variable.
 
         If is not given in `set` mode value will be taken from current env.
 
-        :param str key:
+        :param key:
 
         :param value:
 
-        :param bool unset: Whether to unset this variable.
+        :param unset: Whether to unset this variable.
 
-        :param bool asap: If True env variable will be set as soon as possible.
+        :param asap: If True env variable will be set as soon as possible.
 
         """
         if unset:
@@ -422,10 +437,11 @@ class Section(OptionsGroup):
 
         return self
 
-    def include(self, target):
+    def include(self, target: Union['Section', List['Section'], str, List[str]]):
         """Includes target contents into config.
 
-        :param str|Section|list target: File path or Section to include.
+        :param target: File path or Section to include.
+
         """
         for target_ in listify(target):
             if isinstance(target_, Section):
@@ -436,14 +452,13 @@ class Section(OptionsGroup):
         return self
 
     @classmethod
-    def derive_from(cls, section, name=None):
+    def derive_from(cls, section: 'Section', name: str = None) -> 'Section':
         """Creates a new section based on the given.
 
-        :param Section section: Section to derive from,
+        :param section: Section to derive from,
 
-        :param str name: New section name.
+        :param name: New section name.
 
-        :rtype: Section
         """
         new_section = deepcopy(section)
 
@@ -452,7 +467,7 @@ class Section(OptionsGroup):
 
         return new_section
 
-    def _set_basic_params_from_dict(self, src_dict):
+    def _set_basic_params_from_dict(self, src_dict: dict):
 
         for key, value in src_dict.items():
             if not key.startswith('params_') or not value:
@@ -464,7 +479,7 @@ class Section(OptionsGroup):
             if options_group is not None:
                 options_group.set_basic_params(**value)
 
-    def _get_options(self):
+    def _get_options(self) -> List[Tuple[str, Any]]:
         options = []
 
         for name, val in self._section._opts.items():
@@ -474,7 +489,7 @@ class Section(OptionsGroup):
 
         return options
 
-    class vars:
+    class vars:  # noqa
         """The following variables also known as magic variables
         could be used as option values where appropriate.
 
@@ -521,11 +536,9 @@ class Section(OptionsGroup):
         """Use group name."""
 
         @classmethod
-        def get_descriptions(cls):
-            """Returns variable to description mapping.
+        def get_descriptions(cls) -> Dict[str, str]:
+            """Returns variable to description mapping."""
 
-            :rtype: dict
-            """
             descriptions = {
                 cls.DIR_VASSALS: 'the vassals directory - pwd',
                 cls.VERSION: 'the uWSGI version',
@@ -565,23 +578,26 @@ class Section(OptionsGroup):
             return dict(descriptions)
 
     @classmethod
-    def bootstrap(cls, dsn, allow_shared_sockets=None, **init_kwargs):
+    def bootstrap(
+            cls,
+            dsn: StrList,
+            allow_shared_sockets: bool = None,
+            **init_kwargs: Dict[str, Any]
+    ) -> 'Section':
         """Constructs a section object performing it's basic (default) configuration.
 
-        :param str|list[str] dsn: Data source name, e.g:
+        :param dsn: Data source name, e.g:
                 * http://127.0.0.1:8000
                 * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
 
                 .. note:: Some schemas:
                     fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
 
-        :param bool allow_shared_sockets: Allows using shared sockets to bind
+        :param allow_shared_sockets: Allows using shared sockets to bind
             to priviledged ports. If not provided automatic mode is enabled:
             shared are allowed if current user is not root.
 
         :param init_kwargs: Additional initialization keyword arguments accepted by section type.
-
-        :rtype: Section
 
         """
         section = cls(**init_kwargs)
@@ -601,16 +617,16 @@ class Configuration:
 
     """
 
-    def __init__(self, sections=None, autoinclude_sections=False, alias=None):
+    def __init__(self, sections: List[Section] = None, autoinclude_sections: bool = False, alias: str = None):
         """
 
-        :param list[Section] sections: If not provided, empty section
+        :param sections: If not provided, empty section
             will be automatically generated.
 
-        :param bool autoinclude_sections: Whether to include
+        :param autoinclude_sections: Whether to include
             in the first sections all subsequent sections.
 
-        :param str alias: Configuration alias.
+        :param alias: Configuration alias.
             This will be used in ``tofile`` as file name.
 
         """
@@ -629,7 +645,7 @@ class Configuration:
         self.alias = alias or 'uwsgicfg'
 
     @classmethod
-    def _validate_sections(cls, sections):
+    def _validate_sections(cls, sections: List[Section]):
         """Validates sections types and uniqueness."""
         names = []
         for section in sections:
@@ -643,13 +659,13 @@ class Configuration:
 
             names.append(name)
 
-    def format(self, do_print=False, stamp=True, formatter='ini'):
+    def format(self, do_print: bool = False, stamp: bool = True, formatter: str = 'ini') -> StrList:
         """Applies formatting to configuration.
 
-        :param bool do_print: Whether to print out formatted config.
-        :param bool stamp: Whether to add stamp data to the first configuration section.
-        :param str formatter: Formatter alias to format options. Default: ini.
-        :rtype: str|list
+        :param do_print: Whether to print out formatted config.
+        :param stamp: Whether to add stamp data to the first configuration section.
+        :param formatter: Formatter alias to format options. Default: ini.
+
         """
         if stamp and self.sections:
             self.sections[0].print_stamp()
@@ -662,22 +678,17 @@ class Configuration:
 
         return formatted
 
-    def print_ini(self):
-        """Print out this configuration as .ini.
-
-        :rtype: str
-        """
+    def print_ini(self) -> StrList:
+        """Print out this configuration as .ini."""
         return self.format(do_print=True)
 
-    def tofile(self, filepath=None):
+    def tofile(self, filepath: str = None) -> str:
         """Saves configuration into a file and returns its path.
 
         Convenience method.
 
-        :param str filepath: Filepath to save configuration into.
+        :param filepath: Filepath to save configuration into.
             If not provided a temporary file will be automatically generated.
-
-        :rtype: str
 
         """
         if filepath is None:
@@ -697,9 +708,12 @@ class Configuration:
         return filepath
 
 
-def configure_uwsgi(configurator_func):
+def configure_uwsgi(configurator_func: Callable) -> Optional[List[Configuration]]:
     """Allows configuring uWSGI using Configuration objects returned
     by the given configuration function.
+
+    Returns a list with detected configurations or ``None`` if called from
+    within uWSGI (e.g. when trying to load WSGI application).
 
     .. code-block: python
 
@@ -710,12 +724,7 @@ def configure_uwsgi(configurator_func):
         configure_uwsgi(get_configurations)
 
 
-    :param callable configurator_func: Function which return a list on configurations.
-
-    :rtype: list|None
-
-    :returns: A list with detected configurations or
-        ``None`` if called from within uWSGI (e.g. when trying to load WSGI application).
+    :param configurator_func: Function which return a list on configurations.
 
     :raises ConfigurationError:
 
@@ -775,7 +784,7 @@ def configure_uwsgi(configurator_func):
         config = registry.get(target_alias)
 
         if config:
-            section = config.sections[0]  # type: Section
+            section = config.sections[0]
             # Set ready marker which is checked above.
             os.environ[ENV_CONF_READY] = '1'
 

@@ -1,25 +1,27 @@
+from typing import Type, Any, Union, Optional, Callable
+
 from .utils import listify
 
 
 if False:  # pragma: nocover
-    from .config import Section
+    from .config import Section  # noqa
 
 
 class Options:
     """Options descriptor. Allows option."""
 
-    def __init__(self, opt_type):
+    def __init__(self, opt_type: Type):
         """
         :param opt_type:
         """
         self.opt_type = opt_type
 
-    def __get__(self, section, section_cls):
+    def __get__(self, section: 'Section', section_cls: Type['Section']) -> 'OptionsGroup':
         """
 
-        :param Section section:
-        :param OptionsGroup options_obj:
-        :rtype: OptionsGroup
+        :param section:
+        :param section_cls:
+
         """
         key = self.opt_type.__name__
 
@@ -43,10 +45,10 @@ class OptionKey:
 
     __slots__ = ['key']
 
-    def __init__(self, key):
+    def __init__(self, key: str):
         self.key = key
 
-    def swap(self, new_key):
+    def swap(self, new_key: Any):
 
         if new_key:
             self.key = f'{new_key}'
@@ -72,31 +74,28 @@ class OptionsGroup:
     Methods ending with `_params` return section object and may be chained.
 
     """
-    _section = None  # type: Section
+    _section: 'Section' = None
     """Section this option group belongs to."""
 
-    plugin = False  # type: bool|str
+    plugin: Union[bool, str] = False
     """Indication this option group belongs to a plugin."""
 
-    name = None
+    name: str = None
     """Name to represent the group."""
 
     def __init__(self, *args, **kwargs):
         if self._section is None:
-            self._section = kwargs.pop('_section', None)  # type: Section
+            self._section = kwargs.pop('_section', None)
 
         self.set_basic_params(*args, **kwargs)
 
-    def _get_name(self, *args, **kwargs):
-        """
-        :rtype: str
-        """
+    def _get_name(self, *args, **kwargs) -> str:
         return self.name
 
     def __str__(self):
         return self._get_name()
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> 'Section':
         """The call is translated into ``set_basic_params``` call.
 
         This approach is much more convenient yet IDE most probably won't
@@ -104,7 +103,7 @@ class OptionsGroup:
 
         :param args:
         :param kwargs:
-        :rtype: Section
+
         """
         return self.set_basic_params(*args, **kwargs)
 
@@ -114,16 +113,22 @@ class OptionsGroup:
     def __hash__(self):
         return hash(f'{self}')
 
-    def set_basic_params(self, *args, **kwargs):
-        """
-        :rtype: Section
-        """
+    def set_basic_params(self, *args, **kwargs) -> 'Section':
         return self._section
 
-    def _set(self, key, value, condition=True, cast=None, multi=False, plugin=None, priority=None):
+    def _set(
+            self,
+            key: str,
+            value: Any,
+            condition: Optional[bool] = True,
+            cast: Callable = None,
+            multi: bool = False,
+            plugin: str = None,
+            priority: int = None
+    ):
         """
 
-        :param str key: Option name
+        :param key: Option name
 
         :param value: Option value. Can be a lis if ``multi``.
 
@@ -133,11 +138,11 @@ class OptionsGroup:
         :param cast: Value type caster.
             * bool - treat value as a flag
 
-        :param bool multi: Indicate that many options can use the same name.
+        :param multi: Indicate that many options can use the same name.
 
-        :param str plugin: Plugin this option exposed by. Activated automatically.
+        :param plugin: Plugin this option exposed by. Activated automatically.
 
-        :param int priority: Option priority indicator. Options with lower numbers will come first.
+        :param priority: Option priority indicator. Options with lower numbers will come first.
 
         """
         key = OptionKey(key)
@@ -238,19 +243,19 @@ class OptionsGroup:
 class ParametrizedValue(OptionsGroup):
     """Represents parametrized option value."""
 
-    alias = None
+    alias: str = None
     """Alias to address this value."""
 
-    args_joiner = ' '
+    args_joiner: str = ' '
     """Symbol to join arguments with."""
 
-    name_separator = ':'
+    name_separator: str = ':'
     """Separator to add after name portion."""
 
-    name_separator_strip = False
+    name_separator_strip: bool = False
     """Strip leading and trailing name separator from the result."""
 
-    opt_key = None
+    opt_key: str = None
     """Allows swapping default option key with custom value."""
 
     def __init__(self, *args):
@@ -281,9 +286,9 @@ class ParametrizedValue(OptionsGroup):
 
 class TemplatedValue(ParametrizedValue):
 
-    tpl = '%s'
+    tpl: str = '%s'
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         self._name = name
         super(TemplatedValue, self).__init__()
 

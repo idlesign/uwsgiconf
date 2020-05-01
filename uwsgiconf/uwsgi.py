@@ -4,8 +4,7 @@ from .exceptions import UwsgiconfException as __DummyException
 from .settings import FORCE_STUB as __FORCE_STUB
 
 if False:  # pragma: nocover
-    # Give IDEs a chance to load stub symbols.
-    from .uwsgi_stub import *
+    from .uwsgi_stub import *  # noqa  # Give IDEs a chance to load stub symbols.
 
 
 try:  # pragma: nocover
