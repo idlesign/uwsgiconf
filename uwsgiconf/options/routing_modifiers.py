@@ -4,7 +4,7 @@ from ..exceptions import ConfigurationError
 RANGE_255 = list(range(256))
 
 
-class Modifier(object):
+class Modifier:
 
     _submod = None
     subcodes = None

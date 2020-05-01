@@ -3,7 +3,7 @@ from functools import wraps
 from .. import uwsgi
 
 
-class Lock(object):
+class Lock:
     """Locks related stuff.
 
     Lock number 0 is always available. More locks need to be registered

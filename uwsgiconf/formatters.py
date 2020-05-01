@@ -66,7 +66,7 @@ def format_print_text(text, color_fg=None, color_bg=None):
     return text
 
 
-class FormatterBase(object):
+class FormatterBase:
     """Base class for configuration formatters."""
 
     alias = None

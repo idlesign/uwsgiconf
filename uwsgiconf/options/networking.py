@@ -12,7 +12,7 @@ from ..exceptions import ConfigurationError
 class Networking(OptionsGroup):
     """Networking related stuff. Socket definition, binding and tuning."""
     
-    class sockets(object):
+    class sockets:
         """Available socket types to use with ``.register_socket()``."""
 
         default = SocketDefault

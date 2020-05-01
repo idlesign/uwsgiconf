@@ -37,7 +37,7 @@ def get_last_received():
     return Signal(uwsgi.signal_received())
 
 
-class Signal(object):
+class Signal:
     """Represents uWSGI signal.
 
     .. warning:: If you define a new function in worker1 and register

@@ -71,7 +71,7 @@ def output_capturing():
         sys.stdout = out
 
 
-class ConfModule(object):
+class ConfModule:
     """Represents a uwsgiconf configuration module.
 
     Allows reading configurations from .py files.
@@ -195,7 +195,7 @@ def filter_locals(locals_dict, drop=None, include=None):
     return locals_dict
 
 
-class KeyValue(object):
+class KeyValue:
     """Allows lazy flattening the given dictionary into a key-value string."""
 
     def __init__(
@@ -266,7 +266,7 @@ def get_output(cmd, args):
     return out.decode('utf-8')
 
 
-class Finder(object):
+class Finder:
     """Finds various entities."""
 
     @classmethod
@@ -286,7 +286,7 @@ class Finder(object):
         return sys.executable
 
 
-class Fifo(object):
+class Fifo:
     """uWSGI Master FIFO interface."""
 
     def __init__(self, fifo_filepath):
@@ -355,7 +355,7 @@ class Fifo(object):
             f.write(cmd)
 
 
-class UwsgiRunner(object):
+class UwsgiRunner:
     """Exposes methods to run uWSGI."""
 
     def __init__(self, binary_path=None):

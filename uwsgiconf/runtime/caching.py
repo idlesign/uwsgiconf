@@ -2,7 +2,7 @@ from .. import uwsgi
 from ..utils import decode
 
 
-class Cache(object):
+class Cache:
     """Interface for uWSGI Caching subsystem.
 
     .. warning:: To use this helper one needs

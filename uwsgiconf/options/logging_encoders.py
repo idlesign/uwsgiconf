@@ -58,7 +58,7 @@ class EncoderFormat(Encoder):
         """
         super(EncoderFormat, self).__init__(template)
 
-    class vars(object):
+    class vars:
         """Variables available to use."""
 
         MESSAGE = '${msg}'

@@ -32,7 +32,7 @@ class Logging(OptionsGroup):
 
     """
 
-    class loggers(object):
+    class loggers:
         """Loggers available for ``add_logger()``."""
 
         file = LoggerFile
@@ -45,7 +45,7 @@ class Logging(OptionsGroup):
 
         # todo consider adding other loggers: crypto, graylog2, systemd
 
-    class encoders(object):
+    class encoders:
         """Loggers available for ``add_logger_encoder()``."""
 
         compress = EncoderCompress
@@ -356,7 +356,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    class vars(object):
+    class vars:
         """Variables available for custom log formatting."""
 
         # The following are taken blindly from the internal wsgi_request structure of the current request.

@@ -210,7 +210,7 @@ class ForwarderSubscriptionServer(Forwarder):
 
 class _RouterWithForwarders(_RouterCommon):
 
-    class forwarders(object):
+    class forwarders:
         """Forwarders are kind of registries containing information
         on where to forward requests.
 

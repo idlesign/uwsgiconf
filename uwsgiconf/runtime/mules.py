@@ -64,7 +64,7 @@ def mule_offload(mule_or_farm=None):
     return mule_offload_
 
 
-class Mule(object):
+class Mule:
     """Represents uWSGI Mule."""
 
     __slots__ = ['id']
@@ -147,7 +147,7 @@ class Mule(object):
         return uwsgi.mule_msg(message, self.id)
 
 
-class Farm(object):
+class Farm:
     """Represents uWSGI Mule Farm."""
 
     __slots__ = ['name', 'mules']

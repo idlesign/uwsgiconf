@@ -163,7 +163,7 @@ class Cheapening(OptionsGroup):
 
     """
 
-    class algorithms(object):
+    class algorithms:
         """Algorithms available to use with ``cheaper_algorithm``."""
 
         busyness = AlgoBusyness

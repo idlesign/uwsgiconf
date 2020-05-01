@@ -29,7 +29,7 @@ def register_file_monitor(filename, target=None):
     return _automate_signal(target, func=lambda sig: uwsgi.add_file_monitor(int(sig), filename))
 
 
-class Metric(object):
+class Metric:
     """User metric related stuff."""
 
     def __init__(self, name):

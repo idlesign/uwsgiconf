@@ -5,7 +5,7 @@ from .. import uwsgi as _uwsgi
 from ..utils import decode_deep, decode
 
 
-class _PostForkHooks(object):
+class _PostForkHooks:
 
     funcs = []
 
@@ -30,7 +30,7 @@ class _PostForkHooks(object):
 _uwsgi.post_fork_hook = _PostForkHooks.run
 
 
-class _Platform(object):
+class _Platform:
 
     request = _Request  # type: _Request
     """Current request information. 

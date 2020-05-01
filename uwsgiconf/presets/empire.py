@@ -2,7 +2,7 @@ from ..config import Section
 from ..utils import filter_locals
 
 
-class Broodlord(object):
+class Broodlord:
     """This mode is a way for a vassal to ask for reinforcements to the Emperor.
 
     Reinforcements are new vassals spawned on demand generally bound on the same socket.

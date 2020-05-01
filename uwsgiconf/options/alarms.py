@@ -15,7 +15,7 @@ class Alarms(OptionsGroup):
 
     """
 
-    class alarm_types(object):
+    class alarm_types:
         """Alarm types available for ``.register_alarm()``."""
 
         command = AlarmCommand

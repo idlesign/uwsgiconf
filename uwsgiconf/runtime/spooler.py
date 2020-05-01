@@ -58,7 +58,7 @@ def _register_task(spooler_obj, spooler_cls):
     return _register_task_
 
 
-class _TaskRegisterer(object):
+class _TaskRegisterer:
     # Allows task decoration using both Spooler class and object.
 
     def __get__(self, instance, owner):
@@ -76,7 +76,7 @@ class _TaskRegisterer(object):
         # Mirrors `_register_task_` arguments for IDEs ho get proper hints.
 
 
-class Spooler(object):
+class Spooler:
     """Gives an access to uWSGI Spooler related functions.
 
     .. warning:: To use this helper one needs
@@ -287,7 +287,7 @@ class Spooler(object):
         return uwsgi.spooler_get_task(path) or {}
 
 
-class TaskResult(object):
+class TaskResult:
     """Represents a task processing result."""
 
     code_uwsgi = None
@@ -315,7 +315,7 @@ class ResultRescheduled(TaskResult):
     code_uwsgi = uwsgi.SPOOL_RETRY
 
 
-class SpoolerTask(object):
+class SpoolerTask:
     """Consolidates information for a spooler task."""
 
     mark_processed = ResultProcessed

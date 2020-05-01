@@ -18,7 +18,7 @@ class Monitoring(OptionsGroup):
         Basic set of metrics gathered from uWSGI internals + user defined metrics.
 
     """
-    class metric_types(object):
+    class metric_types:
         """Various metric types to represent data of various nature.
 
         User metrics must inherit from one of those.
@@ -29,7 +29,7 @@ class Monitoring(OptionsGroup):
         counter = MetricTypeCounter
         gauge = MetricTypeGauge
 
-    class collectors(object):
+    class collectors:
         """Metric collection and accumulation means."""
 
         accumulator = CollectorAccumulator
@@ -41,7 +41,7 @@ class Monitoring(OptionsGroup):
         pointer = CollectorPointer
         sum = CollectorSum
 
-    class pushers(object):
+    class pushers:
         """Means to deliver metrics to various remotes or locals.
 
         These are available for ``.register_stats_pusher()``.

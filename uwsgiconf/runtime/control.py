@@ -31,7 +31,7 @@ set_process_name = uwsgi.setprocname
 """
 
 
-class harakiri_imposed(object):
+class harakiri_imposed:
     """Decorator and context manager.
     Allows temporarily setting harakiri timeout for a function or a code block.
 

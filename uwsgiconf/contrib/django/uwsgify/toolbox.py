@@ -38,7 +38,7 @@ def get_project_name(project_dir):
     return os.path.basename(project_dir)
 
 
-class SectionMutator(object):
+class SectionMutator:
     """Configuration file section mutator."""
 
     def __init__(self, section, dir_base, project_name, options):

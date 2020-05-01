@@ -21,7 +21,7 @@ class Subscriptions(OptionsGroup):
 
     """
 
-    class algorithms(object):
+    class algorithms:
         """Balancing algorithms available to use with ``subscribe``."""
 
         ip_hash = IpHash

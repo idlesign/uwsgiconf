@@ -96,7 +96,7 @@ class Section(OptionsGroup):
     python = Options(Python)  # type: Python
     """Python options group."""
 
-    class embedded_plugins_presets(object):
+    class embedded_plugins_presets:
         """These are plugin presets that can be used as ``embedded_plugins`` values."""
 
         BASIC = [plugin.strip() for plugin in (
@@ -474,7 +474,7 @@ class Section(OptionsGroup):
 
         return options
 
-    class vars(object):
+    class vars:
         """The following variables also known as magic variables
         could be used as option values where appropriate.
 
@@ -594,7 +594,7 @@ class Section(OptionsGroup):
         return section
 
 
-class Configuration(object):
+class Configuration:
     """
     Configuration is comprised from one or more Sections and could
     be represented in format natively supported by uWSGI.

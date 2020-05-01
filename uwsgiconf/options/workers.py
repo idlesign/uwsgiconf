@@ -3,7 +3,7 @@ from ..base import OptionsGroup
 from ..utils import listify
 
 
-class MuleFarm(object):
+class MuleFarm:
     """Represents a mule farm."""
 
     def __init__(self, name, mule_numbers):

@@ -5,7 +5,7 @@ if False:  # pragma: nocover
     from .config import Section
 
 
-class Options(object):
+class Options:
     """Options descriptor. Allows option."""
 
     def __init__(self, opt_type):
@@ -39,7 +39,7 @@ class Options(object):
         return options_obj
 
 
-class OptionKey(object):
+class OptionKey:
 
     __slots__ = ['key']
 
@@ -61,7 +61,7 @@ class OptionKey(object):
         return hash(self.key)
 
 
-class OptionsGroup(object):
+class OptionsGroup:
     """Introduces group of options.
 
     Basic group parameters may be passed to initializer

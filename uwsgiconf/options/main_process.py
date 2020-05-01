@@ -13,7 +13,7 @@ class MainProcess(OptionsGroup):
 
     """
 
-    class actions(object):
+    class actions:
         """Actions available for ``.set_hook()``."""
 
         alarm = ActionAlarm

@@ -1,7 +1,7 @@
 from ..base import ParametrizedValue
 
 
-class SubjectBuiltin(object):
+class SubjectBuiltin:
 
     name = None
 

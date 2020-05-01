@@ -17,7 +17,7 @@ class Statics(OptionsGroup):
     DIR_DOCUMENT_ROOT = 'docroot'
     """Used to check for static files in the requested DOCUMENT_ROOT. Pass into ``static_dir``."""
 
-    class expiration_criteria(object):
+    class expiration_criteria:
         """Expiration criteria (subjects) to use with ``.add_expiration_rule()``."""
 
         FILENAME = 'filename'
@@ -32,7 +32,7 @@ class Statics(OptionsGroup):
         REQUEST_URI = 'uri'
         """Allows setting the Expires header for the specified ``REQUEST_URI`` pattern."""
 
-    class transfer_modes(object):
+    class transfer_modes:
         """File transfer (serving) modes.
 
         With this, uWSGI will only generate response headers and
