@@ -1,13 +1,15 @@
-from .signals import _automate_signal
+from typing import Union
+
+from .signals import _automate_signal, Signal
 from .. import uwsgi
 
 
-def register_file_monitor(filename, target=None):
+def register_file_monitor(filename: str, target: Union[int, str, Signal] = None):
     """Maps a specific file/directory modification event to a signal.
 
-    :param str filename: File or a directory to watch for its modification.
+    :param filename: File or a directory to watch for its modification.
 
-    :param int|Signal|str target: Existing signal to raise
+    :param target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
         Available targets:
@@ -25,6 +27,7 @@ def register_file_monitor(filename, target=None):
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
     :raises ValueError: If unable to register monitor.
+
     """
     return _automate_signal(target, func=lambda sig: uwsgi.add_file_monitor(int(sig), filename))
 
@@ -32,33 +35,28 @@ def register_file_monitor(filename, target=None):
 class Metric:
     """User metric related stuff."""
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         """
-        :param str name: Metric name.
+        :param name: Metric name.
 
         """
         self.name = name
 
     @property
-    def value(self):
-        """Current metric value.
-
-        :rtype: int|long
-        """
+    def value(self) -> int:
+        """Current metric value."""
         return uwsgi.metric_get(self.name)
 
-    def set(self, value, mode=None):
+    def set(self, value: int, mode: str = None) -> bool:
         """Sets metric value.
 
-        :param int|long value: New value.
+        :param value: New value.
 
-        :param str mode: Update mode.
+        :param mode: Update mode.
 
             * None - Unconditional update.
             * max - Sets metric value if it is greater that the current one.
             * min - Sets metric value if it is less that the current one.
-
-        :rtype: bool
 
         """
         if mode == 'max':
@@ -72,41 +70,34 @@ class Metric:
 
         return func(self.name, value)
 
-    def incr(self, delta=1):
+    def incr(self, delta: int = 1) -> bool:
         """Increments the specified metric key value by the specified value.
 
-        :param int delta:
-
-        :rtype: bool
+        :param delta:
 
         """
         return uwsgi.metric_inc(self.name, delta)
 
-    def decr(self, delta=1):
+    def decr(self, delta: int = 1) -> bool:
         """Decrements the specified metric key value by the specified value.
 
-        :param int delta:
-
-        :rtype: bool
+        :param delta:
 
         """
         return uwsgi.metric_dec(self.name, delta)
 
-    def mul(self, value=1):
+    def mul(self, value: int = 1) -> bool:
         """Multiplies the specified metric key value by the specified value.
 
-        :param int value:
-
-        :rtype: bool
+        :param value:
 
         """
         return uwsgi.metric_mul(self.name, value)
 
-    def div(self, value=1):
+    def div(self, value: int = 1) -> bool:
         """Divides the specified metric key value by the specified value.
 
-        :param int value:
+        :param value:
 
-        :rtype: bool
         """
         return uwsgi.metric_div(self.name, value)

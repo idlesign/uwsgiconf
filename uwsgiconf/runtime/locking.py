@@ -1,4 +1,5 @@
 from functools import wraps
+from typing import Callable
 
 from .. import uwsgi
 
@@ -29,9 +30,9 @@ class Lock:
     """
     __slots__ = ['num']
 
-    def __init__(self, num=0):
+    def __init__(self, num: int = 0):
         """
-        :param int num: Lock number (0-64). 0 is always available and is used as default.
+        :param num: Lock number (0-64). 0 is always available and is used as default.
 
         """
         self.num = num
@@ -39,7 +40,7 @@ class Lock:
     def __int__(self):
         return self.num
 
-    def __call__(self, func):
+    def __call__(self, func: Callable):
 
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -50,21 +51,19 @@ class Lock:
         return wrapper
 
     @property
-    def is_set(self):
+    def is_set(self) -> bool:
         """"Checks whether the lock is active.
 
-        :rtype: bool
-
         :raises ValueError: For Spooler or invalid lock number
+
         """
         return uwsgi.is_locked(self.num)
 
     def acquire(self):
         """Sets the lock.
 
-        :rtype: None
-
         :raises ValueError: For Spooler or invalid lock number
+
         """
         uwsgi.lock(self.num)
         return True
@@ -72,9 +71,8 @@ class Lock:
     def release(self):
         """Unlocks the lock.
 
-        :rtype: None
-
         :raises ValueError: For Spooler or invalid lock number
+
         """
         uwsgi.unlock(self.num)
         return True

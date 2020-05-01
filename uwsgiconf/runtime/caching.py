@@ -1,3 +1,5 @@
+from typing import List, Any, Callable, Union
+
 from .. import uwsgi
 from ..utils import decode
 
@@ -11,11 +13,11 @@ class Cache:
     """
     __slots__ = ['name', 'timeout']
 
-    def __init__(self, name=None, timeout=None):
+    def __init__(self, name: str = None, timeout: int = None):
         """
-        :param str name: Cache name with optional address (if @-syntax is used).
+        :param name: Cache name with optional address (if @-syntax is used).
 
-        :param int timeout: Expire timeout (seconds).
+        :param timeout: Expire timeout (seconds).
             Default: 300 (5 minutes). Use 0 to not to set a timeout (not to expire).
 
             .. note:: This value is ignore if cache is configured not to expire.
@@ -24,22 +26,20 @@ class Cache:
         self.timeout = timeout or 300
         self.name = name
 
-    def __contains__(self, key):
+    def __contains__(self, key: str) -> bool:
         """Checks whether there is a value in the cache associated with the given key.
 
-        :param str key: The cache key to check.
+        :param key: The cache key to check.
 
-        :rtype: bool
         """
         return uwsgi.cache_exists(key, self.name)
 
     @property
-    def keys(self):
+    def keys(self) -> List[str]:
         """Returns a list of keys available in cache.
 
-        :rtype: list
-
         :raises ValueError: If cache is unavailable.
+
         """
         return uwsgi.cache_keys(self.name)
 
@@ -47,20 +47,18 @@ class Cache:
         """Clears cache the cache."""
         uwsgi.cache_clear(self.name)
 
-    def get(self, key, default=None, as_int=False, setter=None):
+    def get(self, key: str, default: Any = None, as_int: bool = False, setter: Callable = None) -> Union[str, int]:
         """Gets a value from the cache.
 
-        :param str key: The cache key to get value for.
+        :param key: The cache key to get value for.
 
         :param default: Value to return if none found in cache.
 
-        :param bool as_int: Return 64bit number instead of str.
+        :param as_int: Return 64bit number instead of str.
 
-        :param callable setter: Setter callable to automatically set cache
+        :param setter: Setter callable to automatically set cache
             value if not already cached. Required to accept a key and return
             a value that will be cached.
-
-        :rtype: str|int
 
         """
         if as_int:
@@ -84,16 +82,15 @@ class Cache:
 
     __getitem__ = get
 
-    def set(self, key, value, timeout=None):
+    def set(self, key: str, value: str, timeout: int = None) -> bool:
         """Sets the specified key value.
 
-        :param str key:
+        :param key:
 
-        :param str value:
+        :param value:
 
-        :param int timeout: 0 to not to expire. Object default is used if not set.
+        :param timeout: 0 to not to expire. Object default is used if not set.
 
-        :rtype: bool
         """
         if timeout is None:
             timeout = self.timeout
@@ -102,57 +99,52 @@ class Cache:
 
     __setitem__ = set
 
-    def delete(self, key):
+    def delete(self, key: str):
         """Deletes the given cached key from the cache.
 
-        :param str key: The cache key to delete.
+        :param key: The cache key to delete.
 
-        :rtype: None
         """
         uwsgi.cache_del(key, self.name)
 
     __delitem__ = delete
 
-    def incr(self, key, delta=1):
+    def incr(self, key: str, delta: int = 1) -> bool:
         """Increments the specified key value by the specified value.
        
-        :param str key:
+        :param key:
     
-        :param int delta:
+        :param delta:
 
-        :rtype: bool
         """
         return uwsgi.cache_inc(key, delta, self.timeout, self.name)
 
-    def decr(self, key, delta=1):
+    def decr(self, key: str, delta: int = 1) -> bool:
         """Decrements the specified key value by the specified value.
 
-        :param str key:
+        :param key:
 
-        :param int delta:
+        :param delta:
 
-        :rtype: bool
         """
         return uwsgi.cache_dec(key, delta, self.timeout, self.name)
 
-    def mul(self, key, value=2):
+    def mul(self, key: str, value: int = 2) -> bool:
         """Multiplies the specified key value by the specified value.
 
-        :param str key:
+        :param key:
 
-        :param int value:
+        :param value:
 
-        :rtype: bool
         """
         return uwsgi.cache_mul(key, value, self.timeout, self.name)
 
-    def div(self, key, value=2):
+    def div(self, key: str, value: int = 2) -> bool:
         """Divides the specified key value by the specified value.
 
-        :param str key:
+        :param key:
 
-        :param int value:
+        :param value:
 
-        :rtype: bool
         """
         return uwsgi.cache_div(key, value, self.timeout, self.name)

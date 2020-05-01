@@ -1,10 +1,12 @@
+from typing import Callable, Sequence, Tuple
+
 from .. import uwsgi
 from ..utils import encode, decode, get_logger
 
 _LOG = get_logger(__name__)
 
 
-def register_rpc(name=None):
+def register_rpc(name: str = None) -> Callable:
     """Decorator. Allows registering a function for RPC.
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
@@ -18,12 +20,11 @@ def register_rpc(name=None):
         make_rpc_call('expose_me', ['value1'])
 
 
-    :param str name: RPC function name to associate
+    :param name: RPC function name to associate
         with decorated function.
 
-    :rtype: callable
     """
-    def wrapper(func):
+    def wrapper(func: Callable):
         func_name = func.__name__
         rpc_name = name or func_name
 
@@ -36,18 +37,16 @@ def register_rpc(name=None):
     return wrapper
 
 
-def make_rpc_call(func_name, args=None, remote=None):
+def make_rpc_call(func_name: str, args: Sequence[str] = None, remote: str = None) -> str:
     """Performs an RPC function call (local or remote) with the given arguments.
 
-    :param str func_name: RPC function name to call.
+    :param func_name: RPC function name to call.
 
     :param Iterable args: Function arguments.
 
         .. warning:: Strings are expected.
 
-    :param str remote:
-
-    :rtype: bytes|str
+    :param remote:
 
     :raises ValueError: If unable to call RPC function.
 
@@ -65,9 +64,6 @@ def make_rpc_call(func_name, args=None, remote=None):
     return decode(result)
 
 
-def get_rpc_list():
-    """Returns registered RPC functions names.
-
-    :rtype: tuple
-    """
+def get_rpc_list() -> Tuple[str, ...]:
+    """Returns registered RPC functions names."""
     return uwsgi.rpc_list()

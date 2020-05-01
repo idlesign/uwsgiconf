@@ -1,13 +1,17 @@
 import pickle
 from functools import partial
+from typing import Union, Callable, Optional, List, Dict
 
 from .. import uwsgi
 from ..utils import decode, decode_deep, listify
 
-__offloaded_functions = {}
+__offloaded_functions: Dict[str, Callable] = {}
 
 
-def _get_farms():
+TypeMuleFarm = Union[int, str, 'Mule', 'Farm']
+
+
+def _get_farms() -> dict:
     return decode_deep(listify(uwsgi.opt.get('farm', [])))
 
 
@@ -29,7 +33,7 @@ def _mule_messages_hook(message):
 uwsgi.mule_msg_hook = _mule_messages_hook
 
 
-def __offload(func_name, mule_or_farm, *args, **kwargs):
+def __offload(func_name: str, mule_or_farm: TypeMuleFarm, *args, **kwargs) -> bool:
     # Sends a message to a mule/farm, instructing it
     # to run a function using given arguments,
     return Mule(mule_or_farm).send(pickle.dumps(
@@ -42,10 +46,10 @@ def __offload(func_name, mule_or_farm, *args, **kwargs):
     ))
 
 
-def mule_offload(mule_or_farm=None):
+def mule_offload(mule_or_farm: TypeMuleFarm = None) -> Callable:
     """Decorator. Use to offload function execution to a mule or a farm.
 
-    :param int|str|Mule|Farm mule_or_farm:
+    :param mule_or_farm:
 
     """
     if isinstance(mule_or_farm, Mule):
@@ -69,9 +73,9 @@ class Mule:
 
     __slots__ = ['id']
 
-    def __init__(self, id):
+    def __init__(self, id: int):
         """
-        :param int id: Mule ID
+        :param id: Mule ID
 
         """
         self.id = id
@@ -79,7 +83,7 @@ class Mule:
     def __str__(self):
         return str(self.id)
 
-    def offload(self):
+    def offload(self) -> Callable:
         """Decorator. Allows to offload function execution on this mule.
 
         .. code-block:: python
@@ -95,19 +99,13 @@ class Mule:
         return mule_offload(self)
 
     @classmethod
-    def get_current_id(cls):
-        """Returns current mule ID. Returns 0 if not a mule.
-
-        :rtype: int
-        """
+    def get_current_id(cls) -> int:
+        """Returns current mule ID. Returns 0 if not a mule."""
         return uwsgi.mule_id()
 
     @classmethod
-    def get_current(cls):
-        """Returns current mule object or None if not a mule.
-
-        :rtype: Optional[Mule]
-        """
+    def get_current(cls) -> Optional['Mule']:
+        """Returns current mule object or None if not a mule."""
         mule_id = cls.get_current_id()
 
         if not mule_id:
@@ -116,33 +114,37 @@ class Mule:
         return Mule(mule_id)
 
     @classmethod
-    def get_message(cls, signals=True, farms=False, buffer_size=65536, timeout=-1):
+    def get_message(
+            cls,
+            signals: bool = True,
+            farms: bool = False,
+            buffer_size: int = 65536,
+            timeout: int = -1
+    ) -> str:
         """Block until a mule message is received and return it.
 
         This can be called from multiple threads in the same programmed mule.
 
-        :param bool signals: Whether to manage signals.
+        :param signals: Whether to manage signals.
 
-        :param bool farms: Whether to manage farms.
+        :param farms: Whether to manage farms.
 
-        :param int buffer_size:
+        :param buffer_size:
 
-        :param int timeout: Seconds.
-
-        :rtype: str
+        :param timeout: Seconds.
 
         :raises ValueError: If not in a mule.
+
         """
         return decode(uwsgi.mule_get_msg(signals, farms, buffer_size, timeout))
 
-    def send(self, message):
+    def send(self, message: str) -> bool:
         """Sends a message to a mule(s)/farm.
 
-        :param str message:
-
-        :rtype: bool
+        :param message:
 
         :raises ValueError: If no mules, or mule ID or farm name is not recognized.
+
         """
         return uwsgi.mule_msg(message, self.id)
 
@@ -152,10 +154,10 @@ class Farm:
 
     __slots__ = ['name', 'mules']
 
-    def __init__(self, name, mules=None):
+    def __init__(self, name: str, mules: List[int] = None):
         """
-        :param str name: Mule farm name.
-        :param list[int] mules: Attached mules.
+        :param name: Mule farm name.
+        :param mules: Attached mules.
 
         """
         self.name = name
@@ -165,7 +167,7 @@ class Farm:
         return f"{self.name}: {', '.join(map(str, self.mules))}"
 
     @classmethod
-    def get_farms(cls):
+    def get_farms(cls) -> List['Farm']:
         """Returns a list of registered farm objects.
 
         .. code-block:: python
@@ -174,17 +176,15 @@ class Farm:
             first_farm = farms[0]
             first_farm_first_mule = first_farm.mules[0]
 
-        :rtype: list[Farm]
-
         """
         return [Farm._from_spec(farm_spec) for farm_spec in _get_farms()]
 
     @classmethod
-    def _from_spec(cls, spec):
+    def _from_spec(cls, spec: str) -> 'Farm':
         name, _, mules = spec.partition(':')
         return Farm(name=name, mules=[int(mule_id) for mule_id in mules.split(',')])
 
-    def offload(self):
+    def offload(self) -> Callable:
         """Decorator. Allows to offload function execution on mules of this farm.
 
         .. code-block:: python
@@ -200,34 +200,25 @@ class Farm:
         return mule_offload(self)
 
     @property
-    def is_mine(self):
-        """Returns flag indicating whether current mule belongs
-        to this farm.
-
-        :param str name: Farm name.
-
-        :rtype: bool
-        """
+    def is_mine(self) -> bool:
+        """Returns flag indicating whether current mule belongs to this farm."""
         return uwsgi.in_farm(self.name)
 
     @classmethod
-    def get_message(cls):
+    def get_message(cls) -> str:
         """Reads a mule farm message.
 
          * http://uwsgi.readthedocs.io/en/latest/Embed.html
 
-         .. warning:: Bytes are returned for Python 3.
-
-         :rtype: str|None
-
          :raises ValueError: If not in a mule
+
          """
         return decode(uwsgi.farm_get_msg())
 
-    def send(self, message):
+    def send(self, message: str):
         """Sends a message to the given farm.
 
-        :param str message:
+        :param message:
 
         """
         return uwsgi.farm_msg(self.name, message)

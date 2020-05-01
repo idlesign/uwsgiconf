@@ -1,6 +1,7 @@
 from functools import wraps
-from .. import uwsgi
+from typing import Callable
 
+from .. import uwsgi
 
 stop = uwsgi.stop
 """Stops uWSGI.
@@ -50,13 +51,14 @@ class harakiri_imposed:
                 do()
 
     """
-    def __init__(self, timeout):
+    def __init__(self, timeout: int):
         """
-        :param int timeout: Timeout (seconds) before harakiri.
+        :param timeout: Timeout (seconds) before harakiri.
+
         """
         self._timeout = timeout
 
-    def __call__(self, func):
+    def __call__(self, func: Callable):
         timeout = self._timeout
 
         @wraps(func)

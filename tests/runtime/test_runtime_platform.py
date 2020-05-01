@@ -10,7 +10,7 @@ def test_platform_stub():
     assert not uwsgi.clock
     assert not uwsgi.get_listen_queue()
     assert uwsgi.get_version() == '0.0.0'
-    assert uwsgi.get_version(as_tuple=True) == (0, 0, 0, 0, '')
+    assert uwsgi.get_version(as_tuple=True) == (0, 0, 0, 0, b'')
     assert uwsgi.master_pid == -1
     assert uwsgi.config_variables == {}
     assert uwsgi.config == {}

@@ -1,4 +1,5 @@
 from threading import local
+from typing import Callable, Type, Tuple, Union
 
 from .request import _Request
 from .. import uwsgi as _uwsgi
@@ -10,14 +11,13 @@ class _PostForkHooks:
     funcs = []
 
     @classmethod
-    def add(cls):
-        """Decorator. Registers a function to be called after process fork().
+    def add(cls) -> Callable:
+        """Decorator. Registers a function to be called after process fork()."""
 
-        :param callable func:
-        """
-        def add_(func):
+        def add_(func: Callable):
             cls.funcs.append(func)
             return func
+
         return add_
 
     @classmethod
@@ -32,7 +32,7 @@ _uwsgi.post_fork_hook = _PostForkHooks.run
 
 class _Platform:
 
-    request = _Request  # type: _Request
+    request: Type[_Request] = _Request
     """Current request information. 
     
     .. note:: Object is attached runtime.
@@ -50,118 +50,88 @@ class _Platform:
 
     """
 
-    workers_count = _uwsgi.numproc  # type: int
+    workers_count: int = _uwsgi.numproc
     """Number of workers (processes) currently running."""
 
-    cores_count = _uwsgi.cores  # type: int
+    cores_count: int = _uwsgi.cores
     """Detected number of processor cores."""
 
-    buffer_size = _uwsgi.buffer_size  # type: int
+    buffer_size: int = _uwsgi.buffer_size
     """The current configured buffer size in bytes."""
 
-    threads_enabled = _uwsgi.has_threads  # type: bool
+    threads_enabled: bool = _uwsgi.has_threads
     """Flag indicating whether thread support is enabled."""
 
-    started_on = _uwsgi.started_on  # type: int
+    started_on: int = _uwsgi.started_on
     """uWSGI's startup Unix timestamp."""
 
-    apps_map = _uwsgi.applications  # type: dict
+    apps_map: dict = _uwsgi.applications
     """Applications dictionary mapping mountpoints to application callables."""
 
     @property
-    def hostname(self):
-        """Current host name.
-
-        :rtype: str
-
-        """
+    def hostname(self) -> str:
+        """Current host name."""
         return decode(_uwsgi.hostname)
 
     @property
-    def config(self):
-        """The current configuration options, including any custom placeholders.
-
-        :rtype: dict
-
-        """
+    def config(self) -> dict:
+        """The current configuration options, including any custom placeholders."""
         return decode_deep(_uwsgi.opt)
 
     @property
-    def config_variables(self):
-        """Current mapping of configuration file "magic" variables.
-
-        :rtype: dict
-
-        """
+    def config_variables(self) -> dict:
+        """Current mapping of configuration file "magic" variables."""
         return decode_deep(_uwsgi.magic_table)
 
     @property
-    def worker_id(self):
-        """Returns current worker ID. 0 if not a worker (e.g. mule).
-
-        :rtype: int
-        """
+    def worker_id(self) -> int:
+        """Returns current worker ID. 0 if not a worker (e.g. mule)."""
         return _uwsgi.worker_id()
 
     @property
-    def workers_info(self):
+    def workers_info(self) -> Tuple[dict, ...]:
         """Gets statistics for all the workers for the current server.
 
         Returns tuple of dicts.
 
-        :rtype: tuple[dict]
         """
         return tuple(decode_deep(item) for item in _uwsgi.workers())
 
     @property
-    def ready_for_requests(self):
-        """Returns flag indicating whether we are ready to handle requests.
-
-        :rtype: bool
-        """
+    def ready_for_requests(self) -> bool:
+        """Returns flag indicating whether we are ready to handle requests."""
         return _uwsgi.ready()
 
     @property
-    def master_pid(self):
-        """Return the process identifier (PID) of the uWSGI master process.
-
-        :rtype: int
-        """
+    def master_pid(self) -> int:
+        """Return the process identifier (PID) of the uWSGI master process."""
         return _uwsgi.masterpid()
 
     @property
-    def memory(self):
-        """Returns memory usage tuple of ints: (rss, vsz).
-
-        :rtype: tuple[int, int]
-        """
+    def memory(self) -> Tuple[int, int]:
+        """Returns memory usage tuple of ints: (rss, vsz)."""
         return _uwsgi.mem()
 
     @property
-    def clock(self):
-        """Returns uWSGI clock microseconds.
-
-        :rtype: long
-        """
+    def clock(self) -> int:
+        """Returns uWSGI clock microseconds."""
         return _uwsgi.micros()
 
-    def get_listen_queue(self, socket_num=0):
+    def get_listen_queue(self, socket_num: int = 0) -> int:
         """Returns listen queue (backlog size) of the given socket.
 
-        :param int socket_num: Socket number.
-
-        :rtype: int
+        :param socket_num: Socket number.
 
         :raises ValueError: If socket is not found
+
         """
         return _uwsgi.listen_queue(socket_num)
 
-    def get_version(self, as_tuple=False):
+    def get_version(self, as_tuple: bool = False) -> Union[str, Tuple[int, int, int, int, bytes]]:
         """Returns uWSGI version string or tuple.
 
-        :param bool as_tuple:
+        :param as_tuple:
 
-        :rtype: str|tuple
         """
         if as_tuple:
             return _uwsgi.version_info
@@ -172,10 +142,7 @@ class _Platform:
 __THREAD_LOCAL = local()
 
 
-def __get_platform():
-    """
-    :rtype: _Platform
-    """
+def __get_platform() -> _Platform:
     platform = getattr(__THREAD_LOCAL, 'uwsgi_platform', None)
 
     if platform is None:
