@@ -1,6 +1,3 @@
-# -*- encoding: utf-8 -*-
-from __future__ import unicode_literals
-
 from os import environ
 
 CONFIGS_MODULE_ATTR = 'uwsgi_configuration'

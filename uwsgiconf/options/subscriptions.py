@@ -91,7 +91,7 @@ class Subscriptions(OptionsGroup):
 
         """
         if digest_algo and dir_cert:
-            self._set('subscriptions-sign-check', '%s:%s' % (digest_algo, dir_cert))
+            self._set('subscriptions-sign-check', f'{digest_algo}:{dir_cert}')
 
         self._set('subscriptions-sign-check-tolerance', tolerance)
         self._set('subscriptions-sign-skip-uid', no_check_uid, multi=True)

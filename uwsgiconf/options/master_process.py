@@ -174,7 +174,7 @@ class MasterProcess(OptionsGroup):
             bool_keys=['unique'],
         )
 
-        self._set('cron2', ('%s %s' % (rule, command)).strip(), multi=True)
+        self._set('cron2', (f'{rule} {command}').strip(), multi=True)
 
         return self._section
 

@@ -7,7 +7,7 @@ from .routing_subjects import *
 from .routing_vars import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..utils import listify, string_types
+from ..utils import listify
 
 
 class RouteRule(object):
@@ -174,7 +174,7 @@ class RouteRule(object):
         if subject is None:
             subject = 'run'  # always run the specified route action
 
-        elif isinstance(subject, string_types):
+        elif isinstance(subject, str):
             subject = self.subjects.path_info(subject)
 
         subject_rule = ''
@@ -189,8 +189,8 @@ class RouteRule(object):
             subject_rule = subject.regexp
             subject = subject.name
 
-        self.command_label = ('%s-route-label' % stage).strip('-')
-        self.command = ('%s-route-%s' % (stage, subject)).strip('-')
+        self.command_label = f'{stage}-route-label'.strip('-')
+        self.command = f'{stage}-route-{subject}'.strip('-')
         self.value = subject_rule, action
 
 
@@ -328,10 +328,10 @@ class Routing(OptionsGroup):
 
         if status not in statuses:
             raise ConfigurationError(
-                'Code `%s` for `routing.set_error_page()` is unsupported. Supported: %s' %
-                (status, ', '.join(map(str, statuses))))
+                f"Code `{status}` for `routing.set_error_page()` is unsupported. "
+                f"Supported: {', '.join(map(str, statuses))}")
 
-        self._set('error-page-%s' % status, html_fpath, multi=True)
+        self._set(f'error-page-{status}', html_fpath, multi=True)
 
         return self._section
 
@@ -352,7 +352,7 @@ class Routing(OptionsGroup):
 
         if common_prefix:
             if not codes_map:
-                codes_map = {code: '%s.html' % code for code in statuses}
+                codes_map = {code: f'{code}.html' for code in statuses}
 
             for code, filename in codes_map.items():
                 codes_map[code] = os.path.join(common_prefix, filename)
@@ -385,7 +385,7 @@ class Routing(OptionsGroup):
         :param str|unicode value:
 
         """
-        self._set('add-header', '%s: %s' % (name, value), multi=True)
+        self._set('add-header', f'{name}: {value}', multi=True)
 
         return self._section
 
@@ -412,6 +412,8 @@ class Routing(OptionsGroup):
         """
         self._set(
             'pull-header' if pull else 'collect-header',
-            '%s %s' % (name, target_var), multi=True)
+            f'{name} {target_var}',
+            multi=True
+        )
 
         return self._section

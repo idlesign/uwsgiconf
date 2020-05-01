@@ -310,7 +310,7 @@ class MainProcess(OptionsGroup):
         :param str|unicode|list|HookAction|list[HookAction] action:
 
         """
-        self._set('hook-%s' % phase, action, multi=True)
+        self._set(f'hook-{phase}', action, multi=True)
 
         return self._section
 
@@ -322,7 +322,7 @@ class MainProcess(OptionsGroup):
         :param str|unicode|list|HookAction|list[HookAction] action:
 
         """
-        self._set('hook-touch', '%s %s' % (fpath, action), multi=True)
+        self._set('hook-touch', f'{fpath} {action}', multi=True)
 
         return self._section
 
@@ -365,7 +365,7 @@ class MainProcess(OptionsGroup):
         :param str|unicode phase: See constants in ``Phases`` class.
 
         """
-        self._set('exec-%s' % phase, command, multi=True)
+        self._set(f'exec-{phase}', command, multi=True)
 
         return self._section
 
@@ -377,7 +377,7 @@ class MainProcess(OptionsGroup):
         :param str|unicode target: File path.
 
         """
-        self._set('touch-exec', '%s %s' % (target, command), multi=True)
+        self._set('touch-exec', f'{target} {command}', multi=True)
 
         return self._section
 

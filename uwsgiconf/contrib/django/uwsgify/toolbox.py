@@ -1,10 +1,11 @@
+import importlib.util
 import inspect
 import os
 from importlib import import_module
 
 from uwsgiconf.presets.nice import PythonSection
 from uwsgiconf.settings import CONFIGS_MODULE_ATTR
-from uwsgiconf.utils import ConfModule, UwsgiRunner, PY3
+from uwsgiconf.utils import ConfModule, UwsgiRunner
 
 if False:  # pragma: nocover
     from uwsgiconf.base import Section
@@ -136,13 +137,7 @@ class SectionMutator(object):
 
         """
         def load():
-            module_fake_name = '%s.%s' % (name_project, os.path.splitext(name_module)[0])
-
-            if not PY3:  # pragma: nocover
-                import imp
-                return imp.load_source(module_fake_name, path_conf)
-
-            import importlib.util
+            module_fake_name = f'{name_project}.{os.path.splitext(name_module)[0]}'
 
             spec = importlib.util.spec_from_file_location(module_fake_name, path_conf)
             module = importlib.util.module_from_spec(spec)
@@ -152,9 +147,9 @@ class SectionMutator(object):
 
         if embedded:
             try:
-                module = import_module('%s.%s' % (name_project, name_module.rstrip('.py')))
+                module = import_module(f"{name_project}.{name_module.rstrip('.py')}")
 
-            except ImportError:  # py3 - ModuleNotFoundError
+            except ModuleNotFoundError:
                 return None
 
         else:
@@ -183,7 +178,7 @@ class SectionMutator(object):
 
         section = PythonSection.bootstrap(
             'http://127.0.0.1:8000',
-            wsgi_module='%s.%s' % (name_package, name_module),
+            wsgi_module=f'{name_package}.{name_module}',
         )
 
         if os.path.exists(dir_base):
@@ -231,14 +226,7 @@ class SectionMutator(object):
             section.set_runtime_dir(section.get_runtime_dir())
 
             if not self.options['compile']:
-                if PY3:
-                    os.makedirs(self.runtime_dir, 0o755, True)
-                else:
-                    try:
-                        os.makedirs(self.runtime_dir, 0o755)
-
-                    except OSError:  # simulate exist_ok
-                        pass
+                os.makedirs(self.runtime_dir, 0o755, True)
 
     def mutate(self, embedded=False):
         """Mutates current section."""
@@ -263,10 +251,10 @@ class SectionMutator(object):
             )
 
         else:
-            main.set_naming_params(prefix='[%s] ' % project_name)
+            main.set_naming_params(prefix=f'[{project_name}] ')
 
         section.print_out(
-            'Embedded mode: %s' % ('yes' if embedded else 'no'),
+            f"Embedded mode: {'yes' if embedded else 'no'}",
             format_options='blue')
 
         # todo maybe autoreload in debug

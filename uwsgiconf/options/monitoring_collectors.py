@@ -23,7 +23,7 @@ class Collector(ParametrizedValue):
                     child = child.name
                 children_.append(child)
 
-            args.append('children=%s' % ';'.join(children_))
+            args.append(f"children={';'.join(children_)}")
 
         super(Collector, self).__init__(*args)
 

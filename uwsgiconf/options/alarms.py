@@ -77,9 +77,7 @@ class Alarms(OptionsGroup):
         """
         self.register_alarm(alarm)
 
-        value = '%s %s' % (
-            ','.join(map(attrgetter('alias'), listify(alarm))),
-            matcher)
+        value = f"{','.join(map(attrgetter('alias'), listify(alarm)))} {matcher}"
 
         self._set('not-alarm-log' if skip else 'alarm-log', value)
 
@@ -109,12 +107,12 @@ class Alarms(OptionsGroup):
         value = fd
 
         if byte_count:
-            value += ':%s' % byte_count
+            value += f':{byte_count}'
 
-        value += ' %s' % message
+        value += f' {message}'
 
         for alarm in listify(alarm):
-            self._set('alarm-fd', '%s %s' % (alarm.alias, value), multi=True)
+            self._set('alarm-fd', f'{alarm.alias} {value}', multi=True)
 
         return self._section
 

@@ -16,7 +16,7 @@ def errorprint():
         yield
 
     except ConfigurationError as e:
-        click.secho('%s' % e, err=True, fg='red')
+        click.secho(f'{e}', err=True, fg='red')
         sys.exit(1)
 
 
@@ -45,7 +45,7 @@ def run(conf, only):
         spawned = config.spawn_uwsgi(only)
 
         for alias, pid in spawned:
-            click.secho("Spawned uWSGI for configuration aliased '%s'. PID %s" % (alias, pid), fg='green')
+            click.secho(f"Spawned uWSGI for configuration aliased '{alias}'. PID {pid}", fg='green')
 
 
 @base.command()

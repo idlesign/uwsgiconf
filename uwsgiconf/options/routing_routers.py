@@ -11,7 +11,7 @@ class RouterBase(OptionsGroup):
 
     def _set_aliased(self, *args, **kwargs):
         args = list(args)
-        args[0] = '%s-%s' % (self.alias, args[0])
+        args[0] = f'{self.alias}-{args[0]}'
         self._set(*args, **kwargs)
 
     def __init__(self, on=None):
@@ -235,7 +235,7 @@ class _RouterWithForwarders(_RouterCommon):
         if forward_to is not None:
             if isinstance(forward_to, Forwarder):
 
-                value = '%s' % forward_to
+                value = f'{forward_to}'
                 self._set_aliased(forward_to.name, value, multi=True)
 
             else:
@@ -922,7 +922,7 @@ class RouterTunTap(RouterBase):
             Example: `uwsgi0`.
 
         """
-        self._set_aliased('device', '%s %s' % (device_name, socket))
+        self._set_aliased('device', f'{device_name} {socket}')
 
         return self
 
@@ -987,6 +987,6 @@ class RouterTunTap(RouterBase):
         if src:
             value.extend((src, dst))
 
-        self._set_aliased('router-firewall-%s' % direction.lower(), ' '.join(value), multi=True)
+        self._set_aliased(f'router-firewall-{direction.lower()}', ' '.join(value), multi=True)
 
         return self

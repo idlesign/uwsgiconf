@@ -3,8 +3,6 @@ from sys import version_info
 
 import pytest
 
-PY2 = (version_info[0] == 2)
-
 
 @pytest.fixture
 def patch_project_dir(monkeypatch):
@@ -40,7 +38,6 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir, stub):
         lambda project_name: '%s' % fifofile)
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_mutate_existing_section(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.toolbox import SectionMutator
 
@@ -48,7 +45,6 @@ def test_mutate_existing_section(patch_base_command):
     assert mutator.section.name == 'testdummy'
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
 
     class Settings(object):
@@ -82,35 +78,30 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, stub):
         Command().handle(compile=False, contribute_static=True, embedded=True)
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_log(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_log import Command
 
     Command().handle(reopen=True, rotate=False)
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_reload(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_reload import Command
 
     Command().handle(force=False, workers=False, chain=False)
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_stats(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_stats import Command
 
     Command().handle()
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_stop(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_stop import Command
 
     Command().handle(force=False)
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 
@@ -129,7 +120,6 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys):
     assert 'dummy/manage.py uwsgi_run --nostatic --noruntimes\n' in out
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_uwsgi_sysinit_upstart(patch_base_command, capsys):
     from uwsgiconf.contrib.django.uwsgify.management.commands.uwsgi_sysinit import Command
 

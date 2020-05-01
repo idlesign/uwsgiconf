@@ -68,7 +68,7 @@ class Section(_Section):
         self.main_process.set_basic_params(vacuum=True)
         self.main_process.set_naming_params(
             autonaming=True,
-            prefix='%s ' % process_prefix if process_prefix else None,
+            prefix=f'{process_prefix} ' if process_prefix else None,
         )
         self.master_process.set_basic_params(enable=True)
         self.master_process.set_exit_events(sig_term=True)  # Respect the convention. Make Upstart and Co happy.
@@ -88,33 +88,18 @@ class Section(_Section):
         """
         vars = self.logging.vars
 
+        app_id = app_req_count = worker_req_count = tsize = sendfile_route_offload = '-'
+
         format_default = (
-            '[pid: %s|app: %s|req: %s/%s] %s (%s) {%s vars in %s bytes} [%s] %s %s => '
-            'generated %s bytes in %s %s%s(%s %s) %s headers in %s bytes (%s switches on core %s)' % (
-
-                vars.WORKER_PID,
-                '-',  # app id
-                '-',  # app req count
-                '-',  # worker req count
-                vars.REQ_REMOTE_ADDR,
-                vars.REQ_REMOTE_USER,
-                vars.REQ_COUNT_VARS_CGI,
-                vars.SIZE_PACKET_UWSGI,
-                vars.REQ_START_CTIME,
-                vars.REQ_METHOD,
-                vars.REQ_URI,
-                vars.RESP_SIZE_BODY,
-                vars.RESP_TIME_MS,  # or RESP_TIME_US,
-                '-',  # tsize
-                '-',  # via sendfile/route/offload
-                vars.REQ_SERVER_PROTOCOL,
-                vars.RESP_STATUS,
-                vars.RESP_COUNT_HEADERS,
-                vars.RESP_SIZE_HEADERS,
-                vars.ASYNC_SWITCHES,
-                vars.CORE,
-        ))
-
+            f"[pid: {vars.WORKER_PID}|app: {app_id}|req: {app_req_count}/{worker_req_count}] "
+            f"{vars.REQ_REMOTE_ADDR} ({vars.REQ_REMOTE_USER}) "
+            f"{{{vars.REQ_COUNT_VARS_CGI} vars in {vars.SIZE_PACKET_UWSGI} bytes}} "
+            f"[{vars.REQ_START_CTIME}] {vars.REQ_METHOD} {vars.REQ_URI} => "
+            f"generated {vars.RESP_SIZE_BODY} bytes in {vars.RESP_TIME_MS} "
+            f"{tsize}{sendfile_route_offload}({vars.REQ_SERVER_PROTOCOL} {vars.RESP_STATUS}) "
+            f"{vars.RESP_COUNT_HEADERS} headers in {vars.RESP_SIZE_HEADERS} bytes "
+            f"({vars.ASYNC_SWITCHES} switches on core {vars.CORE})"
+        )
         return format_default
 
     @classmethod
@@ -221,7 +206,7 @@ class Section(_Section):
 
         path_cert_chain and networking.register_socket(
             networking.sockets.from_dsn(
-                'https://%s?cert=%s&key=%s' % (address, path_cert_chain, path_cert_private),
+                f'https://{address}?cert={path_cert_chain}&key={path_cert_private}',
                 allow_shared_sockets=allow_shared_sockets))
 
         self.statics.register_static_map(

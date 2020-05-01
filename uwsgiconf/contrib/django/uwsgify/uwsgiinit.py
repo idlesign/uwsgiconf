@@ -1,6 +1,3 @@
-# -*- encoding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django import db
 from django.apps import apps
 from django.utils.module_loading import autodiscover_modules
@@ -26,7 +23,8 @@ def check_for_stub():
     msg = (
         'Something from uwsgiconf.uwsgi has been imported before uWSGI start. '
         'Please move uWSGI related stuff including such imports '
-        'into %s.py modules of your apps.' % MODULE_INIT)
+        f'into {MODULE_INIT}.py modules of your apps.'
+    )
 
     raise RuntimeConfigurationError(msg)
 

@@ -83,7 +83,7 @@ class Python(OptionsGroup):
                 if version == 2:
                     version = ''
 
-            name = '%s%s' % (name, version)
+            name = f'{name}{version}'
 
         self.name = name
 
@@ -180,7 +180,7 @@ class Python(OptionsGroup):
         :param bool after_init: add a python module alias after uwsgi module initialization
         """
         command = 'post-pymodule-alias' if after_init else 'pymodule-alias'
-        self._set(command, '%s=%s' % (alias, module_path), multi=True)
+        self._set(command, f'{alias}={module_path}', multi=True)
 
         return self._section
 

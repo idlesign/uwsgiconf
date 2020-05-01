@@ -131,7 +131,7 @@ def get_config(systype, conf, conf_path, runner=None, project_name=None):
     :rtype: str|unicode
 
     """
-    runner = runner or ('%s run' % Finder.uwsgiconf())
+    runner = runner or f'{Finder.uwsgiconf()} run'
     conf_path = abspath(conf_path)
 
     if isinstance(conf, Configuration):
@@ -141,7 +141,7 @@ def get_config(systype, conf, conf_path, runner=None, project_name=None):
 
     formatted = tpl.strip().format(
         project=project_name or conf.project_name or basename(dirname(conf_path)),
-        command='%s %s' % (runner, conf_path),
+        command=f'{runner} {conf_path}',
     )
 
     return formatted

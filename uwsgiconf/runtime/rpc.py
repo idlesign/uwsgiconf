@@ -13,7 +13,7 @@ def register_rpc(name=None):
 
         @register_rpc()
         def expose_me(arg1, arg2=15):
-            print('RPC called %s' % arg1)
+            print(f'RPC called {arg1}')
 
         make_rpc_call('expose_me', ['value1'])
 
@@ -29,7 +29,7 @@ def register_rpc(name=None):
 
         uwsgi.register_rpc(rpc_name, func)
 
-        _LOG.debug("Registering '%s' for RPC under '%s' alias ...", func_name, rpc_name)
+        _LOG.debug(f"Registering '{func_name}' for RPC under '{rpc_name}' alias ...")
 
         return func
 

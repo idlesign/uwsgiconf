@@ -4,7 +4,6 @@ from functools import partial, wraps
 from .signals import _automate_signal
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
-from ..utils import string_types
 
 
 def register_timer(period, target=None):
@@ -190,7 +189,7 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, ta
     for name, val in task_args_initial.items():
 
         # uWSGI won't accept strings, so we emulate ranges here.
-        if isinstance(val, string_types):
+        if isinstance(val, str):
 
             # Rules like 10-18/2 (from 10 till 18 every 2 hours).
             val, _, step = val.partition('/')

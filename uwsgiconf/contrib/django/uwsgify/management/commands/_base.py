@@ -31,5 +31,6 @@ class FifoCommand(BaseCommand):
 
         else:
             raise CommandError(
-                'Unable to find uWSGI FIFO file for "%s" project in %s' %
-                (mutator.section.project_name, filepath))
+                'Unable to find uWSGI FIFO file '
+                f'for "{mutator.section.project_name}" project in {filepath}'
+            )

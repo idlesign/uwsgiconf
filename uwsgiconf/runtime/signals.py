@@ -2,7 +2,7 @@ from collections import namedtuple
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
-from ..utils import string_types, get_logger
+from ..utils import get_logger
 
 _LOG = get_logger(__name__)
 
@@ -118,7 +118,7 @@ class Signal(object):
 
         def wrapper(func):
 
-            _LOG.debug("Registering '%s' as signal '%s' handler ...", func.__name__, sign_num)
+            _LOG.debug(f"Registering '{func.__name__}' as signal '{sign_num}' handler ...")
 
             uwsgi.register_signal(sign_num, target, func)
             registry_signals.append(SignalDescription(sign_num, target, func))
@@ -159,7 +159,7 @@ class Signal(object):
 
 def _automate_signal(target, func):
 
-    if target is None or isinstance(target, string_types):
+    if target is None or isinstance(target, str):
         sig = Signal()
 
         func(sig)

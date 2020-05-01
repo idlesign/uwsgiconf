@@ -50,7 +50,7 @@ class Caching(OptionsGroup):
 
         """
         cache_name = cache_name or ''
-        value = '%s %s=%s' % (cache_name, key, value)
+        value = f'{cache_name} {key}={value}'
 
         self._set('add-cache-item', value.strip(), multi=True)
 
@@ -74,7 +74,7 @@ class Caching(OptionsGroup):
             command += '-gzip'
 
         cache_name = cache_name or ''
-        value = '%s %s' % (cache_name, filepath)
+        value = f'{cache_name} {filepath}'
 
         self._set(command, value.strip(), multi=True)
 

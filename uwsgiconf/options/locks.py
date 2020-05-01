@@ -59,7 +59,7 @@ class Locks(OptionsGroup):
         command = 'flock-wait' if wait else 'flock'
 
         if after_setup:
-            command = '%s2' % command
+            command = f'{command}2'
 
         self._set(command, fpath)
 

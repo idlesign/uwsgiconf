@@ -35,7 +35,7 @@ def _register_task(spooler_obj, spooler_cls):
 
             _task_functions[func_name] = func
 
-            _LOG.debug('Spooler. Registered function: %s', func_name)
+            _LOG.debug(f'Spooler. Registered function: {func_name}')
 
             def task_call(*args, **kwargs):
                 # Redirect task (function call) into spooler.
@@ -211,7 +211,7 @@ class Spooler(object):
             result = task.process()
 
         except Exception as e:
-            _LOG.exception('Spooler. Unhandled exception in task %s', task_name)
+            _LOG.exception(f"Spooler. Unhandled exception in task '{task_name}'")
             result = ResultRescheduled(exception=e)
 
         if result is None:
@@ -356,7 +356,7 @@ class SpoolerTask(object):
         payload_.update(payload or {})
 
         msg = dict(
-            message='ucfg_%s' % cls.type_id,
+            message=f'ucfg_{cls.type_id}',
             spooler=spooler,
             priority=priority,
             postpone=postpone,

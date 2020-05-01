@@ -50,7 +50,7 @@ class OptionKey(object):
     def swap(self, new_key):
 
         if new_key:
-            self.key = '%s' % new_key
+            self.key = f'{new_key}'
 
     def __str__(self):
         return self.key
@@ -110,10 +110,10 @@ class OptionsGroup(object):
         return self.set_basic_params(*args, **kwargs)
 
     def __eq__(self, obj):
-        return '%s' % self == obj
+        return f'{self}' == obj
 
     def __hash__(self):
-        return hash('%s' % self)
+        return hash(f'{self}')
 
     def set_basic_params(self, *args, **kwargs):
         """
@@ -270,7 +270,7 @@ class ParametrizedValue(OptionsGroup):
         result += self.args_joiner.join(args)
 
         if self.alias:
-            result = '%s %s' % (self.alias, result)
+            result = f'{self.alias} {result}'
 
         result = result.strip()
 

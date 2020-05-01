@@ -40,7 +40,7 @@ class Command(BaseCommand):
 
         for opt in ('nostatic', 'noruntimes', 'noerrpages'):
             if options.get(opt, False):
-                command = command + ' --%s' % opt
+                command = command + f' --{opt}'
 
         config = get_config(
             systype,

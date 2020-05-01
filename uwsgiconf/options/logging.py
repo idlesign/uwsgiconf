@@ -1,7 +1,7 @@
 from ..base import OptionsGroup, TemplatedValue
 from .logging_loggers import *
 from .logging_encoders import *
-from ..utils import listify, string_types
+from ..utils import listify
 
 
 class Var(TemplatedValue):
@@ -94,7 +94,7 @@ class Logging(OptionsGroup):
         self._set('memory-report', memory_report)
         self._set('log-prefix', prefix)
 
-        if isinstance(prefix_date, string_types) and '%' in prefix_date:
+        if isinstance(prefix_date, str) and '%' in prefix_date:
             prefix_date = prefix_date.replace('%', '%%')  # Escaping.
                 
         self._set('log-date', prefix_date, cast=(bool if isinstance(prefix_date, bool) else None))
@@ -314,7 +314,7 @@ class Logging(OptionsGroup):
         command = 'log-req-route' if requests_only else 'log-route'
 
         for logger in listify(logger):
-            self._set(command, '%s %s' % (logger, matcher), multi=True)
+            self._set(command, f'{logger} {matcher}', multi=True)
 
         return self._section
 
@@ -344,13 +344,13 @@ class Logging(OptionsGroup):
 
         for encoder in listify(encoder):
 
-            value = '%s' % encoder
+            value = f'{encoder}'
 
             if logger:
                 if isinstance(logger, Logger):
                     logger = logger.alias
 
-                value += ':%s' % logger
+                value += f':{logger}'
 
             self._set(command, value, multi=True)
 

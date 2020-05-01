@@ -31,7 +31,7 @@ class SubjectCustom(ParametrizedValue):
         return self
 
     def _setup(self, name, arg=None):
-        self.name = '%s' % name
+        self.name = f'{name}'
         self.args = [self._subject, arg]
         return self
 

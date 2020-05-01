@@ -97,10 +97,10 @@ class IniFormatter(FormatterBase):
         for section_name, key, value in self.iter_options():
 
             if section_name != last_section:
-                lines.append('\n[%s]' % section_name)
+                lines.append(f'\n[{section_name}]')
                 last_section = section_name
 
-            lines.append('%s = %s' % (key, str(value).strip()))
+            lines.append(f'{key} = {str(value).strip()}')
 
         lines = '\n'.join(lines)
         return lines
@@ -120,14 +120,14 @@ class ArgsFormatter(FormatterBase):
                 value = str(value).strip()
 
                 if value == 'true':
-                    lines.append('--%s' % key)
+                    lines.append(f'--{key}')
 
                 elif value.startswith('%') and len(value) == 2:
                     # No config var support is available in command line.
                     continue
 
                 else:
-                    lines.extend(['--%s' % key, '%s' % value])
+                    lines.extend([f'--{key}', f'{value}'])
 
         return lines
 

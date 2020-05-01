@@ -40,8 +40,8 @@ class Modifier(object):
 
         if val is not None and (allowed is not None and val not in allowed):
             raise ConfigurationError(
-                'Unsupported submod (modifier2) value `%s` for %s (modifier1) `%s`' %
-                (val, self.__class__.__name__, self.code))
+                f'Unsupported submod (modifier2) value `{val}` '
+                f'for {self.__class__.__name__} (modifier1) `{self.code}`')
 
         self._submod = val
 

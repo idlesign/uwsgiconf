@@ -1,5 +1,3 @@
-from __future__ import unicode_literals, absolute_import
-
 import logging
 import os
 import sys
@@ -19,15 +17,6 @@ if False:  # pragma: nocover
     from uwsgiconf.config import Configuration
 
 
-PY3 = sys.version_info[0] == 3
-
-if PY3:  # pragma: nocover
-    string_types = str,
-
-else:  # pragma: nocover
-    string_types = basestring,
-
-
 EmbeddedPlugins = namedtuple('EmbeddedPlugins', ['generic', 'request'])
 
 
@@ -38,12 +27,12 @@ def get_logger(name):
 
 def encode(value):
     """Encodes str into bytes if required."""
-    return value.encode('utf-8') if PY3 and isinstance(value, str) else value
+    return value.encode('utf-8') if isinstance(value, str) else value
 
 
 def decode(value):
     """Decodes bytes into str if required."""
-    return value.decode('utf-8') if PY3 and isinstance(value, bytes) else value
+    return value.decode('utf-8') if isinstance(value, bytes) else value
 
 
 def decode_deep(value):
@@ -252,7 +241,7 @@ class KeyValue(object):
 
                     val = ';'.join(listify(val))
 
-                value_chunks.append('%s=%s' % (self.aliases.get(key, key), val))
+                value_chunks.append(f'{self.aliases.get(key, key)}={val}')
 
         return self.items_separator.join(value_chunks).strip()
 
@@ -456,14 +445,14 @@ class UwsgiRunner(object):
                 # Consider it to be a python script (uwsgicfg.py).
                 # Pass --conf as an argument to have a chance to use
                 # touch reloading form .py configuration file change.
-                args.append('exec://%s %s --conf %s' % (self.binary_python, filepath, config.alias))
+                args.append(f'exec://{self.binary_python} {filepath} --conf {config.alias}')
 
         if replace:
 
             try:
                 return os.execvp('uwsgi', args)
 
-            except OSError:  # py3 - FileNotFoundError
+            except FileNotFoundError:
 
                 raise UwsgiconfException(
                     'uWSGI executable not found. '

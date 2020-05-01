@@ -62,7 +62,7 @@ class Metric(ParametrizedValue):
         super(Metric, self).__init__(value)
 
     def __str__(self):
-        return 'name=%s' % super(Metric, self).__str__()
+        return f'name={super(Metric, self).__str__()}'
 
 
 class MetricTypeCounter(Metric):

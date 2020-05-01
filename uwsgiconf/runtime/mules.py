@@ -16,7 +16,7 @@ def _mule_messages_hook(message):
     try:
         loaded = pickle.loads(message)
 
-    except Exception:  # py3 pickle.UnpicklingError
+    except pickle.UnpicklingError:
         return
 
     else:
@@ -162,7 +162,7 @@ class Farm(object):
         self.mules = tuple(Mule(mule_id) for mule_id in mules or [])
 
     def __str__(self):
-        return '%s: %s' % (self.name, ', '.join(map(str, self.mules)))
+        return f"{self.name}: {', '.join(map(str, self.mules))}"
 
     @classmethod
     def get_farms(cls):

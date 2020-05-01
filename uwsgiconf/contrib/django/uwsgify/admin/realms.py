@@ -23,14 +23,18 @@ class SummaryAdmin(OnePageAdmin):
             :rtype: str
             """
             module_path = func.__module__
+
             if module_path.startswith('uwsgi_file'):
                 module_path = module_path.replace('uwsgi_file__', 'uwsgi://', 1).replace('_', '/')
-            return '%s.%s' % (module_path, func.__name__)
+
+            return f'{module_path}.{func.__name__}'
 
         def get_signals_info(signals):
             info = []
+
             for signal in signals:
-                info.append('%s - %s: %s' % (signal.num, signal.target, get_func_name(signal.func)))
+                info.append(f'{signal.num} - {signal.target}: {get_func_name(signal.func)}')
+
             return info
 
         time_started = datetime.fromtimestamp(uwsgi.started_on)
@@ -152,7 +156,7 @@ class WorkersAdmin(OnePageAdmin):
             if keyname_worker == 'apps':
                 # Get info about applications served by worker,
                 for idx_app, keyname_app, name_app, value_app in value_worker:
-                    app_key = '%s %s. %s %s' % (_('Worker'), idx_worker + 1, _('Application'), idx_app)
+                    app_key = f'%s {idx_worker + 1}. %s {idx_app}' % (_('Worker'), _('Application'))
                     info_apps.setdefault(app_key, OrderedDict())[name_app] = [value_app]
 
             else:

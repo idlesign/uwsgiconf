@@ -29,12 +29,12 @@ class Socket(ParametrizedValue):
         self._make_section_like()
 
         if modifier:
-            self._set('%s-modifier1' % self.name, modifier.code)
+            self._set(f'{self.name}-modifier1', modifier.code)
 
             submod = modifier.submod
 
             if submod:
-                self._set('%s-modifier2' % self.name, modifier.submod)
+                self._set(f'{self.name}-modifier2', modifier.submod)
 
         super(Socket, self).__init__()
 

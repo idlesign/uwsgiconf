@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from sys import modules as __modules
 
 from .exceptions import UwsgiconfException as __DummyException

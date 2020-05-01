@@ -19,7 +19,7 @@ class MuleFarm(object):
         self.mule_numbers = mule_numbers
 
     def __str__(self):
-        return '%s:%s' % (self.name, ','.join(map(str, self.mule_numbers)))
+        return f"{self.name}:{','.join(map(str, self.mule_numbers))}"
 
 
 class Workers(OptionsGroup):
@@ -167,7 +167,7 @@ class Workers(OptionsGroup):
         self._set('offload-threads', count_offload)
 
         if count:
-            self._section.print_out('Threads per worker: %s' % count)
+            self._section.print_out(f'Threads per worker: {count}')
 
         self._set('threads-stacksize', stack_size)
 
@@ -384,7 +384,7 @@ class Workers(OptionsGroup):
 
         """
         if clients_socket_pool:
-            self._set('zergpool', '%s:%s' % (socket, ','.join(listify(clients_socket_pool))), multi=True)
+            self._set('zergpool', f"{socket}:{','.join(listify(clients_socket_pool))}", multi=True)
 
         else:
             self._set('zerg-server', socket)

@@ -236,7 +236,7 @@ class Section(OptionsGroup):
 
         if not dir_ and default:
             uid = self.main_process.get_owner()[0]
-            dir_ = '/run/user/%s/' % uid if uid else '/run/'
+            dir_ = f'/run/user/{uid}/' if uid else '/run/'
 
         return dir_
 
@@ -279,7 +279,11 @@ class Section(OptionsGroup):
 
         print_out = partial(self.print_out, format_options='red')
         print_out('This configuration was automatically generated using')
-        print_out('uwsgiconf v%s on %s' % ('.'.join(map(str, VERSION)), datetime.now().isoformat(' ')))
+        print_out(
+            'uwsgiconf v%s on %s' % (
+                '.'.join(map(str, VERSION)),
+                datetime.now().isoformat(' ')
+            ))
 
         return self
 
@@ -387,7 +391,7 @@ class Section(OptionsGroup):
         :param str|unicode value:
 
         """
-        self._set('set-placeholder', '%s=%s' % (key, value), multi=True)
+        self._set('set-placeholder', f'{key}={value}', multi=True)
 
         return self
 
@@ -411,7 +415,11 @@ class Section(OptionsGroup):
             if value is None:
                 value = os.environ.get(key)
 
-            self._set('%senv' % ('i' if asap else ''), '%s=%s' % (key, value), multi=True)
+            self._set(
+                f"{'i' if asap else ''}env",
+                f'{key}={value}',
+                multi=True
+            )
 
         return self
 
@@ -480,7 +488,7 @@ class Section(OptionsGroup):
         FORMAT_ESCAPE = '%['
         """ANSI escape \\033. useful for printing colors"""
 
-        FORMAT_END = '%s[0m' % FORMAT_ESCAPE
+        FORMAT_END = f'{FORMAT_ESCAPE}[0m'
 
         CONF_CURRENT_SECTION = '%x'
         """The current section identifier, eg. conf.ini:section."""
@@ -632,7 +640,7 @@ class Configuration(object):
 
             name = section.name
             if name in names:
-                raise ConfigurationError('`%s` section name must be unique' % name)
+                raise ConfigurationError(f'`{name}` section name must be unique')
 
             names.append(name)
 
@@ -674,14 +682,14 @@ class Configuration(object):
 
         """
         if filepath is None:
-            with NamedTemporaryFile(prefix='%s_' % self.alias, suffix='.ini', delete=False) as f:
+            with NamedTemporaryFile(prefix=f'{self.alias}_', suffix='.ini', delete=False) as f:
                 filepath = f.name
 
         else:
             filepath = os.path.abspath(filepath)
 
             if os.path.isdir(filepath):
-                filepath = os.path.join(filepath, '%s.ini' % self.alias)
+                filepath = os.path.join(filepath, f'{self.alias}.ini')
 
         with open(filepath, 'w') as target_file:
             target_file.write(self.format())
@@ -743,8 +751,8 @@ def configure_uwsgi(configurator_func):
 
         if alias in registry:
             raise ConfigurationError(
-                "Configuration alias '%s' clashes with another configuration. "
-                "Please change the alias." % alias)
+                f"Configuration alias '{alias}' clashes with another configuration. "
+                "Please change the alias.")
 
         registry[alias] = conf_candidate
 

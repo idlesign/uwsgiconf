@@ -119,7 +119,7 @@ class Statics(OptionsGroup):
 
             command += '2'
 
-        self._set(command, '%s=%s' % (mountpoint, target), multi=True)
+        self._set(command, f'{mountpoint}={target}', multi=True)
 
         if safe_target:
             self._set('static-safe', target, multi=True)
@@ -147,7 +147,7 @@ class Statics(OptionsGroup):
 
         if criterion != self.expiration_criteria.FILENAME:
 
-            command += '-%s' % criterion
+            command += f'-{criterion}'
 
         if criterion == self.expiration_criteria.MIME_TYPE:
 
@@ -158,7 +158,7 @@ class Statics(OptionsGroup):
             command += '-mtime'
 
         for value in listify(value):
-            self._set(command, '%s%s%s' % (value, separator, timeout), multi=True)
+            self._set(command, f'{value}{separator}{timeout}', multi=True)
 
         return self._section
 

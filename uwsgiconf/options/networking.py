@@ -74,7 +74,7 @@ class Networking(OptionsGroup):
 
             except TypeError as e:
                 raise ConfigurationError(
-                    'Unable to configure %s using `%s` DSN: %s' % (socket.__name__, dsn, e))
+                    f'Unable to configure {socket.__name__} using `{dsn}` DSN: {e}')
 
             return socket
 
@@ -174,7 +174,7 @@ class Networking(OptionsGroup):
         return self._section
 
     def _get_shared_socket_idx(self, shared):
-        return '=%s' % self._sockets.index(shared)
+        return f'={self._sockets.index(shared)}'
 
     def register_socket(self, socket):
         """Registers the given socket(s) for further use.
@@ -207,7 +207,7 @@ class Networking(OptionsGroup):
 
             if bound_workers:
                 self._set(
-                    'map-socket', '%s:%s' % (len(sockets), ','.join(map(str, bound_workers))),
+                    'map-socket', f"{len(sockets)}:{','.join(map(str, bound_workers))}",
                     multi=True)
 
             if not uses_shared:
@@ -296,7 +296,7 @@ class Networking(OptionsGroup):
 
         args = [item for item in (cert, key, ciphers, client_ca) if item is not None]
 
-        self._set(command, '%s %s' % (name, ','.join(args)))
+        self._set(command, f"{name} {','.join(args)}")
 
         return self._section
 

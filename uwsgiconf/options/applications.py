@@ -63,7 +63,7 @@ class Applications(OptionsGroup):
 
         """
         # todo check worker mount -- uwsgi_init_worker_mount_app() expects worker://
-        self._set('worker-mount' if into_worker else 'mount', '%s=%s' % (mountpoint, app), multi=True)
+        self._set('worker-mount' if into_worker else 'mount', f'{mountpoint}={app}', multi=True)
 
         return self._section
 
