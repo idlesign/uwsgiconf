@@ -56,6 +56,17 @@ def test_get_bundled_static_path(assert_lines):
 
 
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
+def test_configure_https_redirect(assert_lines):
+
+    section = Section()
+    section.configure_https_redirect()
+    assert_lines(
+        'route-if-not = eq:${HTTPS};on redirect-301:https://${HTTP_HOST}${REQUEST_URI}',
+        section
+    )
+
+
+@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_maintenance_mode(assert_lines):
 
     section = Section()

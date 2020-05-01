@@ -181,6 +181,18 @@ class Section(_Section):
 
         return self
 
+    def configure_https_redirect(self):
+        """Enables HTTP to HTTPS redirect."""
+        rule = self.routing.route_rule
+
+        self.routing.register_route([
+            rule(
+                rule.actions.redirect('https://${HTTP_HOST}${REQUEST_URI}', permanent=True),
+                rule.subjects.custom('${HTTPS}', negate=True).eq('on')
+            ),
+        ])
+        return self
+
     def configure_certbot_https(self, domain, webroot, address=None, allow_shared_sockets=None):
         """Enables HTTPS using certificates from Certbot https://certbot.eff.org.
 

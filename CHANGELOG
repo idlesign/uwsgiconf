@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Nice preset. Added .configure_https_redirect() shortcut.
 * Fixed 'tests' packaging.
 
 
