@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from datetime import datetime, timedelta
 
 from django.template.defaultfilters import filesizeformat
@@ -41,35 +40,35 @@ class SummaryAdmin(OnePageAdmin):
         rss, vsz = uwsgi.memory
         config = uwsgi.config
 
-        info_basic = OrderedDict([
-            (_('Version'), uwsgi.get_version()),
-            (_('Hostname'), uwsgi.hostname),
-            (_('Serving since'), time_started),
-            (_('Serving for'), datetime.now() - time_started),
-            (_('Clock'), uwsgi.clock),
-            (_('Master PID'), uwsgi.master_pid),
-            (_('Memory (RSS, VSZ)'), '\n'.join((filesizeformat(rss), filesizeformat(vsz)))),
-            (_('Buffer size'), uwsgi.buffer_size),
-            (_('Cores'), uwsgi.cores_count),
-            (_('Workers'), uwsgi.workers_count),
-            (_('Mules'), config.get('mules', 0)),
-            (_('Farms'), '\n'.join(map(str, Farm.get_farms()))),
-            (_('Threads support'), '+' if uwsgi.threads_enabled else '-'),
-            (_('Current worker'), uwsgi.worker_id),
-            (_('Requests by worker'), uwsgi.request.id),
-            (_('Requests total'), uwsgi.request.total_count),
-            (_('Socket queue size'), uwsgi.get_listen_queue()),
-            (_('Log size'), get_current_log_size()),
-            (_('RPC'), '\n'.join(get_rpc_list())),
-            (_('Post fork hooks'), '\n'.join(map(get_func_name, uwsgi.postfork_hooks.funcs))),
-            (_('Signals'), '\n'.join(get_signals_info(registry_signals))),
-            (_('Spoolers'), '\n'.join(map(str, Spooler.get_spoolers()))),
-        ])
+        info_basic = {
+            _('Version'): uwsgi.get_version(),
+            _('Hostname'): uwsgi.hostname,
+            _('Serving since'): time_started,
+            _('Serving for'): datetime.now() - time_started,
+            _('Clock'): uwsgi.clock,
+            _('Master PID'): uwsgi.master_pid,
+            _('Memory (RSS, VSZ)'): '\n'.join((filesizeformat(rss), filesizeformat(vsz))),
+            _('Buffer size'): uwsgi.buffer_size,
+            _('Cores'): uwsgi.cores_count,
+            _('Workers'): uwsgi.workers_count,
+            _('Mules'): config.get('mules', 0),
+            _('Farms'): '\n'.join(map(str, Farm.get_farms())),
+            _('Threads support'): '+' if uwsgi.threads_enabled else '-',
+            _('Current worker'): uwsgi.worker_id,
+            _('Requests by worker'): uwsgi.request.id,
+            _('Requests total'): uwsgi.request.total_count,
+            _('Socket queue size'): uwsgi.get_listen_queue(),
+            _('Log size'): get_current_log_size(),
+            _('RPC'): '\n'.join(get_rpc_list()),
+            _('Post fork hooks'): '\n'.join(map(get_func_name, uwsgi.postfork_hooks.funcs)),
+            _('Signals'): '\n'.join(get_signals_info(registry_signals)),
+            _('Spoolers'): '\n'.join(map(str, Spooler.get_spoolers())),
+        }
 
         context.update({
             'panels': {
                 '': {
-                    'rows': OrderedDict(((key, [val]) for key, val in info_basic.items())),
+                    'rows': dict((key, [val]) for key, val in info_basic.items()),
                 }
             },
         })
@@ -82,7 +81,7 @@ class ConfigurationAdmin(OnePageAdmin):
 
         context.update({
             'panels': {
-                '': {'rows': OrderedDict(((key, [val]) for key, val in uwsgi.config.items()))},
+                '': {'rows': dict((key, [val]) for key, val in uwsgi.config.items())},
             },
         })
 
@@ -94,46 +93,41 @@ class WorkersAdmin(OnePageAdmin):
 
         fromts = datetime.fromtimestamp
 
-        info_worker_map = OrderedDict([
-            ('id', (_('ID'), None)),
-            ('pid', (_('PID'), None)),
-            ('status', (_('Status'), None)),
+        info_worker_map = {
+            'id': (_('ID'), None),
+            'pid': (_('PID'), None),
+            'status': (_('Status'), None),
+            'running_time': (_('Running for'), lambda val: timedelta(microseconds=val)),
+            'last_spawn': (_('Spawned at'), lambda val: fromts(val)),
+            'respawn_count': (_('Respawns'), None),
+            'requests': (_('Requests'), None),
+            'delta_requests': (_('Delta requests'), None),  # Used alongside with MAX_REQUESTS
+            'exceptions': (_('Exceptions'), None),
+            'signals': (_('Signals'), None),
+            'rss': (_('RSS'), lambda val: filesizeformat(val)),
+            'vsz': (_('VSZ'), lambda val: filesizeformat(val)),
+            'tx': (_('Transmitted'), lambda val: filesizeformat(val)),
+            'avg_rt': (_('Avg. response'), lambda val: timedelta(microseconds=val)),
+            'apps': (None, lambda val: iter_items(val, info_app_map)),
+        }
 
-            ('running_time', (_('Running for'), lambda val: timedelta(microseconds=val))),
-            ('last_spawn', (_('Spawned at'), lambda val: fromts(val))),
+        info_app_map = {
+            'id': (_('ID'), None),
+            'startup_time': (_('Serving since'), None),
+            'interpreter': (_('Interpreter'), None),
+            'modifier1': (_('Modifier 1'), None),
+            'mountpoint': (_('Mountpoint'), None),
+            'callable': (_('Callable'), None),
+            'chdir': (_('Directory'), None),
+            'requests': (_('Requests'), None),
+            'exceptions': (_('Exceptions'), None),
+        }
 
-            ('respawn_count', (_('Respawns'), None)),
-            ('requests', (_('Requests'), None)),
-            ('delta_requests', (_('Delta requests'), None)),  # Used alongside with MAX_REQUESTS
-            ('exceptions', (_('Exceptions'), None)),
-            ('signals', (_('Signals'), None)),
-
-            ('rss', (_('RSS'), lambda val: filesizeformat(val))),
-            ('vsz', (_('VSZ'), lambda val: filesizeformat(val))),
-
-            ('tx', (_('Transmitted'), lambda val: filesizeformat(val))),
-            ('avg_rt', (_('Avg. response'), lambda val: timedelta(microseconds=val))),
-
-            ('apps', (None, lambda val: iter_items(val, info_app_map))),
-        ])
-
-        info_app_map = OrderedDict([
-            ('id', (_('ID'), None)),
-            ('startup_time', (_('Serving since'), None)),
-            ('interpreter', (_('Interpreter'), None)),
-            ('modifier1', (_('Modifier 1'), None)),
-            ('mountpoint', (_('Mountpoint'), None)),
-            ('callable', (_('Callable'), None)),
-            ('chdir', (_('Directory'), None)),
-            ('requests', (_('Requests'), None)),
-            ('exceptions', (_('Exceptions'), None)),
-        ])
-
-        panels = OrderedDict()
-        info_workers = OrderedDict()
+        panels = {}
+        info_workers = {}
         panels[''] = {'rows': info_workers}
 
-        info_apps = OrderedDict()
+        info_apps = {}
 
         def iter_items(info, mapping):
 
@@ -157,7 +151,7 @@ class WorkersAdmin(OnePageAdmin):
                 # Get info about applications served by worker,
                 for idx_app, keyname_app, name_app, value_app in value_worker:
                     app_key = f'%s {idx_worker + 1}. %s {idx_app}' % (_('Worker'), _('Application'))
-                    info_apps.setdefault(app_key, OrderedDict())[name_app] = [value_app]
+                    info_apps.setdefault(app_key, {})[name_app] = [value_app]
 
             else:
                 info_workers.setdefault(name_worker, []).append(value_worker)

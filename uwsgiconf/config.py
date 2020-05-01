@@ -1,6 +1,5 @@
 import os
 import sys
-from collections import OrderedDict
 from copy import deepcopy
 from datetime import datetime
 from functools import partial
@@ -166,8 +165,8 @@ class Section(OptionsGroup):
         self._plugins = embedded_plugins or []
 
         self._section = self
-        self._options_objects = OrderedDict()
-        self._opts = OrderedDict()
+        self._options_objects = {}
+        self._opts = {}
 
         self.name = name or 'uwsgi'
         self._runtime_dir = runtime_dir or ''
@@ -563,7 +562,7 @@ class Section(OptionsGroup):
 
             descriptions = sorted(descriptions.items(), key=lambda item: item[0].lower())
 
-            return OrderedDict(descriptions)
+            return dict(descriptions)
 
     @classmethod
     def bootstrap(cls, dsn, allow_shared_sockets=None, **init_kwargs):
@@ -735,7 +734,7 @@ def configure_uwsgi(configurator_func):
         return None
 
     configurations = configurator_func()
-    registry = OrderedDict()
+    registry = {}
 
     if not isinstance(configurations, (list, tuple)):
         configurations = [configurations]

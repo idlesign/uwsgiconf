@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from .utils import listify
 
 
@@ -229,7 +228,7 @@ class OptionsGroup(object):
                     opts[key] = value
 
     def _make_section_like(self):
-        self._section = type('SectionLike', (object,), {'_opts': OrderedDict()})
+        self._section = type('SectionLike', (object,), {'_opts': {}})
 
     def _contribute_to_opts(self, target):
         target_section = target._section
@@ -256,7 +255,7 @@ class ParametrizedValue(OptionsGroup):
 
     def __init__(self, *args):
         self.args = list(args)
-        self._opts = OrderedDict()
+        self._opts = {}
         super(ParametrizedValue, self).__init__(_section=self)
 
     def __str__(self):
