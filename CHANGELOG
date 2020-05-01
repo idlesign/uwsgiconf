@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+! Dropped support for Py 2.7 and 3.5.
 + Nice preset. Added .configure_https_redirect() shortcut.
 * Fixed 'tests' packaging.
 

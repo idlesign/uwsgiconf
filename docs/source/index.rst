@@ -41,7 +41,7 @@ Requirements
    :target: https://idlesign.github.io/lbc/
    :alt: LBC Python 2
 
-1. Python 2.7+, 3.5+
+1. Python 3.6+
 2. ``click`` package (optional, for CLI)
 3. uWSGI (``uwsgi`` or ``pyuwsgi``)
 
