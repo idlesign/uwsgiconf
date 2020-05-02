@@ -582,7 +582,7 @@ class Section(OptionsGroup):
             cls,
             dsn: StrList,
             allow_shared_sockets: bool = None,
-            **init_kwargs: Dict[str, Any]
+            **init_kwargs: Any
     ) -> 'Section':
         """Constructs a section object performing it's basic (default) configuration.
 

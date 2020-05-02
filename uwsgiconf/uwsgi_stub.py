@@ -208,6 +208,9 @@ def add_var(name: str, value: str) -> bool:
 def alarm(name: str, message: str):
     """Issues the given alarm with the given message.
 
+    .. note:: to register an alarm use
+        ``section.alarms.register_alarm(section.alarms.alarm_types.log('myalarm'))``
+
     :param name:
 
     :param message: Message to pass to alarm.
@@ -216,7 +219,7 @@ def alarm(name: str, message: str):
 
 
 def async_connect(socket: str) -> int:
-    """Issues socket connection. And returns a file descriptor.
+    """Issues socket connection. And returns a file descriptor or -1.
 
     * http://uwsgi.readthedocs.io/en/latest/Async.html
 
@@ -225,7 +228,7 @@ def async_connect(socket: str) -> int:
     """
 
 
-def async_sleep(seconds: int):
+def async_sleep(seconds: int) -> bytes:
     """Suspends handling the current request and passes control to the next async core.
 
     * http://uwsgi.readthedocs.io/en/latest/Async.html
@@ -855,7 +858,7 @@ def route(name: str, args_str: str) -> int:
     """
 
 
-def rpc(address: str, func_name: bytes, *args: bytes) -> bytes:
+def rpc(address: Optional[bytes], func_name: bytes, *args: bytes) -> bytes:
     """Performs an RPC function call with the given arguments.
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
@@ -871,7 +874,7 @@ def rpc(address: str, func_name: bytes, *args: bytes) -> bytes:
     """
 
 
-def rpc_list() -> Tuple[str, ...]:
+def rpc_list() -> Tuple[bytes, ...]:
     """Returns registered RPC functions names."""
     return tuple()
 
@@ -1102,7 +1105,7 @@ def wait_fd_read(fd: int, timeout: int = None) -> bytes:
 
     :param timeout: Timeout. Default:  infinite.
 
-    :raises IOError: If unable to read.
+    :raises OSError: If unable to read.
 
     """
 
@@ -1119,7 +1122,7 @@ def wait_fd_write(fd: int, timeout: int = None) -> bytes:
 
     :param timeout: Timeout. Default:  infinite.
 
-    :raises IOError: If unable to read.
+    :raises OSError: If unable to read.
 
     """
 
