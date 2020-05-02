@@ -11,13 +11,14 @@ __offloaded_functions: Dict[str, Callable] = {}
 TypeMuleFarm = Union[int, str, 'Mule', 'Farm']
 
 
-def _get_farms() -> dict:
-    return decode_deep(listify(uwsgi.opt.get('farm', [])))
+def _get_farms() -> List[str]:
+    return decode_deep(listify(uwsgi.opt.get(b'farm', [])))
 
 
-def _mule_messages_hook(message):
+def _mule_messages_hook(message: bytes):
     # Processes mule messages, tries to decode it.
     try:
+        print(Mule.get_current_id())
         loaded = pickle.loads(message)
 
     except pickle.UnpicklingError:
@@ -36,7 +37,8 @@ uwsgi.mule_msg_hook = _mule_messages_hook
 def __offload(func_name: str, mule_or_farm: TypeMuleFarm, *args, **kwargs) -> bool:
     # Sends a message to a mule/farm, instructing it
     # to run a function using given arguments,
-    return Mule(mule_or_farm).send(pickle.dumps(
+    target = Mule if isinstance(mule_or_farm, int) else Farm
+    return target(mule_or_farm).send(pickle.dumps(
         (
             'ucfg_off',
             func_name,
@@ -49,33 +51,40 @@ def __offload(func_name: str, mule_or_farm: TypeMuleFarm, *args, **kwargs) -> bo
 def mule_offload(mule_or_farm: TypeMuleFarm = None) -> Callable:
     """Decorator. Use to offload function execution to a mule or a farm.
 
-    :param mule_or_farm:
+    :param mule_or_farm: If not set, offloads to a first mule.
 
     """
     if isinstance(mule_or_farm, Mule):
-        mule_or_farm = mule_or_farm.id
+        target = mule_or_farm.id
 
     elif isinstance(mule_or_farm, Farm):
-        mule_or_farm = mule_or_farm.name
+        target = mule_or_farm.name
 
-    mule_or_farm = mule_or_farm or 0
+    else:
+        target = mule_or_farm
+
+    target = target or 1
 
     def mule_offload_(func):
         func_name = func.__name__
         __offloaded_functions[func_name] = func
-        return partial(__offload, func_name, mule_or_farm)
+        return partial(__offload, func_name, target)
         
     return mule_offload_
 
 
 class Mule:
-    """Represents uWSGI Mule."""
+    """Represents uWSGI Mule.
 
+    .. note:: Register mules before using this. E.g.:
+        ``section.workers.set_mules_params(mules=3)``
+
+    """
     __slots__ = ['id']
 
     def __init__(self, id: int):
         """
-        :param id: Mule ID
+        :param id: Mule ID. Enumeration starts with 1.
 
         """
         self.id = id
@@ -138,7 +147,7 @@ class Mule:
         """
         return decode(uwsgi.mule_get_msg(signals, farms, buffer_size, timeout))
 
-    def send(self, message: str) -> bool:
+    def send(self, message: Union[str, bytes]) -> bool:
         """Sends a message to a mule(s)/farm.
 
         :param message:
@@ -150,8 +159,12 @@ class Mule:
 
 
 class Farm:
-    """Represents uWSGI Mule Farm."""
+    """Represents uWSGI Mule Farm.
 
+    .. note:: Register farms before using this. E.g.:
+        ``section.workers.set_mules_params(farms=section.workers.mule_farm('myfarm', 2))``
+
+    """
     __slots__ = ['name', 'mules']
 
     def __init__(self, name: str, mules: List[int] = None):
@@ -201,7 +214,7 @@ class Farm:
 
     @property
     def is_mine(self) -> bool:
-        """Returns flag indicating whether current mule belongs to this farm."""
+        """Returns flag indicating whether the current mule belongs to this farm."""
         return uwsgi.in_farm(self.name)
 
     @classmethod
@@ -215,7 +228,7 @@ class Farm:
          """
         return decode(uwsgi.farm_get_msg())
 
-    def send(self, message: str):
+    def send(self, message: Union[str, bytes]):
         """Sends a message to the given farm.
 
         :param message:

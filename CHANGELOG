@@ -11,6 +11,7 @@ Unreleased
 * Fixed 'tests' packaging.
 * Runtime .caching improved.
 * Runtime .logging improved.
+* Runtime .mules improved.
 * Runtime .rpc improved.
 
 
