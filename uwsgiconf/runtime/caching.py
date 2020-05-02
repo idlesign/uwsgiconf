@@ -1,7 +1,7 @@
 from typing import List, Any, Callable, Union
 
 from .. import uwsgi
-from ..utils import decode
+from ..utils import decode, decode_deep
 
 
 class Cache:
@@ -10,10 +10,12 @@ class Cache:
     .. warning:: To use this helper one needs
         to configure cache(s) in uWSGI config beforehand.
 
+        E.g.: ``section.caching.add_cache('mycache', 100)``
+
     """
     __slots__ = ['name', 'timeout']
 
-    def __init__(self, name: str = None, timeout: int = None):
+    def __init__(self, name: str, timeout: int = None):
         """
         :param name: Cache name with optional address (if @-syntax is used).
 
@@ -41,7 +43,7 @@ class Cache:
         :raises ValueError: If cache is unavailable.
 
         """
-        return uwsgi.cache_keys(self.name)
+        return decode_deep(uwsgi.cache_keys(self.name))
 
     def clear(self):
         """Clears cache the cache."""
@@ -82,12 +84,13 @@ class Cache:
 
     __getitem__ = get
 
-    def set(self, key: str, value: str, timeout: int = None) -> bool:
+    def set(self, key: str, value: Any, timeout: int = None) -> bool:
         """Sets the specified key value.
 
         :param key:
 
         :param value:
+            .. note:: This value will be casted to string as uWSGI cache works with strings.
 
         :param timeout: 0 to not to expire. Object default is used if not set.
 
@@ -95,7 +98,7 @@ class Cache:
         if timeout is None:
             timeout = self.timeout
 
-        return uwsgi.cache_set(key, value, timeout, self.name)
+        return uwsgi.cache_set(key, str(value), timeout, self.name)
 
     __setitem__ = set
 

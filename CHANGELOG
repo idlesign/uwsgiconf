@@ -9,6 +9,7 @@ Unreleased
 ! Removed deprecated runtime.environ module.
 + Nice preset. Added .configure_https_redirect() shortcut.
 * Fixed 'tests' packaging.
+* Runtime .caching improved.
 
 
 v0.20.1 [2020-01-18]
