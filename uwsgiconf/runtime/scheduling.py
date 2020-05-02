@@ -5,10 +5,10 @@ from typing import Union, Callable
 from .signals import _automate_signal, Signal
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
+from ..typehints import Strint
 
-TypeTarget = Union[int, str, Signal]
+TypeTarget = Union[Strint, Signal]
 TypeRegResult = Union[Callable, bool]
-Strint = Union[int, str]
 
 
 def register_timer(period: int, target: TypeTarget = None) -> TypeRegResult:

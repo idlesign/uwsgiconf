@@ -1,16 +1,19 @@
-from .workers_cheapening import *
+from typing import Union, List
+
+from .workers_cheapening import *  # noqa
 from ..base import OptionsGroup
+from ..typehints import Strlist
 from ..utils import listify
 
 
 class MuleFarm:
     """Represents a mule farm."""
 
-    def __init__(self, name, mule_numbers):
+    def __init__(self, name: str, mule_numbers: Union[int, List[int]]):
         """
-        :param str name: Farm alias.
+        :param name: Farm alias.
 
-        :param int|list[int] mule_numbers: Total mules on farm count,
+        :param mule_numbers: Total mules on farm count,
             or a list of mule numbers.
 
         """
@@ -28,11 +31,18 @@ class Workers(OptionsGroup):
     mule_farm = MuleFarm
 
     def set_basic_params(
-            self, count=None, touch_reload=None, touch_chain_reload=None, zombie_reaper=None,
-            limit_addr_space=None, limit_count=None, cpu_affinity=None):
+            self,
+            count: int = None,
+            touch_reload: Strlist = None,
+            touch_chain_reload: Strlist = None,
+            zombie_reaper: bool = None,
+            limit_addr_space: int = None,
+            limit_count: int = None,
+            cpu_affinity: int = None
+    ):
         """
 
-        :param int count: Spawn the specified number of workers (processes).
+        :param count: Spawn the specified number of workers (processes).
             Set the number of workers for preforking mode.
             This is the base for easy and safe concurrency in your app.
             More workers you add, more concurrent requests you can manage.
@@ -44,32 +54,32 @@ class Workers(OptionsGroup):
             Setting ``workers`` to a ridiculously high number will **not**
             magically make your application web scale - quite the contrary.
 
-        :param str|list touch_reload: Trigger reload of (and only) workers
+        :param touch_reload: Trigger reload of (and only) workers
             if the specified file is modified/touched.
 
-        :param str|list touch_chain_reload: Trigger chain workers reload on file touch.
+        :param touch_chain_reload: Trigger chain workers reload on file touch.
             When in lazy/lazy_apps mode, you can simply destroy a worker to force it to reload the application code.
             A new reloading system named "chain reload", allows you to reload one worker at time
             (opposed to the standard way where all of the workers are destroyed in bulk)
 
             * http://uwsgi-docs.readthedocs.io/en/latest/articles/TheArtOfGracefulReloading.html#chain-reloading-lazy-apps
 
-        :param bool zombie_reaper: Call waitpid(-1,...) after each request to get rid of zombies.
+        :param zombie_reaper: Call waitpid(-1,...) after each request to get rid of zombies.
             Enables reaper mode. After each request the server will call ``waitpid(-1)``
             to get rid of zombie processes.
             If you spawn subprocesses in your app and you happen to end up with zombie processes
             all over the place you can enable this option. (It really would be better
             if you could fix your application's process spawning usage though.)
 
-        :param int limit_addr_space: Limit process address space (vsz) (in megabytes)
+        :param limit_addr_space: Limit process address space (vsz) (in megabytes)
             Limits the address space usage of each uWSGI (worker) process using POSIX/UNIX ``setrlimit()``.
             For example, ``limit-as 256`` will disallow uWSGI processes to grow over 256MB of address space.
             Address space is the virtual memory a process has access to. It does *not* correspond to physical memory.
             Read and understand this page before enabling this option: http://en.wikipedia.org/wiki/Virtual_memory
 
-        :param int limit_count: Limit the number of spawnable processes.
+        :param limit_count: Limit the number of spawnable processes.
 
-        :param int cpu_affinity: number of cores for each worker (Linux only)
+        :param cpu_affinity: number of cores for each worker (Linux only)
             Set the number of cores (CPUs) to allocate to each worker process.
 
             * 4 workers, 4 CPUs, affinity is 1,
@@ -103,24 +113,25 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def run_command_as_worker(self, command, after_post_fork_hook=False):
+    def run_command_as_worker(self, command: str, after_post_fork_hook: bool = False):
         """Run the specified command as worker.
 
-        :param str command:
+        :param command:
 
-        :param bool after_post_fork_hook: Whether to run it after `post_fork` hook.
+        :param after_post_fork_hook: Whether to run it after `post_fork` hook.
 
         """
         self._set('worker-exec2' if after_post_fork_hook else 'worker-exec', command, multi=True)
 
         return self._section
 
-    def set_count_auto(self, count=None):
+    def set_count_auto(self, count: int = None):
         """Sets workers count.
 
         By default sets it to detected number of available cores
 
-        :param int count:
+        :param count:
+
         """
         count = count or self._section.vars.CPU_CORES
 
@@ -129,23 +140,29 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_thread_params(
-            self, enable=None, count=None, count_offload=None, stack_size=None, no_wait=None):
+            self,
+            enable: bool = None,
+            count: int = None,
+            count_offload: int = None,
+            stack_size: int = None,
+            no_wait: bool = None
+    ):
         """Sets threads related params.
 
-        :param bool enable: Enable threads in the embedded languages.
+        :param enable: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
 
             .. warning:: Threads will simply *not work* if this option is not enabled.
                 There will likely be no error, just no execution of your thread code.
 
-        :param int count: Run each worker in prethreaded mode with the specified number
+        :param count: Run each worker in prethreaded mode with the specified number
             of threads per worker.
 
             .. warning:: Do not use with ``gevent``.
 
             .. note:: Enables threads automatically.
 
-        :param int count_offload: Set the number of threads (per-worker) to spawn
+        :param count_offload: Set the number of threads (per-worker) to spawn
             for offloading. Default: 0.
 
             These threads run such tasks in a non-blocking/evented way allowing
@@ -156,9 +173,9 @@ class Workers(OptionsGroup):
 
             * http://uwsgi-docs.readthedocs.io/en/latest/OffloadSubsystem.html
 
-        :param int stack_size: Set threads stacksize.
+        :param stack_size: Set threads stacksize.
 
-        :param bool no_wait: Do not wait for threads cancellation on quit/reload.
+        :param no_wait: Do not wait for threads cancellation on quit/reload.
 
         """
         self._set('enable-threads', enable, cast=bool)
@@ -174,8 +191,15 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_mules_params(
-            self, mules=None, touch_reload=None, harakiri_timeout=None, farms=None, reload_mercy=None,
-            msg_buffer=None, msg_buffer_recv=None):
+            self,
+            mules: Union[int, List[int]] = None,
+            touch_reload: Strlist = None,
+            harakiri_timeout: int = None,
+            farms: List[MuleFarm] = None,
+            reload_mercy: int = None,
+            msg_buffer: int = None,
+            msg_buffer_recv: int = None
+    ):
         """Sets mules related params.
 
         http://uwsgi.readthedocs.io/en/latest/Mules.html
@@ -183,25 +207,25 @@ class Workers(OptionsGroup):
         Mules are worker processes living in the uWSGI stack but not reachable via socket connections,
         that can be used as a generic subsystem to offload tasks.
 
-        :param int|list mules: Add the specified mules or number of mules.
+        :param mules: Add the specified mules or number of mules.
 
-        :param str|list touch_reload: Reload mules if the specified file is modified/touched.
+        :param touch_reload: Reload mules if the specified file is modified/touched.
 
-        :param int harakiri_timeout: Set harakiri timeout for mule tasks.
+        :param harakiri_timeout: Set harakiri timeout for mule tasks.
 
-        :param list[MuleFarm] farms: Mule farms list.
+        :param farms: Mule farms list.
 
             Examples:
                 * cls_mule_farm('first', 2)
                 * cls_mule_farm('first', [4, 5])
 
-        :param int reload_mercy: Set the maximum time (in seconds) a mule can take
+        :param reload_mercy: Set the maximum time (in seconds) a mule can take
             to reload/shutdown. Default: 60.
 
-        :param int msg_buffer: Set mule message buffer size (bytes) given
+        :param msg_buffer: Set mule message buffer size (bytes) given
             for mule message queue.
 
-        :param int msg_buffer: Set mule message recv buffer size (bytes).
+        :param msg_buffer: Set mule message recv buffer size (bytes).
 
         """
         farms = farms or []
@@ -241,21 +265,30 @@ class Workers(OptionsGroup):
         return self._section
 
     def set_reload_params(
-            self, min_lifetime=None, max_lifetime=None,
-            max_requests=None, max_requests_delta=None,
-            max_addr_space=None, max_rss=None, max_uss=None, max_pss=None,
-            max_addr_space_forced=None, max_rss_forced=None, watch_interval_forced=None,
-            mercy=None):
+            self,
+            min_lifetime: int = None,
+            max_lifetime: int = None,
+            max_requests: int = None,
+            max_requests_delta: int = None,
+            max_addr_space: int = None,
+            max_rss: int = None,
+            max_uss: int = None,
+            max_pss: int = None,
+            max_addr_space_forced: int = None,
+            max_rss_forced: int = None,
+            watch_interval_forced: int = None,
+            mercy: int = None
+    ):
         """Sets workers reload parameters.
 
-        :param int min_lifetime: A worker cannot be destroyed/reloaded unless it has been alive
+        :param min_lifetime: A worker cannot be destroyed/reloaded unless it has been alive
             for N seconds (default 60). This is an anti-fork-bomb measure.
             Since 1.9
 
-        :param int max_lifetime: Reload workers after this many seconds. Disabled by default.
+        :param max_lifetime: Reload workers after this many seconds. Disabled by default.
             Since 1.9
 
-        :param int max_requests: Reload workers after the specified amount of managed
+        :param max_requests: Reload workers after the specified amount of managed
             requests (avoid memory leaks).
             When a worker reaches this number of requests it will get recycled (killed and restarted).
             You can use this option to "dumb fight" memory leaks.
@@ -268,34 +301,34 @@ class Workers(OptionsGroup):
             Do not use with benchmarking as you'll get stalls
             such as `worker respawning too fast !!! i have to sleep a bit (2 seconds)...`
 
-        :param int max_requests_delta: Add (worker_id * delta) to the max_requests value of each worker.
+        :param max_requests_delta: Add (worker_id * delta) to the max_requests value of each worker.
 
-        :param int max_addr_space: Reload a worker if its address space usage is higher
+        :param max_addr_space: Reload a worker if its address space usage is higher
             than the specified value in megabytes.
 
-        :param int max_rss: Reload a worker if its physical unshared memory (resident set size) is higher
+        :param max_rss: Reload a worker if its physical unshared memory (resident set size) is higher
             than the specified value (in megabytes).
 
-        :param int max_uss: Reload a worker if Unique Set Size is higher
+        :param max_uss: Reload a worker if Unique Set Size is higher
             than the specified value in megabytes.
 
             .. note:: Linux only.
 
-        :param int max_pss: Reload a worker if Proportional Set Size is higher
+        :param max_pss: Reload a worker if Proportional Set Size is higher
             than the specified value in megabytes.
 
             .. note:: Linux only.
 
-        :param int max_addr_space_forced: Force the master to reload a worker if its address space is higher
+        :param max_addr_space_forced: Force the master to reload a worker if its address space is higher
             than specified megabytes (in megabytes).
 
-        :param int max_rss_forced: Force the master to reload a worker
+        :param max_rss_forced: Force the master to reload a worker
             if its resident set size memory is higher than specified in megabytes.
 
-        :param int watch_interval_forced: The memory collector [per-worker] thread memeory watch
+        :param watch_interval_forced: The memory collector [per-worker] thread memeory watch
             interval (seconds) used for forced reloads. Default: 3.
 
-        :param int mercy: Set the maximum time (in seconds) a worker can take
+        :param mercy: Set the maximum time (in seconds) a worker can take
             before reload/shutdown. Default: 60.
 
         """
@@ -318,16 +351,22 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_reload_on_exception_params(self, do_reload=None, etype=None, evalue=None, erepr=None):
+    def set_reload_on_exception_params(
+            self,
+            do_reload: bool = None,
+            etype: str = None,
+            evalue: str = None,
+            erepr: str = None
+    ):
         """Sets workers reload on exceptions parameters.
 
-        :param bool do_reload: Reload a worker when an exception is raised.
+        :param do_reload: Reload a worker when an exception is raised.
 
-        :param str etype: Reload a worker when a specific exception type is raised.
+        :param etype: Reload a worker when a specific exception type is raised.
 
-        :param str evalue: Reload a worker when a specific exception value is raised.
+        :param evalue: Reload a worker when a specific exception value is raised.
 
-        :param str erepr: Reload a worker when a specific exception type+value (language-specific) is raised.
+        :param erepr: Reload a worker when a specific exception type+value (language-specific) is raised.
 
         """
         self._set('reload-on-exception', do_reload, cast=bool)
@@ -337,20 +376,20 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_harakiri_params(self, timeout=None, verbose=None, disable_for_arh=None):
+    def set_harakiri_params(self, timeout: int = None, verbose: bool = None, disable_for_arh: bool = None):
         """Sets workers harakiri parameters.
 
-        :param int timeout: Harakiri timeout in seconds.
+        :param timeout: Harakiri timeout in seconds.
             Every request that will take longer than the seconds specified
             in the harakiri timeout will be dropped and the corresponding
             worker is thereafter recycled.
 
-        :param bool verbose: Harakiri verbose mode.
+        :param verbose: Harakiri verbose mode.
             When a request is killed by Harakiri you will get a message in the uWSGI log.
             Enabling this option will print additional info (for example,
             the current syscall will be reported on Linux platforms).
 
-        :param bool disable_for_arh: Disallow Harakiri killings during after-request hook methods.
+        :param disable_for_arh: Disallow Harakiri killings during after-request hook methods.
 
         """
         self._set('harakiri', timeout)
@@ -359,7 +398,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_zerg_server_params(self, socket, clients_socket_pool=None):
+    def set_zerg_server_params(self, socket: str, clients_socket_pool: Strlist = None):
         """Zerg mode. Zerg server params.
 
         When your site load is variable, it would be nice to be able to add
@@ -368,13 +407,13 @@ class Workers(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Zerg.html
 
-        :param str socket: Unix socket to bind server to.
+        :param socket: Unix socket to bind server to.
 
             Examples:
                 * unix socket - ``/var/run/mutalisk``
                 * Linux abstract namespace - ``@nydus``
 
-        :param str|list[str] clients_socket_pool: This enables Zerg Pools.
+        :param clients_socket_pool: This enables Zerg Pools.
 
             .. note:: Expects master process.
 
@@ -391,12 +430,12 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_zerg_client_params(self, server_sockets, use_fallback_socket=None):
+    def set_zerg_client_params(self, server_sockets: Strlist, use_fallback_socket: bool = None):
         """Zerg mode. Zergs params.
 
-        :param str|list[str] server_sockets: Attaches zerg to a zerg server.
+        :param server_sockets: Attaches zerg to a zerg server.
 
-        :param bool use_fallback_socket: Fallback to normal sockets if the zerg server is not available
+        :param use_fallback_socket: Fallback to normal sockets if the zerg server is not available
 
         """
         self._set('zerg', server_sockets, multi=True)

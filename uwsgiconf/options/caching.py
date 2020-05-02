@@ -1,4 +1,5 @@
 from ..base import OptionsGroup
+from ..typehints import Strlist
 from ..utils import KeyValue
 
 
@@ -15,17 +16,21 @@ class Caching(OptionsGroup):
     * http://uwsgi-docs.readthedocs.io/en/latest/tutorials/CachingCookbook.html
 
     """
-
-    def set_basic_params(self, no_expire=None, expire_scan_interval=None, report_freed=None):
+    def set_basic_params(
+            self,
+            no_expire: bool = None,
+            expire_scan_interval: int = None,
+            report_freed: bool = None
+    ):
         """
-        :param bool no_expire: Disable auto sweep of expired items.
+        :param no_expire: Disable auto sweep of expired items.
             Since uWSGI 1.2, cache item expiration is managed by a thread in the master process,
             to reduce the risk of deadlock. This thread can be disabled
             (making item expiry a no-op) with the this option.
 
-        :param int expire_scan_interval: Set the frequency (in seconds) of cache sweeper scans. Default: 3.
+        :param expire_scan_interval: Set the frequency (in seconds) of cache sweeper scans. Default: 3.
 
-        :param bool report_freed: Constantly report the cache item freed by the sweeper.
+        :param report_freed: Constantly report the cache item freed by the sweeper.
 
             .. warning:: Use only for debug.
 
@@ -36,17 +41,17 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_item(self, key, value, cache_name=None):
+    def add_item(self, key: str, value: str, cache_name: str = None):
         """Add an item into the given cache.
 
         This is a commodity option (mainly useful for testing) allowing you
         to store an item in a uWSGI cache during startup.
 
-        :param str key:
+        :param key:
 
         :param value:
 
-        :param str cache_name: If not set, default will be used.
+        :param cache_name: If not set, default will be used.
 
         """
         cache_name = cache_name or ''
@@ -56,16 +61,16 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_file(self, filepath, gzip=False, cache_name=None):
+    def add_file(self, filepath: str, gzip: bool = False, cache_name: bool = None):
         """Load a static file in the cache.
 
         .. note:: Items are stored with the filepath as is (relative or absolute) as the key.
 
-        :param str filepath:
+        :param filepath:
 
-        :param bool gzip: Use gzip compression.
+        :param gzip: Use gzip compression.
 
-        :param str cache_name: If not set, default will be used.
+        :param cache_name: If not set, default will be used.
 
         """
         command = 'load-file-in-cache'
@@ -81,10 +86,26 @@ class Caching(OptionsGroup):
         return self._section
 
     def add_cache(
-            self, name, max_items, no_expire=None, store=None, store_sync_interval=None, store_delete=None,
-            hash_algo=None, hash_size=None, key_size=None, udp_clients=None, udp_servers=None,
-            block_size=None, block_count=None, sync_from=None, mode_bitmap=None, use_lastmod=None,
-            full_silent=None, full_purge_lru=None):
+            self,
+            name: str,
+            max_items: int,
+            no_expire: bool = None,
+            store: str = None,
+            store_sync_interval: int = None,
+            store_delete: bool = None,
+            hash_algo: str = None,
+            hash_size: int = None,
+            key_size: int = None,
+            udp_clients: Strlist = None,
+            udp_servers: Strlist = None,
+            block_size: int = None,
+            block_count: int = None,
+            sync_from: Strlist = None,
+            mode_bitmap: bool = None,
+            use_lastmod: bool = None,
+            full_silent: bool = None,
+            full_purge_lru: bool = None
+    ):
         """Creates cache. Default mode: single block.
 
         .. note:: This uses new generation ``cache2`` option available since uWSGI 1.9.
@@ -94,73 +115,73 @@ class Caching(OptionsGroup):
             Its main purpose is deleting expired keys from the cache.
             If you want auto-expiring you need to enable the master.
 
-        :param str name: Set the name of the cache. Must be unique in an instance.
+        :param name: Set the name of the cache. Must be unique in an instance.
 
-        :param int max_items: Set the maximum number of cache items.
+        :param max_items: Set the maximum number of cache items.
 
             .. note:: Effective number of items is **max_items - 1** -
                 the first item of the cache is always internally used as "NULL/None/undef".
 
-        :param bool no_expire: If ``True`` cache items won't expire even if instructed
+        :param no_expire: If ``True`` cache items won't expire even if instructed
             to do so by cache set method.
 
-        :param str store: Set the filename for the persistent storage.
+        :param store: Set the filename for the persistent storage.
             If it doesn't exist, the system assumes an empty cache and the file will be created.
 
-        :param int store_sync_interval: Set the number of seconds after which msync() is called
+        :param store_sync_interval: Set the number of seconds after which msync() is called
             to flush memory cache on disk when in persistent mode.
             By default it is disabled leaving the decision-making to the kernel.
 
-        :param bool store_delete: uWSGI, by default, will not start if a cache file exists
+        :param store_delete: uWSGI, by default, will not start if a cache file exists
             and the store file does not match the configured items/blocksize.
             Setting this option will make uWSGI delete the existing file upon mismatch
             and create a new one.
 
-        :param str hash_algo: Set the hash algorithm used in the hash table. Current options are:
+        :param hash_algo: Set the hash algorithm used in the hash table. Current options are:
 
             * djb33x (default)
             * murmur2
 
-        :param int hash_size: This is the size of the hash table in bytes.
+        :param hash_size: This is the size of the hash table in bytes.
             Generally 65536 (the default) is a good value.
 
             .. note:: Change it only if you know what you are doing
                 or if you have a lot of collisions in your cache.
 
-        :param int key_size: Set the maximum size of a key, in bytes. Default: 2048.
+        :param key_size: Set the maximum size of a key, in bytes. Default: 2048.
 
-        :param str|list udp_clients: List of UDP servers which will receive UDP cache updates.
+        :param udp_clients: List of UDP servers which will receive UDP cache updates.
 
-        :param str |list udp_servers: List of UDP addresses on which to bind the cache
+        :param udp_servers: List of UDP addresses on which to bind the cache
             to wait for UDP updates.
 
-        :param int block_size: Set the size (in bytes) of a single block.
+        :param block_size: Set the size (in bytes) of a single block.
 
             .. note:: It's a good idea to use a multiple of 4096 (common memory page size).
 
-        :param int block_count: Set the number of blocks in the cache. Useful only in bitmap mode,
+        :param block_count: Set the number of blocks in the cache. Useful only in bitmap mode,
             otherwise the number of blocks is equal to the maximum number of items.
 
-        :param str|list sync_from: List of uWSGI addresses which the cache subsystem will connect to
+        :param sync_from: List of uWSGI addresses which the cache subsystem will connect to
             for getting a full dump of the cache. It can be used for initial cache synchronization.
             The first node sending a valid dump will stop the procedure.
             
-        :param bool mode_bitmap: Enable (more versatile but relatively slower) bitmap mode.
+        :param mode_bitmap: Enable (more versatile but relatively slower) bitmap mode.
 
             http://uwsgi-docs.readthedocs.io/en/latest/Caching.html#single-block-faster-vs-bitmaps-slower
 
             .. warning:: Considered production ready only from uWSGI 2.0.2.
 
-        :param bool use_lastmod: Enabling will update last_modified_at timestamp of each cache
+        :param use_lastmod: Enabling will update last_modified_at timestamp of each cache
             on every cache item modification. Enable it if you want to track this value
             or if other features depend on it. This value will then be accessible via the stats socket.
 
-        :param bool full_silent: By default uWSGI will print warning message on every cache set operation
+        :param full_silent: By default uWSGI will print warning message on every cache set operation
             if the cache is full. To disable this warning set this option.
 
             .. note:: Available since 2.0.4.
 
-        :param bool full_purge_lru: Allows the caching framework to evict Least Recently Used (LRU)
+        :param full_purge_lru: Allows the caching framework to evict Least Recently Used (LRU)
             item when you try to add new item to cache storage that is full.
 
             .. note:: ``no_expire`` argument will be ignored.

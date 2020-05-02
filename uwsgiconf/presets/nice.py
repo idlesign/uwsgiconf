@@ -1,37 +1,48 @@
+from typing import Union, Callable
+
 from ..config import Section as _Section
+from ..typehints import Strlist
 
 
 class Section(_Section):
     """Basic nice configuration."""
 
     def __init__(
-            self, name=None, touch_reload=None, workers=None, threads=None, mules=None, owner=None,
-            log_into=None, log_dedicated=None,
-            process_prefix=None, ignore_write_errors=None,
+            self,
+            name: str = None,
+            touch_reload: Strlist =None,
+            workers: int = None,
+            threads: Union[int, bool] = None,
+            mules: int = None,
+            owner: str = None,
+            log_into: str = None,
+            log_dedicated: bool = None,
+            process_prefix: str = None,
+            ignore_write_errors: bool = None,
             **kwargs):
         """
 
-        :param str name: Section name.
+        :param name: Section name.
 
-        :param str|list touch_reload: Reload uWSGI if the specified file or directory is modified/touched.
+        :param touch_reload: Reload uWSGI if the specified file or directory is modified/touched.
 
-        :param int workers: Spawn the specified number of workers (processes).
+        :param workers: Spawn the specified number of workers (processes).
             Default: workers number equals to CPU count.
 
-        :param int|bool threads: Number of threads per worker or ``True`` to enable user-made threads support.
+        :param threads: Number of threads per worker or ``True`` to enable user-made threads support.
 
-        :param int mules: Number of mules to spawn.
+        :param mules: Number of mules to spawn.
 
-        :param str owner: Set process owner user and group.
+        :param owner: Set process owner user and group.
 
-        :param str log_into: Filepath or UDP address to send logs into.
+        :param log_into: Filepath or UDP address to send logs into.
 
-        :param bool log_dedicated: If ``True`` all logging will be handled with a separate
+        :param log_dedicated: If ``True`` all logging will be handled with a separate
             thread in master process.
 
-        :param str process_prefix: Add prefix to process names.
+        :param process_prefix: Add prefix to process names.
 
-        :param bool ignore_write_errors: If ``True`` no annoying SIGPIPE/write/writev errors
+        :param ignore_write_errors: If ``True`` no annoying SIGPIPE/write/writev errors
             will be logged, and no related exceptions will be raised.
 
             .. note:: Usually such errors could be seen on client connection cancelling
@@ -80,7 +91,7 @@ class Section(_Section):
             self.master_process.set_exception_handling_params(no_write_exception=True)
             self.logging.set_filters(write_errors=False, sigpipe=False)
 
-    def get_log_format_default(self):
+    def get_log_format_default(self) -> str:
         """Returns default log message format.
 
         .. note:: Some params may be missing.
@@ -103,10 +114,10 @@ class Section(_Section):
         return format_default
 
     @classmethod
-    def get_bundled_static_path(cls, filename):
+    def get_bundled_static_path(cls, filename: str) -> str:
         """Returns a full path to a static HTML page file bundled with uwsgiconf.
 
-        :param str filename: File name to return path to.
+        :param filename: File name to return path to.
 
             Examples:
                 * 403.html
@@ -114,20 +125,18 @@ class Section(_Section):
                 * 500.html
                 * 503.html
 
-        :rtype: str
-
         """
         from pathlib import Path
         return str(Path(__file__).parent.parent / 'contrib/django/uwsgify/static/uwsgify' / filename)
 
-    def configure_maintenance_mode(self, trigger, response):
+    def configure_maintenance_mode(self, trigger: str, response: str):
         """Allows maintenance mode when a certain response
         is given for every request if a trigger is set.
 
-        :param str trigger: This triggers maintenance mode responses.
+        :param trigger: This triggers maintenance mode responses.
             Should be a path to a file: if file exists, maintenance mode is on.
 
-        :param str response: Response to to give in maintenance mode.
+        :param response: Response to to give in maintenance mode.
 
             Supported:
                 * File path - this file will be served in response.
@@ -155,10 +164,10 @@ class Section(_Section):
 
         return self
 
-    def configure_owner(self, owner='www-data'):
+    def configure_owner(self, owner: str = 'www-data'):
         """Shortcut to set process owner data.
 
-        :param str owner: Sets user and group. Default: ``www-data``.
+        :param owner: Sets user and group. Default: ``www-data``.
 
         """
         if owner is not None:
@@ -178,23 +187,29 @@ class Section(_Section):
         ])
         return self
 
-    def configure_certbot_https(self, domain, webroot, address=None, allow_shared_sockets=None):
+    def configure_certbot_https(
+            self,
+            domain: str,
+            webroot: str,
+            address: str = None,
+            allow_shared_sockets: bool = None
+    ):
         """Enables HTTPS using certificates from Certbot https://certbot.eff.org.
 
         .. note:: This relies on ``webroot`` mechanism of Certbot - https://certbot.eff.org/docs/using.html#webroot
 
             Sample command to get a certificate: ``certbot certonly --webroot -w /webroot/path/ -d mydomain.org``
 
-        :param str domain: Domain name certificates issued for
+        :param domain: Domain name certificates issued for
             (the same as in ``-d`` option in the above command).
 
-        :param str webroot: Directory to store challenge files to get and renew the certificate
+        :param webroot: Directory to store challenge files to get and renew the certificate
             (the same as in ``-w`` option in the above command).
 
-        :param str address: Address to bind socket to.
+        :param address: Address to bind socket to.
 
-        :param bool allow_shared_sockets: Allows using shared sockets to bind
-            to priviledged ports. If not provided automatic mode is enabled:
+        :param allow_shared_sockets: Allows using shared sockets to bind
+            to privileged ports. If not provided automatic mode is enabled:
             shared are allowed if current user is not root.
 
         """
@@ -219,30 +234,39 @@ class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
 
     def __init__(
-            self, name=None, params_python=None, wsgi_module=None, wsgi_callable=None,
-            embedded_plugins=True, require_app=True, threads=True, **kwargs):
+            self,
+            name: str = None,
+            params_python: dict = None,
+            wsgi_module: str = None,
+            wsgi_callable: Union[str, Callable] = None,
+            embedded_plugins: bool = True,
+            require_app: bool = True,
+            threads: Union[bool, int] = True,
+            **kwargs
+    ):
         """
 
-        :param str name: Section name.
+        :param name: Section name.
 
-        :param dict params_python: See Python plugin basic params.
+        :param params_python: See Python plugin basic params.
 
-        :param str wsgi_module: WSGI application module path or filepath.
+        :param wsgi_module: WSGI application module path or filepath.
 
             Example:
                 mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
-        :param str|callable wsgi_callable: WSGI application callable name. Default: application.
+        :param wsgi_callable: WSGI application callable name. Default: application.
 
-        :param bool|None embedded_plugins: This indicates whether plugins were embedded into uWSGI,
+        :param embedded_plugins: This indicates whether plugins were embedded into uWSGI,
             which is the case if you have uWSGI from PyPI.
 
-        :param bool require_app: Exit if no app can be loaded.
+        :param require_app: Exit if no app can be loaded.
 
-        :param int|bool threads: Number of threads per worker or ``True`` to enable user-made threads support.
+        :param threads: Number of threads per worker or ``True`` to enable user-made threads support.
 
         :param kwargs:
+
         """
         if embedded_plugins is True:
             embedded_plugins = self.embedded_plugins_presets.BASIC + ['python', 'python2', 'python3']

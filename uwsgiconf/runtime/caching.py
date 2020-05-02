@@ -1,6 +1,7 @@
-from typing import List, Any, Callable, Union
+from typing import List, Any, Callable
 
 from .. import uwsgi
+from ..typehints import Strint
 from ..utils import decode, decode_deep
 
 
@@ -49,7 +50,7 @@ class Cache:
         """Clears cache the cache."""
         uwsgi.cache_clear(self.name)
 
-    def get(self, key: str, default: Any = None, as_int: bool = False, setter: Callable = None) -> Union[str, int]:
+    def get(self, key: str, default: Any = None, as_int: bool = False, setter: Callable = None) -> Strint:
         """Gets a value from the cache.
 
         :param key: The cache key to get value for.

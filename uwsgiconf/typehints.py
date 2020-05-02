@@ -1,3 +1,4 @@
 from typing import Union, List
 
-StrList = Union[str, List[str]]
+Strlist = Union[str, List[str]]
+Strint = Union[str, int]

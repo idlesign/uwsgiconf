@@ -3,12 +3,13 @@ from functools import partial
 from typing import Union, Callable, Optional, List, Dict
 
 from .. import uwsgi
+from ..typehints import Strint
 from ..utils import decode, decode_deep, listify
 
 __offloaded_functions: Dict[str, Callable] = {}
 
 
-TypeMuleFarm = Union[int, str, 'Mule', 'Farm']
+TypeMuleFarm = Union[Strint, 'Mule', 'Farm']
 
 
 def _get_farms() -> List[str]:

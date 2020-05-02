@@ -10,13 +10,13 @@ if False:  # pragma: nocover
 class Options:
     """Options descriptor. Allows option."""
 
-    def __init__(self, opt_type: Type):
+    def __init__(self, opt_type: Type['OptionsGroup']):
         """
         :param opt_type:
         """
         self.opt_type = opt_type
 
-    def __get__(self, section: 'Section', section_cls: Type['Section']) -> 'OptionsGroup':
+    def __get__(self, section: 'Section', section_cls: Type['Section']) -> Union['OptionsGroup', Type['OptionsGroup']]:
         """
 
         :param section:
@@ -80,7 +80,7 @@ class OptionsGroup:
     plugin: Union[bool, str] = False
     """Indication this option group belongs to a plugin."""
 
-    name: str = None
+    name: str = ''
     """Name to represent the group."""
 
     def __init__(self, *args, **kwargs):
@@ -120,7 +120,7 @@ class OptionsGroup:
             self,
             key: str,
             value: Any,
-            condition: Optional[bool] = True,
+            condition: Optional[Union[bool, str]] = True,
             cast: Callable = None,
             multi: bool = False,
             plugin: str = None,
@@ -243,7 +243,7 @@ class OptionsGroup:
 class ParametrizedValue(OptionsGroup):
     """Represents parametrized option value."""
 
-    alias: str = None
+    alias: str = ''
     """Alias to address this value."""
 
     args_joiner: str = ' '
@@ -255,7 +255,7 @@ class ParametrizedValue(OptionsGroup):
     name_separator_strip: bool = False
     """Strip leading and trailing name separator from the result."""
 
-    opt_key: str = None
+    opt_key: Optional[str] = None
     """Allows swapping default option key with custom value."""
 
     def __init__(self, *args):

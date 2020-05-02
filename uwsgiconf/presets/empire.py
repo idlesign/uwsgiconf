@@ -1,5 +1,8 @@
+from typing import Tuple
+
 from ..config import Section
 from ..utils import filter_locals
+from ..typehints import Strlist
 
 
 class Broodlord:
@@ -16,25 +19,36 @@ class Broodlord:
 
     """
     def __init__(
-            self, zerg_socket, zerg_die_on_idle=None, vassals_home=None,
-            zerg_count=None, vassal_overload_sos_interval=None, vassal_queue_items_sos=None,
-            section_emperor=None, section_zerg=None):
+            self,
+            zerg_socket: str,
+            zerg_die_on_idle: int = None,
+            vassals_home: Strlist = None,
+            zerg_count: int = None,
+            vassal_overload_sos_interval: int = None,
+            vassal_queue_items_sos: int = None,
+            section_emperor: Section = None,
+            section_zerg: Section = None
+    ):
         """
-        :param str zerg_socket: Unix socket to bind server to.
+        :param zerg_socket: Unix socket to bind server to.
 
-        :param int zerg_die_on_idle: A number of seconds after which an idle zerg will be destroyed.
+        :param zerg_die_on_idle: A number of seconds after which an idle zerg will be destroyed.
 
-        :param str|list[str] vassals_home: Set vassals home.
+        :param vassals_home: Set vassals home.
 
-        :param int zerg_count: Maximum number of zergs to spawn.
+        :param zerg_count: Maximum number of zergs to spawn.
 
-        :param int vassal_overload_sos_interval: Ask emperor for reinforcement when overloaded.
+        :param vassal_overload_sos_interval: Ask emperor for reinforcement when overloaded.
             Accepts the number of seconds to wait between asking for a new reinforcements.
 
-        :param int vassal_queue_items_sos: Ask emperor for sos if backlog queue has more
+        :param vassal_queue_items_sos: Ask emperor for sos if backlog queue has more
             items than the value specified
-        """
 
+        :param section_emperor: Custom section object.
+
+        :param section_zerg: Custom section object.
+
+        """
         self.socket = zerg_socket
         self.vassals_home = vassals_home
         self.die_on_idle = zerg_die_on_idle
@@ -51,11 +65,9 @@ class Broodlord:
         self.section_emperor = section_emperor
         self.section_zerg = section_zerg
 
-    def configure(self):
-        """Configures broodlord mode and returns emperor and zerg sections.
+    def configure(self) -> Tuple[Section, Section]:
+        """Configures broodlord mode and returns emperor and zerg sections."""
 
-        :rtype: tuple
-        """
         section_emperor = self.section_emperor
         section_zerg = self.section_zerg
 

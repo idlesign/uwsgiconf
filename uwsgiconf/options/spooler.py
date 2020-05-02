@@ -1,6 +1,7 @@
 from os import path
 
 from ..base import OptionsGroup
+from ..typehints import Strlist
 from ..utils import listify
 
 
@@ -26,35 +27,45 @@ class Spooler(OptionsGroup):
         super(Spooler, self).__init__(*args, **kwargs)
 
     def set_basic_params(
-            self, touch_reload=None, quiet=None, process_count=None, max_tasks=None,
-            order_tasks=None, harakiri=None, change_dir=None, poll_interval=None, signal_as_task=None,
-            cheap=None, base_dir=None):
+            self,
+            touch_reload: Strlist = None,
+            quiet: bool = None,
+            process_count: int = None,
+            max_tasks: int = None,
+            order_tasks: int = None,
+            harakiri: int = None,
+            change_dir: str = None,
+            poll_interval: int = None,
+            signal_as_task: bool = None,
+            cheap: bool = None,
+            base_dir: str = None
+    ):
         """
 
-        :param str|list touch_reload: reload spoolers if the specified file is modified/touched
+        :param touch_reload: reload spoolers if the specified file is modified/touched
 
-        :param bool quiet: Do not log spooler related messages.
+        :param quiet: Do not log spooler related messages.
 
-        :param int process_count: Set the number of processes for spoolers.
+        :param process_count: Set the number of processes for spoolers.
 
-        :param int max_tasks: Set the maximum number of tasks to run before recycling
+        :param max_tasks: Set the maximum number of tasks to run before recycling
             a spooler (to help alleviate memory leaks).
 
-        :param int order_tasks: Try to order the execution of spooler tasks (uses scandir instead of readdir).
+        :param order_tasks: Try to order the execution of spooler tasks (uses scandir instead of readdir).
 
-        :param int harakiri: Set harakiri timeout for spooler tasks.
+        :param harakiri: Set harakiri timeout for spooler tasks.
 
-        :param str change_dir: chdir() to specified directory before each spooler task.
+        :param change_dir: chdir() to specified directory before each spooler task.
 
-        :param int poll_interval: Spooler poll frequency in seconds. Default: 30.
+        :param poll_interval: Spooler poll frequency in seconds. Default: 30.
 
-        :param bool signal_as_task: Treat signal events as tasks in spooler.
+        :param signal_as_task: Treat signal events as tasks in spooler.
             To be used with ``spooler-max-tasks``. If enabled spooler will treat signal
             events as task. Run signal handler will also increase the spooler task count.
 
-        :param bool cheap: Use spooler cheap mode.
+        :param cheap: Use spooler cheap mode.
 
-        :param str base_dir: Base directory to prepend to `work_dir` argument of `.add()`.
+        :param base_dir: Base directory to prepend to `work_dir` argument of `.add()`.
 
         """
         self._set('touch-spoolers-reload', touch_reload, multi=True)
@@ -73,16 +84,16 @@ class Spooler(OptionsGroup):
 
         return self._section
 
-    def add(self, work_dir, external=False):
+    def add(self, work_dir: Strlist, external: bool = False):
         """Run a spooler on the specified directory.
 
-        :param str|list[str] work_dir: Spooler working directory path or it's name if
+        :param work_dir: Spooler working directory path or it's name if
             `base_dir` argument of `spooler.set_basic_params()` is set.
 
             .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}/spool/
               See ``Section.project_name`` and ``Section.runtime_dir``.
 
-        :param bool external: map spoolers requests to a spooler directory managed by an external instance
+        :param external: map spoolers requests to a spooler directory managed by an external instance
 
         """
         command = 'spooler'

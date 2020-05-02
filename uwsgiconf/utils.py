@@ -10,7 +10,7 @@ from typing import Optional, Any, List, Tuple, Dict
 
 from .exceptions import UwsgiconfException
 from .settings import CONFIGS_MODULE_ATTR
-from .typehints import StrList
+from .typehints import Strlist
 
 if False:  # pragma: nocover
     from .config import Configuration  # noqa
@@ -161,7 +161,7 @@ class ConfModule:
         return module
 
 
-def listify(src: Any) -> List[Any]:
+def listify(src: Any) -> List:
     """Make a list with source object if not already a list.
 
     :param src:
@@ -259,7 +259,7 @@ class KeyValue:
         return self.items_separator.join(value_chunks).strip()
 
 
-def get_output(cmd: str, args: StrList) -> str:
+def get_output(cmd: str, args: Strlist) -> str:
     """Runs a command and returns its output (stdout + stderr).
 
     :param cmd:
@@ -367,7 +367,7 @@ class UwsgiRunner:
         self.binary_uwsgi = binary_path or 'uwsgi'
         self.binary_python = self.prepare_env()
 
-    def get_output(self, command_args: StrList) -> str:
+    def get_output(self, command_args: Strlist) -> str:
         """Runs a command and returns its output (stdout + stderr).
 
         :param command_args:

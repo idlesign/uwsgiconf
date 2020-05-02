@@ -2,20 +2,20 @@ import importlib.util
 import inspect
 import os
 from importlib import import_module
+from typing import Optional
 
 from uwsgiconf.presets.nice import PythonSection
 from uwsgiconf.settings import CONFIGS_MODULE_ATTR
 from uwsgiconf.utils import ConfModule, UwsgiRunner
 
 if False:  # pragma: nocover
-    from uwsgiconf.base import Section
+    from uwsgiconf.base import Section  # noqa
 
 
-def find_project_dir():
+def find_project_dir() -> str:
     """Runs up the stack to find the location of manage.py
     which will be considered a project base path.
 
-    :rtype: str
     """
     frame = inspect.currentframe()
 
@@ -29,11 +29,11 @@ def find_project_dir():
     return os.path.dirname(filename)
 
 
-def get_project_name(project_dir):
+def get_project_name(project_dir: str) -> str:
     """Return project name from project directory.
 
-    :param str project_dir:
-    :rtype: str
+    :param project_dir:
+
     """
     return os.path.basename(project_dir)
 
@@ -41,50 +41,34 @@ def get_project_name(project_dir):
 class SectionMutator:
     """Configuration file section mutator."""
 
-    def __init__(self, section, dir_base, project_name, options):
+    def __init__(self, section: 'Section', dir_base: str, project_name: str, options: dict):
         from django.conf import settings
 
-        self.section = section  # type: Section
+        self.section = section
         self.dir_base = dir_base
         self.project_name = project_name
         self.settings = settings
         self.options = options
 
     @property
-    def runtime_dir(self):
-        """Project runtime directory.
-
-        :rtype: str
-
-        """
+    def runtime_dir(self) -> str:
+        """Project runtime directory."""
         return self.section.replace_placeholders('{project_runtime_dir}')
 
-    def get_pid_filepath(self):
-        """Return pidfile path for the given project.
-
-        :param str project_name:
-        :rtype: str
-
-        """
+    def get_pid_filepath(self) -> str:
+        """Return pidfile path for the given project."""
         return os.path.join(self.runtime_dir, 'uwsgi.pid')
 
-    def get_fifo_filepath(self):
-        """Return master FIFO path for the given project.
-
-        :param str project_name:
-        :rtype: str
-
-        """
+    def get_fifo_filepath(self) -> str:
+        """Return master FIFO path for the given project."""
         return os.path.join(self.runtime_dir, 'uwsgi.fifo')
 
     @classmethod
-    def spawn(cls, options=None, dir_base=None):
+    def spawn(cls, options: dict = None, dir_base: str = None) -> 'SectionMutator':
         """Alternative constructor. Creates a mutator and returns section object.
 
-        :param dict options:
-        :param str dir_base:
-
-        :rtype: SectionMutator
+        :param options:
+        :param dir_base:
 
         """
         options_all = {
@@ -124,16 +108,23 @@ class SectionMutator:
         return mutator
 
     @classmethod
-    def _get_section_existing(self, path_conf, name_module, name_project, embedded=False):
+    def _get_section_existing(
+            self,
+            path_conf: str,
+            name_module: str,
+            name_project: str,
+            embedded: bool = False
+    ) -> Optional['Section']:
         """Loads config section from existing configuration file (aka uwsgicfg.py)
 
-        :param str path_conf: Path containing configuration module.
-        :param str name_module: Configuration module name.
-        :param str name_project: Project (package) name.
-        :param bool embedded: Flag. Do not try to load module file from file system manually,
-            but try to import the module.
+        :param path_conf: Path containing configuration module.
 
-        :rtype: Optional[Section]
+        :param name_module: Configuration module name.
+
+        :param name_project: Project (package) name.
+
+        :param embedded: Flag. Do not try to load module file from file system manually,
+            but try to import the module.
 
         """
         def load():
@@ -164,11 +155,10 @@ class SectionMutator:
         return section
 
     @classmethod
-    def _get_section_new(cls, dir_base):
+    def _get_section_new(cls, dir_base: str) -> PythonSection:
         """Creates a new section with default settings.
 
-        :param str dir_base:
-        :rtype: Section
+        :param dir_base:
 
         """
         from django.conf import settings
@@ -228,7 +218,7 @@ class SectionMutator:
             if not self.options['compile']:
                 os.makedirs(self.runtime_dir, 0o755, True)
 
-    def mutate(self, embedded=False):
+    def mutate(self, embedded: bool = False):
         """Mutates current section."""
         section = self.section
         project_name = self.project_name
@@ -287,12 +277,14 @@ class SectionMutator:
             self.contribute_error_pages()
 
 
-def run_uwsgi(config_section, compile_only=False, embedded=False):
+def run_uwsgi(config_section: 'Section', compile_only: bool = False, embedded: bool = False):
     """Runs uWSGI using the given section configuration.
 
-    :param Section config_section:
-    :param bool compile_only: Do not run, only compile and output configuration file for run.
-    :param bool embedded: Do not create temporary config files and try to use resource files for configuration.
+    :param config_section:
+
+    :param compile_only: Do not run, only compile and output configuration file for run.
+
+    :param embedded: Do not create temporary config files and try to use resource files for configuration.
 
     """
     config = config_section.as_configuration()

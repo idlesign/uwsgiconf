@@ -1,7 +1,11 @@
 import os
+from typing import Optional, List, Union, Tuple
 
 from .main_process_actions import *
 from ..base import OptionsGroup
+from ..typehints import Strint, Strlist
+
+TypeActionExt = Union[str, 'HookAction', List[Union[str, 'HookAction']]]
 
 
 class MainProcess(OptionsGroup):
@@ -176,24 +180,30 @@ class MainProcess(OptionsGroup):
     def __init__(self, *args, **kwargs):
         super(MainProcess, self).__init__(*args, **kwargs)
 
-        self.owner = [None, None]
+        self.owner: List[Optional[Strint], Optional[Strint]] = [None, None]
 
     def set_basic_params(
-            self, touch_reload=None, priority=None, vacuum=None, binary_path=None, honour_stdin=None):
+            self,
+            touch_reload: Strlist = None,
+            priority: int = None,
+            vacuum: bool = None,
+            binary_path: str = None,
+            honour_stdin: bool = None
+    ):
         """
 
-        :param str|list touch_reload: Reload uWSGI if the specified file or directory is modified/touched.
+        :param touch_reload: Reload uWSGI if the specified file or directory is modified/touched.
 
-        :param int priority: Set processes/threads priority (``nice``) value.
+        :param priority: Set processes/threads priority (``nice``) value.
 
-        :param bool vacuum: Try to remove all of the generated files/sockets
+        :param vacuum: Try to remove all of the generated files/sockets
             (UNIX sockets and pidfiles) upon exit.
 
-        :param str binary_path: Force uWSGI binary path.
+        :param binary_path: Force uWSGI binary path.
             If you do not have uWSGI in the system path you can force its path with this option
             to permit the reloading system and the Emperor to easily find the binary to execute.
 
-        :param bool honour_stdin: Do not remap stdin to ``/dev/null``.
+        :param honour_stdin: Do not remap stdin to ``/dev/null``.
             By default, ``stdin`` is remapped to ``/dev/null`` on uWSGI startup.
             If you need a valid stdin (for debugging, piping and so on) use this option.
 
@@ -206,17 +216,17 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_memory_params(self, ksm_interval=None, no_swap=None):
+    def set_memory_params(self, ksm_interval: int = None, no_swap: bool = None):
         """Set memory related parameters.
 
-        :param int ksm_interval: Kernel Samepage Merging frequency option, that can reduce memory usage.
+        :param ksm_interval: Kernel Samepage Merging frequency option, that can reduce memory usage.
             Accepts a number of requests (or master process cycles) to run page scanner after.
 
             .. note:: Linux only.
 
             * http://uwsgi.readthedocs.io/en/latest/KSM.html
 
-        :param bool no_swap: Lock all memory pages avoiding swapping.
+        :param no_swap: Lock all memory pages avoiding swapping.
 
         """
         self._set('ksm', ksm_interval)
@@ -224,7 +234,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def daemonize(self, log_into, after_app_loading=False):
+    def daemonize(self, log_into: str, after_app_loading: bool = False):
         """Daemonize uWSGI.
 
         :param str log_into: Logging destination:
@@ -237,7 +247,7 @@ class MainProcess(OptionsGroup):
                     Use ``networking.register_socket('192.168.1.2:1717, type=networking.SOCK_UDP)``
                     to start uWSGI UDP server.
 
-        :param str bool after_app_loading: Whether to daemonize after
+        :param after_app_loading: Whether to daemonize after
             or before applications loading.
 
         """
@@ -245,12 +255,12 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def change_dir(self, to, after_app_loading=False):
+    def change_dir(self, to: str, after_app_loading: bool = False):
         """Chdir to specified directory before or after apps loading.
 
-        :param str to: Target directory.
+        :param to: Target directory.
 
-        :param bool after_app_loading:
+        :param after_app_loading:
                 *True* - after load
                 *False* - before load
 
@@ -259,18 +269,24 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_owner_params(self, uid=None, gid=None, add_gids=None, set_asap=False):
+    def set_owner_params(
+            self,
+            uid: Strint = None,
+            gid: Strint = None,
+            add_gids: Union[Strint, List[Strint]] = None,
+            set_asap: bool = False
+    ):
         """Set process owner params - user, group.
 
-        :param str|int uid: Set uid to the specified username or uid.
+        :param uid: Set uid to the specified username or uid.
 
-        :param str|int gid: Set gid to the specified groupname or gid.
+        :param gid: Set gid to the specified groupname or gid.
 
-        :param list|str|int add_gids: Add the specified group id to the process credentials.
+        :param add_gids: Add the specified group id to the process credentials.
             This options allows you to add additional group ids to the current process.
             You can specify it multiple times.
 
-        :param bool set_asap: Set as soon as possible.
+        :param set_asap: Set as soon as possible.
             Setting them on top of your vassal file will force the instance to setuid()/setgid()
             as soon as possible and without the (theoretical) possibility to override them.
 
@@ -286,11 +302,11 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def get_owner(self, default=True):
+    def get_owner(self, default: bool = True) -> Tuple[Optional[Strint], Optional[Strint]]:
         """Return (User ID, Group ID) tuple
 
-        :param bool default: Whether to return default if not set.
-        :rtype: tuple[int, int]
+        :param default: Whether to return default if not set.
+
         """
         uid, gid = self.owner
 
@@ -302,48 +318,48 @@ class MainProcess(OptionsGroup):
 
         return uid, gid
 
-    def set_hook(self, phase, action):
+    def set_hook(self, phase: str, action: TypeActionExt):
         """Allows setting hooks (attaching actions) for various uWSGI phases.
 
-        :param str phase: See constants in ``.phases``.
+        :param phase: See constants in ``.phases``.
 
-        :param str|list|HookAction|list[HookAction] action:
+        :param action:
 
         """
         self._set(f'hook-{phase}', action, multi=True)
 
         return self._section
 
-    def set_hook_touch(self, fpath, action):
+    def set_hook_touch(self, fpath: str, action: TypeActionExt):
         """Allows running certain action when the specified file is touched.
 
-        :param str fpath: File path.
+        :param fpath: File path.
 
-        :param str|list|HookAction|list[HookAction] action:
+        :param action:
 
         """
         self._set('hook-touch', f'{fpath} {action}', multi=True)
 
         return self._section
 
-    def set_hook_after_request(self, func):
+    def set_hook_after_request(self, func: str):
         """Run the specified function/symbol (C level) after each request.
 
-        :param str func:
+        :param func:
 
         """
         self._set('after-request-hook', func, multi=True)
 
         return self._section
 
-    def set_on_exit_params(self, skip_hooks=None, skip_teardown=None):
+    def set_on_exit_params(self, skip_hooks: bool = None, skip_teardown: bool = None):
         """Set params related to process exit procedure.
 
-        :param bool skip_hooks: Skip ``EXIT`` phase hook.
+        :param skip_hooks: Skip ``EXIT`` phase hook.
 
             .. note:: Ignored by the master.
 
-        :param bool skip_teardown: Allows skipping teardown (finalization) processes for some plugins.
+        :param skip_teardown: Allows skipping teardown (finalization) processes for some plugins.
 
             .. note:: Ignored by the master.
 
@@ -357,41 +373,41 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def run_command_on_event(self, command, phase=phases.ASAP):
+    def run_command_on_event(self, command: str, phase: str = phases.ASAP):
         """Run the given command on a given phase.
 
-        :param str command:
+        :param command:
 
-        :param str phase: See constants in ``Phases`` class.
+        :param phase: See constants in ``Phases`` class.
 
         """
         self._set(f'exec-{phase}', command, multi=True)
 
         return self._section
 
-    def run_command_on_touch(self, command, target):
+    def run_command_on_touch(self, command: str, target: str):
         """Run command when the specified file is modified/touched.
 
-        :param str command:
+        :param command:
 
-        :param str target: File path.
+        :param target: File path.
 
         """
         self._set('touch-exec', f'{target} {command}', multi=True)
 
         return self._section
 
-    def set_pid_file(self, fpath, before_priv_drop=True, safe=False):
+    def set_pid_file(self, fpath: str, before_priv_drop: bool = True, safe: bool = False):
         """Creates pidfile before or after privileges drop.
 
-        :param str fpath: File path.
+        :param fpath: File path.
 
-        :param bool before_priv_drop: Whether to create pidfile before privileges are dropped.
+        :param before_priv_drop: Whether to create pidfile before privileges are dropped.
 
             .. note:: Vacuum is made after privileges drop, so it may not be able
                 to delete PID file if it was created before dropping.
 
-        :param bool safe: The safe-pidfile works similar to pidfile
+        :param safe: The safe-pidfile works similar to pidfile
             but performs the write a little later in the loading process.
             This avoids overwriting the value when app loading fails,
             with the consequent loss of a valid PID number.
@@ -409,17 +425,17 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_naming_params(self, autonaming=None, prefix=None, suffix=None, name=None):
+    def set_naming_params(self, autonaming: bool = None, prefix: str = None, suffix: str = None, name: str = None):
         """Setups processes naming parameters.
 
-        :param bool autonaming: Automatically set process name to something meaningful.
+        :param autonaming: Automatically set process name to something meaningful.
             Generated process names may be 'uWSGI Master', 'uWSGI Worker #', etc.
 
-        :param str prefix: Add prefix to process names.
+        :param prefix: Add prefix to process names.
 
-        :param str suffix: Append string to process names.
+        :param suffix: Append string to process names.
 
-        :param str name: Set process names to given static value.
+        :param name: Set process names to given static value.
 
         """
         self._set('auto-procname', autonaming, cast=bool)

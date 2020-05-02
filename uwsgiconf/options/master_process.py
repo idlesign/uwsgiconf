@@ -1,6 +1,7 @@
 from ..base import OptionsGroup
-from .. utils import KeyValue
 from ..exceptions import ConfigurationError
+from ..typehints import Strlist, Strint
+from ..utils import KeyValue
 
 
 class MasterProcess(OptionsGroup):
@@ -15,24 +16,30 @@ class MasterProcess(OptionsGroup):
     """
 
     def set_basic_params(
-            self, enable=None, name=None, no_orphans=None, as_root=None,
-            subproc_check_interval=None, fifo_file=None):
+            self,
+            enable: bool = None,
+            name: str = None,
+            no_orphans: bool = None,
+            as_root: bool = None,
+            subproc_check_interval: int = None,
+            fifo_file: str = None
+    ):
         """
 
-        :param bool enable: Enable uWSGI master process.
+        :param enable: Enable uWSGI master process.
 
-        :param str master_enabled: Set master process name to given value.
+        :param name: Set master process name to given value.
 
-        :param bool no_orphans: Automatically kill workers if master dies (can be dangerous for availability).
+        :param no_orphans: Automatically kill workers if master dies (can be dangerous for availability).
 
-        :param bool as_root: Leave master process running as root.
+        :param as_root: Leave master process running as root.
 
-        :param int subproc_check_interval: Set the interval (in seconds) of master checks. Default: 1
+        :param subproc_check_interval: Set the interval (in seconds) of master checks. Default: 1
             The master process makes a scan of subprocesses, etc. every N seconds.
 
             .. warning:: You can increase this time if you need to, but it's DISCOURAGED.
 
-        :param str fifo_file: Enables the master FIFO.
+        :param fifo_file: Enables the master FIFO.
 
             .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}.fifo
               See ``Section.project_name`` and ``Section.runtime_dir``.
@@ -56,7 +63,7 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_exit_events(self, no_workers=None, idle=None, reload=None, sig_term=None):
+    def set_exit_events(self, no_workers: bool = None, idle: bool = None, reload: bool = None, sig_term: bool = None):
         """Do exit on certain events
 
         :param bool no_workers: Shutdown uWSGI when no workers are running.
@@ -77,16 +84,21 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_exception_handling_params(self, handler=None, catch=None, no_write_exception=None):
+    def set_exception_handling_params(
+            self,
+            handler: Strlist = None,
+            catch: bool = None,
+            no_write_exception: bool = None
+    ):
         """Exception handling related params.
 
-        :param str|list[str] handler: Register one or more exception handling C-functions.
+        :param handler: Register one or more exception handling C-functions.
 
-        :param bool catch: Catch exceptions and report them as http output (including stack trace and env params).
+        :param catch: Catch exceptions and report them as http output (including stack trace and env params).
 
             .. warning:: Use only for testing purposes.
 
-        :param bool no_write_exception: Disable exception generation on write()/writev().
+        :param no_write_exception: Disable exception generation on write()/writev().
 
             .. note:: This can be combined with ``logging.set_filters(write_errors=False, sigpipe=False)``.
 
@@ -99,12 +111,12 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_idle_params(self, timeout=None, exit=None):
+    def set_idle_params(self, timeout: int = None, exit: bool = None):
         """Activate idle mode - put uWSGI in cheap mode after inactivity timeout.
 
-        :param int timeout: Inactivity timeout in seconds.
+        :param timeout: Inactivity timeout in seconds.
 
-        :param bool exit: Shutdown uWSGI when idle.
+        :param exit: Shutdown uWSGI when idle.
 
         """
         self._set('idle', timeout)
@@ -112,13 +124,13 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_reload_params(self, mercy=None, exit=None):
+    def set_reload_params(self, mercy: int = None, exit: bool = None):
         """Set reload related params.
 
-        :param int mercy: Set the maximum time (in seconds) we wait
+        :param mercy: Set the maximum time (in seconds) we wait
             for workers and other processes to die during reload/shutdown.
 
-        :param bool exit: Force exit even if a reload is requested.
+        :param exit: Force exit even if a reload is requested.
 
         """
         self._set('reload-mercy', mercy)
@@ -127,8 +139,17 @@ class MasterProcess(OptionsGroup):
         return self._section
 
     def add_cron_task(
-            self, command, weekday=None, month=None, day=None, hour=None, minute=None,
-            legion=None, unique=None, harakiri=None):
+            self,
+            command: str,
+            weekday: Strint = None,
+            month: Strint = None,
+            day: Strint = None,
+            hour: Strint = None,
+            minute: Strint = None,
+            legion: str = None,
+            unique: bool = None,
+            harakiri: int = None
+    ):
         """Adds a cron task running the given command on the given schedule.
         http://uwsgi.readthedocs.io/en/latest/Cron.html
 
@@ -141,29 +162,29 @@ class MasterProcess(OptionsGroup):
 
         .. note:: We use cron2 option available since 1.9.11.
 
-        :param str command: Command to execute on schedule (with or without path).
+        :param command: Command to execute on schedule (with or without path).
 
-        :param int|str weekday: Day of a the week number. Defaults to `each`.
+        :param weekday: Day of a the week number. Defaults to `each`.
             0 - Sunday  1 - Monday  2 - Tuesday  3 - Wednesday
             4 - Thursday  5 - Friday  6 - Saturday
 
-        :param int|str month: Month number 1-12. Defaults to `each`.
+        :param month: Month number 1-12. Defaults to `each`.
 
-        :param int|str day: Day of the month number 1-31. Defaults to `each`.
+        :param day: Day of the month number 1-31. Defaults to `each`.
 
-        :param int|str hour: Hour 0-23. Defaults to `each`.
+        :param hour: Hour 0-23. Defaults to `each`.
 
-        :param int|str minute: Minute 0-59. Defaults to `each`.
+        :param minute: Minute 0-59. Defaults to `each`.
 
-        :param str legion: Set legion (cluster) name to use this cron command against.
+        :param legion: Set legion (cluster) name to use this cron command against.
             Such commands are only executed by legion lord node.
 
-        :param bool unique: Marks command as unique. Default to not unique.
+        :param unique: Marks command as unique. Default to not unique.
             Some commands can take a long time to finish or just hang doing their thing.
             Sometimes this is okay, but there are also cases when running multiple instances
             of the same command can be dangerous.
 
-        :param int harakiri: Enforce a time limit (in seconds) on executed commands.
+        :param harakiri: Enforce a time limit (in seconds) on executed commands.
             If a command is taking longer it will be killed.
 
         """
@@ -178,7 +199,13 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def attach_process_classic(self, command_or_pid_path, background, control=False, for_legion=False):
+    def attach_process_classic(
+            self,
+            command_or_pid_path: str,
+            background: bool,
+            control: bool = False,
+            for_legion: bool = False
+    ):
         """Attaches a command/daemon to the master process optionally managed by a pidfile.
 
         This will allow the uWSGI master to control/monitor/respawn this process.
@@ -188,15 +215,15 @@ class MasterProcess(OptionsGroup):
 
         http://uwsgi-docs.readthedocs.io/en/latest/AttachingDaemons.html
 
-        :param str command_or_pid_path:
+        :param command_or_pid_path:
 
-        :param bool background: Must indicate whether process is in background.
+        :param background: Must indicate whether process is in background.
 
-        :param bool control: Consider this process a control: when the daemon dies, the master exits.
+        :param control: Consider this process a control: when the daemon dies, the master exits.
 
             .. note:: pidfile managed processed not supported.
 
-        :param bool for_legion: Legion daemons will be executed only on the legion lord node,
+        :param for_legion: Legion daemons will be executed only on the legion lord node,
             so there will always be a single daemon instance running in each legion.
             Once the lord dies a daemon will be spawned on another node.
 
@@ -230,54 +257,67 @@ class MasterProcess(OptionsGroup):
         return self._section
 
     def attach_process(
-            self, command, for_legion=False, broken_counter=None, pidfile=None, control=None, daemonize=None,
-            touch_reload=None, signal_stop=None, signal_reload=None, honour_stdin=None,
-            uid=None, gid=None, new_pid_ns=None, change_dir=None):
+            self,
+            command: str,
+            for_legion: bool = False,
+            broken_counter: int = None,
+            pidfile: str = None,
+            control: bool = None,
+            daemonize: bool = None,
+            touch_reload: Strlist = None,
+            signal_stop: int = None,
+            signal_reload: int = None,
+            honour_stdin: bool = None,
+            uid: Strint = None,
+            gid: Strint = None,
+            new_pid_ns: bool = None,
+            change_dir: str = None
+    ):
         """Attaches a command/daemon to the master process.
 
         This will allow the uWSGI master to control/monitor/respawn this process.
 
         http://uwsgi-docs.readthedocs.io/en/latest/AttachingDaemons.html
 
-        :param str command: The command line to execute.
+        :param command: The command line to execute.
 
-        :param bool for_legion: Legion daemons will be executed only on the legion lord node,
+        :param for_legion: Legion daemons will be executed only on the legion lord node,
             so there will always be a single daemon instance running in each legion.
             Once the lord dies a daemon will be spawned on another node.
 
-        :param int broken_counter: Maximum attempts before considering a daemon "broken".
+        :param broken_counter: Maximum attempts before considering a daemon "broken".
 
-        :param str pidfile: The pidfile path to check (enable smart mode).
+        :param pidfile: The pidfile path to check (enable smart mode).
 
-        :param bool control: If True, the daemon becomes a `control` one:
+        :param control: If True, the daemon becomes a `control` one:
             if it dies the whole uWSGI instance dies.
 
-        :param bool daemonize: Daemonize the process (enable smart2 mode).
+        :param daemonize: Daemonize the process (enable smart2 mode).
 
-        :param list|str touch_reload: List of files to check:
+        :param touch_reload: List of files to check:
             whenever they are 'touched', the daemon is restarted
 
-        :param int signal_stop: The signal number to send to the daemon when uWSGI is stopped.
+        :param signal_stop: The signal number to send to the daemon when uWSGI is stopped.
 
-        :param int signal_reload: The signal number to send to the daemon when uWSGI is reloaded.
+        :param signal_reload: The signal number to send to the daemon when uWSGI is reloaded.
 
-        :param bool honour_stdin: The signal number to send to the daemon when uWSGI is reloaded.
+        :param honour_stdin: The signal number to send to the daemon when uWSGI is reloaded.
 
-        :param str|int uid: Drop privileges to the specified uid.
-
-            .. note:: Requires master running as root.
-
-        :param str|int gid: Drop privileges to the specified gid.
+        :param uid: Drop privileges to the specified uid.
 
             .. note:: Requires master running as root.
 
-        :param bool new_pid_ns: Spawn the process in a new pid namespace.
+        :param gid: Drop privileges to the specified gid.
+
+            .. note:: Requires master running as root.
+
+        :param new_pid_ns: Spawn the process in a new pid namespace.
 
             .. note:: Requires master running as root.
 
             .. note:: Linux only.
 
-        :param str change_dir: Use chdir() to the specified directory
+        :param change_dir: Use chdir() to the specified directory
             before running the command.
 
         """

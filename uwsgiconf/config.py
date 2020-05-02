@@ -11,7 +11,7 @@ from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
 from .formatters import FORMATTERS, format_print_text
 from .options import *
-from .typehints import StrList
+from .typehints import Strlist
 from .utils import listify, UwsgiRunner
 
 
@@ -173,8 +173,8 @@ class Section(OptionsGroup):
         self._plugins = embedded_plugins or []
 
         self._section = self
-        self._options_objects = {}
-        self._opts = {}
+        self._options_objects: dict = {}
+        self._opts: dict = {}
 
         self.name = name or 'uwsgi'
         self._runtime_dir = runtime_dir or ''
@@ -185,7 +185,7 @@ class Section(OptionsGroup):
         self._set_basic_params_from_dict(kwargs)
         self.set_basic_params(strict_config=strict_config)
 
-    def replace_placeholders(self, value: Optional[StrList]) -> Optional[StrList]:
+    def replace_placeholders(self, value: Optional[Strlist]) -> Optional[Strlist]:
         """Replaces placeholders that can be used e.g. in filepaths.
 
         Supported placeholders:
@@ -348,7 +348,7 @@ class Section(OptionsGroup):
     def set_plugins_params(
             self,
             plugins: Union[List[str], List[OptionsGroup], str, OptionsGroup] = None,
-            search_dirs: StrList = None,
+            search_dirs: Strlist = None,
             autoload: bool = None,
             required: bool = False
     ):
@@ -580,7 +580,7 @@ class Section(OptionsGroup):
     @classmethod
     def bootstrap(
             cls,
-            dsn: StrList,
+            dsn: Strlist,
             allow_shared_sockets: bool = None,
             **init_kwargs: Any
     ) -> 'Section':
@@ -659,7 +659,7 @@ class Configuration:
 
             names.append(name)
 
-    def format(self, do_print: bool = False, stamp: bool = True, formatter: str = 'ini') -> StrList:
+    def format(self, do_print: bool = False, stamp: bool = True, formatter: str = 'ini') -> Strlist:
         """Applies formatting to configuration.
 
         :param do_print: Whether to print out formatted config.
@@ -678,7 +678,7 @@ class Configuration:
 
         return formatted
 
-    def print_ini(self) -> StrList:
+    def print_ini(self) -> Strlist:
         """Print out this configuration as .ini."""
         return self.format(do_print=True)
 

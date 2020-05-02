@@ -9,12 +9,11 @@ from ...toolbox import SectionMutator
 class FifoCommand(BaseCommand):
     """Base for uWSGI control management commands using master FIFO."""
 
-    def run_cmd(self, fifo, options):
+    def run_cmd(self, fifo: Fifo, options: dict):
         """Must return FIFO command.
 
-        :param Fifo fifo:
-        :param dict options:
-        :rtype: bytes
+        :param fifo:
+        :param options:
 
         """
         raise NotImplementedError

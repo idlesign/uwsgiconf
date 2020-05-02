@@ -1,8 +1,11 @@
 from operator import attrgetter
+from typing import List
 
+from .alarm_types import AlarmType, AlarmCommand, AlarmSignal, AlarmCurl, AlarmLog, AlarmMule, AlarmXmpp
 from ..base import OptionsGroup
-from .alarm_types import *
 from ..utils import listify
+
+TypeAlarmExt = List[AlarmType]
 
 
 class Alarms(OptionsGroup):
@@ -14,7 +17,6 @@ class Alarms(OptionsGroup):
     * http://uwsgi-docs.readthedocs.io/en/latest/AlarmSubsystem.html
 
     """
-
     class alarm_types:
         """Alarm types available for ``.register_alarm()``."""
 
@@ -29,14 +31,14 @@ class Alarms(OptionsGroup):
         self._alarms = []
         super(Alarms, self).__init__(*args, **kwargs)
 
-    def set_basic_params(self, msg_size=None, cheap=None, anti_loop_timeout=None):
+    def set_basic_params(self, msg_size: int = None, cheap: bool = None, anti_loop_timeout: int = None):
         """
-        :param int msg_size: Set the max size of an alarm message in bytes. Default: 8192.
+        :param msg_size: Set the max size of an alarm message in bytes. Default: 8192.
 
-        :param bool cheap: Use main alarm thread rather than create dedicated
+        :param cheap: Use main alarm thread rather than create dedicated
             threads for curl-based alarms
 
-        :param int anti_loop_timeout: Tune the anti-loop alarm system. Default: 3 seconds.
+        :param anti_loop_timeout: Tune the anti-loop alarm system. Default: 3 seconds.
 
         """
         self._set('alarm-msg-size', msg_size)
@@ -52,10 +54,10 @@ class Alarms(OptionsGroup):
 
         return self._section
 
-    def register_alarm(self, alarm):
+    def register_alarm(self, alarm: TypeAlarmExt):
         """Register (create) an alarm.
 
-        :param AlarmType|list[AlarmType] alarm: Alarm.
+        :param alarm: Alarm.
 
         """
         for alarm in listify(alarm):
@@ -65,14 +67,14 @@ class Alarms(OptionsGroup):
 
         return self._section
 
-    def alarm_on_log(self, alarm, matcher, skip=False):
+    def alarm_on_log(self, alarm: TypeAlarmExt, matcher: str, skip: bool = False):
         """Raise (or skip) the specified alarm when a log line matches the specified regexp.
 
-        :param AlarmType|list[AlarmType] alarm: Alarm.
+        :param alarm: Alarm.
 
-        :param str matcher: Regular expression to match log line.
+        :param matcher: Regular expression to match log line.
 
-        :param bool skip:
+        :param skip:
 
         """
         self.register_alarm(alarm)
@@ -83,7 +85,7 @@ class Alarms(OptionsGroup):
 
         return self._section
 
-    def alarm_on_fd_ready(self, alarm, fd, message, byte_count=None):
+    def alarm_on_fd_ready(self, alarm: TypeAlarmExt, fd: str, message: str, byte_count: int = None):
         """Triggers the alarm when the specified file descriptor is ready for read.
 
         This is really useful for integration with the Linux eventfd() facility.
@@ -91,13 +93,13 @@ class Alarms(OptionsGroup):
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Changelog-1.9.7.html#alarm-fd
 
-        :param AlarmType|list[AlarmType] alarm: Alarm.
+        :param alarm: Alarm.
 
-        :param str fd: File descriptor.
+        :param fd: File descriptor.
 
-        :param str message: Message to send.
+        :param message: Message to send.
 
-        :param int byte_count: Files to read. Default: 1 byte.
+        :param byte_count: Files to read. Default: 1 byte.
 
             .. note:: For ``eventfd`` set 8.
 
@@ -111,33 +113,35 @@ class Alarms(OptionsGroup):
 
         value += f' {message}'
 
-        for alarm in listify(alarm):
-            self._set('alarm-fd', f'{alarm.alias} {value}', multi=True)
+        for alarm_ in listify(alarm):
+            self._set('alarm-fd', f'{alarm_.alias} {value}', multi=True)
 
         return self._section
 
-    def alarm_on_queue_full(self, alarm):
+    def alarm_on_queue_full(self, alarm: TypeAlarmExt):
         """Raise the specified alarm when the socket backlog queue is full.
 
-        :param AlarmType|list[AlarmType] alarm: Alarm.
+        :param alarm: Alarm.
+
         """
         self.register_alarm(alarm)
 
-        for alarm in listify(alarm):
-            self._set('alarm-backlog', alarm.alias, multi=True)
+        for alarm_ in listify(alarm):
+            self._set('alarm-backlog', alarm_.alias, multi=True)
 
         return self._section
 
-    def alarm_on_segfault(self, alarm):
+    def alarm_on_segfault(self, alarm: TypeAlarmExt):
         """Raise the specified alarm when the segmentation fault handler is executed.
 
         Sends a backtrace.
 
-        :param AlarmType|list[AlarmType] alarm: Alarm.
+        :param alarm: Alarm.
+
         """
         self.register_alarm(alarm)
 
-        for alarm in listify(alarm):
-            self._set('alarm-segfault', alarm.alias, multi=True)
+        for alarm_ in listify(alarm):
+            self._set('alarm-segfault', alarm_.alias, multi=True)
 
         return self._section

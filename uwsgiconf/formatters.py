@@ -1,6 +1,6 @@
 from typing import List, Generator, Tuple, Any, Dict
 
-from .typehints import StrList
+from .typehints import Strlist
 
 if False:  # pragma: nocover
     from .config import Section  # noqa
@@ -87,7 +87,7 @@ class FormatterBase:
             for key, value in section._get_options():
                 yield name, key, value
 
-    def format(self) -> StrList:
+    def format(self) -> Strlist:
         raise NotImplementedError()  # pragma: nocover
 
 

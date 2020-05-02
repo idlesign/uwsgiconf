@@ -2,9 +2,9 @@ import sys
 
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
+from ..typehints import Strint, Strlist
 
-
-AUTO = (1,)
+AUTO = -1
 
 
 class Python(OptionsGroup):
@@ -19,30 +19,27 @@ class Python(OptionsGroup):
     plugin = True
 
     def set_basic_params(
-            self, version=AUTO, python_home=None, enable_threads=None, search_path=None,
-            python_binary=None, tracebacker_path=None, plugin_dir=None, os_env_reload=None,
-            optimization_level=None):
+            self,
+            version: Strint = AUTO,
+            python_home: str = None,
+            enable_threads: bool = None,
+            search_path: str = None,
+            python_binary: str = None,
+            tracebacker_path: str = None,
+            plugin_dir: str = None,
+            os_env_reload: bool = None,
+            optimization_level: int = None
+    ):
         """
 
-        :param str|int version: Python version plugin supports.
+        :param version: Python version plugin supports.
 
             Example:
                 * 3 - version 3
                 * <empty> - version 2
                 * <default> - version deduced by uwsgiconf
 
-        :param str python_home: Set python executable directory - PYTHONHOME/virtualenv.
-
-        :param str search_path: Add directory (or an .egg or a glob) to the Python search path.
-
-            .. note:: This can be specified up to 64 times.
-
-        :param str python_binary: Set python program name.
-
-        :param str tracebacker_path: Enable the uWSGI Python tracebacker.
-            http://uwsgi-docs.readthedocs.io/en/latest/Tracebacker.html
-
-        :param str plugin_dir: Directory to search for plugin.
+        :param python_home: Set python executable directory - PYTHONHOME/virtualenv.
 
         :param bool enable_threads: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
@@ -50,10 +47,21 @@ class Python(OptionsGroup):
             .. warning:: Threads will simply *not work* if this option is not enabled.
                          There will likely be no error, just no execution of your thread code.
 
-        :param bool os_env_reload: Force ``os.environ`` reloading for every request.
+        :param search_path: Add directory (or an .egg or a glob) to the Python search path.
+
+            .. note:: This can be specified up to 64 times.
+
+        :param python_binary: Set python program name.
+
+        :param tracebacker_path: Enable the uWSGI Python tracebacker.
+            http://uwsgi-docs.readthedocs.io/en/latest/Tracebacker.html
+
+        :param plugin_dir: Directory to search for plugin.
+
+        :param os_env_reload: Force ``os.environ`` reloading for every request.
             Used to allow setting of ``UWSGI_SETENV`` for Python applications.
 
-        :param int optimization_level: Python optimization level (see ``-O`` argument).
+        :param optimization_level: Python optimization level (see ``-O`` argument).
             .. warning:: This may be dangerous for some apps.
 
         """
@@ -71,7 +79,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def _set_name(self, version=AUTO):
+    def _set_name(self, version: Strint = AUTO):
         """Returns plugin name."""
 
         name = 'python'
@@ -102,16 +110,17 @@ class Python(OptionsGroup):
             * pyargv="one two three" will set ``sys.argv`` to ``('one', 'two', 'three')``.
 
         :param args:
+
         """
         if args:
             self._set('pyargv', ' '.join(args))
 
         return self._section
 
-    def set_wsgi_params(self, module=None, callable_name=None, env_strategy=None):
+    def set_wsgi_params(self, module: str = None, callable_name: str = None, env_strategy: str = None):
         """Set wsgi related parameters.
 
-        :param str module:
+        :param module:
             * load .wsgi file as the Python application
             * load a WSGI module as the application.
 
@@ -121,9 +130,9 @@ class Python(OptionsGroup):
                 * mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
                 * mypackage.my_wsgi_module:my_app -- read from `my_app` attr of mypackage/my_wsgi_module.py
 
-        :param str callable_name: Set WSGI callable name. Default: application.
+        :param callable_name: Set WSGI callable name. Default: application.
 
-        :param str env_strategy: Strategy for allocating/deallocating
+        :param env_strategy: Strategy for allocating/deallocating
             the WSGI env, can be:
 
             * ``cheat`` - preallocates the env dictionary on uWSGI startup and clears it
@@ -146,23 +155,24 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def eval_wsgi_entrypoint(self, code):
+    def eval_wsgi_entrypoint(self, code: str):
         """Evaluates Python code as WSGI entry point.
 
-        :param str code:
+        :param code:
+
         """
         self._set('eval', code)
 
         return self._section
 
-    def set_autoreload_params(self, scan_interval=None, ignore_modules=None):
+    def set_autoreload_params(self, scan_interval: int = None, ignore_modules: Strlist = None):
         """Sets autoreload related parameters.
 
-        :param int scan_interval: Seconds. Monitor Python modules' modification times to trigger reload.
+        :param scan_interval: Seconds. Monitor Python modules' modification times to trigger reload.
 
             .. warning:: Use only in development.
 
-        :param list|str ignore_modules: Ignore the specified module during auto-reload scan.
+        :param ignore_modules: Ignore the specified module during auto-reload scan.
 
         """
         self._set('py-auto-reload', scan_interval)
@@ -170,30 +180,31 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def register_module_alias(self, alias, module_path, after_init=False):
+    def register_module_alias(self, alias: str, module_path: str, after_init: bool = False):
         """Adds an alias for a module.
 
         http://uwsgi-docs.readthedocs.io/en/latest/PythonModuleAlias.html
 
-        :param str alias:
-        :param str module_path:
-        :param bool after_init: add a python module alias after uwsgi module initialization
+        :param alias:
+        :param module_path:
+        :param after_init: add a python module alias after uwsgi module initialization
+
         """
         command = 'post-pymodule-alias' if after_init else 'pymodule-alias'
         self._set(command, f'{alias}={module_path}', multi=True)
 
         return self._section
 
-    def import_module(self, modules, shared=False, into_spooler=False):
+    def import_module(self, modules: Strint, shared: bool = False, into_spooler: bool = False):
         """Imports a python module.
 
-        :param list|str modules:
+        :param modules:
 
-        :param bool shared: If shared import is done once in master process.
+        :param shared: If shared import is done once in master process.
             Otherwise import a python module in all of the processes.
             This is done after fork but before request processing.
 
-        :param bool into_spooler: Import a python module in the spooler.
+        :param into_spooler: Import a python module in the spooler.
             http://uwsgi-docs.readthedocs.io/en/latest/Spooler.html
 
         """
@@ -209,10 +220,10 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def run_module(self, module):
+    def run_module(self, module: str):
         """Runs a Python script in the uWSGI environment.
 
-        :param str module:
+        :param module:
 
         """
         self._set('pyrun', module)

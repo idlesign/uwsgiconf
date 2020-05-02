@@ -8,16 +8,16 @@ class Locks(OptionsGroup):
 
     """
 
-    def set_basic_params(self, count=None, thunder_lock=None, lock_engine=None):
+    def set_basic_params(self, count: int = None, thunder_lock: bool = None, lock_engine: str = None):
         """
-        :param int count: Create the specified number of shared locks.
+        :param count: Create the specified number of shared locks.
 
-        :param bool thunder_lock: Serialize accept() usage (if possible)
+        :param thunder_lock: Serialize accept() usage (if possible)
             Could improve performance on Linux with robust pthread mutexes.
 
             http://uwsgi.readthedocs.io/en/latest/articles/SerializingAccept.html
 
-        :param str lock_engine: Set the lock engine.
+        :param lock_engine: Set the lock engine.
 
             Example:
                 - ipcsem
@@ -29,12 +29,12 @@ class Locks(OptionsGroup):
 
         return self._section
 
-    def set_ipcsem_params(self, ftok=None, persistent=None):
+    def set_ipcsem_params(self, ftok: str = None, persistent: bool = None):
         """Sets ipcsem lock engine params.
 
-        :param str ftok: Set the ipcsem key via ftok() for avoiding duplicates.
+        :param ftok: Set the ipcsem key via ftok() for avoiding duplicates.
 
-        :param bool persistent: Do not remove ipcsem's on shutdown.
+        :param persistent: Do not remove ipcsem's on shutdown.
 
         """
         self._set('ftok', ftok)
@@ -42,16 +42,16 @@ class Locks(OptionsGroup):
 
         return self._section
 
-    def lock_file(self, fpath, after_setup=False, wait=False):
+    def lock_file(self, fpath: str, after_setup: bool = False, wait: bool = False):
         """Locks the specified file.
 
-        :param str fpath: File path.
+        :param fpath: File path.
 
-        :param bool after_setup:
+        :param after_setup:
             True  - after logging/daemon setup
             False - before starting
 
-        :param bool wait:
+        :param wait:
             True  - wait if locked
             False - exit if locked
 
