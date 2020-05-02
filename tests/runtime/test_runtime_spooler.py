@@ -9,7 +9,7 @@ class FakeUwsgi(object):
 
     @property
     def opt(self):
-        return {'spooler': ['/home/here/spooler1', '/home/here/spooler2']}
+        return {b'spooler': ['/home/here/spooler1', '/home/here/spooler2']}
 
     def spooler_pids(self):
         return [1, 2]

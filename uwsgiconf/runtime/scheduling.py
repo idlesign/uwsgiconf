@@ -1,12 +1,17 @@
 from datetime import datetime
 from functools import partial, wraps
+from typing import Union, Callable
 
-from .signals import _automate_signal
+from .signals import _automate_signal, Signal
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
 
+TypeTarget = Union[int, str, Signal]
+TypeRegResult = Union[Callable, bool]
+Strint = Union[int, str]
 
-def register_timer(period, target=None):
+
+def register_timer(period: int, target: TypeTarget = None) -> TypeRegResult:
     """Add timer.
 
     Can be used as a decorator:
@@ -19,8 +24,7 @@ def register_timer(period, target=None):
 
     :param int period: The interval (seconds) at which to raise the signal.
 
-    :param int|Signal|str target: Existing signal to raise
-        or Signal Target to register signal implicitly.
+    :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
         Available targets:
 
@@ -36,14 +40,13 @@ def register_timer(period, target=None):
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
-    :rtype: bool|callable
-
     :raises ValueError: If unable to add timer.
+
     """
     return _automate_signal(target, func=lambda sig: uwsgi.add_timer(int(sig), period))
 
 
-def register_timer_rb(period, repeat=None, target=None):
+def register_timer_rb(period: int, repeat: int = None, target: TypeTarget = None) -> TypeRegResult:
     """Add a red-black timer (based on black-red tree).
 
         .. code-block:: python
@@ -52,13 +55,12 @@ def register_timer_rb(period, repeat=None, target=None):
             def repeat():
                 do()
 
-    :param int period: The interval (seconds) at which the signal is raised.
+    :param period: The interval (seconds) at which the signal is raised.
 
-    :param int repeat: How many times to send signal. Will stop after ther number is reached.
+    :param repeat: How many times to send signal. Will stop after ther number is reached.
         Default: None - infinitely.
 
-    :param int|Signal|str target: Existing signal to raise
-        or Signal Target to register signal implicitly.
+    :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
         Available targets:
 
@@ -74,14 +76,13 @@ def register_timer_rb(period, repeat=None, target=None):
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
-    :rtype: bool|callable
-
     :raises ValueError: If unable to add timer.
+
     """
     return _automate_signal(target, func=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0))
 
 
-def register_timer_ms(period, target=None):
+def register_timer_ms(period: int, target: TypeTarget = None) -> TypeRegResult:
     """Add a millisecond resolution timer.
 
         .. code-block:: python
@@ -90,10 +91,9 @@ def register_timer_ms(period, target=None):
             def repeat():
                 do()
 
-    :param int period: The interval (milliseconds) at which the signal is raised.
+    :param period: The interval (milliseconds) at which the signal is raised.
 
-    :param int|Signal|str target: Existing signal to raise
-        or Signal Target to register signal implicitly.
+    :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
         Available targets:
 
@@ -109,14 +109,20 @@ def register_timer_ms(period, target=None):
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
-    :rtype: bool|callable
-
     :raises ValueError: If unable to add timer.
+
     """
     return _automate_signal(target, func=lambda sig: uwsgi.add_ms_timer(int(sig), period))
 
 
-def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, target=None):
+def register_cron(
+        weekday: Strint = None,
+        month: Strint = None,
+        day: Strint = None,
+        hour: Strint = None,
+        minute: Strint = None,
+        target: TypeTarget = None
+) -> TypeRegResult:
     """Adds cron. The interface to the uWSGI signal cron facility.
 
         .. code-block:: python
@@ -135,20 +141,19 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, ta
         Keep in mind, that your actual function will be wrapped into another one, which will check
         whether it is time to call your function.
 
-    :param int|str weekday: Day of a the week number. Defaults to `each`.
+    :param weekday: Day of a the week number. Defaults to `each`.
         0 - Sunday  1 - Monday  2 - Tuesday  3 - Wednesday
         4 - Thursday  5 - Friday  6 - Saturday
 
-    :param int|str month: Month number 1-12. Defaults to `each`.
+    :param month: Month number 1-12. Defaults to `each`.
 
-    :param int|str day: Day of the month number 1-31. Defaults to `each`.
+    :param day: Day of the month number 1-31. Defaults to `each`.
 
-    :param int|str hour: Hour 0-23. Defaults to `each`.
+    :param hour: Hour 0-23. Defaults to `each`.
 
-    :param int|str minute: Minute 0-59. Defaults to `each`.
+    :param minute: Minute 0-59. Defaults to `each`.
 
-    :param int|Signal|str target: Existing signal to raise
-        or Signal Target to register signal implicitly.
+    :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
         Available targets:
 
@@ -164,9 +169,8 @@ def register_cron(weekday=None, month=None, day=None, hour=None, minute=None, ta
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
-    :rtype: bool|callable
-
     :raises ValueError: If unable to add cron rule.
+
     """
     task_args_initial = {name: val for name, val in locals().items() if val is not None and name != 'target'}
     task_args_casted = {}

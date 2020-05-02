@@ -28,7 +28,7 @@ def test_mule(monkeypatch):
 
 def test_farm(monkeypatch):
 
-    monkeypatch.setattr('uwsgiconf.runtime.mules.uwsgi.opt', {'farm': 'myfarm:1,2,3'})
+    monkeypatch.setattr('uwsgiconf.runtime.mules.uwsgi.opt', {b'farm': b'myfarm:1,2,3'})
 
     farms = Farm.get_farms()
     assert len(farms) == 1

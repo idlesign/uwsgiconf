@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from importlib import import_module
 from io import StringIO
 from types import ModuleType
-from typing import Union, Any, List, Tuple, Dict
+from typing import Optional, Any, List, Tuple, Dict
 
 from .exceptions import UwsgiconfException
 from .settings import CONFIGS_MODULE_ATTR
@@ -24,17 +24,19 @@ def get_logger(name: str):
     return logging.getLogger(name)
 
 
-def encode(value: Union[str, bytes]) -> bytes:
-    """Encodes str into bytes if required."""
-    return value.encode('utf-8') if isinstance(value, str) else value
+def encode(value: str) -> bytes:
+    """Encodes str into bytes."""
+    return value.encode('utf-8')
 
 
-def decode(value: Union[str, bytes]) -> str:
-    """Decodes bytes into str if required."""
-    return value.decode('utf-8') if isinstance(value, bytes) else value
+def decode(value: Optional[bytes]) -> Optional[str]:
+    """Decodes bytes into str."""
+    if value is None:
+        return value
+    return value.decode('utf-8')
 
 
-def decode_deep(value: Any) -> dict:
+def decode_deep(value: Any) -> Any:
     """Decodes object deep if required.
 
     :param value:
@@ -43,13 +45,19 @@ def decode_deep(value: Any) -> dict:
     if isinstance(value, dict):
         out = {}
         for key, val in value.items():
-            out[key] = decode_deep(val)
+            out[decode_deep(key)] = decode_deep(val)
 
-    elif isinstance(value, (tuple, list)):
+    elif isinstance(value, tuple):
+        out = tuple(decode_deep(item) for item in value)
+
+    elif isinstance(value, list):
         out = [decode_deep(item) for item in value]
 
-    else:
+    elif isinstance(value, bytes):
         out = decode(value)
+
+    else:
+        out = value
 
     return out
 

@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import List, Callable
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
@@ -7,17 +8,15 @@ from ..utils import get_logger
 _LOG = get_logger(__name__)
 
 
-registry_signals = []  # type: list[SignalDescription]
-"""Registered signals."""
-
 SignalDescription = namedtuple('SignalDescription', ['num', 'target', 'func'])
 """Registered signal information."""
 
+registry_signals: List[SignalDescription] = []
+"""Registered signals."""
 
-def get_available_num():
+
+def get_available_num() -> int:
     """Returns first available signal number.
-
-    :rtype: int
 
     :raises UwsgiconfException: If no signal is available.
 
@@ -29,11 +28,8 @@ def get_available_num():
     raise UwsgiconfException('No uWSGI signals available.')
 
 
-def get_last_received():
-    """Get the last signal received.
-
-    :rtype: Signal
-    """
+def get_last_received() -> 'Signal':
+    """Get the last signal received."""
     return Signal(uwsgi.signal_received())
 
 
@@ -61,7 +57,7 @@ class Signal:
     """
     __slots__ = ['num']
 
-    def __init__(self, num=None):
+    def __init__(self, num: int = None):
         """
         :param int num: Signal number (0-255).
 
@@ -73,19 +69,16 @@ class Signal:
     def __int__(self):
         return self.num
 
-    def __call__(self, func):
+    def __call__(self, func: Callable):
         # Allows using object as a decorator.
         return self.register_handler()(func)
 
     @property
-    def registered(self):
-        """Whether the signal is registered.
+    def registered(self) -> bool:
+        """Whether the signal is registered."""
+        return uwsgi.signal_registered(self.num) or False
 
-        :rtype: bool
-        """
-        return uwsgi.signal_registered(self.num)
-
-    def register_handler(self, target=None):
+    def register_handler(self, target: str = None) -> Callable:
         """Decorator for a function to be used as a signal handler.
 
         .. code-block:: python
@@ -96,7 +89,7 @@ class Signal:
             def somefunc():
                 pass
 
-        :param str target: Where this signal will be delivered to. Default: ``worker``.
+        :param target: Where this signal will be delivered to. Default: ``worker``.
 
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
@@ -116,7 +109,7 @@ class Signal:
         target = target or 'worker'
         sign_num = self.num
 
-        def wrapper(func):
+        def wrapper(func: Callable):
 
             _LOG.debug(f"Registering '{func.__name__}' as signal '{sign_num}' handler ...")
 
@@ -127,19 +120,18 @@ class Signal:
 
         return wrapper
 
-    def send(self, remote=None):
+    def send(self, remote: str = None):
         """Sends the signal to master or remote.
 
         When you send a signal, it is copied into the master's queue.
         The master will then check the signal table and dispatch the messages.
 
-        :param str|None remote: Remote address.
-
-        :rtype: None
+        :param remote: Remote address.
 
         :raises ValueError: If remote rejected the signal.
 
-        :raises IOError: If unable to deliver to remote.
+        :raises OSError: If unable to deliver to remote.
+
         """
         uwsgi.signal(self.num, *([remote] if remote is not None else []))
 
@@ -153,6 +145,7 @@ class Signal:
         * http://uwsgi-docs.readthedocs.io/en/latest/Signals.html#signal-wait-and-signal-received
 
         :raises SystemError: If something went wrong.
+
         """
         uwsgi.signal_wait(self.num)
 

@@ -33,8 +33,12 @@ def register_file_monitor(filename: str, target: Union[int, str, Signal] = None)
 
 
 class Metric:
-    """User metric related stuff."""
+    """User metric related stuff.
 
+    .. note:: One needs to register user metric beforehand.
+        E.g.:: ``section.monitoring.register_metric(section.monitoring.metric_types.absolute('mymetric'))``
+
+    """
     def __init__(self, name: str):
         """
         :param name: Metric name.

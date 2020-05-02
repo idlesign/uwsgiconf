@@ -4,37 +4,20 @@ from typing import Callable
 from .. import uwsgi
 
 stop = uwsgi.stop
-"""Stops uWSGI.
-
-:rtype: bool|None
-"""
 
 reload = uwsgi.reload
-"""Gracefully reloads uWSGI.
-
-* http://uwsgi.readthedocs.io/en/latest/Management.html#reloading-the-server
-
-:rtype: bool
-"""
 
 disconnect = uwsgi.disconnect
-"""Drops current connection.
-
-:rtype: None
-"""
 
 set_process_name = uwsgi.setprocname
-"""Sets current process name.
-
-:param str name:
-
-:rtype: bool
-"""
 
 
 class harakiri_imposed:
     """Decorator and context manager.
+
     Allows temporarily setting harakiri timeout for a function or a code block.
+
+    .. note:: This is for workers, mules and spoolers.
 
     Examples:
 

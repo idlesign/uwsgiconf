@@ -88,7 +88,7 @@ spooler: Callable = lambda: None
 sockets: List[int] = []
 """Current list of file descriptors for registered sockets."""
 
-start_response: Callable = None
+start_response: Optional[Callable] = None
 """Callable spitting UWSGI response."""
 
 started_on: int = 0
@@ -495,7 +495,7 @@ def farm_get_msg() -> Optional[bytes]:
      """
 
 
-def farm_msg(farm: str, message: str):
+def farm_msg(farm: str, message: Union[str, bytes]):
     """Sends a message to the given farm.
 
     :param farm: Farm name to send message to.
@@ -531,9 +531,9 @@ def i_am_the_spooler() -> bool:
     return False
 
 
-def in_farm(name: str) -> bool:
-    """Returns flag indicating whether you are (mule) belong
-    to the given farm.
+def in_farm(name: str) -> Optional[bool]:
+    """Returns flag indicating whether you (mule) belong
+    to the given farm. Returns ``None`` is not in a mule.
 
     :param name: Farm name.
 
@@ -736,7 +736,7 @@ def mule_id() -> int:
     return 0
 
 
-def mule_msg(message: str, mule_farm: Union[str, int] = None) -> bool:
+def mule_msg(message: Union[str, bytes], mule_farm: Union[str, int] = None) -> bool:
     """Sends a message to a mule(s)/farm.
 
     :param message:
@@ -978,13 +978,12 @@ def set_warning_message(message: str) -> bool:
     return False
 
 
-def setprocname(name: str) -> bool:
+def setprocname(name: str):
     """Sets current process name.
 
     :param name:
 
     """
-    return False
 
 
 def signal(num: int, remote: str = ''):
@@ -1161,12 +1160,16 @@ def websocket_recv_nb(request_context=None) -> bytes:
     """
 
 
+# todo uWSGI 2.1+ has uwsgi.request_context()
+
+
 def websocket_send(message: str, request_context=None):
     """Sends a message to websocket.
 
     :param message: data to send
 
     :param request_context:
+        .. note:: uWSGI 2.1+
 
     :raises IOError: If unable to send a message.
 
@@ -1179,6 +1182,7 @@ def websocket_send_binary(message: str, request_context=None):
     :param message: data to send
 
     :param request_context:
+         .. note:: uWSGI 2.1+
 
     :raises IOError: If unable to send a message.
 
