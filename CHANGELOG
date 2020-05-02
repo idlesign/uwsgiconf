@@ -12,6 +12,7 @@ Unreleased
 * Runtime .caching improved.
 * Runtime .logging improved.
 * Runtime .mules improved.
+* Runtime .platform improved.
 * Runtime .rpc improved.
 
 

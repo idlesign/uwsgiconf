@@ -1,5 +1,5 @@
 from threading import local
-from typing import Callable, Type, Tuple, Union
+from typing import Callable, Type, Tuple, Union, Optional, Dict, List
 
 from .request import _Request
 from .. import uwsgi as _uwsgi
@@ -65,7 +65,7 @@ class _Platform:
     started_on: int = _uwsgi.started_on
     """uWSGI's startup Unix timestamp."""
 
-    apps_map: dict = _uwsgi.applications
+    apps_map: Optional[dict] = _uwsgi.applications
     """Applications dictionary mapping mountpoints to application callables."""
 
     @property
@@ -74,12 +74,12 @@ class _Platform:
         return decode(_uwsgi.hostname)
 
     @property
-    def config(self) -> dict:
+    def config(self) -> Dict[str, Union[str, List[str]]]:
         """The current configuration options, including any custom placeholders."""
         return decode_deep(_uwsgi.opt)
 
     @property
-    def config_variables(self) -> dict:
+    def config_variables(self) -> Dict[str, str]:
         """Current mapping of configuration file "magic" variables."""
         return decode_deep(_uwsgi.magic_table)
 
@@ -127,14 +127,14 @@ class _Platform:
         """
         return _uwsgi.listen_queue(socket_num)
 
-    def get_version(self, as_tuple: bool = False) -> Union[str, Tuple[int, int, int, int, bytes]]:
+    def get_version(self, as_tuple: bool = False) -> Union[str, Tuple[int, int, int, int, str]]:
         """Returns uWSGI version string or tuple.
 
         :param as_tuple:
 
         """
         if as_tuple:
-            return _uwsgi.version_info
+            return decode_deep(_uwsgi.version_info)
 
         return decode(_uwsgi.version)
 
