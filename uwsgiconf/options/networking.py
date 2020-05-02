@@ -1,8 +1,5 @@
 from os import geteuid
-try:
-    from urllib.parse import urlsplit, parse_qs
-except ImportError:
-    from urlparse import urlsplit, parse_qs
+from urllib.parse import urlsplit, parse_qs
 
 from .networking_sockets import *
 from ..base import OptionsGroup
