@@ -249,6 +249,8 @@ class Section(OptionsGroup):
 
         """
         self._runtime_dir = value or ''
+        
+        return self
 
     def set_basic_params(self, strict_config: bool = None, **kwargs):
 
