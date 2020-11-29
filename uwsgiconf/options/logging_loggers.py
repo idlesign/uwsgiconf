@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import Union
+
 from ..base import ParametrizedValue
 
 
@@ -16,14 +19,14 @@ class LoggerFile(Logger):
     name = 'file'
     plugin = 'logfile'
 
-    def __init__(self, filepath, alias=None):
+    def __init__(self, filepath: Union[str, Path], alias=None):
         """
         :param str filepath: File path.
 
         :param str alias: Logger alias.
 
         """
-        super(LoggerFile, self).__init__(alias, filepath)
+        super(LoggerFile, self).__init__(alias, str(filepath))
 
 
 class LoggerSocket(Logger):
@@ -32,7 +35,7 @@ class LoggerSocket(Logger):
     name = 'socket'
     plugin = 'logsocket'
 
-    def __init__(self, addr_or_path, alias=None):
+    def __init__(self, addr_or_path: Union[str, Path], alias=None):
         """
 
         :param str addr_or_path: Remote address or filepath.
@@ -44,7 +47,7 @@ class LoggerSocket(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerSocket, self).__init__(alias, addr_or_path)
+        super(LoggerSocket, self).__init__(alias, str(addr_or_path))
 
 
 class LoggerSyslog(Logger):

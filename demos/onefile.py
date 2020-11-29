@@ -25,8 +25,8 @@ def app_1(env, start_response):
     data = [
         '<h1>uwsgiconf demo: one file</h1>',
 
-        '<div>uWSGI version: %s</div>' % uwsgi.get_version(),
-        '<div>uWSGI request ID: %s</div>' % uwsgi.request.id,
+        f'<div>uWSGI version: {uwsgi.get_version()}</div>',
+        f'<div>uWSGI request ID: {uwsgi.request.id}</div>',
     ]
 
     return encode(data)
@@ -42,7 +42,7 @@ def app_2(env, start_response):
     data = [
         '<h1>uwsgiconf demo: one file second app</h1>',
 
-        '<div>Some random number for you: %s</div>' % random.randint(1, 99999),
+        f'<div>Some random number for you: {random.randint(1, 99999)}</div>',
     ]
 
     return encode(data)
@@ -57,30 +57,30 @@ def configure():
     Applications are on 127.0.0.1 on ports starting from 8000.
 
     """
-    import os
+    from pathlib import Path
     from uwsgiconf.presets.nice import PythonSection
 
-    FILE = os.path.abspath(__file__)
+    filepath = Path(__file__).absolute()
     port = 8000
 
     configurations = []
 
     for idx in range(2):
 
-        alias = 'app_%s' % (idx + 1)
+        alias = f'app_{idx + 1}'
 
         section = PythonSection.bootstrap(
 
-            'http://127.0.0.1:%s' % port,
+            f'http://127.0.0.1:{port}',
 
             # Automatically reload uWSGI if this file is changed.
-            touch_reload=FILE,
+            touch_reload=filepath,
 
             # To differentiate easily.
             process_prefix=alias,
 
             # Serve WSGI application (see above) from this very file.
-            wsgi_module=FILE,
+            wsgi_module=filepath,
 
             # Custom WSGI callable for second app.
             wsgi_callable=alias,

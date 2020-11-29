@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import Union
+
 from ..base import ParametrizedValue
 from ..utils import KeyValue, filter_locals
 
@@ -368,11 +371,12 @@ class ActionServeStatic(RouteAction):
     name = 'static'
     plugin = 'router_static'
 
-    def __init__(self, fpath):
+    def __init__(self, fpath: Union[str, Path]):
         """
         :param str fpath: Static file path.
+
         """
-        super(ActionServeStatic, self).__init__(fpath)
+        super(ActionServeStatic, self).__init__(str(fpath))
 
 
 class ActionAuthBasic(RouteAction):
@@ -655,8 +659,9 @@ class ActionSetScriptFile(RouteAction):
     """
     name = 'setfile'
 
-    def __init__(self, fpath):
+    def __init__(self, fpath: Union[str, Path]):
         """
         :param str fpath: File path.
+
         """
-        super(ActionSetScriptFile, self).__init__(fpath)
+        super(ActionSetScriptFile, self).__init__(str(fpath))

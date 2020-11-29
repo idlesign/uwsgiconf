@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Union, Callable
 
 from ..config import Section as _Section
@@ -126,7 +127,6 @@ class Section(_Section):
                 * 503.html
 
         """
-        from pathlib import Path
         return str(Path(__file__).parent.parent / 'contrib/django/uwsgify/static/uwsgify' / filename)
 
     def configure_maintenance_mode(self, trigger: str, response: str):
@@ -144,8 +144,6 @@ class Section(_Section):
                   This is often discouraged, because it may have search ranking implications.
 
         """
-        from pathlib import Path
-
         routing = self.routing
 
         rule = routing.route_rule

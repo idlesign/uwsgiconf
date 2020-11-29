@@ -1,4 +1,6 @@
 import sys
+from pathlib import Path
+from typing import Union
 
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
@@ -15,7 +17,6 @@ class Python(OptionsGroup):
         If you need threads, remember to enable them with ``enable_threads``.
 
     """
-
     plugin = True
 
     def set_basic_params(
@@ -117,7 +118,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_wsgi_params(self, module: str = None, callable_name: str = None, env_strategy: str = None):
+    def set_wsgi_params(self, module: Union[str, Path] = None, callable_name: str = None, env_strategy: str = None):
         """Set wsgi related parameters.
 
         :param module:
@@ -142,7 +143,7 @@ class Python(OptionsGroup):
                 Default behaviour for uWSGI >= 2.1
 
         """
-        module = module or ''
+        module = str(module or '')
 
         if '/' in module:
             self._set('wsgi-file', module, condition=module)

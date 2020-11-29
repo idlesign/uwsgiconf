@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Optional, List, Union, Tuple
 
 from .main_process_actions import *
@@ -330,7 +331,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_hook_touch(self, fpath: str, action: TypeActionExt):
+    def set_hook_touch(self, fpath: Union[str, Path], action: TypeActionExt):
         """Allows running certain action when the specified file is touched.
 
         :param fpath: File path.
@@ -397,7 +398,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_pid_file(self, fpath: str, before_priv_drop: bool = True, safe: bool = False):
+    def set_pid_file(self, fpath: Union[str, Path], before_priv_drop: bool = True, safe: bool = False):
         """Creates pidfile before or after privileges drop.
 
         :param fpath: File path.
@@ -421,7 +422,7 @@ class MainProcess(OptionsGroup):
         if safe:
             command = 'safe-' + command
 
-        self._set(command, fpath)
+        self._set(command, str(fpath))
 
         return self._section
 

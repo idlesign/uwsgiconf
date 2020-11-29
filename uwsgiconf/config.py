@@ -4,6 +4,7 @@ from copy import deepcopy
 from datetime import datetime
 from functools import partial
 from itertools import chain
+from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import List, Union, Callable, Optional, Any, Tuple, Dict
 
@@ -684,7 +685,7 @@ class Configuration:
         """Print out this configuration as .ini."""
         return self.format(do_print=True)
 
-    def tofile(self, filepath: str = None) -> str:
+    def tofile(self, filepath: Union[str, Path] = None) -> str:
         """Saves configuration into a file and returns its path.
 
         Convenience method.
@@ -698,10 +699,12 @@ class Configuration:
                 filepath = f.name
 
         else:
-            filepath = os.path.abspath(filepath)
+            filepath = Path(filepath).absolute()
 
-            if os.path.isdir(filepath):
-                filepath = os.path.join(filepath, f'{self.alias}.ini')
+            if filepath.is_dir():
+                filepath = filepath / f'{self.alias}.ini'
+
+        filepath = str(filepath)
 
         with open(filepath, 'w') as target_file:
             target_file.write(self.format())

@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import Union
+
 from ..base import ParametrizedValue
 from ..utils import listify
 
@@ -118,7 +121,7 @@ class ActionFileCreate(HookAction):
 
     name = 'create'
 
-    def __init__(self, fpath):
+    def __init__(self, fpath: Union[str, Path]):
         super(ActionFileCreate, self).__init__(fpath)
 
 

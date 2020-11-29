@@ -236,11 +236,11 @@ class MasterProcess(OptionsGroup):
 
             if background:
                 # Attach a command/daemon to the master process managed by a pidfile (the command must daemonize)
-                self._set(prefix + 'smart-attach-daemon', command_or_pid_path, multi=True)
+                self._set(f'{prefix}smart-attach-daemon', command_or_pid_path, multi=True)
 
             else:
                 # Attach a command/daemon to the master process managed by a pidfile (the command must NOT daemonize)
-                self._set(prefix + 'smart-attach-daemon2', command_or_pid_path, multi=True)
+                self._set(f'{prefix}smart-attach-daemon2', command_or_pid_path, multi=True)
 
         else:
             if background:
@@ -252,7 +252,7 @@ class MasterProcess(OptionsGroup):
 
             else:
                 # Attach a command/daemon to the master process (the command has to remain in foreground)
-                self._set(prefix + 'attach-daemon', command_or_pid_path, multi=True)
+                self._set(f'{prefix}attach-daemon', command_or_pid_path, multi=True)
 
         return self._section
 
