@@ -36,13 +36,13 @@ class Socket(ParametrizedValue):
             if submod:
                 self._set(f'{self.name}-modifier2', modifier.submod)
 
-        super(Socket, self).__init__()
+        super().__init__()
 
     def __str__(self):
         if self.address not in self.args:
             self.args.insert(0, self.address)
 
-        result = super(Socket, self).__str__()
+        result = super().__str__()
 
         self.args.pop(0)
 
@@ -83,7 +83,7 @@ class SocketHttp(Socket):
         if http11:
             self.name = 'http11-socket'
 
-        super(SocketHttp, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
 class SocketHttps(Socket):
@@ -120,7 +120,7 @@ class SocketHttps(Socket):
 
         :param Modifier modifier: Socket routing modifier.
         """
-        super(SocketHttps, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
         args = [cert, key]
 
         if ciphers or client_ca:
@@ -176,7 +176,7 @@ class SocketUwsgi(Socket):
         if persistent:
             self.name = 'puwsgi-socket'
 
-        super(SocketUwsgi, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
 class SocketUwsgis(SocketHttps):
@@ -217,7 +217,7 @@ class SocketFastcgi(Socket):
         if nph:
             self.name = 'fastcgi-nph-socket'
 
-        super(SocketFastcgi, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
 class SocketScgi(Socket):
@@ -243,7 +243,7 @@ class SocketScgi(Socket):
         if nph:
             self.name = 'scgi-nph-socket'
 
-        super(SocketScgi, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
 class SocketRaw(Socket):
@@ -293,7 +293,7 @@ class SocketShared(Socket):
         if undeferred:
             self.name = 'undeferred-shared-socket'
 
-        super(SocketShared, self).__init__(address, bound_workers=bound_workers, modifier=modifier)
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
 class SocketZeromq(Socket):

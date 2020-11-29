@@ -24,7 +24,7 @@ class SubjectCustom(ParametrizedValue):
         """
         self._subject = subject
         self.negate = negate
-        super(SubjectCustom, self).__init__()
+        super().__init__()
 
     def __invert__(self):
         self.negate = True

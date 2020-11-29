@@ -23,7 +23,7 @@ class PusherSocket(Pusher):
 
         :param str prefix: Arbitrary prefix to differentiate sender.
         """
-        super(PusherSocket, self).__init__(address, prefix)
+        super().__init__(address, prefix)
 
 
 class PusherRrdtool(Pusher):
@@ -44,7 +44,7 @@ class PusherRrdtool(Pusher):
         :param int push_interval: Set push frequency.
 
         """
-        super(PusherRrdtool, self).__init__(target_dir)
+        super().__init__(target_dir)
 
         self._set('rrdtool-freq', push_interval)
         self._set('rrdtool-lib', library)
@@ -66,7 +66,7 @@ class PusherStatsd(Pusher):
 
         :param bool all_gauges: Push all metrics to statsd as gauges.
         """
-        super(PusherStatsd, self).__init__(address, prefix)
+        super().__init__(address, prefix)
 
         self._set('statsd-no-workers', no_workers, cast=bool)
         self._set('statsd-all-gauges', all_gauges, cast=bool)
@@ -126,7 +126,7 @@ class PusherCarbon(Pusher):
             .. note:: Dots are not replaced by default.
 
         """
-        super(PusherCarbon, self).__init__(address)
+        super().__init__(address)
 
         self._set('carbon-id', node_realm)
         self._set('carbon-root', node_root)
@@ -159,7 +159,7 @@ class PusherZabbix(Pusher):
             for the current metrics setup.
 
         """
-        super(PusherZabbix, self).__init__(address, prefix)
+        super().__init__(address, prefix)
 
         self._set('zabbix-template', template)
 
@@ -180,7 +180,7 @@ class PusherMongo(Pusher):
         """
         value = KeyValue(locals(), aliases={'push_interval': 'freq'})
 
-        super(PusherMongo, self).__init__(value)
+        super().__init__(value)
 
 
 class PusherFile(Pusher):
@@ -202,4 +202,4 @@ class PusherFile(Pusher):
         """
         value = KeyValue(locals(), aliases={'fpath': 'path', 'push_interval': 'freq'})
 
-        super(PusherFile, self).__init__(value)
+        super().__init__(value)

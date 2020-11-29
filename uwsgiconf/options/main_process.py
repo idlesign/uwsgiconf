@@ -179,7 +179,7 @@ class MainProcess(OptionsGroup):
         """
 
     def __init__(self, *args, **kwargs):
-        super(MainProcess, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.owner: List[Optional[Strint], Optional[Strint]] = [None, None]
 

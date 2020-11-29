@@ -45,7 +45,7 @@ class ActionMount(HookAction):
             args = [mountpoint, flags]
             self.name = 'umount'
 
-        super(ActionMount, self).__init__(*args)
+        super().__init__(*args)
 
 
 class ActionExecute(HookAction):
@@ -64,7 +64,7 @@ class ActionExecute(HookAction):
 
     # todo consider adding safeexec
     def __init__(self, command):
-        super(ActionExecute, self).__init__(command)
+        super().__init__(command)
 
 
 class ActionCall(HookAction):
@@ -92,7 +92,7 @@ class ActionCall(HookAction):
 
         self.name = name
 
-        super(ActionCall, self).__init__(target)
+        super().__init__(target)
 
 
 class ActionDirChange(HookAction):
@@ -104,7 +104,7 @@ class ActionDirChange(HookAction):
     name = 'cd'
 
     def __init__(self, target_dir):
-        super(ActionDirChange, self).__init__(target_dir)
+        super().__init__(target_dir)
 
 
 class ActionDirCreate(HookAction):
@@ -113,7 +113,7 @@ class ActionDirCreate(HookAction):
     name = 'mkdir'
 
     def __init__(self, target_dir):
-        super(ActionDirCreate, self).__init__(target_dir)
+        super().__init__(target_dir)
 
 
 class ActionFileCreate(HookAction):
@@ -122,7 +122,7 @@ class ActionFileCreate(HookAction):
     name = 'create'
 
     def __init__(self, fpath: Union[str, Path]):
-        super(ActionFileCreate, self).__init__(fpath)
+        super().__init__(fpath)
 
 
 class ActionExit(HookAction):
@@ -134,7 +134,7 @@ class ActionExit(HookAction):
     name = 'exit'
 
     def __init__(self, status_code=None):
-        super(ActionExit, self).__init__(status_code)
+        super().__init__(status_code)
 
 
 class ActionPrintout(HookAction):
@@ -146,7 +146,7 @@ class ActionPrintout(HookAction):
     name = 'print'
 
     def __init__(self, text=None):
-        super(ActionPrintout, self).__init__(text)
+        super().__init__(text)
 
 
 class ActionSetHostName(HookAction):
@@ -155,7 +155,7 @@ class ActionSetHostName(HookAction):
     name = 'hostname'
 
     def __init__(self, name):
-        super(ActionSetHostName, self).__init__(name)
+        super().__init__(name)
 
 
 class ActionAlarm(HookAction):
@@ -164,7 +164,7 @@ class ActionAlarm(HookAction):
     name = 'alarm'
 
     def __init__(self, alarm, message):
-        super(ActionAlarm, self).__init__(alarm, message)
+        super().__init__(alarm, message)
 
 
 class ActionFileWrite(HookAction):
@@ -195,7 +195,7 @@ class ActionFileWrite(HookAction):
         if newline:
             self.name += 'n'
 
-        super(ActionFileWrite, self).__init__(target, text)
+        super().__init__(target, text)
 
 
 class ActionFifoWrite(HookAction):
@@ -211,7 +211,7 @@ class ActionFifoWrite(HookAction):
         if wait:
             self.name = 'spinningfifo'
 
-        super(ActionFifoWrite, self).__init__(target, text)
+        super().__init__(target, text)
 
 
 class ActionUnlink(HookAction):
@@ -223,4 +223,4 @@ class ActionUnlink(HookAction):
     name = 'unlink'
 
     def __init__(self, target):
-        super(ActionUnlink, self).__init__(target)
+        super().__init__(target)

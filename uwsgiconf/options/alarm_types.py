@@ -9,7 +9,7 @@ class AlarmType(ParametrizedValue):
 
     def __init__(self, alias: str, *args, **kwargs):
         self.alias = alias or ''
-        super(AlarmType, self).__init__(*args)
+        super().__init__(*args)
 
 
 class AlarmCommand(AlarmType):
@@ -18,7 +18,7 @@ class AlarmCommand(AlarmType):
     name = 'cmd'
 
     def __init__(self, alias: str, command: str):
-        super(AlarmCommand, self).__init__(alias, command)
+        super().__init__(alias, command)
 
 
 class AlarmSignal(AlarmType):
@@ -27,7 +27,7 @@ class AlarmSignal(AlarmType):
     name = 'signal'
 
     def __init__(self, alias: str, sig_num: int):
-        super(AlarmSignal, self).__init__(alias, sig_num)
+        super().__init__(alias, sig_num)
 
 
 class AlarmLog(AlarmType):
@@ -36,7 +36,7 @@ class AlarmLog(AlarmType):
     name = 'log'
 
     def __init__(self, alias: str):
-        super(AlarmLog, self).__init__(alias)
+        super().__init__(alias)
 
 
 class AlarmMule(AlarmType):
@@ -45,7 +45,7 @@ class AlarmMule(AlarmType):
     name = 'mule'
 
     def __init__(self, alias: str, mule_id: int):
-        super(AlarmMule, self).__init__(alias, mule_id)
+        super().__init__(alias, mule_id)
 
 
 class AlarmCurl(AlarmType):
@@ -75,7 +75,7 @@ class AlarmCurl(AlarmType):
             bool_keys=['ssl', 'ssl_insecure'],
             items_separator=self.args_joiner,
         )
-        super(AlarmCurl, self).__init__(alias, url, opts)
+        super().__init__(alias, url, opts)
 
 
 class AlarmXmpp(AlarmType):
@@ -86,4 +86,4 @@ class AlarmXmpp(AlarmType):
     args_joiner = ';'
 
     def __init__(self, alias: str, jid: str, password: str, recipients: Strlist):
-        super(AlarmXmpp, self).__init__(alias, jid, password, ','.join(listify(recipients)))
+        super().__init__(alias, jid, password, ','.join(listify(recipients)))

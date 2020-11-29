@@ -24,7 +24,7 @@ class RouterBase(OptionsGroup):
 
         self._set(command, on)
 
-        super(RouterBase, self).__init__()
+        super().__init__()
 
     def _contribute_to_opts(self, target):
         target_section = target._section
@@ -131,7 +131,7 @@ class ForwarderPath(Forwarder):
         if '%s' in sockets_dir:
             self.name = 'use-pattern'
 
-        super(ForwarderPath, self).__init__(sockets_dir)
+        super().__init__(sockets_dir)
 
 
 class ForwarderCode(Forwarder):
@@ -159,7 +159,7 @@ class ForwarderCode(Forwarder):
 
         """
         modifier = modifier or ModifierWsgi
-        super(ForwarderCode, self).__init__(modifier.code, script, func)
+        super().__init__(modifier.code, script, func)
 
 
 class ForwarderCache(Forwarder):
@@ -174,7 +174,7 @@ class ForwarderCache(Forwarder):
         """
         :param str cache_name: Cache name to use.
         """
-        super(ForwarderCache, self).__init__(cache_name)
+        super().__init__(cache_name)
 
 
 class ForwarderSocket(Forwarder):
@@ -186,7 +186,7 @@ class ForwarderSocket(Forwarder):
         """
         :param str socket: Socket filepath.
         """
-        super(ForwarderSocket, self).__init__(socket)
+        super().__init__(socket)
 
 
 class ForwarderSubscriptionServer(Forwarder):
@@ -205,7 +205,7 @@ class ForwarderSubscriptionServer(Forwarder):
         """
         :param str address: Address (including port) to run the subscription server on.
         """
-        super(ForwarderSubscriptionServer, self).__init__(address)
+        super().__init__(address)
 
 
 class _RouterWithForwarders(_RouterCommon):
@@ -230,7 +230,7 @@ class _RouterWithForwarders(_RouterCommon):
             Expects a forwarder instance or one or more node names.
 
         """
-        super(_RouterWithForwarders, self).__init__(on)
+        super().__init__(on)
 
         if forward_to is not None:
             if isinstance(forward_to, Forwarder):
@@ -278,7 +278,7 @@ class _RouterWithForwarders(_RouterCommon):
         :param forward_to: Forward request to the given node.
 
         """
-        super(_RouterWithForwarders, self).set_basic_params(**filter_locals(locals(), drop=[
+        super().set_basic_params(**filter_locals(locals(), drop=[
             'quiet',
             'buffer_size',
         ]))
@@ -353,7 +353,7 @@ class RouterHttp(_RouterWithForwarders):
 
 
         """
-        super(RouterHttp, self).set_basic_params(**filter_locals(locals(), drop=[
+        super().set_basic_params(**filter_locals(locals(), drop=[
             'keepalive',
             'resubscribe_addresses',
         ]))
@@ -388,7 +388,7 @@ class RouterHttp(_RouterWithForwarders):
 
         """
 
-        super(RouterHttp, self).set_connections_params(
+        super().set_connections_params(
             **filter_locals(locals(), ['timeout_headers', 'timeout_backend']))
 
         self._set_aliased('headers-timeout', timeout_headers)
@@ -508,7 +508,7 @@ class RouterHttps(RouterHttp):
             bool_keys=['use_spdy'],
         )
 
-        super(_RouterWithForwarders, self).__init__(on)
+        super().__init__(on)
 
         self._set_aliased('session-context', session_context)
 
@@ -564,7 +564,7 @@ class RouterSsl(_RouterWithForwarders):
         self._set_aliased('session-context', session_context)
         self._set_aliased('sni', use_sni, cast=bool)
 
-        super(RouterSsl, self).__init__(on, forward_to)
+        super().__init__(on, forward_to)
 
     def set_connections_params(self, harakiri=None, timeout_socket=None, retry_delay=None, retry_max=None):
         """Sets connection-related parameters.
@@ -579,7 +579,7 @@ class RouterSsl(_RouterWithForwarders):
         :param int retry_max: Maximum number of retries/fallbacks to other nodes. Default: 3.
 
         """
-        super(RouterSsl, self).set_connections_params(**filter_locals(locals(), ['retry_max']))
+        super().set_connections_params(**filter_locals(locals(), ['retry_max']))
 
         self._set_aliased('max-retries', retry_max)
 
@@ -631,7 +631,7 @@ class RouterFast(_RouterWithForwarders):
             See `.empire.set_emperor_command_params()`.
 
         """
-        super(RouterFast, self).set_basic_params(**filter_locals(locals(), [
+        super().set_basic_params(**filter_locals(locals(), [
             'fallback_nokey',
             'subscription_key',
             'emperor_command_socket',
@@ -676,7 +676,7 @@ class RouterFast(_RouterWithForwarders):
         :param int defer: Defer connection delay, seconds. Default: 5.
 
         """
-        super(RouterFast, self).set_connections_params(**filter_locals(locals(), ['retry_max', 'defer']))
+        super().set_connections_params(**filter_locals(locals(), ['retry_max', 'defer']))
 
         self._set_aliased('max-retries', retry_max)
         self._set_aliased('defer-connect-timeout', defer)
@@ -739,7 +739,7 @@ class RouterRaw(_RouterWithForwarders):
         :param bool use_xclient: Use the xclient protocol to pass the client address.
 
         """
-        super(RouterRaw, self).set_connections_params(**filter_locals(locals(), ['retry_max', 'use_xclient']))
+        super().set_connections_params(**filter_locals(locals(), ['retry_max', 'use_xclient']))
 
         self._set_aliased('max-retries', retry_max)
         self._set_aliased('xclient', use_xclient)
@@ -777,7 +777,7 @@ class RouterForkPty(_RouterCommon):
 
         self.on_command = router_name
 
-        super(RouterForkPty, self).__init__(on)
+        super().__init__(on)
 
     def set_basic_params(
             self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
@@ -805,7 +805,7 @@ class RouterForkPty(_RouterCommon):
             on every connection. Default: /bin/sh.
 
         """
-        super(RouterForkPty, self).set_basic_params(**filter_locals(locals(), ['run_command']))
+        super().set_basic_params(**filter_locals(locals(), ['run_command']))
 
         self._set_aliased('command', run_command)
 
@@ -869,7 +869,7 @@ class RouterTunTap(RouterBase):
         :param str gateway: Gateway address.
 
         """
-        super(RouterTunTap, self).__init__()
+        super().__init__()
 
         if on is not None:
             value = [device or 'uwsgidev', on]

@@ -10,7 +10,7 @@ class BalancingAlgorithmWithBackup(BalancingAlgorithm):
 
     def __init__(self, backup_level=None):
         self.backup_level = backup_level
-        super(BalancingAlgorithmWithBackup, self).__init__()
+        super().__init__()
 
 
 class WeightedRoundRobin(BalancingAlgorithmWithBackup):

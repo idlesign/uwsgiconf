@@ -7,7 +7,7 @@ from ..utils import listify
 class Var(TemplatedValue):
 
     def __str__(self):
-        return '%(' + super(Var, self).__str__() + ')'
+        return '%(' + super().__str__() + ')'
 
 
 class VarMetric(Var):
@@ -21,7 +21,7 @@ class VarRequestVar(Var):
 
     def __init__(self, name):
         name = name.replace('-', '_').upper()  # Normalize.
-        super(VarRequestVar, self).__init__(name)
+        super().__init__(name)
 
 
 class Logging(OptionsGroup):

@@ -76,7 +76,7 @@ class Networking(OptionsGroup):
             return socket
 
     def __init__(self, *args, **kwargs):
-        super(Networking, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self._sockets = []  # Registered sockets list.
 

@@ -24,7 +24,7 @@ class Spooler(OptionsGroup):
 
     def __init__(self, *args, **kwargs):
         self._base_dir = ''
-        super(Spooler, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def set_basic_params(
             self,

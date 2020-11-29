@@ -10,7 +10,7 @@ class Logger(ParametrizedValue):
 
     def __init__(self, alias, *args):
         self.alias = alias or ''
-        super(Logger, self).__init__(*args)
+        super().__init__(*args)
 
 
 class LoggerFile(Logger):
@@ -26,7 +26,7 @@ class LoggerFile(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerFile, self).__init__(alias, str(filepath))
+        super().__init__(alias, str(filepath))
 
 
 class LoggerFileDescriptor(Logger):
@@ -78,7 +78,7 @@ class LoggerSocket(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerSocket, self).__init__(alias, str(addr_or_path))
+        super().__init__(alias, str(addr_or_path))
 
 
 class LoggerSyslog(Logger):
@@ -99,7 +99,7 @@ class LoggerSyslog(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerSyslog, self).__init__(alias, app_name, facility)
+        super().__init__(alias, app_name, facility)
 
 
 class LoggerRsyslog(LoggerSyslog):
@@ -129,7 +129,7 @@ class LoggerRsyslog(LoggerSyslog):
         :param str alias: Logger alias.
 
         """
-        super(LoggerRsyslog, self).__init__(app_name, facility, alias=alias)
+        super().__init__(app_name, facility, alias=alias)
 
         self.args.insert(0, host)
 
@@ -163,7 +163,7 @@ class LoggerRedis(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerRedis, self).__init__(alias, host, command, prefix)
+        super().__init__(alias, host, command, prefix)
 
 
 class LoggerMongo(Logger):
@@ -189,7 +189,7 @@ class LoggerMongo(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerMongo, self).__init__(alias, host, collection, node)
+        super().__init__(alias, host, collection, node)
 
 
 class LoggerZeroMq(Logger):
@@ -209,4 +209,4 @@ class LoggerZeroMq(Logger):
         :param str alias: Logger alias.
 
         """
-        super(LoggerZeroMq, self).__init__(alias, connection_str)
+        super().__init__(alias, connection_str)

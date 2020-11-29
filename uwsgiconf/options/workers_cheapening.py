@@ -5,7 +5,7 @@ class Algo(OptionsGroup):
 
     def __init__(self, *args, **kwargs):
         self._make_section_like()
-        super(Algo, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class AlgoSpare(Algo):

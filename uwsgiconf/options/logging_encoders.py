@@ -17,7 +17,7 @@ class EncoderPrefix(Encoder):
         :param str value: Value to be used as affix
 
         """
-        super(EncoderPrefix, self).__init__(value)
+        super().__init__(value)
 
 
 class EncoderSuffix(EncoderPrefix):
@@ -76,7 +76,7 @@ class EncoderFormat(Encoder):
             Available variables are listed in ``FormatEncoder.Vars``.
 
         """
-        super(EncoderFormat, self).__init__(template)
+        super().__init__(template)
 
     class vars:
         """Variables available to use."""

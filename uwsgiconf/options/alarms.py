@@ -29,7 +29,7 @@ class Alarms(OptionsGroup):
 
     def __init__(self, *args, **kwargs):
         self._alarms = []
-        super(Alarms, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def set_basic_params(self, msg_size: int = None, cheap: bool = None, anti_loop_timeout: int = None):
         """

@@ -261,7 +261,7 @@ class ParametrizedValue(OptionsGroup):
     def __init__(self, *args):
         self.args = list(args)
         self._opts = {}
-        super(ParametrizedValue, self).__init__(_section=self)
+        super().__init__(_section=self)
 
     def __str__(self):
         args = [str(arg) for arg in self.args if arg is not None]
@@ -290,7 +290,7 @@ class TemplatedValue(ParametrizedValue):
 
     def __init__(self, name: str):
         self._name = name
-        super(TemplatedValue, self).__init__()
+        super().__init__()
 
     def __str__(self):
         return self.tpl % self._name

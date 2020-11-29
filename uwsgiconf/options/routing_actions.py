@@ -20,7 +20,7 @@ class ActionFlush(RouteAction):
     name = 'flush'
 
     def __init__(self):
-        super(ActionFlush, self).__init__()
+        super().__init__()
 
 
 class ActionGzip(RouteAction):
@@ -30,7 +30,7 @@ class ActionGzip(RouteAction):
     plugin = 'transformation_gzip'
 
     def __init__(self):
-        super(ActionGzip, self).__init__()
+        super().__init__()
 
 
 class ActionToFile(RouteAction):
@@ -41,7 +41,7 @@ class ActionToFile(RouteAction):
 
     def __init__(self, filename, mode=None):
         arg = KeyValue(locals())
-        super(ActionToFile, self).__init__(arg)
+        super().__init__(arg)
 
 
 class ActionUpper(RouteAction):
@@ -54,7 +54,7 @@ class ActionUpper(RouteAction):
     plugin = 'transformation_toupper'
 
     def __init__(self):
-        super(ActionUpper, self).__init__()
+        super().__init__()
 
 
 class ActionChunked(RouteAction):
@@ -63,7 +63,7 @@ class ActionChunked(RouteAction):
     name = 'chunked'
 
     def __init__(self):
-        super(ActionChunked, self).__init__()
+        super().__init__()
 
 
 class ActionTemplate(RouteAction):
@@ -76,7 +76,7 @@ class ActionTemplate(RouteAction):
     name = 'template'
 
     def __init__(self):
-        super(ActionTemplate, self).__init__()
+        super().__init__()
 
 
 class ActionFixContentLen(RouteAction):
@@ -91,7 +91,7 @@ class ActionFixContentLen(RouteAction):
         if add_header:
             self.name = 'forcexcl'
 
-        super(ActionFixContentLen, self).__init__()
+        super().__init__()
 
 
 class ActionDoContinue(RouteAction):
@@ -102,7 +102,7 @@ class ActionDoContinue(RouteAction):
     name = 'continue'
 
     def __init__(self):
-        super(ActionDoContinue, self).__init__()
+        super().__init__()
 
 
 class ActionDoBreak(RouteAction):
@@ -121,7 +121,7 @@ class ActionDoBreak(RouteAction):
         if return_body:
             self.name = 'return'
 
-        super(ActionDoBreak, self).__init__(code)
+        super().__init__(code)
 
 
 class ActionLog(RouteAction):
@@ -141,7 +141,7 @@ class ActionLog(RouteAction):
         if message is None:
             self.name = 'donotlog'
 
-        super(ActionLog, self).__init__(message)
+        super().__init__(message)
 
 
 class ActionOffloadOff(RouteAction):
@@ -150,7 +150,7 @@ class ActionOffloadOff(RouteAction):
     name = 'donotoffload'
 
     def __init__(self):
-        super(ActionOffloadOff, self).__init__()
+        super().__init__()
 
 
 class ActionAddVarLog(RouteAction):
@@ -164,7 +164,7 @@ class ActionAddVarLog(RouteAction):
 
         :param val: Variable value.
         """
-        super(ActionAddVarLog, self).__init__(name, val)
+        super().__init__(name, val)
 
 
 class ActionDoGoto(RouteAction):
@@ -176,7 +176,7 @@ class ActionDoGoto(RouteAction):
         """
         :param str|int where: Rule number of label to go to.
         """
-        super(ActionDoGoto, self).__init__(where)
+        super().__init__(where)
 
 
 class ActionAddVarCgi(RouteAction):
@@ -190,7 +190,7 @@ class ActionAddVarCgi(RouteAction):
 
         :param val: Variable value.
         """
-        super(ActionAddVarCgi, self).__init__(name, val)
+        super().__init__(name, val)
 
 
 class ActionHeaderAdd(RouteAction):
@@ -206,7 +206,7 @@ class ActionHeaderAdd(RouteAction):
         """
         name += ':'
 
-        super(ActionHeaderAdd, self).__init__(name, val)
+        super().__init__(name, val)
 
 
 class ActionHeaderRemove(RouteAction):
@@ -218,7 +218,7 @@ class ActionHeaderRemove(RouteAction):
         """
         :param str name: Header name.
         """
-        super(ActionHeaderRemove, self).__init__(name)
+        super().__init__(name)
 
 
 class ActionHeadersOff(RouteAction):
@@ -227,7 +227,7 @@ class ActionHeadersOff(RouteAction):
     name = 'disableheaders'
 
     def __init__(self):
-        super(ActionHeadersOff, self).__init__()
+        super().__init__()
 
 
 class ActionHeadersReset(RouteAction):
@@ -241,7 +241,7 @@ class ActionHeadersReset(RouteAction):
         """
         :param int code: HTTP code.
         """
-        super(ActionHeadersReset, self).__init__(code)
+        super().__init__(code)
 
 
 class ActionSignal(RouteAction):
@@ -253,7 +253,7 @@ class ActionSignal(RouteAction):
         """
         :param int num: Signal number.
         """
-        super(ActionSignal, self).__init__(num)
+        super().__init__(num)
 
 
 class ActionSend(RouteAction):
@@ -270,7 +270,7 @@ class ActionSend(RouteAction):
         """
         if crnl:
             self.name = 'send-crnl'
-        super(ActionSend, self).__init__(data)
+        super().__init__(data)
 
 
 class ActionRedirect(RouteAction):
@@ -287,7 +287,7 @@ class ActionRedirect(RouteAction):
         if permanent:
             self.name = 'redirect-301'
 
-        super(ActionRedirect, self).__init__(url)
+        super().__init__(url)
 
 
 class ActionRewrite(RouteAction):
@@ -311,7 +311,7 @@ class ActionRewrite(RouteAction):
         if do_continue:
             self.name = 'rewrite-last'
 
-        super(ActionRewrite, self).__init__(rule)
+        super().__init__(rule)
 
 
 class ActionRouteUwsgi(RouteAction):
@@ -329,7 +329,7 @@ class ActionRouteUwsgi(RouteAction):
         :param Modifier modifier: Set request modifier.
         :param str app: Set ``UWSGI_APPID``.
         """
-        super(ActionRouteUwsgi, self).__init__(external_address, modifier, modifier.submod, app)
+        super().__init__(external_address, modifier, modifier.submod, app)
 
 
 class ActionRouteExternal(RouteAction):
@@ -345,7 +345,7 @@ class ActionRouteExternal(RouteAction):
 
         :param str host_header: HOST header value.
         """
-        super(ActionRouteExternal, self).__init__(address, host_header)
+        super().__init__(address, host_header)
 
 
 class ActionAlarm(RouteAction):
@@ -362,7 +362,7 @@ class ActionAlarm(RouteAction):
 
         :param str message: Message to pass into alarm.
         """
-        super(ActionAlarm, self).__init__(name, message)
+        super().__init__(name, message)
 
 
 class ActionServeStatic(RouteAction):
@@ -376,7 +376,7 @@ class ActionServeStatic(RouteAction):
         :param str fpath: Static file path.
 
         """
-        super(ActionServeStatic, self).__init__(str(fpath))
+        super().__init__(str(fpath))
 
 
 class ActionAuthBasic(RouteAction):
@@ -408,7 +408,7 @@ class ActionAuthBasic(RouteAction):
         if password:
             user_password.append(password)
 
-        super(ActionAuthBasic, self).__init__(realm, ''.join(user_password) if user_password else None)
+        super().__init__(realm, ''.join(user_password) if user_password else None)
 
 
 class AuthLdap(RouteAction):
@@ -464,7 +464,7 @@ class AuthLdap(RouteAction):
         if do_next:
             self.name = 'ldapauth-next'
 
-        super(AuthLdap, self).__init__(realm, arg)
+        super().__init__(realm, arg)
 
 
 class ActionSetHarakiri(RouteAction):
@@ -476,7 +476,7 @@ class ActionSetHarakiri(RouteAction):
         """
         :param int timeout:
         """
-        super(ActionSetHarakiri, self).__init__(timeout)
+        super().__init__(timeout)
 
 
 class ActionDirChange(RouteAction):
@@ -488,7 +488,7 @@ class ActionDirChange(RouteAction):
         """
         :param str dir: Directory to change into.
         """
-        super(ActionDirChange, self).__init__(dir)
+        super().__init__(dir)
 
 
 class ActionSetVarUwsgiAppid(RouteAction):
@@ -507,7 +507,7 @@ class ActionSetVarUwsgiAppid(RouteAction):
         """
         :param str app: Application ID.
         """
-        super(ActionSetVarUwsgiAppid, self).__init__(app)
+        super().__init__(app)
 
 
 class ActionSetVarRemoteUser(RouteAction):
@@ -519,7 +519,7 @@ class ActionSetVarRemoteUser(RouteAction):
         """
         :param str user: Username.
         """
-        super(ActionSetVarRemoteUser, self).__init__(user)
+        super().__init__(user)
 
 
 class ActionSetVarUwsgiHome(RouteAction):
@@ -531,7 +531,7 @@ class ActionSetVarUwsgiHome(RouteAction):
         """
         :param str dir: Directory to make a new home.
         """
-        super(ActionSetVarUwsgiHome, self).__init__(dir)
+        super().__init__(dir)
 
 
 class ActionSetVarUwsgiScheme(RouteAction):
@@ -549,7 +549,7 @@ class ActionSetVarUwsgiScheme(RouteAction):
         """
         :param str value:
         """
-        super(ActionSetVarUwsgiScheme, self).__init__(value)
+        super().__init__(value)
 
 
 class ActionSetVarScriptName(RouteAction):
@@ -561,7 +561,7 @@ class ActionSetVarScriptName(RouteAction):
         """
         :param str name: Script name
         """
-        super(ActionSetVarScriptName, self).__init__(name)
+        super().__init__(name)
 
 
 class ActionSetVarRequestMethod(RouteAction):
@@ -573,7 +573,7 @@ class ActionSetVarRequestMethod(RouteAction):
         """
         :param str name: Method name.
         """
-        super(ActionSetVarRequestMethod, self).__init__(name)
+        super().__init__(name)
 
 
 class ActionSetVarRequestUri(RouteAction):
@@ -585,7 +585,7 @@ class ActionSetVarRequestUri(RouteAction):
         """
         :param str value: URI
         """
-        super(ActionSetVarRequestUri, self).__init__(value)
+        super().__init__(value)
 
 
 class ActionSetVarRemoteAddr(RouteAction):
@@ -597,7 +597,7 @@ class ActionSetVarRemoteAddr(RouteAction):
         """
         :param str value: Address.
         """
-        super(ActionSetVarRemoteAddr, self).__init__(value)
+        super().__init__(value)
 
 
 class ActionSetVarPathInfo(RouteAction):
@@ -609,7 +609,7 @@ class ActionSetVarPathInfo(RouteAction):
         """
         :param str value: New info.
         """
-        super(ActionSetVarPathInfo, self).__init__(value)
+        super().__init__(value)
 
 
 class ActionSetVarDocumentRoot(RouteAction):
@@ -621,7 +621,7 @@ class ActionSetVarDocumentRoot(RouteAction):
         """
         :param str value:
         """
-        super(ActionSetVarDocumentRoot, self).__init__(value)
+        super().__init__(value)
 
 
 class ActionSetUwsgiProcessName(RouteAction):
@@ -633,7 +633,7 @@ class ActionSetUwsgiProcessName(RouteAction):
         """
         :param str name: New process name.
         """
-        super(ActionSetUwsgiProcessName, self).__init__(name)
+        super().__init__(name)
 
 
 class ActionFixVarPathInfo(RouteAction):
@@ -648,7 +648,7 @@ class ActionFixVarPathInfo(RouteAction):
     name = 'fixpathinfo'
 
     def __init__(self):
-        super(ActionFixVarPathInfo, self).__init__()
+        super().__init__()
 
 
 class ActionSetScriptFile(RouteAction):
@@ -664,4 +664,4 @@ class ActionSetScriptFile(RouteAction):
         :param str fpath: File path.
 
         """
-        super(ActionSetScriptFile, self).__init__(str(fpath))
+        super().__init__(str(fpath))

@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):  # pragma: nocover
 
-        super(Command, self).add_arguments(parser)
+        super().add_arguments(parser)
 
         parser.add_argument(
             '--nostatic', action='store_false', dest='contribute_static',

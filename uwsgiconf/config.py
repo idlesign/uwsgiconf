@@ -181,7 +181,7 @@ class Section(OptionsGroup):
         self._runtime_dir = runtime_dir or ''
         self._project_name = project_name or ''
 
-        super(Section, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self._set_basic_params_from_dict(kwargs)
         self.set_basic_params(strict_config=strict_config)
@@ -633,7 +633,7 @@ class Configuration:
             This will be used in ``tofile`` as file name.
 
         """
-        super(Configuration, self).__init__()
+        super().__init__()
 
         sections = sections or [Section()]
         self._validate_sections(sections)

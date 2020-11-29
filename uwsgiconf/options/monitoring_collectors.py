@@ -25,7 +25,7 @@ class Collector(ParametrizedValue):
 
             args.append(f"children={';'.join(children_)}")
 
-        super(Collector, self).__init__(*args)
+        super().__init__(*args)
 
 
 class CollectorPointer(Collector):
@@ -50,7 +50,7 @@ class CollectorFile(Collector):
         """
         value = KeyValue(locals(), aliases={'fpath': 'arg1', 'get_slot': 'arg1n'})
 
-        super(CollectorFile, self).__init__(value)
+        super().__init__(value)
 
 
 class CollectorFunction(Collector):
@@ -72,7 +72,7 @@ class CollectorFunction(Collector):
         """
         value = KeyValue(locals(), aliases={'func': 'arg1'})
 
-        super(CollectorFunction, self).__init__(value)
+        super().__init__(value)
 
 
 class CollectorSum(Collector):
@@ -81,7 +81,7 @@ class CollectorSum(Collector):
     name = 'sum'
 
     def __init__(self, what):
-        super(CollectorSum, self).__init__(children=what)
+        super().__init__(children=what)
 
 
 class CollectorAvg(Collector):
@@ -93,7 +93,7 @@ class CollectorAvg(Collector):
     name = 'avg'
 
     def __init__(self, what):
-        super(CollectorAvg, self).__init__(children=what)
+        super().__init__(children=what)
 
 
 class CollectorAccumulator(Collector):
@@ -108,7 +108,7 @@ class CollectorAccumulator(Collector):
     name = 'accumulator'
 
     def __init__(self, what):
-        super(CollectorAccumulator, self).__init__(children=what)
+        super().__init__(children=what)
 
 
 class CollectorAdder(Collector):
@@ -123,7 +123,7 @@ class CollectorAdder(Collector):
         """
         value = KeyValue(filter_locals(locals(), drop=['what']), aliases={'value': 'arg1n'})
 
-        super(CollectorAdder, self).__init__(value, children=what)
+        super().__init__(value, children=what)
 
 
 class CollectorMultiplier(CollectorAdder):

@@ -59,10 +59,10 @@ class Metric(ParametrizedValue):
             aliases={'collect_interval': 'freq', 'type_str': 'type', 'alias_for': 'alias'}
         )
 
-        super(Metric, self).__init__(value)
+        super().__init__(value)
 
     def __str__(self):
-        return f'name={super(Metric, self).__str__()}'
+        return f'name={super().__str__()}'
 
 
 class MetricTypeCounter(Metric):

@@ -1,10 +1,4 @@
-from sys import version_info
-
-import pytest
-
 from uwsgiconf.presets.nice import Section, PythonSection
-
-PY2 = (version_info[0] == 2)
 
 
 def test_nice_section(assert_lines):
@@ -48,14 +42,12 @@ def test_nice_section(assert_lines):
     assert '%(headers) headers in %(hsize) bytes' in Section().get_log_format_default()
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_get_bundled_static_path(assert_lines):
 
     path = Section.get_bundled_static_path('503.html')
     assert path.endswith('uwsgiconf/contrib/django/uwsgify/static/uwsgify/503.html')
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_https_redirect(assert_lines):
 
     section = Section()
@@ -66,7 +58,6 @@ def test_configure_https_redirect(assert_lines):
     )
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_maintenance_mode(assert_lines):
 
     section = Section()
@@ -95,7 +86,6 @@ def test_configure_logging_json(assert_lines):
     ], section)
 
 
-@pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_certbot_https(assert_lines, monkeypatch):
 
     monkeypatch.setattr('pathlib.Path.exists', lambda self: True)

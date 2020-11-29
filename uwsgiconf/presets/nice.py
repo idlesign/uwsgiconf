@@ -51,7 +51,7 @@ class Section(_Section):
 
         :param kwargs:
         """
-        super(Section, self).__init__(strict_config=True, name=name, **kwargs)
+        super().__init__(strict_config=True, name=name, **kwargs)
 
         # Fix possible problems with non-ASCII.
         self.env('LANG', 'en_US.UTF-8')
@@ -307,7 +307,7 @@ class PythonSection(Section):
         if embedded_plugins is True:
             embedded_plugins = self.embedded_plugins_presets.BASIC + ['python', 'python2', 'python3']
 
-        super(PythonSection, self).__init__(
+        super().__init__(
             name=name, embedded_plugins=embedded_plugins, threads=threads,
             **kwargs)
 
