@@ -244,11 +244,10 @@ class Section(_Section):
         ))
 
         new_line = logging.encoders.newline()
-        t = vars_enc.TIME_FORMAT('iso')
 
         log_template = (
             '{'
-            f'"dt": "{t}", '
+            '"dt": "' + str(vars_enc.TIME_FORMAT('iso')) + '", '
             '"src": "__src__", '
             f'"msg": "{vars_enc.MESSAGE}", '
             '"ctx": {}, '
