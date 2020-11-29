@@ -97,6 +97,16 @@ def test_logging_add_logger(assert_lines):
 
     logging = Section().logging
     assert_lines([
+        'logger = fd:33',
+    ], logging.add_logger(logging.loggers.fd(33)))
+
+    logging = Section().logging
+    assert_lines([
+        'logger = stdio:',
+    ], logging.add_logger(logging.loggers.stdio()))
+
+    logging = Section().logging
+    assert_lines([
         'logger = my socket:/home/here.sock',
     ], logging.add_logger(logging.loggers.socket('/home/here.sock', alias='my')))
 

@@ -36,6 +36,8 @@ class Logging(OptionsGroup):
         """Loggers available for ``add_logger()``."""
 
         file = LoggerFile
+        fd = LoggerFileDescriptor
+        stdio = LoggerStdIO
         mongo = LoggerMongo
         redis = LoggerRedis
         socket = LoggerSocket
@@ -294,7 +296,7 @@ class Logging(OptionsGroup):
         if for_single_worker:
             command = 'worker-logger-req' if requests_only else 'worker-logger'
         else:
-            command = 'req-logger' if requests_only else 'logger'
+            command = 'logger-req' if requests_only else 'logger'
 
         for logger in listify(logger):
             self._set(command, logger, multi=True)

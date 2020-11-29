@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union, Callable
+from typing import Union, Callable, Optional
 
 from ..config import Section as _Section
 from ..typehints import Strlist
@@ -227,6 +227,44 @@ class Section(_Section):
 
         return self
 
+    def configure_logging_json(self):
+        """Configures uWSGI output to be json-formatted."""
+
+        logging = self.logging
+
+        vars_enc = logging.encoders.format.vars
+        vars_req = logging.vars
+
+        # Allow request encoding.
+        logging.add_logger(logging.loggers.stdio(), requests_only=True)
+
+        # Log essential request data to place into "msg".
+        logging.set_basic_params(template=(
+            f'{vars_req.REQ_METHOD} {vars_req.REQ_URI} -> {vars_req.RESP_STATUS}'
+        ))
+
+        new_line = logging.encoders.newline()
+        t = vars_enc.TIME_FORMAT('iso')
+
+        log_template = (
+            '{'
+            f'"dt": "{t}", '
+            '"src": "__src__", '
+            f'"msg": "{vars_enc.MESSAGE}", '
+            '"ctx": {}, '
+            f'"ms": {vars_enc.TIME_MS}'
+            '}'
+        )
+
+        logging.add_logger_encoder(
+            [logging.encoders.json(log_template.replace('__src__', 'uwsgi.req')), new_line],
+            requests_only=True)
+
+        logging.add_logger_encoder(
+            [logging.encoders.json(log_template.replace('__src__', 'uwsgi.out')), new_line])
+
+        return self
+
 
 class PythonSection(Section):
     """Basic nice configuration using Python plugin."""
@@ -237,7 +275,7 @@ class PythonSection(Section):
             params_python: dict = None,
             wsgi_module: str = None,
             wsgi_callable: Union[str, Callable] = None,
-            embedded_plugins: bool = True,
+            embedded_plugins: Optional[bool] = True,
             require_app: bool = True,
             threads: Union[bool, int] = True,
             **kwargs

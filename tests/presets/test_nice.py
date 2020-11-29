@@ -80,6 +80,21 @@ def test_configure_maintenance_mode(assert_lines):
     ], section)
 
 
+def test_configure_logging_json(assert_lines):
+
+    section = Section()
+    section.configure_logging_json()
+
+    assert_lines([
+        'logger-req = stdio:',
+        'log-format = %(method) %(uri) -> %(status)',
+        'log-req-encoder = json {"dt": "${strftime:%%Y-%%m-%%dT%%H:%%M:%%S%%z}", "src": "uwsgi.req"',
+        'log-req-encoder = nl',
+        '"src": "uwsgi.out"',
+
+    ], section)
+
+
 @pytest.mark.skipif(PY2, reason='Not tested on PY2')
 def test_configure_certbot_https(assert_lines, monkeypatch):
 

@@ -4,6 +4,8 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Logging. Added 'fd' and 'stdio' loggers support.
++ Preset Nice. Added '.configure_logging_json()' helper.
 * Improved support for pathlib.Path.
 
 

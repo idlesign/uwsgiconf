@@ -29,6 +29,37 @@ class LoggerFile(Logger):
         super(LoggerFile, self).__init__(alias, str(filepath))
 
 
+class LoggerFileDescriptor(Logger):
+    """Allows logging using file descriptor."""
+
+    name = 'fd'
+    plugin = 'logfile'
+
+    def __init__(self, fd: int, alias=None):
+        """
+        :param str fd: File descriptor.
+
+        :param str alias: Logger alias.
+
+        """
+        super().__init__(alias, fd)
+
+
+class LoggerStdIO(Logger):
+    """Allows logging stdio."""
+
+    name = 'stdio'
+    plugin = 'logfile'
+
+    def __init__(self, alias=None):
+        """
+
+        :param str alias: Logger alias.
+
+        """
+        super().__init__(alias)
+
+
 class LoggerSocket(Logger):
     """Allows logging into UNIX and UDP sockets."""
 

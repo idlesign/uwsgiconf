@@ -1,4 +1,4 @@
-from ..base import ParametrizedValue
+from ..base import ParametrizedValue, TemplatedValue
 
 
 class Encoder(ParametrizedValue):
@@ -44,6 +44,26 @@ class EncoderCompress(Encoder):
     name = 'compress'
 
 
+class TimeFormatter(TemplatedValue):
+    """Allows user-defined time value formatting."""
+
+    tpl = '${strftime:%s}'
+
+    def __init__(self, fmt: str):
+        """
+        :param fmt: Time value format Format string (as for `strftime`)
+
+            Aliases:
+                * iso - ISO 8601: %Y-%m-%dT%H:%M:%S%z
+                    2020-11-29T04:44:08+0000
+
+        """
+        if fmt == 'iso':
+            fmt = '%Y-%m-%dT%H:%M:%S%z'
+
+        super().__init__(fmt.replace('%', '%%'))
+
+
 class EncoderFormat(Encoder):
     """Apply the specified format to each log msg."""
 
@@ -70,10 +90,14 @@ class EncoderFormat(Encoder):
         TIME = '${unix}'
         """Current unix time."""
 
-        TIME_MS = '${micros}'
+        TIME_US = '${micros}'
         """Current unix time in microseconds."""
 
-        # todo consider adding ${strftime:xxx} - strftime using the xxx format
+        TIME_MS = '${millis}'
+        """Current unix time in milliseconds."""
+
+        TIME_FORMAT = TimeFormatter
+        """Current time in user-defined format."""
 
 
 class EncoderJson(EncoderFormat):
