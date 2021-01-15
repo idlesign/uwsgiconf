@@ -190,7 +190,8 @@ class Section(_Section):
             domain: str,
             webroot: str,
             address: str = None,
-            allow_shared_sockets: bool = None
+            allow_shared_sockets: bool = None,
+            http_redirect: bool = False,
     ):
         """Enables HTTPS using certificates from Certbot https://certbot.eff.org.
 
@@ -210,6 +211,9 @@ class Section(_Section):
             to privileged ports. If not provided automatic mode is enabled:
             shared are allowed if current user is not root.
 
+        :param http_redirect: Redirect HTTP requests to HTTPS
+            if certificates exist.
+
         """
         address = address or ':443'
 
@@ -217,10 +221,15 @@ class Section(_Section):
 
         path_cert_chain, path_cert_private = networking.sockets.https.get_certbot_paths(domain)
 
-        path_cert_chain and networking.register_socket(
-            networking.sockets.from_dsn(
-                f'https://{address}?cert={path_cert_chain}&key={path_cert_private}',
-                allow_shared_sockets=allow_shared_sockets))
+        if path_cert_chain:
+
+            networking.register_socket(
+                networking.sockets.from_dsn(
+                    f'https://{address}?cert={path_cert_chain}&key={path_cert_private}',
+                    allow_shared_sockets=allow_shared_sockets))
+
+            if http_redirect:
+                self.configure_https_redirect()
 
         self.statics.register_static_map(
             '/.well-known/', webroot, retain_resource_path=True)

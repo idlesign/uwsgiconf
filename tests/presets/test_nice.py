@@ -100,7 +100,7 @@ def test_configure_certbot_https(assert_lines, monkeypatch):
     ], section)
 
     section = Section.bootstrap(['http://:80'])
-    section.configure_certbot_https('mydomain.org', '/var/www/')
+    section.configure_certbot_https('mydomain.org', '/var/www/', http_redirect=True)
 
     assert_lines([
         'shared-socket = :80',
@@ -108,6 +108,7 @@ def test_configure_certbot_https(assert_lines, monkeypatch):
         'http-socket = =0',
         'https-socket = =1,/etc/letsencrypt/live/mydomain.org/fullchain.pem,'
         '/etc/letsencrypt/live/mydomain.org/privkey.pem',
+        'route-if-not = eq:${HTTPS};on redirect-301:https://${HTTP_HOST}${REQUEST_URI}',
     ], section)
 
 
