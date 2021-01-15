@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v0.22.0 [2021-01-15]
+--------------------
 + Logging. Added 'fd' and 'stdio' loggers support.
 + Preset Nice. '.configure_certbot_https()' now accepts 'http_redirect' param.
 + Preset Nice. Added '.configure_logging_json()' helper.
