@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'uwsgiconf'
-copyright = u'2017-2020, Igor `idle sign` Starikov'
+copyright = u'2017-2021, Igor `idle sign` Starikov'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
