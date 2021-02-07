@@ -37,10 +37,6 @@ By that time you already know that **uwsgiconf** is just another configuration m
 Requirements
 ------------
 
-.. image:: https://idlesign.github.io/lbc/py2-lbc.svg
-   :target: https://idlesign.github.io/lbc/
-   :alt: LBC Python 2
-
 1. Python 3.6+
 2. ``click`` package (optional, for CLI)
 3. uWSGI (``uwsgi`` or ``pyuwsgi``)
