@@ -2,6 +2,11 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* uwsgify. Fix Django deprecation warning.
+
+
 v0.22.0 [2021-01-15]
 --------------------
 + Logging. Added 'fd' and 'stdio' loggers support.

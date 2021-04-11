@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import re_path
 from django.contrib import admin
 from django.template.response import TemplateResponse
 
@@ -9,7 +9,7 @@ class OnePageAdmin(admin.ModelAdmin):
         info = self.model._meta.app_label, self.model._meta.model_name
 
         urlpatterns = [
-            url('^$', self.admin_site.admin_view(self.view_onepage), name='%s_%s_changelist' % info)
+            re_path('^$', self.admin_site.admin_view(self.view_onepage), name=f'%s_%s_changelist' % info)
         ]
 
         return urlpatterns
