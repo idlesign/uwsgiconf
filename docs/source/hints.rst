@@ -46,7 +46,7 @@ plugin packages separately from uWSGI itself).
 In that case you can try to set ``embedded_plugins=False`` for ``PythonSection`` (see Quickstart example).
 
 Another option is to quickly fire up ``uWSGI`` to check what plugins are embedded (the same can be achieved with
-``$ uwsgiconf probe_plugins`` command).
+``$ uwsgiconf probe-plugins`` command).
 
 **uwsgiconf** can also do it for you automatically on configuration stage:
 
