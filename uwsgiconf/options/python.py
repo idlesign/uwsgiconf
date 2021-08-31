@@ -21,6 +21,7 @@ class Python(OptionsGroup):
 
     def set_basic_params(
             self,
+            *,
             version: Strint = AUTO,
             python_home: str = None,
             enable_threads: bool = None,
@@ -118,7 +119,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_wsgi_params(self, module: Union[str, Path] = None, callable_name: str = None, env_strategy: str = None):
+    def set_wsgi_params(self, *, module: Union[str, Path] = None, callable_name: str = None, env_strategy: str = None):
         """Set wsgi related parameters.
 
         :param module:
@@ -166,7 +167,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_autoreload_params(self, scan_interval: int = None, ignore_modules: Strlist = None):
+    def set_autoreload_params(self, *, scan_interval: int = None, ignore_modules: Strlist = None):
         """Sets autoreload related parameters.
 
         :param scan_interval: Seconds. Monitor Python modules' modification times to trigger reload.
@@ -181,7 +182,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def register_module_alias(self, alias: str, module_path: str, after_init: bool = False):
+    def register_module_alias(self, alias: str, module_path: str, *, after_init: bool = False):
         """Adds an alias for a module.
 
         http://uwsgi-docs.readthedocs.io/en/latest/PythonModuleAlias.html
@@ -196,7 +197,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def import_module(self, modules: Strint, shared: bool = False, into_spooler: bool = False):
+    def import_module(self, modules: Strint, *, shared: bool = False, into_spooler: bool = False):
         """Imports a python module.
 
         :param modules:

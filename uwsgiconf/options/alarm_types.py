@@ -17,7 +17,7 @@ class AlarmCommand(AlarmType):
 
     name = 'cmd'
 
-    def __init__(self, alias: str, command: str):
+    def __init__(self, alias: str, *, command: str):
         super().__init__(alias, command)
 
 
@@ -26,8 +26,8 @@ class AlarmSignal(AlarmType):
 
     name = 'signal'
 
-    def __init__(self, alias: str, sig_num: int):
-        super().__init__(alias, sig_num)
+    def __init__(self, alias: str, *, sig: int):
+        super().__init__(alias, sig)
 
 
 class AlarmLog(AlarmType):
@@ -44,8 +44,8 @@ class AlarmMule(AlarmType):
 
     name = 'mule'
 
-    def __init__(self, alias: str, mule_id: int):
-        super().__init__(alias, mule_id)
+    def __init__(self, alias: str, *, mule: int):
+        super().__init__(alias, mule)
 
 
 class AlarmCurl(AlarmType):
@@ -59,6 +59,7 @@ class AlarmCurl(AlarmType):
             self,
             alias: str,
             url: str,
+            *,
             method: str = None,
             ssl: bool = None,
             ssl_insecure: bool = None,
@@ -85,5 +86,5 @@ class AlarmXmpp(AlarmType):
     plugin = 'alarm_xmpp'
     args_joiner = ';'
 
-    def __init__(self, alias: str, jid: str, password: str, recipients: Strlist):
+    def __init__(self, alias: str, *, jid: str, password: str, recipients: Strlist):
         super().__init__(alias, jid, password, ','.join(listify(recipients)))

@@ -38,7 +38,7 @@ def test_main_process_basics(assert_lines):
 
     assert_lines([
         'touch-exec = myfile.txt date',
-    ], Section().main_process.run_command_on_touch('date', 'myfile.txt'))
+    ], Section().main_process.run_command_on_touch('date', target='myfile.txt'))
 
     assert_lines([
         'skip-atexit = true',
@@ -62,7 +62,7 @@ def test_main_process_hooks(assert_lines):
     prc = section.main_process
     asap = prc.phases.ASAP
 
-    prc.set_hook(asap, prc.actions.mount('/proc', 'proc', 'none'))
+    prc.set_hook(asap, prc.actions.mount('/proc', fs='proc', src='none'))
     prc.set_hook(asap, prc.actions.mount('/proc', flags=['rec', 'detach']))
     prc.set_hook(asap, prc.actions.execute('cat /proc/self/mounts'))
     prc.set_hook(asap, prc.actions.call('uwsgi_log application has been loaded'))

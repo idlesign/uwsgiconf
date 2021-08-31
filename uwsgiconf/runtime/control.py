@@ -34,7 +34,7 @@ class harakiri_imposed:
                 do()
 
     """
-    def __init__(self, timeout: int):
+    def __init__(self, *, timeout: int):
         """
         :param timeout: Timeout (seconds) before harakiri.
 

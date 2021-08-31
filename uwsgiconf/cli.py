@@ -42,7 +42,7 @@ def run(conf, only):
     """
     with errorprint():
         config = ConfModule(conf)
-        spawned = config.spawn_uwsgi(only)
+        spawned = config.spawn_uwsgi(only=only)
 
         for alias, pid in spawned:
             click.secho(f"Spawned uWSGI for configuration aliased '{alias}'. PID {pid}", fg='green')

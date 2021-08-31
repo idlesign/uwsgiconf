@@ -121,6 +121,7 @@ class OptionsGroup:
             self,
             key: str,
             value: Any,
+            *,
             condition: Optional[Union[bool, str]] = True,
             cast: Callable = None,
             multi: bool = False,
@@ -151,7 +152,7 @@ class OptionsGroup:
         def set_plugin(plugin):
             self._section.set_plugins_params(plugins=plugin)
 
-        def handle_priority(value, use_list=False):
+        def handle_priority(value, *, use_list=False):
 
             if priority is not None:
                 # Restructure options.

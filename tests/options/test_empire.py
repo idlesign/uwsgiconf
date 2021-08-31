@@ -17,15 +17,15 @@ def test_empire_basics(assert_lines):
 
     assert_lines([
         'emperor-wrapper = myvas',
-    ], Section().empire.set_vassals_wrapper_params('myvas'))
+    ], Section().empire.set_vassals_wrapper_params(wrapper='myvas'))
 
     assert_lines([
         'emperor-throttle = 100',
-    ], Section().empire.set_throttle_params(100))
+    ], Section().empire.set_throttle_params(level=100))
 
     assert_lines([
         'emperor-required-heartbeat = 200',
-    ], Section().empire.set_tolerance_params(200))
+    ], Section().empire.set_tolerance_params(for_heartbeat=200))
 
     assert_lines([
         'emperor-tyrant = true',

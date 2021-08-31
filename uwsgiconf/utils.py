@@ -94,7 +94,7 @@ class ConfModule:
         self.fpath = fpath
         self._confs = None
 
-    def spawn_uwsgi(self, only: str = None) -> List[Tuple[str, int]]:
+    def spawn_uwsgi(self, *, only: str = None) -> List[Tuple[str, int]]:
         """Spawns uWSGI process(es) which will use configuration(s) from the module.
 
         Returns list of tuples:
@@ -175,6 +175,7 @@ def listify(src: Any) -> List:
 
 def filter_locals(
         locals_dict: Dict[str, Any],
+        *,
         drop: List[str] = None,
         include: List[str] = None
 ) -> Dict[str, Any]:
@@ -208,6 +209,7 @@ class KeyValue:
     def __init__(
             self,
             locals_dict: Dict[str, Any],
+            *,
             keys: List[str] = None,
             aliases: Dict[str, str] = None,
             bool_keys: List[str] = None,
@@ -259,7 +261,7 @@ class KeyValue:
         return self.items_separator.join(value_chunks).strip()
 
 
-def get_output(cmd: str, args: Strlist) -> str:
+def get_output(cmd: str, *, args: Strlist) -> str:
     """Runs a command and returns its output (stdout + stderr).
 
     :param cmd:
@@ -283,7 +285,7 @@ class Finder:
     @classmethod
     def uwsgiconf(cls) -> str:
         """Finds uwsgiconf executable location."""
-        return get_output('which', ['uwsgiconf']).strip()
+        return get_output('which', args=['uwsgiconf']).strip()
 
     @classmethod
     def python(cls) -> str:
@@ -301,7 +303,7 @@ class Fifo:
         """
         self.fifo = fifo_filepath
 
-    def cmd_log(self, reopen: bool = False, rotate: bool = False):
+    def cmd_log(self, *, reopen: bool = False, rotate: bool = False):
         """Allows managing of uWSGI log related stuff
 
         :param reopen: Reopen log file. Could be required after third party rotation.
@@ -322,7 +324,7 @@ class Fifo:
         """Dump uWSGI configuration and current stats into the log."""
         return self.send_command(b's')
 
-    def cmd_stop(self, force: bool = False):
+    def cmd_stop(self, *, force: bool = False):
         """Shutdown uWSGI instance.
 
         :param force: Use forced (brutal) shutdown instead of a graceful one.
@@ -330,7 +332,7 @@ class Fifo:
         """
         return self.send_command(b'Q' if force else b'q')
 
-    def cmd_reload(self, force: bool = False, workers_only: bool = False, workers_chain: bool = False):
+    def cmd_reload(self, *, force: bool = False, workers_only: bool = False, workers_chain: bool = False):
         """Reloads uWSGI master process, workers.
 
         :param force: Use forced (brutal) reload instead of a graceful one.
@@ -373,7 +375,7 @@ class UwsgiRunner:
         :param command_args:
 
         """
-        return get_output(self.binary_uwsgi, command_args)
+        return get_output(self.binary_uwsgi, args=command_args)
 
     def get_plugins(self) -> EmbeddedPlugins:
         """Returns ``EmbeddedPlugins`` object with."""
@@ -401,6 +403,7 @@ class UwsgiRunner:
     def spawn(
             self,
             config: 'Configuration',
+            *,
             replace: bool = False,
             filepath: str = None,
             embedded: bool = False

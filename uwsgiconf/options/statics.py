@@ -49,7 +49,7 @@ class Statics(OptionsGroup):
         """Use ``X-Accel-Redirect`` mode. Nginx."""
 
     def set_basic_params(
-            self, static_dir=None, index_file=None, mime_file=None, skip_ext=None, transfer_mode=None):
+            self, *, static_dir=None, index_file=None, mime_file=None, skip_ext=None, transfer_mode=None):
         """
 
         :param str|list[str] static_dir: Check for static files in the specified directory.
@@ -89,7 +89,7 @@ class Statics(OptionsGroup):
 
         return self._section
 
-    def register_static_map(self, mountpoint, target, retain_resource_path=False, safe_target=False):
+    def register_static_map(self, mountpoint, target, *, retain_resource_path=False, safe_target=False):
         """Allows mapping mountpoint to a static directory (or file).
 
         * http://uwsgi.readthedocs.io/en/latest/StaticFiles.html#mode-3-using-static-file-mount-points
@@ -126,7 +126,7 @@ class Statics(OptionsGroup):
 
         return self._section
 
-    def add_expiration_rule(self, criterion, value, timeout, use_mod_time=False):
+    def add_expiration_rule(self, criterion, value, *, timeout, use_mod_time=False):
         """Adds statics expiration rule based on a criterion.
 
         :param str criterion: Criterion (subject) to base expiration on.
@@ -165,7 +165,7 @@ class Statics(OptionsGroup):
     # todo consider adding:
     # static-gzip*
 
-    def set_paths_caching_params(self, timeout=None, cache_name=None):
+    def set_paths_caching_params(self, *, timeout=None, cache_name=None):
         """Use the uWSGI caching subsystem to store mappings from URI to filesystem paths.
 
         * http://uwsgi.readthedocs.io/en/latest/StaticFiles.html#caching-paths-mappings-resolutions

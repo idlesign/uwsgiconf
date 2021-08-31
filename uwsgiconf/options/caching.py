@@ -21,6 +21,7 @@ class Caching(OptionsGroup):
     """
     def set_basic_params(
             self,
+            *,
             no_expire: bool = None,
             expire_scan_interval: int = None,
             report_freed: bool = None
@@ -44,7 +45,7 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_item(self, key: str, value: str, cache_name: str = None):
+    def add_item(self, key: str, value: str, *, cache_name: str = None):
         """Add an item into the given cache.
 
         This is a commodity option (mainly useful for testing) allowing you
@@ -64,7 +65,7 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_file(self, filepath: Union[str, Path], gzip: bool = False, cache_name: bool = None):
+    def add_file(self, filepath: Union[str, Path], *, gzip: bool = False, cache_name: str = None):
         """Load a static file in the cache.
 
         .. note:: Items are stored with the filepath as is (relative or absolute) as the key.
@@ -91,6 +92,7 @@ class Caching(OptionsGroup):
     def add_cache(
             self,
             name: str,
+            *,
             max_items: int,
             no_expire: bool = None,
             store: str = None,

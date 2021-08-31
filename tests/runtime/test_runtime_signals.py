@@ -20,4 +20,4 @@ def test_signals():
     def my(sign):
         pass
 
-    register_timer(3, sig)
+    register_timer(3, target=sig)

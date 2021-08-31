@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
+! Prepare for 1.0.0. Switch to keyword-only arguments here and there.
 + Django. Added 'Maintenance' section to Admin.
 + Section.env() now supports 'update_local' argument.
 * uwsgify. Fix Django deprecation warning.

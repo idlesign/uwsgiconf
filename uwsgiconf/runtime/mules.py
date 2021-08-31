@@ -126,6 +126,7 @@ class Mule:
     @classmethod
     def get_message(
             cls,
+            *,
             signals: bool = True,
             farms: bool = False,
             buffer_size: int = 65536,
@@ -168,7 +169,7 @@ class Farm:
     """
     __slots__ = ['name', 'mules']
 
-    def __init__(self, name: str, mules: List[int] = None):
+    def __init__(self, name: str, *, mules: List[int] = None):
         """
         :param name: Mule farm name.
         :param mules: Attached mules.

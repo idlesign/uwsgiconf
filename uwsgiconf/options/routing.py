@@ -271,7 +271,7 @@ class Routing(OptionsGroup):
         wsgi = ModifierWsgi
         xslt = ModifierXslt
 
-    def use_router(self, router, force=None):
+    def use_router(self, router, *, force=None):
         """
 
         :param RouterBase router: Dedicated router object. See `.routers`.
@@ -286,7 +286,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def register_route(self, route_rules, label=None):
+    def register_route(self, route_rules, *, label=None):
         """Registers a routing rule.
 
         :param RouteRule|list[RouteRule] route_rules:
@@ -314,12 +314,12 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def set_error_page(self, status, html_fpath):
+    def set_error_page(self, status: int, html_fpath: str):
         """Add an error page (html) for managed 403, 404, 500 response.
 
-        :param int status: HTTP status code.
+        :param status: HTTP status code.
 
-        :param str html_fpath: HTML page file path.
+        :param html_fpath: HTML page file path.
 
         """
         statuses = [403, 404, 500]
@@ -335,17 +335,17 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def set_error_pages(self, codes_map=None, common_prefix=None):
+    def set_error_pages(self, codes_map: dict = None, *, common_prefix: str = None):
         """Add an error pages for managed 403, 404, 500 responses.
 
         Shortcut for ``.set_error_page()``.
 
-        :param dict codes_map: Status code mapped into an html filepath or
+        :param codes_map: Status code mapped into an html filepath or
             just a filename if common_prefix is used.
 
             If not set, filename containing status code is presumed: 400.html, 500.html, etc.
 
-        :param str common_prefix: Common path (prefix) for all files.
+        :param common_prefix: Common path (prefix) for all files.
 
         """
         statuses = [403, 404, 500]
@@ -362,7 +362,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def set_geoip_params(self, db_country=None, db_city=None):
+    def set_geoip_params(self, *, db_country=None, db_city=None):
         """Sets GeoIP parameters.
 
         * http://uwsgi.readthedocs.io/en/latest/GeoIP.html
@@ -399,7 +399,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def header_collect(self, name, target_var, pull=False):
+    def header_collect(self, name, target_var, *, pull=False):
         """Store the specified response header in a request var
         (optionally removing it from the response).
 

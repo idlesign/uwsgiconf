@@ -293,7 +293,7 @@ def test_routing_actions(assert_lines):
         'route-run = http:127.0.0.1:8181,my.domain.ru',
 
     ], Section().routing.register_route(
-        rule(rule.actions.route_external('127.0.0.1:8181', 'my.domain.ru'), subject=None)
+        rule(rule.actions.route_external('127.0.0.1:8181', host_header='my.domain.ru'), subject=None)
     ))
 
 
@@ -312,9 +312,9 @@ def test_routing_actions(assert_lines):
         'route-run = basicauth:my realm,ussr:',
 
     ], Section().routing.register_route([
-        rule(rule.actions.auth_basic('my realm', 'usr', 'pwd', do_next=True), subject=None),
+        rule(rule.actions.auth_basic('my realm', user='usr', password='pwd', do_next=True), subject=None),
         rule(rule.actions.auth_basic('my realm', password='htpwd'), subject=None),
-        rule(rule.actions.auth_basic('my realm', 'ussr'), subject=None),
+        rule(rule.actions.auth_basic('my realm', user='ussr'), subject=None),
     ]))
 
     assert_lines([

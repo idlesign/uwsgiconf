@@ -21,6 +21,7 @@ class Broodlord:
     def __init__(
             self,
             zerg_socket: str,
+            *,
             zerg_die_on_idle: int = None,
             vassals_home: Strlist = None,
             zerg_count: int = None,

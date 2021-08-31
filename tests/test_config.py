@@ -66,7 +66,7 @@ def test_section_embeddeding_plugins(assert_lines, mock_popen):
     section = Section(embedded_plugins=Section.embedded_plugins_presets.BASIC)
     assert_lines([
         'plugin = syslog'
-    ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
+    ], section.logging.add_logger(section.logging.loggers.syslog(app_name='some')), assert_in=False)
 
     mock_popen(lambda: (b'plugins ***\nsyslog', b''))
 
@@ -74,12 +74,12 @@ def test_section_embeddeding_plugins(assert_lines, mock_popen):
     section = Section(embedded_plugins=Section.embedded_plugins_presets.PROBE)
     assert_lines([
         'plugin = syslog'
-    ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
+    ], section.logging.add_logger(section.logging.loggers.syslog(app_name='some')), assert_in=False)
 
     section = Section(embedded_plugins=Section.embedded_plugins_presets.PROBE('/venv/bin/uwsgi'))
     assert_lines([
         'plugin = syslog'
-    ], section.logging.add_logger(section.logging.loggers.syslog('some')), assert_in=False)
+    ], section.logging.add_logger(section.logging.loggers.syslog(app_name='some')), assert_in=False)
 
 
 def test_section_print(assert_lines):

@@ -25,7 +25,7 @@ class Networking(OptionsGroup):
         zeromq = SocketZeromq
 
         @classmethod
-        def from_dsn(cls, dsn, allow_shared_sockets=None) -> 'Socket':
+        def from_dsn(cls, dsn, *, allow_shared_sockets=None) -> 'Socket':
             """Constructs socket configuration object from DSN.
 
             .. note:: This will also automatically use shared sockets
@@ -80,7 +80,7 @@ class Networking(OptionsGroup):
 
         self._sockets = []  # Registered sockets list.
 
-    def set_basic_params(self, queue_size=None, freebind=None, default_socket_type=None):
+    def set_basic_params(self, *, queue_size=None, freebind=None, default_socket_type=None):
         """
 
         :param int queue_size: Also known as a backlog. Every socket has an associated queue 
@@ -109,7 +109,7 @@ class Networking(OptionsGroup):
         return self._section
 
     def set_socket_params(
-            self, send_timeout=None, keep_alive=None, no_defer_accept=None,
+            self, *, send_timeout=None, keep_alive=None, no_defer_accept=None,
             buffer_send=None, buffer_receive=None):
         """Sets common socket params.
 
@@ -135,7 +135,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_unix_socket_params(self, abstract=None, permissions=None, owner=None, umask=None):
+    def set_unix_socket_params(self, *, abstract=None, permissions=None, owner=None, umask=None):
         """Sets Unix-socket related params.
 
         :param bool abstract: Force UNIX socket into abstract mode (Linux only).
@@ -159,7 +159,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_bsd_socket_params(self, port_reuse=None):
+    def set_bsd_socket_params(self, *, port_reuse=None):
         """Sets BSD-sockets related params.
 
         :param bool port_reuse: Enable REUSE_PORT flag on socket to allow multiple
@@ -213,7 +213,7 @@ class Networking(OptionsGroup):
         return self._section
 
     def set_ssl_params(
-            self, verbose_errors=None,
+            self, *, verbose_errors=None,
             sessions_cache=None, sessions_timeout=None, session_context=None,
             raw_options=None, dir_tmp=None, client_cert_var=None):
         """
@@ -258,18 +258,27 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_sni_params(self, name, cert, key, ciphers=None, client_ca=None, wildcard=False):
+    def set_sni_params(
+            self,
+            name: str,
+            *,
+            cert: str,
+            key: str,
+            ciphers: str = None,
+            client_ca: str = None,
+            wildcard: bool = False
+    ):
         """Allows setting Server Name Identification (virtual hosting for SSL nodes) params.
 
         * http://uwsgi.readthedocs.io/en/latest/SNI.html
 
-        :param str name: Node/server/host name.
+        :param name: Node/server/host name.
 
-        :param str cert: Certificate file.
+        :param cert: Certificate file.
 
-        :param str key: Private key file.
+        :param key: Private key file.
 
-        :param str ciphers: Ciphers [alias] string.
+        :param ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -278,12 +287,12 @@ class Networking(OptionsGroup):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str client_ca: Client CA file for client-based auth.
+        :param client_ca: Client CA file for client-based auth.
 
             .. note: You can prepend ! (exclamation mark) to make client certificate
                 authentication mandatory.
 
-        :param bool wildcard: Allow regular expressions in ``name`` (used for wildcard certificates).
+        :param wildcard: Allow regular expressions in ``name`` (used for wildcard certificates).
 
         """
         command = 'sni'

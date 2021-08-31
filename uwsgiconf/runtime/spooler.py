@@ -73,7 +73,7 @@ class _TaskRegisterer:
     def __get__(self, instance: 'Spooler', owner: Type['Spooler']):
         return _register_task(instance, owner)
 
-    def __call__(self, priority: int = None, postpone: Union[datetime, timedelta] = None):
+    def __call__(self, *, priority: int = None, postpone: Union[datetime, timedelta] = None):
         """Decorator. Used to register a function which should be run in Spooler.
 
         :param priority: Number. The priority of the message. Larger - less important.
@@ -132,6 +132,7 @@ class Spooler:
     def send_message_raw(
             cls,
             message: str,
+            *,
             spooler: Union[str, 'Spooler'] = None,
             priority: int = None,
             postpone: Union[datetime, timedelta] = None,
@@ -297,7 +298,7 @@ class TaskResult:
 
     code_uwsgi: str = None
 
-    def __init__(self, result: Any = None, exception: Exception = None):
+    def __init__(self, result: Any = None, *, exception: Exception = None):
         self.result = result
         self.exception = exception
 

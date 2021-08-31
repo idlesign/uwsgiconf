@@ -54,7 +54,7 @@ class RouterBase(OptionsGroup):
 class _RouterCommon(RouterBase):
 
     def set_basic_params(
-            self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
+            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None):
         """
 
@@ -85,7 +85,7 @@ class _RouterCommon(RouterBase):
 
         return self
 
-    def set_connections_params(self, harakiri=None, timeout_socket=None, retry_delay=None):
+    def set_connections_params(self, *, harakiri=None, timeout_socket=None, retry_delay=None):
         """Sets connection-related parameters.
 
         :param int harakiri: Set gateway harakiri timeout (seconds).
@@ -149,7 +149,7 @@ class ForwarderCode(Forwarder):
     name = 'use-code-string'
     args_joiner = ':'
 
-    def __init__(self, script, func, modifier=None):
+    def __init__(self, script, func, *, modifier=None):
         """
         :param str script: Script (module for Python) name to get function from.
 
@@ -221,7 +221,7 @@ class _RouterWithForwarders(_RouterCommon):
         socket = ForwarderSocket
         subscription_server = ForwarderSubscriptionServer
 
-    def __init__(self, on=None, forward_to=None):
+    def __init__(self, on=None, *, forward_to=None):
         """Activates the router on the given address.
 
         :param SocketShared|str on: Activates the router on the given address.
@@ -242,7 +242,7 @@ class _RouterWithForwarders(_RouterCommon):
                 self._set_aliased('to', forward_to, multi=True)
 
     def set_basic_params(
-            self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
+            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None, quiet=None, buffer_size=None):
         """
 
@@ -317,7 +317,7 @@ class RouterHttp(_RouterWithForwarders):
     # http-manage-expect
 
     def set_basic_params(
-            self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
+            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None, quiet=None, buffer_size=None,
             keepalive=None, resubscribe_addresses=None):
         """
@@ -364,7 +364,7 @@ class RouterHttp(_RouterWithForwarders):
         return self
 
     def set_connections_params(
-            self, harakiri=None, timeout_socket=None, retry_delay=None, timeout_headers=None, timeout_backend=None):
+            self, *, harakiri=None, timeout_socket=None, retry_delay=None, timeout_headers=None, timeout_backend=None):
         """Sets connection-related parameters.
 
         :param int harakiri: Set gateway harakiri timeout (seconds).
@@ -389,7 +389,7 @@ class RouterHttp(_RouterWithForwarders):
         """
 
         super().set_connections_params(
-            **filter_locals(locals(), ['timeout_headers', 'timeout_backend']))
+            **filter_locals(locals(), drop=['timeout_headers', 'timeout_backend']))
 
         self._set_aliased('headers-timeout', timeout_headers)
         self._set_aliased('connect-timeout', timeout_backend)
@@ -397,7 +397,7 @@ class RouterHttp(_RouterWithForwarders):
         return self
 
     def set_manage_params(
-            self, chunked_input=None, chunked_output=None, gzip=None, websockets=None, source_method=None,
+            self, *, chunked_input=None, chunked_output=None, gzip=None, websockets=None, source_method=None,
             rtsp=None, proxy_protocol=None):
         """Allows enabling various automatic management mechanics.
 
@@ -466,7 +466,7 @@ class RouterHttps(RouterHttp):
     on_command = 'https2'
 
     def __init__(
-            self, on, cert, key, ciphers=None, client_ca=None, session_context=None, use_spdy=None,
+            self, on, *, cert, key, ciphers=None, client_ca=None, session_context=None, use_spdy=None,
             export_cert_var=None):
         """Binds https router to run on the given address.
 
@@ -564,7 +564,7 @@ class RouterSsl(_RouterWithForwarders):
         self._set_aliased('session-context', session_context)
         self._set_aliased('sni', use_sni, cast=bool)
 
-        super().__init__(on, forward_to)
+        super().__init__(on, forward_to=forward_to)
 
     def set_connections_params(self, harakiri=None, timeout_socket=None, retry_delay=None, retry_max=None):
         """Sets connection-related parameters.
@@ -579,7 +579,7 @@ class RouterSsl(_RouterWithForwarders):
         :param int retry_max: Maximum number of retries/fallbacks to other nodes. Default: 3.
 
         """
-        super().set_connections_params(**filter_locals(locals(), ['retry_max']))
+        super().set_connections_params(**filter_locals(locals(), drop=['retry_max']))
 
         self._set_aliased('max-retries', retry_max)
 
@@ -597,7 +597,7 @@ class RouterFast(_RouterWithForwarders):
     plugin = alias
 
     def set_basic_params(
-            self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
+            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None, quiet=None, buffer_size=None,
             fallback_nokey=None, subscription_key=None, emperor_command_socket=None):
         """
@@ -631,7 +631,7 @@ class RouterFast(_RouterWithForwarders):
             See `.empire.set_emperor_command_params()`.
 
         """
-        super().set_basic_params(**filter_locals(locals(), [
+        super().set_basic_params(**filter_locals(locals(), drop=[
             'fallback_nokey',
             'subscription_key',
             'emperor_command_socket',
@@ -676,7 +676,7 @@ class RouterFast(_RouterWithForwarders):
         :param int defer: Defer connection delay, seconds. Default: 5.
 
         """
-        super().set_connections_params(**filter_locals(locals(), ['retry_max', 'defer']))
+        super().set_connections_params(**filter_locals(locals(), drop=['retry_max', 'defer']))
 
         self._set_aliased('max-retries', retry_max)
         self._set_aliased('defer-connect-timeout', defer)
@@ -739,7 +739,7 @@ class RouterRaw(_RouterWithForwarders):
         :param bool use_xclient: Use the xclient protocol to pass the client address.
 
         """
-        super().set_connections_params(**filter_locals(locals(), ['retry_max', 'use_xclient']))
+        super().set_connections_params(**filter_locals(locals(), drop=['retry_max', 'use_xclient']))
 
         self._set_aliased('max-retries', retry_max)
         self._set_aliased('xclient', use_xclient)
@@ -780,7 +780,7 @@ class RouterForkPty(_RouterCommon):
         super().__init__(on)
 
     def set_basic_params(
-            self, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
+            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
             cheap_mode=None, stats_server=None, run_command=None):
         """
 
@@ -805,13 +805,13 @@ class RouterForkPty(_RouterCommon):
             on every connection. Default: /bin/sh.
 
         """
-        super().set_basic_params(**filter_locals(locals(), ['run_command']))
+        super().set_basic_params(**filter_locals(locals(), drop=['run_command']))
 
         self._set_aliased('command', run_command)
 
         return self
 
-    def set_connections_params(self, harakiri=None, timeout_socket=None):
+    def set_connections_params(self, *, harakiri=None, timeout_socket=None):
         """Sets connection-related parameters.
 
         :param int harakiri: Set gateway harakiri timeout (seconds).
@@ -857,7 +857,7 @@ class RouterTunTap(RouterBase):
     alias = 'tuntap'
     plugin = alias
 
-    def __init__(self, on=None, device=None, stats_server=None, gateway=None):
+    def __init__(self, on=None, *, device=None, stats_server=None, gateway=None):
         """Passing params will create a router device.
 
         :param str on: Socket file.
@@ -882,7 +882,7 @@ class RouterTunTap(RouterBase):
 
             self._set_aliased('router', ' '.join(value), multi=True)
 
-    def set_basic_params(self, use_credentials=None, stats_server=None):
+    def set_basic_params(self, *, use_credentials=None, stats_server=None):
         """
         :param str use_credentials: Enable check of SCM_CREDENTIALS for tuntap client/server.
 
@@ -894,7 +894,7 @@ class RouterTunTap(RouterBase):
 
         return self
 
-    def register_route(self, src, dst, gateway):
+    def register_route(self, src, dst, *, gateway):
         """Adds a routing rule to the tuntap router.
 
         :param str src: Source/mask.
@@ -908,7 +908,7 @@ class RouterTunTap(RouterBase):
 
         return self
 
-    def device_connect(self, socket, device_name):
+    def device_connect(self, socket, *, device_name):
         """Add a tuntap device to the instance.
 
         To be used in a vassal.
@@ -926,7 +926,7 @@ class RouterTunTap(RouterBase):
 
         return self
 
-    def device_add_rule(self, direction, action, src, dst, target=None):
+    def device_add_rule(self, *, direction, action, src, dst, target=None):
         """Adds a tuntap device rule.
 
         To be used in a vassal.
@@ -961,7 +961,7 @@ class RouterTunTap(RouterBase):
 
         return self
 
-    def add_firewall_rule(self, direction, action, src=None, dst=None):
+    def add_firewall_rule(self, *, direction, action, src=None, dst=None):
         """Adds a firewall rule to the router.
 
         The TunTap router includes a very simple firewall for governing vassal's traffic.

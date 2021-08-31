@@ -21,7 +21,7 @@ class ActionMount(HookAction):
 
     name = 'mount'
 
-    def __init__(self, mountpoint, fs=None, src=None, flags=None):
+    def __init__(self, mountpoint, *, fs=None, src=None, flags=None):
         """
 
         :param str mountpoint:
@@ -72,7 +72,7 @@ class ActionCall(HookAction):
 
     name = 'call'
 
-    def __init__(self, target, honour_exit_status=False, arg_int=False):
+    def __init__(self, target, *, honour_exit_status=False, arg_int=False):
         """
         :param str target: Symbol and args.
 
@@ -177,7 +177,7 @@ class ActionFileWrite(HookAction):
     """
     name = 'write'
 
-    def __init__(self, target, text, append=False, newline=False):
+    def __init__(self, target, text, *, append=False, newline=False):
         """
 
         :param str target: File to write to.
@@ -203,7 +203,7 @@ class ActionFifoWrite(HookAction):
 
     name = 'writefifo'
 
-    def __init__(self, target, text, wait=False):
+    def __init__(self, target, text, *, wait=False):
         """
         :param bool wait: Wait until FIFO is available.
 

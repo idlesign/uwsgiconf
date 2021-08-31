@@ -10,7 +10,7 @@ class Metric(ParametrizedValue):
     name_separator = ','
 
     def __init__(
-            self, name, oid=None, alias_for=None, collector=None,
+            self, name, *, oid=None, alias_for=None, collector=None,
             initial_value=None, collect_interval=None, reset_after_push=None):
         """
 

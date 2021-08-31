@@ -18,7 +18,6 @@ class WeightedRoundRobin(BalancingAlgorithmWithBackup):
     The default algorithm.
 
     """
-
     name = 'wrr'
 
 

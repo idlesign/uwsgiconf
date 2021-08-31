@@ -8,10 +8,10 @@ if False:  # pragma: nocover
 TypeFormatter = TypeVar('TypeFormatter', bound='FormatterBase')
 
 
-def format_print_text(text: str, color_fg: str = None, color_bg: str = None) -> str:
+def format_print_text(text: str, *, color_fg: str = None, color_bg: str = None) -> str:
     """Format given text using ANSI formatting escape sequences.
 
-    Could be useful gfor print command.
+    Could be useful for print command.
 
     :param text:
     :param color_fg: text (foreground) color

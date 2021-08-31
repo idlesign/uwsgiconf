@@ -59,7 +59,7 @@ def test_networking_basics(assert_lines):
         'https-socket = :8001,cert.crt,key.key,,!clientca',
     ], Section().networking.register_socket(
         sockets.https(
-            ':8001', 'cert.crt', 'key.key', client_ca='!clientca')))
+            ':8001', cert='cert.crt', key='key.key', client_ca='!clientca')))
 
     assert_lines([
         'puwsgi-socket = :8001',

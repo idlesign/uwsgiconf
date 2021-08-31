@@ -30,7 +30,7 @@ class Subscriptions(OptionsGroup):
         weighted_round_robin = WeightedRoundRobin
 
     def set_server_params(
-            self, client_notify_address=None, mountpoints_depth=None, require_vassal=None,
+            self, *, client_notify_address=None, mountpoints_depth=None, require_vassal=None,
             tolerance=None, tolerance_inactive=None, key_dot_split=None):
         """Sets subscription server related params.
 
@@ -64,7 +64,7 @@ class Subscriptions(OptionsGroup):
         return self._section
 
     def set_server_verification_params(
-            self, digest_algo=None, dir_cert=None, tolerance=None, no_check_uid=None,
+            self, *, digest_algo=None, dir_cert=None, tolerance=None, no_check_uid=None,
             dir_credentials=None, pass_unix_credentials=None):
         """Sets peer verification params for subscription server.
 
@@ -101,7 +101,7 @@ class Subscriptions(OptionsGroup):
         return self._section
 
     def set_client_params(
-            self, start_unsubscribed=None, clear_on_exit=None, unsubscribe_on_reload=None,
+            self, *, start_unsubscribed=None, clear_on_exit=None, unsubscribe_on_reload=None,
             announce_interval=None):
         """Sets subscribers related params.
 
@@ -123,7 +123,7 @@ class Subscriptions(OptionsGroup):
         return self._section
 
     def subscribe(
-            self, server=None, key=None, address=None, address_vassal=None,
+            self, server=None, *, key=None, address=None, address_vassal=None,
             balancing_weight=None, balancing_algo=None, modifier=None, signing=None, check_file=None, protocol=None,
             sni_cert=None, sni_key=None, sni_client_ca=None):
         """Registers a subscription intent.

@@ -11,7 +11,7 @@ TypeTarget = Union[Strint, Signal]
 TypeRegResult = Union[Callable, bool]
 
 
-def register_timer(period: int, target: TypeTarget = None) -> TypeRegResult:
+def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:
     """Add timer.
 
     Can be used as a decorator:
@@ -46,7 +46,7 @@ def register_timer(period: int, target: TypeTarget = None) -> TypeRegResult:
     return _automate_signal(target, func=lambda sig: uwsgi.add_timer(int(sig), period))
 
 
-def register_timer_rb(period: int, repeat: int = None, target: TypeTarget = None) -> TypeRegResult:
+def register_timer_rb(period: int, *, repeat: int = None, target: TypeTarget = None) -> TypeRegResult:
     """Add a red-black timer (based on black-red tree).
 
         .. code-block:: python
@@ -82,7 +82,7 @@ def register_timer_rb(period: int, repeat: int = None, target: TypeTarget = None
     return _automate_signal(target, func=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0))
 
 
-def register_timer_ms(period: int, target: TypeTarget = None) -> TypeRegResult:
+def register_timer_ms(period: int, *, target: TypeTarget = None) -> TypeRegResult:
     """Add a millisecond resolution timer.
 
         .. code-block:: python
@@ -116,6 +116,7 @@ def register_timer_ms(period: int, target: TypeTarget = None) -> TypeRegResult:
 
 
 def register_cron(
+        *,
         weekday: Strint = None,
         month: Strint = None,
         day: Strint = None,

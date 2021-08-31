@@ -22,17 +22,17 @@ def test_alarms_registration(assert_lines):
     alarms = Section().alarms
     assert_lines([
         'alarm = my cmd:some',
-    ], alarms.register_alarm(alarms.alarm_types.command('my', 'some')))
+    ], alarms.register_alarm(alarms.alarm_types.command('my', command='some')))
 
     alarms = Section().alarms
     assert_lines([
         'alarm = mysig signal:17',
-    ], alarms.register_alarm(alarms.alarm_types.signal('mysig', 17)))
+    ], alarms.register_alarm(alarms.alarm_types.signal('mysig', sig=17)))
 
     alarms = Section().alarms
     assert_lines([
         'alarm = tomule mule:2',
-    ], alarms.register_alarm(alarms.alarm_types.mule('tomule', 2)))
+    ], alarms.register_alarm(alarms.alarm_types.mule('tomule', mule=2)))
 
     alarms = Section().alarms
     assert_lines([
@@ -48,15 +48,17 @@ def test_alarms_registration(assert_lines):
         'plugin = alarm_xmpp',
         'alarm = jab xmpp:idle@some.com;12345;one@some.com,two@some.com',
     ], alarms.register_alarm(
-        alarms.alarm_types.xmpp('jab', 'idle@some.com', '12345', ['one@some.com', 'two@some.com'])))
+        alarms.alarm_types.xmpp(
+            'jab', jid='idle@some.com', password='12345',
+            recipients=['one@some.com', 'two@some.com'])))
 
 
 def test_alarms_on_log(assert_lines):
 
     alarms = Section().alarms
 
-    alarm1 = alarms.alarm_types.command('mycom', 'some')
-    alarm2 = alarms.alarm_types.signal('mysig', 27)
+    alarm1 = alarms.alarm_types.command('mycom', command='some')
+    alarm2 = alarms.alarm_types.signal('mysig', sig=27)
 
     assert_lines([
         'alarm = mycom cmd:some',
@@ -72,22 +74,22 @@ def test_alarms_on_log(assert_lines):
 def test_alarms_on_fd(assert_lines):
 
     alarms = Section().alarms
-    alarm1 = alarms.alarm_types.signal('mysig', 27)
-    alarm2 = alarms.alarm_types.signal('some', 17)
+    alarm1 = alarms.alarm_types.signal('mysig', sig=27)
+    alarm2 = alarms.alarm_types.signal('some', sig=17)
 
     assert_lines([
         'alarm = mysig signal:27',
         'alarm = some signal:17',
         'alarm-fd = mysig $(CGROUP_OOM_FD):8 damn it!',
         'alarm-fd = some $(CGROUP_OOM_FD):8 damn it!',
-    ], alarms.alarm_on_fd_ready([alarm1, alarm2], '$(CGROUP_OOM_FD)', 'damn it!', byte_count=8))
+    ], alarms.alarm_on_fd_ready([alarm1, alarm2], fd='$(CGROUP_OOM_FD)', message='damn it!', byte_count=8))
 
 
 def test_alarms_on_queue(assert_lines):
 
     alarms = Section().alarms
-    alarm1 = alarms.alarm_types.signal('mysig', 27)
-    alarm2 = alarms.alarm_types.signal('some', 17)
+    alarm1 = alarms.alarm_types.signal('mysig', sig=27)
+    alarm2 = alarms.alarm_types.signal('some', sig=17)
 
     assert_lines([
         'alarm = mysig signal:27',
@@ -100,8 +102,8 @@ def test_alarms_on_queue(assert_lines):
 def test_alarms_on_segfault(assert_lines):
 
     alarms = Section().alarms
-    alarm1 = alarms.alarm_types.signal('mysig', 27)
-    alarm2 = alarms.alarm_types.signal('some', 17)
+    alarm1 = alarms.alarm_types.signal('mysig', sig=27)
+    alarm2 = alarms.alarm_types.signal('some', sig=17)
 
     assert_lines([
         'alarm = mysig signal:27',

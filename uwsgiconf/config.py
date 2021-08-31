@@ -127,6 +127,7 @@ class Section(OptionsGroup):
     def __init__(
             self,
             name: str = None,
+            *,
             runtime_dir: str = None,
             project_name: str = None,
             strict_config: bool = None,
@@ -229,7 +230,7 @@ class Section(OptionsGroup):
     def project_name(self, value: str):
         self._project_name = value or ''
 
-    def get_runtime_dir(self, default: bool = True) -> str:
+    def get_runtime_dir(self, *, default: bool = True) -> str:
         """Directory to store runtime files.
         See ``.replace_placeholders()``
 
@@ -246,7 +247,7 @@ class Section(OptionsGroup):
 
         return dir_
 
-    def set_runtime_dir(self, value):
+    def set_runtime_dir(self, value) -> TypeSection:
         """Sets user-defined runtime directory value.
 
         :param str value:
@@ -256,7 +257,7 @@ class Section(OptionsGroup):
         
         return self
 
-    def set_basic_params(self, strict_config: bool = None, **kwargs):
+    def set_basic_params(self, *, strict_config: bool = None, **kwargs) -> TypeSection:
 
         self._set('strict', strict_config, cast=bool)
 
@@ -270,14 +271,14 @@ class Section(OptionsGroup):
         """
         return Configuration([self], **kwargs)
 
-    def print_plugins(self):
+    def print_plugins(self) -> TypeSection:
         """Print out enabled plugins."""
 
         self._set('plugins-list', True, cast=bool)
 
         return self
 
-    def print_stamp(self):
+    def print_stamp(self) -> TypeSection:
         """Prints out a stamp containing useful information,
         such as what and when has generated this configuration.
 
@@ -297,10 +298,11 @@ class Section(OptionsGroup):
     def print_out(
             self,
             value: Any,
+            *,
             indent: str = None,
             format_options: Union[dict, str] = None,
             asap: bool = False
-    ):
+    ) -> TypeSection:
         """Prints out the given value.
 
         :param value:
@@ -332,7 +334,7 @@ class Section(OptionsGroup):
 
         return self
 
-    def print_variables(self):
+    def print_variables(self) -> TypeSection:
         """Prints out magic variables available in config files
         alongside with their values and descriptions.
         May be useful for debugging.
@@ -353,11 +355,12 @@ class Section(OptionsGroup):
 
     def set_plugins_params(
             self,
+            *,
             plugins: Union[List[str], List[OptionsGroup], str, OptionsGroup] = None,
             search_dirs: Strlist = None,
             autoload: bool = None,
             required: bool = False
-    ):
+    ) -> TypeSection:
         """Sets plugin-related parameters.
 
         :param plugins: uWSGI plugins to load
@@ -384,7 +387,7 @@ class Section(OptionsGroup):
 
         return self
 
-    def set_fallback(self, target: Union[str, 'Section']):
+    def set_fallback(self, target: Union[str, 'Section']) -> TypeSection:
         """Sets a fallback configuration for section.
 
         Re-exec uWSGI with the specified config when exit code is 1.
@@ -399,7 +402,7 @@ class Section(OptionsGroup):
 
         return self
 
-    def set_placeholder(self, key: str, value: str):
+    def set_placeholder(self, key: str, value: str) -> TypeSection:
         """Placeholders are custom magic variables defined during configuration
         time.
 
@@ -415,7 +418,15 @@ class Section(OptionsGroup):
 
         return self
 
-    def env(self, key: str, value: Any = None, unset: bool = False, asap: bool = False, update_local: bool = False):
+    def env(
+            self,
+            key: str,
+            value: Any = None,
+            *,
+            unset: bool = False,
+            asap: bool = False,
+            update_local: bool = False
+    ) -> TypeSection:
         """Processes (sets/unsets) environment variable.
 
         If is not given in `set` mode value will be taken from current env.
@@ -453,7 +464,7 @@ class Section(OptionsGroup):
 
         return self
 
-    def include(self, target: Union['Section', List['Section'], str, List[str]]):
+    def include(self, target: Union['Section', List['Section'], str, List[str]]) -> TypeSection:
         """Includes target contents into config.
 
         :param target: File path or Section to include.
@@ -468,7 +479,7 @@ class Section(OptionsGroup):
         return self
 
     @classmethod
-    def derive_from(cls, section: TypeSection, name: str = None) -> TypeSection:
+    def derive_from(cls, section: TypeSection, *, name: str = None) -> TypeSection:
         """Creates a new section based on the given.
 
         :param section: Section to derive from,
@@ -597,6 +608,7 @@ class Section(OptionsGroup):
     def bootstrap(
             cls,
             dsn: Strlist,
+            *,
             allow_shared_sockets: bool = None,
             **init_kwargs: Any
     ) -> TypeSection:
@@ -633,7 +645,13 @@ class Configuration:
 
     """
 
-    def __init__(self, sections: List[Section] = None, autoinclude_sections: bool = False, alias: str = None):
+    def __init__(
+            self,
+            sections: List[Section] = None,
+            *,
+            autoinclude_sections: bool = False,
+            alias: str = None
+    ):
         """
 
         :param sections: If not provided, empty section
@@ -675,7 +693,7 @@ class Configuration:
 
             names.append(name)
 
-    def format(self, do_print: bool = False, stamp: bool = True, formatter: str = 'ini') -> Strlist:
+    def format(self, *, do_print: bool = False, stamp: bool = True, formatter: str = 'ini') -> Strlist:
         """Applies formatting to configuration.
 
         :param do_print: Whether to print out formatted config.
@@ -733,7 +751,7 @@ def configure_uwsgi(configurator_func: Callable) -> Optional[List[Configuration]
     Returns a list with detected configurations or ``None`` if called from
     within uWSGI (e.g. when trying to load WSGI application).
 
-    .. code-block: python
+    .. code-block:: python
 
         # In configuration module, e.g `uwsgicfg.py`
 

@@ -17,6 +17,7 @@ class MasterProcess(OptionsGroup):
 
     def set_basic_params(
             self,
+            *,
             enable: bool = None,
             name: str = None,
             no_orphans: bool = None,
@@ -63,7 +64,14 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_exit_events(self, no_workers: bool = None, idle: bool = None, reload: bool = None, sig_term: bool = None):
+    def set_exit_events(
+            self,
+            *,
+            no_workers: bool = None,
+            idle: bool = None,
+            reload: bool = None,
+            sig_term: bool = None
+    ):
         """Do exit on certain events
 
         :param bool no_workers: Shutdown uWSGI when no workers are running.
@@ -86,6 +94,7 @@ class MasterProcess(OptionsGroup):
 
     def set_exception_handling_params(
             self,
+            *,
             handler: Strlist = None,
             catch: bool = None,
             no_write_exception: bool = None
@@ -111,7 +120,7 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_idle_params(self, timeout: int = None, exit: bool = None):
+    def set_idle_params(self, *, timeout: int = None, exit: bool = None):
         """Activate idle mode - put uWSGI in cheap mode after inactivity timeout.
 
         :param timeout: Inactivity timeout in seconds.
@@ -124,7 +133,7 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_reload_params(self, mercy: int = None, exit: bool = None):
+    def set_reload_params(self, *, mercy: int = None, exit: bool = None):
         """Set reload related params.
 
         :param mercy: Set the maximum time (in seconds) we wait
@@ -141,6 +150,7 @@ class MasterProcess(OptionsGroup):
     def add_cron_task(
             self,
             command: str,
+            *,
             weekday: Strint = None,
             month: Strint = None,
             day: Strint = None,
@@ -202,6 +212,7 @@ class MasterProcess(OptionsGroup):
     def attach_process_classic(
             self,
             command_or_pid_path: str,
+            *,
             background: bool,
             control: bool = False,
             for_legion: bool = False
@@ -259,6 +270,7 @@ class MasterProcess(OptionsGroup):
     def attach_process(
             self,
             command: str,
+            *,
             for_legion: bool = False,
             broken_counter: int = None,
             pidfile: str = None,

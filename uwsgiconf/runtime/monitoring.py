@@ -5,7 +5,7 @@ from .. import uwsgi
 from ..typehints import Strint
 
 
-def register_file_monitor(filename: str, target: Union[Strint, Signal] = None):
+def register_file_monitor(filename: str, *, target: Union[Strint, Signal] = None):
     """Maps a specific file/directory modification event to a signal.
 
     :param filename: File or a directory to watch for its modification.
@@ -52,7 +52,7 @@ class Metric:
         """Current metric value."""
         return uwsgi.metric_get(self.name)
 
-    def set(self, value: int, mode: str = None) -> bool:
+    def set(self, value: int, *, mode: str = None) -> bool:
         """Sets metric value.
 
         :param value: New value.

@@ -19,7 +19,7 @@ class AlgoSpare(Algo):
     """
     name = 'spare'
 
-    def set_basic_params(self, check_interval_overload=None):
+    def set_basic_params(self, *, check_interval_overload=None):
         """
         :param int check_interval_overload: Interval (sec) to wait after all workers are busy
             before new worker spawn.
@@ -40,7 +40,7 @@ class AlgoSpare2(Algo):
 
     name = 'spare2'
 
-    def set_basic_params(self, check_interval_idle=None):
+    def set_basic_params(self, *, check_interval_idle=None):
         """
         :param int check_interval_idle: Decrease workers after specified idle. Default: 10.
 
@@ -63,7 +63,7 @@ class AlgoQueue(Algo):
     """
     name = 'backlog'
 
-    def set_basic_params(self, check_num_overload=None):
+    def set_basic_params(self, *, check_num_overload=None):
         """
         :param int check_num_overload: Number of backlog items in queue.
 
@@ -88,7 +88,7 @@ class AlgoBusyness(Algo):
     plugin = 'cheaper_busyness'
 
     def set_basic_params(
-            self, check_interval_busy=None,
+            self, *, check_interval_busy=None,
             busy_max=None, busy_min=None,
             idle_cycles_max=None, idle_cycles_penalty=None,
             verbose=None):
@@ -121,7 +121,7 @@ class AlgoBusyness(Algo):
         return self._section
 
     def set_emergency_params(
-            self, workers_step=None, idle_cycles_max=None, queue_size=None, queue_nonzero_delay=None):
+            self, *, workers_step=None, idle_cycles_max=None, queue_size=None, queue_nonzero_delay=None):
         """Sets busyness algorithm emergency workers related params.
 
         Emergency workers could be spawned depending upon uWSGI backlog state.
@@ -173,7 +173,7 @@ class Cheapening(OptionsGroup):
         spare2 = AlgoSpare2
 
     def set_basic_params(
-            self, spawn_on_request=None,
+            self, *, spawn_on_request=None,
             cheaper_algo=None, workers_min=None, workers_startup=None, workers_step=None):
         """
         :param bool spawn_on_request: Spawn workers only after the first request.
@@ -207,7 +207,7 @@ class Cheapening(OptionsGroup):
 
         return self._section
 
-    def set_memory_limits(self, rss_soft=None, rss_hard=None):
+    def set_memory_limits(self, *, rss_soft=None, rss_hard=None):
         """Sets worker memory limits for cheapening.
 
         :param int rss_soft: Don't spawn new workers if total resident memory usage

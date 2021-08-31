@@ -11,7 +11,7 @@ class Locks(OptionsGroup):
 
     """
 
-    def set_basic_params(self, count: int = None, thunder_lock: bool = None, lock_engine: str = None):
+    def set_basic_params(self, *, count: int = None, thunder_lock: bool = None, lock_engine: str = None):
         """
         :param count: Create the specified number of shared locks.
 
@@ -32,7 +32,7 @@ class Locks(OptionsGroup):
 
         return self._section
 
-    def set_ipcsem_params(self, ftok: str = None, persistent: bool = None):
+    def set_ipcsem_params(self, *, ftok: str = None, persistent: bool = None):
         """Sets ipcsem lock engine params.
 
         :param ftok: Set the ipcsem key via ftok() for avoiding duplicates.
@@ -45,7 +45,7 @@ class Locks(OptionsGroup):
 
         return self._section
 
-    def lock_file(self, fpath: Union[str, Path], after_setup: bool = False, wait: bool = False):
+    def lock_file(self, fpath: Union[str, Path], *, after_setup: bool = False, wait: bool = False):
         """Locks the specified file.
 
         :param fpath: File path.

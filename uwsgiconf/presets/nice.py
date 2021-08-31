@@ -12,6 +12,7 @@ class Section(_Section):
     def __init__(
             self,
             name: str = None,
+            *,
             touch_reload: Strlist =None,
             workers: int = None,
             threads: Union[int, bool] = None,
@@ -51,6 +52,7 @@ class Section(_Section):
                and are safe to ignore.
 
         :param kwargs:
+
         """
         super().__init__(strict_config=True, name=name, **kwargs)
 
@@ -223,6 +225,7 @@ class Section(_Section):
             self,
             domain: str,
             webroot: str,
+            *,
             address: str = None,
             allow_shared_sockets: bool = None,
             http_redirect: bool = False,
@@ -314,6 +317,7 @@ class PythonSection(Section):
     def __init__(
             self,
             name: str = None,
+            *,
             params_python: dict = None,
             wsgi_module: str = None,
             wsgi_callable: Union[str, Callable] = None,

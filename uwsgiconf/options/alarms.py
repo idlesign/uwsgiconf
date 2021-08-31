@@ -31,7 +31,7 @@ class Alarms(OptionsGroup):
         self._alarms = []
         super().__init__(*args, **kwargs)
 
-    def set_basic_params(self, msg_size: int = None, cheap: bool = None, anti_loop_timeout: int = None):
+    def set_basic_params(self, *, msg_size: int = None, cheap: bool = None, anti_loop_timeout: int = None):
         """
         :param msg_size: Set the max size of an alarm message in bytes. Default: 8192.
 
@@ -67,7 +67,7 @@ class Alarms(OptionsGroup):
 
         return self._section
 
-    def alarm_on_log(self, alarm: TypeAlarmExt, matcher: str, skip: bool = False):
+    def alarm_on_log(self, alarm: TypeAlarmExt, matcher: str, *, skip: bool = False):
         """Raise (or skip) the specified alarm when a log line matches the specified regexp.
 
         :param alarm: Alarm.
@@ -85,7 +85,7 @@ class Alarms(OptionsGroup):
 
         return self._section
 
-    def alarm_on_fd_ready(self, alarm: TypeAlarmExt, fd: str, message: str, byte_count: int = None):
+    def alarm_on_fd_ready(self, alarm: TypeAlarmExt, *, fd: str, message: str, byte_count: int = None):
         """Triggers the alarm when the specified file descriptor is ready for read.
 
         This is really useful for integration with the Linux eventfd() facility.

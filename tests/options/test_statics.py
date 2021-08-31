@@ -35,10 +35,10 @@ def test_statics_expiration(assert_lines):
 
     ],
     statics.add_expiration_rule(
-        statics.expiration_criteria.FILENAME, ['.*png', '.*pdf'], 50, use_mod_time=True
+        statics.expiration_criteria.FILENAME, ['.*png', '.*pdf'], timeout=50, use_mod_time=True
 
     ).statics.add_expiration_rule(
-        statics.expiration_criteria.MIME_TYPE, 'text/html', 100
+        statics.expiration_criteria.MIME_TYPE, 'text/html', timeout=100
 
     ))
 

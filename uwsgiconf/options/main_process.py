@@ -185,6 +185,7 @@ class MainProcess(OptionsGroup):
 
     def set_basic_params(
             self,
+            *,
             touch_reload: Strlist = None,
             priority: int = None,
             vacuum: bool = None,
@@ -217,7 +218,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_memory_params(self, ksm_interval: int = None, no_swap: bool = None):
+    def set_memory_params(self, *, ksm_interval: int = None, no_swap: bool = None):
         """Set memory related parameters.
 
         :param ksm_interval: Kernel Samepage Merging frequency option, that can reduce memory usage.
@@ -235,7 +236,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def daemonize(self, log_into: str, after_app_loading: bool = False):
+    def daemonize(self, log_into: str, *, after_app_loading: bool = False):
         """Daemonize uWSGI.
 
         :param str log_into: Logging destination:
@@ -256,7 +257,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def change_dir(self, to: str, after_app_loading: bool = False):
+    def change_dir(self, to: str, *, after_app_loading: bool = False):
         """Chdir to specified directory before or after apps loading.
 
         :param to: Target directory.
@@ -272,6 +273,7 @@ class MainProcess(OptionsGroup):
 
     def set_owner_params(
             self,
+            *,
             uid: Strint = None,
             gid: Strint = None,
             add_gids: Union[Strint, List[Strint]] = None,
@@ -303,7 +305,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def get_owner(self, default: bool = True) -> Tuple[Optional[Strint], Optional[Strint]]:
+    def get_owner(self, *, default: bool = True) -> Tuple[Optional[Strint], Optional[Strint]]:
         """Return (User ID, Group ID) tuple
 
         :param default: Whether to return default if not set.
@@ -353,7 +355,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_on_exit_params(self, skip_hooks: bool = None, skip_teardown: bool = None):
+    def set_on_exit_params(self, *, skip_hooks: bool = None, skip_teardown: bool = None):
         """Set params related to process exit procedure.
 
         :param skip_hooks: Skip ``EXIT`` phase hook.
@@ -374,7 +376,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def run_command_on_event(self, command: str, phase: str = phases.ASAP):
+    def run_command_on_event(self, command: str, *, phase: str = phases.ASAP):
         """Run the given command on a given phase.
 
         :param command:
@@ -386,7 +388,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def run_command_on_touch(self, command: str, target: str):
+    def run_command_on_touch(self, command: str, *, target: str):
         """Run command when the specified file is modified/touched.
 
         :param command:
@@ -398,7 +400,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_pid_file(self, fpath: Union[str, Path], before_priv_drop: bool = True, safe: bool = False):
+    def set_pid_file(self, fpath: Union[str, Path], *, before_priv_drop: bool = True, safe: bool = False):
         """Creates pidfile before or after privileges drop.
 
         :param fpath: File path.
@@ -426,7 +428,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_naming_params(self, autonaming: bool = None, prefix: str = None, suffix: str = None, name: str = None):
+    def set_naming_params(self, *, autonaming: bool = None, prefix: str = None, suffix: str = None, name: str = None):
         """Setups processes naming parameters.
 
         :param autonaming: Automatically set process name to something meaningful.

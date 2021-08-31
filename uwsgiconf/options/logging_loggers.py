@@ -19,7 +19,7 @@ class LoggerFile(Logger):
     name = 'file'
     plugin = 'logfile'
 
-    def __init__(self, filepath: Union[str, Path], alias=None):
+    def __init__(self, filepath: Union[str, Path], *, alias=None):
         """
         :param str filepath: File path.
 
@@ -35,7 +35,7 @@ class LoggerFileDescriptor(Logger):
     name = 'fd'
     plugin = 'logfile'
 
-    def __init__(self, fd: int, alias=None):
+    def __init__(self, fd: int, *, alias=None):
         """
         :param str fd: File descriptor.
 
@@ -51,7 +51,7 @@ class LoggerStdIO(Logger):
     name = 'stdio'
     plugin = 'logfile'
 
-    def __init__(self, alias=None):
+    def __init__(self, *, alias=None):
         """
 
         :param str alias: Logger alias.
@@ -66,7 +66,7 @@ class LoggerSocket(Logger):
     name = 'socket'
     plugin = 'logsocket'
 
-    def __init__(self, addr_or_path: Union[str, Path], alias=None):
+    def __init__(self, addr_or_path: Union[str, Path], *, alias=None):
         """
 
         :param str addr_or_path: Remote address or filepath.
@@ -87,7 +87,7 @@ class LoggerSyslog(Logger):
     name = 'syslog'
     plugin = 'syslog'
 
-    def __init__(self, app_name=None, facility=None, alias=None):
+    def __init__(self, *, app_name=None, facility=None, alias=None):
         """
 
         :param str app_name:
@@ -108,7 +108,7 @@ class LoggerRsyslog(LoggerSyslog):
     name = 'rsyslog'
     plugin = 'rsyslog'
 
-    def __init__(self, app_name=None, host=None, facility=None, split=None, packet_size=None, alias=None):
+    def __init__(self, *, app_name=None, host=None, facility=None, split=None, packet_size=None, alias=None):
         """
 
         :param str app_name:
@@ -129,7 +129,7 @@ class LoggerRsyslog(LoggerSyslog):
         :param str alias: Logger alias.
 
         """
-        super().__init__(app_name, facility, alias=alias)
+        super().__init__(app_name=app_name, facility=facility, alias=alias)
 
         self.args.insert(0, host)
 
@@ -147,7 +147,7 @@ class LoggerRedis(Logger):
     name = 'redislog'
     plugin = 'redislog'
 
-    def __init__(self, host=None, command=None, prefix=None, alias=None):
+    def __init__(self, *, host=None, command=None, prefix=None, alias=None):
         """
 
         :param str host: Default: 127.0.0.1:6379
@@ -176,7 +176,7 @@ class LoggerMongo(Logger):
     name = 'mongodblog'
     plugin = 'mongodblog'
 
-    def __init__(self, host=None, collection=None, node=None, alias=None):
+    def __init__(self, *, host=None, collection=None, node=None, alias=None):
         """
 
         :param str host: Default: 127.0.0.1:27017
@@ -198,7 +198,7 @@ class LoggerZeroMq(Logger):
     name = 'zeromq'
     plugin = 'logzmq'
 
-    def __init__(self, connection_str, alias=None):
+    def __init__(self, connection_str, *, alias=None):
         """
 
         :param str connection_str:

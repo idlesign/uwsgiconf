@@ -14,7 +14,7 @@ class SubjectCustom(ParametrizedValue):
 
     args_joiner = ';'
 
-    def __init__(self, subject, negate=False):
+    def __init__(self, subject, *, negate=False):
         """
         :param Var|str subject: Handwritten subject or a Var heir representing it.
 

@@ -33,7 +33,7 @@ def test_subscriptions_basics(assert_lines):
     assert_lines([
         'key=pythonz.net',
         'server=127.0.0.1:4040',
-    ], Section().subscriptions.subscribe('127.0.0.1:4040', 'pythonz.net'))
+    ], Section().subscriptions.subscribe('127.0.0.1:4040', key='pythonz.net'))
 
     # SNI
     assert_lines([

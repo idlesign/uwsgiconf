@@ -118,6 +118,7 @@ TEMPLATES: Dict[str, Callable] = {
 
 def get_config(
         systype: str,
+        *,
         conf: Union[Configuration, Section],
         conf_path: str,
         runner: str = None,

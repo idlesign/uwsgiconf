@@ -127,7 +127,7 @@ class _Platform:
         """
         return _uwsgi.listen_queue(socket_num)
 
-    def get_version(self, as_tuple: bool = False) -> Union[str, Tuple[int, int, int, int, str]]:
+    def get_version(self, *, as_tuple: bool = False) -> Union[str, Tuple[int, int, int, int, str]]:
         """Returns uWSGI version string or tuple.
 
         :param as_tuple:

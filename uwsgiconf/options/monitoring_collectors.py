@@ -39,7 +39,7 @@ class CollectorFile(Collector):
 
     name = 'file'
 
-    def __init__(self, fpath, get_slot=None):
+    def __init__(self, fpath, *, get_slot=None):
         """
         :param str fpath: File path.
 
@@ -120,6 +120,7 @@ class CollectorAdder(Collector):
     def __init__(self, what, value):
         """
         :param int value: Value to add (multiply if it is CollectorMultiplier).
+
         """
         value = KeyValue(filter_locals(locals(), drop=['what']), aliases={'value': 'arg1n'})
 

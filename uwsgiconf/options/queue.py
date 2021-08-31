@@ -12,7 +12,7 @@ class Queue(OptionsGroup):
 
     """
 
-    def enable(self, size, block_size=None, store=None, store_sync_interval=None):
+    def enable(self, size, *, block_size=None, store=None, store_sync_interval=None):
         """Enables shared queue of the given size.
 
         :param int size: Queue size.

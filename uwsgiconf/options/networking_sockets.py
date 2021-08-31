@@ -13,7 +13,7 @@ class Socket(ParametrizedValue):
     opt_key = ''
     args_joiner = ','
 
-    def __init__(self, address, bound_workers=None, modifier=None):
+    def __init__(self, address, *, bound_workers=None, modifier=None):
         """
         :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
@@ -62,7 +62,7 @@ class SocketHttp(Socket):
 
     name = 'http-socket'
 
-    def __init__(self, address, http11=False, bound_workers=None, modifier=None):
+    def __init__(self, address, *, http11=False, bound_workers=None, modifier=None):
         """
         :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
@@ -93,7 +93,7 @@ class SocketHttps(Socket):
 
     name = 'https-socket'
 
-    def __init__(self, address, cert, key, ciphers=None, client_ca=None, bound_workers=None, modifier=None):
+    def __init__(self, address, *, cert, key, ciphers=None, client_ca=None, bound_workers=None, modifier=None):
         """
         :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
@@ -159,7 +159,7 @@ class SocketUwsgi(Socket):
 
     name = 'uwsgi-socket'
 
-    def __init__(self, address, persistent=False, bound_workers=None, modifier=None):
+    def __init__(self, address, *, persistent=False, bound_workers=None, modifier=None):
         """
         :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
@@ -199,7 +199,7 @@ class SocketFastcgi(Socket):
 
     name = 'fastcgi-socket'
 
-    def __init__(self, address, nph=False, bound_workers=None, modifier=None):
+    def __init__(self, address, *, nph=False, bound_workers=None, modifier=None):
         """
         :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
@@ -225,7 +225,7 @@ class SocketScgi(Socket):
 
     name = 'scgi-socket'
 
-    def __init__(self, address, nph=False, bound_workers=None, modifier=None):
+    def __init__(self, address, *, nph=False, bound_workers=None, modifier=None):
         """
         :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
 
@@ -276,7 +276,7 @@ class SocketShared(Socket):
     """
     name = 'shared-socket'
 
-    def __init__(self, address, undeferred=False, bound_workers=None, modifier=None):
+    def __init__(self, address, *, undeferred=False, bound_workers=None, modifier=None):
         """
         :param str address: Address ([host]:port or socket file) to bind socket to.
 

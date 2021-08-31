@@ -39,7 +39,7 @@ class ActionToFile(RouteAction):
     name = 'tofile'
     plugin = 'transformation_tofile'
 
-    def __init__(self, filename, mode=None):
+    def __init__(self, filename, *, mode=None):
         arg = KeyValue(locals())
         super().__init__(arg)
 
@@ -84,7 +84,7 @@ class ActionFixContentLen(RouteAction):
 
     name = 'fixcl'
 
-    def __init__(self, add_header=False):
+    def __init__(self, *, add_header=False):
         """
         :param bool add_header: Force header add instead of plain fix of existing header.
         """
@@ -110,7 +110,7 @@ class ActionDoBreak(RouteAction):
 
     name = 'break'
 
-    def __init__(self, code, return_body=False):
+    def __init__(self, code, *, return_body=False):
         """
         :param int code: HTTP code
 
@@ -263,10 +263,11 @@ class ActionSend(RouteAction):
     """
     name = 'send'
 
-    def __init__(self, data, crnl=False):
+    def __init__(self, data, *, crnl: bool = False):
         """
         :param data: Data to add to response.
-        :param bool crnl: Add carriage return and new line.
+        :param crnl: Add carriage return and new line.
+
         """
         if crnl:
             self.name = 'send-crnl'
@@ -279,7 +280,7 @@ class ActionRedirect(RouteAction):
     name = 'redirect-302'
     plugin = 'router_redirect'
 
-    def __init__(self, url, permanent=False):
+    def __init__(self, url, *, permanent=False):
         """
         :param str url: URL to redirect to.
         :param bool permanent: If ``True`` use 301, otherwise 302.
@@ -300,7 +301,7 @@ class ActionRewrite(RouteAction):
     name = 'rewrite'
     plugin = 'router_rewrite'
 
-    def __init__(self, rule, do_continue=False):
+    def __init__(self, rule, *, do_continue=False):
         """
         :param str rule: A rewrite rule.
 
@@ -323,11 +324,12 @@ class ActionRouteUwsgi(RouteAction):
     plugin = 'router_uwsgi'
     args_joiner = ','
 
-    def __init__(self, external_address='', modifier='', app=''):
+    def __init__(self, external_address='', *, modifier='', app=''):
         """
         :param str external_address: External uWSGI server address (host:port).
         :param Modifier modifier: Set request modifier.
         :param str app: Set ``UWSGI_APPID``.
+
         """
         super().__init__(external_address, modifier, modifier.submod, app)
 
@@ -339,11 +341,12 @@ class ActionRouteExternal(RouteAction):
     plugin = 'router_http'
     args_joiner = ','
 
-    def __init__(self, address, host_header=None):
+    def __init__(self, address, *, host_header=None):
         """
         :param str address: External HTTP address (host:port)
 
         :param str host_header: HOST header value.
+
         """
         super().__init__(address, host_header)
 
@@ -373,7 +376,7 @@ class ActionServeStatic(RouteAction):
 
     def __init__(self, fpath: Union[str, Path]):
         """
-        :param str fpath: Static file path.
+        :param fpath: Static file path.
 
         """
         super().__init__(str(fpath))
@@ -386,7 +389,7 @@ class ActionAuthBasic(RouteAction):
     plugin = 'router_basicauth'
     args_joiner = ','
 
-    def __init__(self, realm, user=None, password=None, do_next=False):
+    def __init__(self, realm, *, user=None, password=None, do_next=False):
         """
         :param str realm:
 
@@ -419,7 +422,7 @@ class AuthLdap(RouteAction):
     args_joiner = ','
 
     def __init__(
-            self, realm, address, base_dn=None, bind_dn=None, bind_password=None,
+            self, realm, address, *, base_dn=None, bind_dn=None, bind_password=None,
             filter=None, login_attr=None, log_level=None,
             do_next=False):
         """

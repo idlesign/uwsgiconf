@@ -39,7 +39,7 @@ def test_monitoring_metrics(assert_lines):
         'alarm = pinger cmd:ping 127.0.0.1',
         'metric-threshold = alarm=pinger,key=mycounter,value=2000',
     ], section.monitoring.set_metrics_threshold(
-        'mycounter', 2000, alarm=section.alarms.alarm_types.command('pinger', 'ping 127.0.0.1')
+        'mycounter', 2000, alarm=section.alarms.alarm_types.command('pinger', command='ping 127.0.0.1')
     ))
 
 
@@ -90,7 +90,7 @@ def test_monitoring_pushers(assert_lines):
         'stats-push = socket:127.0.0.1:8125,myinstance',
 
     ], monitoring.register_stats_pusher(
-        monitoring.pushers.socket('127.0.0.1:8125', 'myinstance')
+        monitoring.pushers.socket('127.0.0.1:8125', prefix='myinstance')
     ))
 
     monitoring = Section().monitoring
@@ -102,7 +102,7 @@ def test_monitoring_pushers(assert_lines):
     ], monitoring.register_stats_pusher(pusher))
 
     monitoring = Section().monitoring
-    pusher = monitoring.pushers.statsd('127.0.0.1:8125', 'myinstance', no_workers=True)
+    pusher = monitoring.pushers.statsd('127.0.0.1:8125', prefix='myinstance', no_workers=True)
     assert_lines([
         'stats-push = statsd:127.0.0.1:8125,myinstance',
         'statsd-no-workers = true',

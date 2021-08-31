@@ -8,6 +8,7 @@ class Applications(OptionsGroup):
 
     def set_basic_params(
             self,
+            *,
             exit_if_none: bool = None,
             max_per_worker: int = None,
             single_interpreter: bool = None,
@@ -42,7 +43,7 @@ class Applications(OptionsGroup):
 
         return self._section
 
-    def mount(self, mountpoint: str, app: str, into_worker: bool = False):
+    def mount(self, mountpoint: str, app: str, *, into_worker: bool = False):
         """Load application under mountpoint.
 
         Example:
@@ -72,7 +73,7 @@ class Applications(OptionsGroup):
 
         return self._section
 
-    def switch_into_lazy_mode(self, affect_master: bool = None):
+    def switch_into_lazy_mode(self, *, affect_master: bool = None):
         """Load apps in workers instead of master.
 
         This option may have memory usage implications

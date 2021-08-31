@@ -32,6 +32,7 @@ class Workers(OptionsGroup):
 
     def set_basic_params(
             self,
+            *,
             count: int = None,
             touch_reload: Strlist = None,
             touch_chain_reload: Strlist = None,
@@ -113,7 +114,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def run_command_as_worker(self, command: str, after_post_fork_hook: bool = False):
+    def run_command_as_worker(self, command: str, *, after_post_fork_hook: bool = False):
         """Run the specified command as worker.
 
         :param command:
@@ -142,6 +143,7 @@ class Workers(OptionsGroup):
     def set_thread_params(
             self,
             enable: bool = None,
+            *,
             count: int = None,
             count_offload: int = None,
             stack_size: int = None,
@@ -193,6 +195,7 @@ class Workers(OptionsGroup):
     def set_mules_params(
             self,
             mules: Union[int, List[int]] = None,
+            *,
             touch_reload: Strlist = None,
             harakiri_timeout: int = None,
             farms: List[MuleFarm] = None,
@@ -266,6 +269,7 @@ class Workers(OptionsGroup):
 
     def set_reload_params(
             self,
+            *,
             min_lifetime: int = None,
             max_lifetime: int = None,
             max_requests: int = None,
@@ -353,6 +357,7 @@ class Workers(OptionsGroup):
 
     def set_reload_on_exception_params(
             self,
+            *,
             do_reload: bool = None,
             etype: str = None,
             evalue: str = None,
@@ -376,7 +381,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_harakiri_params(self, timeout: int = None, verbose: bool = None, disable_for_arh: bool = None):
+    def set_harakiri_params(self, *, timeout: int = None, verbose: bool = None, disable_for_arh: bool = None):
         """Sets workers harakiri parameters.
 
         :param timeout: Harakiri timeout in seconds.
@@ -398,7 +403,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_zerg_server_params(self, socket: str, clients_socket_pool: Strlist = None):
+    def set_zerg_server_params(self, socket: str, *, clients_socket_pool: Strlist = None):
         """Zerg mode. Zerg server params.
 
         When your site load is variable, it would be nice to be able to add
@@ -430,7 +435,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_zerg_client_params(self, server_sockets: Strlist, use_fallback_socket: bool = None):
+    def set_zerg_client_params(self, server_sockets: Strlist, *, use_fallback_socket: bool = None):
         """Zerg mode. Zergs params.
 
         :param server_sockets: Attaches zerg to a zerg server.

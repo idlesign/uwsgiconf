@@ -16,7 +16,7 @@ class Cache:
     """
     __slots__ = ['name', 'timeout']
 
-    def __init__(self, name: str, timeout: int = None):
+    def __init__(self, name: str, *, timeout: int = None):
         """
         :param name: Cache name with optional address (if @-syntax is used).
 
@@ -50,7 +50,7 @@ class Cache:
         """Clears cache the cache."""
         uwsgi.cache_clear(self.name)
 
-    def get(self, key: str, default: Any = None, as_int: bool = False, setter: Callable = None) -> Strint:
+    def get(self, key: str, *, default: Any = None, as_int: bool = False, setter: Callable = None) -> Strint:
         """Gets a value from the cache.
 
         :param key: The cache key to get value for.
@@ -85,7 +85,7 @@ class Cache:
 
     __getitem__ = get
 
-    def set(self, key: str, value: Any, timeout: int = None) -> bool:
+    def set(self, key: str, value: Any, *, timeout: int = None) -> bool:
         """Sets the specified key value.
 
         :param key:
@@ -113,7 +113,7 @@ class Cache:
 
     __delitem__ = delete
 
-    def incr(self, key: str, delta: int = 1) -> bool:
+    def incr(self, key: str, *, delta: int = 1) -> bool:
         """Increments the specified key value by the specified value.
        
         :param key:
@@ -123,7 +123,7 @@ class Cache:
         """
         return uwsgi.cache_inc(key, delta, self.timeout, self.name)
 
-    def decr(self, key: str, delta: int = 1) -> bool:
+    def decr(self, key: str, *, delta: int = 1) -> bool:
         """Decrements the specified key value by the specified value.
 
         :param key:
@@ -133,7 +133,7 @@ class Cache:
         """
         return uwsgi.cache_dec(key, delta, self.timeout, self.name)
 
-    def mul(self, key: str, value: int = 2) -> bool:
+    def mul(self, key: str, *, value: int = 2) -> bool:
         """Multiplies the specified key value by the specified value.
 
         :param key:
@@ -143,7 +143,7 @@ class Cache:
         """
         return uwsgi.cache_mul(key, value, self.timeout, self.name)
 
-    def div(self, key: str, value: int = 2) -> bool:
+    def div(self, key: str, *, value: int = 2) -> bool:
         """Divides the specified key value by the specified value.
 
         :param key:

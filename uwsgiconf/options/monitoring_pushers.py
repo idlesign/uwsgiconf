@@ -17,11 +17,12 @@ class PusherSocket(Pusher):
     name = 'socket'
     plugin = 'stats_pusher_socket'
 
-    def __init__(self, address, prefix=None):
+    def __init__(self, address, *, prefix=None):
         """
         :param str address:
 
         :param str prefix: Arbitrary prefix to differentiate sender.
+
         """
         super().__init__(address, prefix)
 
@@ -35,7 +36,7 @@ class PusherRrdtool(Pusher):
     name = 'rrdtool'
     plugin = 'rrdtool'
 
-    def __init__(self, target_dir, library=None, push_interval=None):
+    def __init__(self, target_dir, *, library=None, push_interval=None):
         """
         :param str target_dir: Directory to store rrd files into.
 
@@ -56,7 +57,7 @@ class PusherStatsd(Pusher):
     name = 'statsd'
     plugin = 'stats_pusher_statsd'
 
-    def __init__(self, address, prefix=None, no_workers=None, all_gauges=None):
+    def __init__(self, address, *, prefix=None, no_workers=None, all_gauges=None):
         """
         :param str address:
 
@@ -86,7 +87,7 @@ class PusherCarbon(Pusher):
     opt_key = name
 
     def __init__(
-            self, address, node_realm=None, node_root=None, push_interval=None, idle_avg_source=None,
+            self, address, *, node_realm=None, node_root=None, push_interval=None, idle_avg_source=None,
             use_metrics=None, no_workers=None, timeout=None, retries=None, retries_delay=None,
             hostname_dots_replacer=None):
         """
@@ -149,7 +150,7 @@ class PusherZabbix(Pusher):
     name = 'zabbix'
     plugin = 'zabbix'
 
-    def __init__(self, address, prefix=None, template=None):
+    def __init__(self, address, *, prefix=None, template=None):
         """
         :param str address:
 
@@ -170,7 +171,7 @@ class PusherMongo(Pusher):
     name = 'mongodb'
     plugin = 'stats_pusher_mongodb'
 
-    def __init__(self, address=None, collection=None, push_interval=None):
+    def __init__(self, *, address=None, collection=None, push_interval=None):
         """
         :param str address: Default: 127.0.0.1:27017
 
@@ -192,7 +193,7 @@ class PusherFile(Pusher):
     name = 'file'
     plugin = 'stats_pusher_file'
 
-    def __init__(self, fpath=None, separator=None, push_interval=None):
+    def __init__(self, fpath=None, *, separator=None, push_interval=None):
         """
         :param str fpath: File path. Default: uwsgi.stats
 

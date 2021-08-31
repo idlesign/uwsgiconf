@@ -79,7 +79,7 @@ class Signal:
         """Whether the signal is registered."""
         return uwsgi.signal_registered(self.num) or False
 
-    def register_handler(self, target: str = None) -> Callable:
+    def register_handler(self, *, target: str = None) -> Callable:
         """Decorator for a function to be used as a signal handler.
 
         .. code-block:: python
@@ -121,7 +121,7 @@ class Signal:
 
         return wrapper
 
-    def send(self, remote: str = None):
+    def send(self, *, remote: str = None):
         """Sends the signal to master or remote.
 
         When you send a signal, it is copied into the master's queue.

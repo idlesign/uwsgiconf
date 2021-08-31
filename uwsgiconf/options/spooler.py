@@ -28,6 +28,7 @@ class Spooler(OptionsGroup):
 
     def set_basic_params(
             self,
+            *,
             touch_reload: Strlist = None,
             quiet: bool = None,
             process_count: int = None,
@@ -84,7 +85,7 @@ class Spooler(OptionsGroup):
 
         return self._section
 
-    def add(self, work_dir: Strlist, external: bool = False):
+    def add(self, work_dir: Strlist, *, external: bool = False):
         """Run a spooler on the specified directory.
 
         :param work_dir: Spooler working directory path or it's name if

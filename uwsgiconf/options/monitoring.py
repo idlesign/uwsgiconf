@@ -128,7 +128,7 @@ class Monitoring(OptionsGroup):
 
         return self._section
 
-    def set_metrics_threshold(self, name, value, check_interval=None, reset_to=None, alarm=None, alarm_message=None):
+    def set_metrics_threshold(self, name, value, *, check_interval=None, reset_to=None, alarm=None, alarm_message=None):
         """Sets metric threshold parameters.
 
         :param str name: Metric name.

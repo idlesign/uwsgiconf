@@ -12,7 +12,7 @@ class Empire(OptionsGroup):
     """
 
     def set_emperor_params(
-            self, vassals_home=None, name=None, scan_interval=None, pid_file=None, spawn_asap=None,
+            self, *, vassals_home=None, name=None, scan_interval=None, pid_file=None, spawn_asap=None,
             stats_address=None, trigger_socket=None, links_no_follow=None):
         """
 
@@ -60,7 +60,7 @@ class Empire(OptionsGroup):
         return self._section
 
     def set_emperor_command_params(
-            self, command_socket=None,
+            self, command_socket=None, *,
             wait_for_command=None, wait_for_command_exclude=None):
         """Emperor commands related parameters.
 
@@ -80,7 +80,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_vassals_wrapper_params(self, wrapper=None, overrides=None, fallbacks=None):
+    def set_vassals_wrapper_params(self, *, wrapper=None, overrides=None, fallbacks=None):
         """Binary wrapper for vassals parameters.
 
         :param str wrapper: Set a binary wrapper for vassals.
@@ -98,7 +98,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_throttle_params(self, level=None, level_max=None):
+    def set_throttle_params(self, *, level=None, level_max=None):
         """Throttling options.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#throttling
@@ -115,7 +115,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_tolerance_params(self, for_heartbeat=None, for_cursed_vassals=None):
+    def set_tolerance_params(self, *, for_heartbeat=None, for_cursed_vassals=None):
         """Various tolerance options.
 
         :param int for_heartbeat: Set the Emperor tolerance about heartbeats.
@@ -132,7 +132,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_mode_tyrant_params(self, enable=None, links_no_follow=None, use_initgroups=None):
+    def set_mode_tyrant_params(self, enable=None, *, links_no_follow=None, use_initgroups=None):
         """Tyrant mode (secure multi-user hosting).
 
         In Tyrant mode the Emperor will run the vassal using the UID/GID of the vassal
@@ -154,7 +154,7 @@ class Empire(OptionsGroup):
         return self._section
 
     def set_mode_broodlord_params(
-            self, zerg_count=None,
+            self, zerg_count=None, *,
             vassal_overload_sos_interval=None, vassal_queue_items_sos=None):
         """This mode is a way for a vassal to ask for reinforcements to the Emperor.
 

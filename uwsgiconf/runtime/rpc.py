@@ -40,7 +40,7 @@ def register_rpc(name: str = None) -> Callable:
     return wrapper
 
 
-def make_rpc_call(func_name: str, args: Sequence[str] = None, remote: str = None) -> Optional[str]:
+def make_rpc_call(func_name: str, *, args: Sequence[str] = None, remote: str = None) -> Optional[str]:
     """Performs an RPC function call (local or remote) with the given arguments.
 
     :param func_name: RPC function name to call.

@@ -61,7 +61,7 @@ class Logging(OptionsGroup):
         # todo consider adding msgpack encoder
 
     def set_basic_params(
-            self, no_requests=None, template=None, memory_report=None, prefix=None, prefix_date=None,
+            self, *, no_requests=None, template=None, memory_report=None, prefix=None, prefix_date=None,
             apply_strftime=None, response_ms=None, ip_x_forwarded=None):
         """
 
@@ -107,7 +107,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def log_into(self, target, before_priv_drop=True):
+    def log_into(self, target, *, before_priv_drop=True):
         """Simple file or UDP logging.
 
         .. note:: This doesn't require any Logger plugin and can be used
@@ -128,7 +128,7 @@ class Logging(OptionsGroup):
         return self._section
 
     def set_file_params(
-            self, reopen_on_reload=None, trucate_on_statup=None, max_size=None, rotation_fname=None,
+            self, *, reopen_on_reload=None, trucate_on_statup=None, max_size=None, rotation_fname=None,
             touch_reopen=None, touch_rotate=None, owner=None, mode=None):
         """Set various parameters related to file logging.
 
@@ -167,7 +167,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def set_filters(self, include=None, exclude=None, write_errors=None, write_errors_tolerance=None, sigpipe=None):
+    def set_filters(self, *, include=None, exclude=None, write_errors=None, write_errors_tolerance=None, sigpipe=None):
         """Set various log data filters.
 
         :param str|list include: Show only log lines matching the specified regexp.
@@ -211,7 +211,7 @@ class Logging(OptionsGroup):
         return self._section
 
     def set_requests_filters(
-            self, slower=None, bigger=None, status_4xx=None, status_5xx=None,
+            self, *, slower=None, bigger=None, status_4xx=None, status_5xx=None,
             no_body=None, sendfile=None, io_errors=None):
         """Set various log data filters.
 
@@ -241,7 +241,7 @@ class Logging(OptionsGroup):
         return self._section
 
     def set_master_logging_params(
-            self, enable=None, dedicate_thread=None, buffer=None,
+            self, enable=None, *, dedicate_thread=None, buffer=None,
             sock_stream=None, sock_stream_requests_only=None):
         """Sets logging params for delegating logging to master process.
 
@@ -282,7 +282,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def add_logger(self, logger, requests_only=False, for_single_worker=False):
+    def add_logger(self, logger, *, requests_only=False, for_single_worker=False):
         """Set/add a common logger or a request requests only.
 
         :param str|list|Logger|list[Logger] logger:
@@ -303,7 +303,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def add_logger_route(self, logger, matcher, requests_only=False):
+    def add_logger_route(self, logger, matcher, *, requests_only=False):
         """Log to the specified named logger if regexp applied on log item matches.
 
         :param str|list|Logger|list[Logger] logger: Logger to associate route with.
@@ -320,7 +320,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def add_logger_encoder(self, encoder, logger=None, requests_only=False, for_single_worker=False):
+    def add_logger_encoder(self, encoder, *, logger=None, requests_only=False, for_single_worker=False):
         """Add an item in the log encoder or request encoder chain.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/LogEncoders.html

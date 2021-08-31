@@ -16,8 +16,8 @@ def test_caching():
     cache.div('my')
     cache.delete('my')
 
-    assert cache.get('some', 'other') == 'other'
-    assert cache.get('int', 10, as_int=True) == 10
+    assert cache.get('some', default='other') == 'other'
+    assert cache.get('int', default=10, as_int=True) == 10
 
     assert 'some' not in cache
 
