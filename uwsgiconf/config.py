@@ -6,7 +6,7 @@ from functools import partial
 from itertools import chain
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import List, Union, Callable, Optional, Any, Tuple, Dict
+from typing import List, Union, Callable, Optional, Any, Tuple, Dict, TypeVar
 
 from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
@@ -14,6 +14,9 @@ from .formatters import FORMATTERS, format_print_text
 from .options import *
 from .typehints import Strlist
 from .utils import listify, UwsgiRunner
+
+
+TypeSection = TypeVar('TypeSection', bound='Section')
 
 
 class Section(OptionsGroup):
@@ -465,7 +468,7 @@ class Section(OptionsGroup):
         return self
 
     @classmethod
-    def derive_from(cls, section: 'Section', name: str = None) -> 'Section':
+    def derive_from(cls, section: TypeSection, name: str = None) -> TypeSection:
         """Creates a new section based on the given.
 
         :param section: Section to derive from,
@@ -487,7 +490,7 @@ class Section(OptionsGroup):
                 continue
 
             group_attr_name = key.replace('params_', '')
-            options_group = getattr(self, group_attr_name, None)  # type: OptionsGroup
+            options_group: OptionsGroup = getattr(self, group_attr_name, None)
 
             if options_group is not None:
                 options_group.set_basic_params(**value)
@@ -596,7 +599,7 @@ class Section(OptionsGroup):
             dsn: Strlist,
             allow_shared_sockets: bool = None,
             **init_kwargs: Any
-    ) -> 'Section':
+    ) -> TypeSection:
         """Constructs a section object performing it's basic (default) configuration.
 
         :param dsn: Data source name, e.g:
@@ -607,7 +610,7 @@ class Section(OptionsGroup):
                     fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
 
         :param allow_shared_sockets: Allows using shared sockets to bind
-            to priviledged ports. If not provided automatic mode is enabled:
+            to privileged ports. If not provided automatic mode is enabled:
             shared are allowed if current user is not root.
 
         :param init_kwargs: Additional initialization keyword arguments accepted by section type.

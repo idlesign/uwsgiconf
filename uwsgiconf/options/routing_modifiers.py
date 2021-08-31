@@ -16,10 +16,10 @@ class Modifier:
         self.submod = submod
 
     @classmethod
-    def _get_code_str(cls, src):
+    def _get_code_str(cls, src) -> str:
         """
         :param src:
-        :rtype: str
+
         """
         return str(src) if src is not None else ''
 
@@ -27,11 +27,8 @@ class Modifier:
         return self._get_code_str(self.code)
 
     @submod.getter
-    def submod(self):
-        """Modifier 2 value.
-
-        :rtype: str
-        """
+    def submod(self) -> str:
+        """Modifier 2 value."""
         return self._get_code_str(self._submod)
 
     @submod.setter

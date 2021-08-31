@@ -25,7 +25,7 @@ class Networking(OptionsGroup):
         zeromq = SocketZeromq
 
         @classmethod
-        def from_dsn(cls, dsn, allow_shared_sockets=None):
+        def from_dsn(cls, dsn, allow_shared_sockets=None) -> 'Socket':
             """Constructs socket configuration object from DSN.
 
             .. note:: This will also automatically use shared sockets
@@ -188,7 +188,7 @@ class Networking(OptionsGroup):
             if uses_shared:
                 # Handling shared sockets involves socket index resolution.
 
-                shared_socket = socket.address  # type: SocketShared
+                shared_socket: SocketShared = socket.address
 
                 if shared_socket not in sockets:
                     self.register_socket(shared_socket)

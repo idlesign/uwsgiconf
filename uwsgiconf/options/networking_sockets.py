@@ -1,9 +1,11 @@
+from typing import Tuple
+
 from ..base import ParametrizedValue
 from ..utils import listify
 
 
 if False:  # pragma: nocover
-    from .routing_modifiers import Modifier
+    from .routing_modifiers import Modifier  # noqa
 
 
 class Socket(ParametrizedValue):
@@ -129,7 +131,7 @@ class SocketHttps(Socket):
         self.args.extend(args)
 
     @classmethod
-    def get_certbot_paths(cls, domain):
+    def get_certbot_paths(cls, domain: str) -> Tuple[str, str]:
         """Returns a tuple of paths for files (certificates_chain, private_key)
         from Certbot https://certbot.eff.org
 
@@ -137,9 +139,7 @@ class SocketHttps(Socket):
 
         .. note:: If files not found empty strings are returned.
 
-        :param str domain: Domain name to get filepaths for.
-
-        :rtype: tuple[str, str]
+        :param domain: Domain name to get filepaths for.
 
         """
         from pathlib import Path

@@ -1,9 +1,11 @@
-from typing import List, Generator, Tuple, Any, Dict
+from typing import List, Generator, Tuple, Any, Dict, TypeVar, Type
 
 from .typehints import Strlist
 
 if False:  # pragma: nocover
     from .config import Section  # noqa
+
+TypeFormatter = TypeVar('TypeFormatter', bound='FormatterBase')
 
 
 def format_print_text(text: str, color_fg: str = None, color_bg: str = None) -> str:
@@ -137,7 +139,7 @@ class ArgsFormatter(FormatterBase):
         return lines
 
 
-FORMATTERS: Dict[str, FormatterBase] = {formatter.alias: formatter for formatter in (
+FORMATTERS: Dict[str, Type[FormatterBase]] = {formatter.alias: formatter for formatter in (
     ArgsFormatter,
     IniFormatter,
 )}

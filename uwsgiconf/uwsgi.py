@@ -13,7 +13,7 @@ try:  # pragma: nocover
 
     import uwsgi
 
-    uwsgi.is_stub = False  # type: bool
+    uwsgi.is_stub = False
     """Indicates whether stub is used instead of real `uwsgi` module."""
 
     # The following allows proper dynamic attributes (e.g. ``env``) addressing.
