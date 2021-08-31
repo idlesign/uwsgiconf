@@ -1,3 +1,5 @@
+from os import environ
+
 from uwsgiconf.presets.nice import Section, PythonSection
 
 
@@ -58,7 +60,7 @@ def test_configure_https_redirect(assert_lines):
     )
 
 
-def test_configure_maintenance_mode(assert_lines):
+def test_configure_maintenance_mode(assert_lines, tmpdir):
 
     section = Section()
     section.configure_maintenance_mode('/watch/that/file', '/serve/this/file')
@@ -68,6 +70,38 @@ def test_configure_maintenance_mode(assert_lines):
         'route-if = exists:/watch/that/file static:/serve/this/file',
         'route-if = exists:/watch/that/file/also redirect-302:http://pythonz.net',
 
+    ], section)
+
+    afile = tmpdir.join('maintenance_file')
+
+    section = Section()
+    section.configure_maintenance_mode(f'{afile}', 'app')
+    assert_lines([
+        f'env = UWSGICONF_MAINTENANCE={afile}',
+        f'touch-reload = {afile}',
+    ], section)
+
+    assert_lines([
+        'wsgi = uwsgiconf.maintenance:app_maintenance',
+    ], section, assert_in=False)
+
+    # Create file
+    afile.write('')
+    section = Section()
+    section.configure_maintenance_mode(f'{afile}', 'app')
+    assert_lines([
+        f'env = UWSGICONF_MAINTENANCE={afile}',
+        f'touch-reload = {afile}',
+        'env = UWSGICONF_MAINTENANCE_INPLACE=1',
+        'wsgi = uwsgiconf.maintenance:app_maintenance',
+    ], section)
+
+    assert environ['UWSGICONF_MAINTENANCE'] == f'{afile}'
+    assert environ['UWSGICONF_MAINTENANCE_INPLACE'] == '1'
+
+    section.configure_maintenance_mode(f'{afile}', 'app::mypack.here.there:myfunc')
+    assert_lines([
+        'wsgi = mypack.here.there:myfunc',
     ], section)
 
 

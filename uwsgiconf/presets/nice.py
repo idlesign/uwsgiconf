@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Union, Callable, Optional
 
 from ..config import Section as _Section
+from ..settings import ENV_MAINTENANCE, ENV_MAINTENANCE_INPLACE
 from ..typehints import Strlist
 
 
@@ -129,7 +130,7 @@ class Section(_Section):
         """
         return str(Path(__file__).parent.parent / 'contrib/django/uwsgify/static/uwsgify' / filename)
 
-    def configure_maintenance_mode(self, trigger: str, response: str):
+    def configure_maintenance_mode(self, trigger: Union[str, Path], response: str):
         """Allows maintenance mode when a certain response
         is given for every request if a trigger is set.
 
@@ -139,11 +140,44 @@ class Section(_Section):
         :param response: Response to to give in maintenance mode.
 
             Supported:
-                * File path - this file will be served in response.
-                * URLs starting with ``http`` - requests will be redirected there using 302.
+                1. File path - this file will be served in response.
+
+                2. URLs starting with ``http`` - requests will be redirected there using 302.
                   This is often discouraged, because it may have search ranking implications.
 
+                3. Prefix ``app`` will replace your entire app with a maintenance one.
+                  Using this also prevents background tasks registration and execution
+                  (including scheduler, timers, signals).
+
+                  * If the value is `app` - the default maintenance application bundled with
+                    uwsgiconf would be used.
+
+                  * Format ``app::<your-module>:<your-app-function>`` instructs uwsgiconf to
+                    load your function as a maintenance app. E.g.: app::my_pack.my_module:my_func
+
         """
+        if response.startswith('app'):
+
+            if response == 'app':
+                response = 'uwsgiconf.maintenance:app_maintenance'
+
+            else:
+                _, _, response = response.partition('::')
+
+            filepath = Path(trigger)
+
+            # We reload uwsgi to swap our app for maintenance app.
+            self.main_process.set_basic_params(touch_reload=f'{filepath}')
+
+            # This will also make available Maintenance page in Django admin.
+            self.env(ENV_MAINTENANCE, f'{filepath}', update_local=True)
+
+            if filepath.exists():
+                self.env(ENV_MAINTENANCE_INPLACE, 1, update_local=True)
+                self.python.set_wsgi_params(module=response)
+
+            return self
+
         routing = self.routing
 
         rule = routing.route_rule

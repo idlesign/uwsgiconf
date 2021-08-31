@@ -412,7 +412,7 @@ class Section(OptionsGroup):
 
         return self
 
-    def env(self, key: str, value: Any = None, unset: bool = False, asap: bool = False):
+    def env(self, key: str, value: Any = None, unset: bool = False, asap: bool = False, update_local: bool = False):
         """Processes (sets/unsets) environment variable.
 
         If is not given in `set` mode value will be taken from current env.
@@ -425,12 +425,22 @@ class Section(OptionsGroup):
 
         :param asap: If True env variable will be set as soon as possible.
 
+        :param update_local: Whether we need to set this value for local environment too.
+            This could be useful in embedded mode.
+
         """
         if unset:
             self._set('unenv', key, multi=True)
+            if update_local:
+                os.environ.pop(key, None)
+
         else:
             if value is None:
                 value = os.environ.get(key)
+
+            else:
+                if update_local:
+                    os.environ[key] = f'{value}'
 
             self._set(
                 f"{'i' if asap else ''}env",

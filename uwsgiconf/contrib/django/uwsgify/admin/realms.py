@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
+from pathlib import Path
 
+from django import forms
+from django.contrib import messages
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext_lazy as _
 
@@ -16,11 +19,8 @@ class SummaryAdmin(OnePageAdmin):
         from uwsgiconf.runtime.spooler import Spooler
         from uwsgiconf.runtime.mules import Farm
 
-        def get_func_name(func):
-            """Returns a distinctive name for a given function.
-
-            :rtype: str
-            """
+        def get_func_name(func) -> str:
+            """Returns a distinctive name for a given function."""
             module_path = func.__module__
 
             if module_path.startswith('uwsgi_file'):
@@ -161,3 +161,73 @@ class WorkersAdmin(OnePageAdmin):
             panels[title] = {'rows': info}
 
         context.update({'panels': panels})
+
+
+class MaintenanceForm(forms.Form):
+
+    confirm_word = 'maintenance'
+
+    confirm = forms.CharField(
+        label=_('Confirmation'),
+        help_text=_('Enter the word "%(word)s".') % {'word': confirm_word})
+
+    def clean_confirm(self):
+
+        value = self.cleaned_data['confirm']
+        confirm_word = self.confirm_word
+
+        if value != confirm_word:
+            raise forms.ValidationError(
+                _('You need to enter "%(word)s" to proceed.') % {'word': confirm_word})
+
+        return value
+
+
+class MaintenanceAdmin(OnePageAdmin):
+
+    def contribute_onepage_context(self, request, context):
+
+        from uwsgiconf.settings import get_maintenance_path
+        maintenance = get_maintenance_path()
+
+        if not maintenance:
+            self.message_user(
+                request,
+                _('Maintenance mode is not supported in this setup.'),
+                level=messages.WARNING
+            )
+            return
+
+        form_kwargs = {}
+        is_submitted = request.method == 'POST'
+
+        if is_submitted:
+            form_kwargs['data'] = request.POST
+
+        form = MaintenanceForm(**form_kwargs)
+
+        if is_submitted and form.is_valid():
+
+            try:
+                Path(maintenance).touch()
+                self.message_user(request, _('Maintenance mode is scheduled.'))
+
+            except Exception as e:
+                self.message_user(
+                    request,
+                    _('Unable to schedule maintenance: %(error)s.') % {'error': f'{e}'})
+
+        else:
+
+            self.message_user(
+                request,
+                _('Remember: maintenance mode can only be turned off from the filesystem. '
+                  'If the process is scheduled, your application, including this administration interface, '
+                  'will only become available after filesystem manipulation and uWSGI restart.'),
+                level=messages.WARNING
+            )
+
+            context.update({
+                'panels': {'': {'rows': {'': [form]}}},
+                'show_save': True,
+            })

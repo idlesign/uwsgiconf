@@ -120,3 +120,19 @@ def test_get_uwsgi_stub_attrs_diff():
     assert from_stub
 
     del sys.modules['uwsgi']
+
+
+def test_maintenanceapp_import():
+    from uwsgiconf.maintenance import app_maintenance
+
+    responses = []
+    def respond(*args):
+        responses.append(args)
+
+    assert b'Service is temporarily unavailable' in app_maintenance({'REQUEST_URI': '/'}, respond)
+    assert app_maintenance({'REQUEST_URI': '/ping'}, respond) == b'success'
+
+    assert responses == [
+        ('503 Service Unavailable', [('Content-Type', 'text/html')]),
+        ('200 OK', [('Content-Type', 'text/html')])
+    ]

@@ -3,6 +3,7 @@ from typing import List, Callable
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
+from ..settings import get_maintenance_inplace
 from ..utils import get_logger
 
 _LOG = get_logger(__name__)
@@ -151,6 +152,10 @@ class Signal:
 
 
 def _automate_signal(target, func):
+
+    if get_maintenance_inplace():
+        # Prevent background works in maintenance mode.
+        return lambda *args, **kwarg: None
 
     if target is None or isinstance(target, str):
         sig = Signal()

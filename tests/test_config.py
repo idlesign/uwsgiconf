@@ -103,6 +103,9 @@ def test_section_env(assert_lines):
         'env = Q=qq',
     ], Section().env('A', 'aa').env('Q').env('B', unset=True))
 
+    Section().env('Q', unset=True, update_local=True)
+    assert 'Q' not in os.environ
+
 
 def test_section_include(assert_lines):
 

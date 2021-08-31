@@ -13,12 +13,6 @@
 
 {% block content %}
 
-    {% if stub %}
-    <p class="errornote">
-        {% trans "This site is not served by uWSGI. Certain functionality or data may be unavailable." %}
-    </p>
-    {% endif %}
-
     {% for panel_name, panel_data in panels.items  %}
     <div class="results">
         <h2>{{ panel_name }}</h2>
@@ -27,9 +21,19 @@
             <tbody>
             {% for title, values in panel_data.rows.items %}
             <tr class="{% cycle 'row1' 'row2' %}">
-                <td nowrap width="25%"><strong>{{ title }}:</strong></td>
+                {% if title %}<td nowrap width="25%"><strong>{{ title }}:</strong></td>{% endif %}
                 {% for value in values %}
-                    <td>{{ value|linebreaksbr }}</td>
+                    <td>
+                        {% if value.auto_id %}
+                            <form method="POST">
+                            {% csrf_token %}
+                            <table width="100%">{{ value|safe }}</table>
+                            {% include "admin/submit_line.html" %}
+                            </form>
+                        {% else %}
+                            {{ value|linebreaksbr }}
+                        {% endif %}
+                    </td>
                 {% endfor %}
             </tr>
             {% endfor %}
