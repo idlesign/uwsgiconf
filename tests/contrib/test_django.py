@@ -28,7 +28,11 @@ def test_mutate_existing_section(patch_base_command):
 
 def test_uwsgi_run(monkeypatch, patch_project_dir, command_run, settings, tmpdir, capsys):
 
+    def runtime_dir(self):
+        return f'{tmpdir}'
+
     monkeypatch.setattr('os.execvp', lambda *args, **kwargs: None)
+    monkeypatch.setattr('uwsgiconf.contrib.django.uwsgify.toolbox.SectionMutator.runtime_dir', property(runtime_dir))
 
     with settings(STATIC_ROOT=f'{tmpdir}'):
         command_run('uwsgi_run')
