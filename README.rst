@@ -3,16 +3,13 @@ uwsgiconf
 https://github.com/idlesign/uwsgiconf
 
 
-|release| |lic| |ci| |coverage|
+|release| |lic| |coverage|
 
 .. |release| image:: https://img.shields.io/pypi/v/uwsgiconf.svg
     :target: https://pypi.python.org/pypi/uwsgiconf
 
 .. |lic| image:: https://img.shields.io/pypi/l/uwsgiconf.svg
     :target: https://pypi.python.org/pypi/uwsgiconf
-
-.. |ci| image:: https://img.shields.io/travis/idlesign/uwsgiconf/master.svg
-    :target: https://travis-ci.org/idlesign/uwsgiconf
 
 .. |coverage| image:: https://img.shields.io/coveralls/idlesign/uwsgiconf/master.svg
     :target: https://coveralls.io/r/idlesign/uwsgiconf
