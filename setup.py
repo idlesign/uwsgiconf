@@ -46,7 +46,10 @@ setup(
     tests_require=[
         'pytest',
         'pytest-djangoapp',
+
+        # to support Python 3.6 and 3.7
         'django<4.0.0',
+        'contextvars',  # for 3.6
     ],
 
     classifiers=[
