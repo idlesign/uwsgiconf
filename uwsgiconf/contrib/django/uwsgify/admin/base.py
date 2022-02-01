@@ -1,4 +1,10 @@
-from django.conf.urls import re_path
+try:
+    from django.conf import re_path
+
+except ImportError:
+    # fallback for Django < 4.0
+    from django.conf.urls import re_path
+
 from django.contrib import admin, messages
 from django.template.response import TemplateResponse
 from django.utils.translation import gettext_lazy as _
@@ -7,10 +13,14 @@ from django.utils.translation import gettext_lazy as _
 class OnePageAdmin(admin.ModelAdmin):
 
     def get_urls(self):
-        info = self.model._meta.app_label, self.model._meta.model_name
+        meta = self.model._meta
 
         urlpatterns = [
-            re_path('^$', self.admin_site.admin_view(self.view_onepage), name=f'%s_%s_changelist' % info)
+            re_path(
+                '^$',
+                self.admin_site.admin_view(self.view_onepage),
+                name=f'{meta.app_label}_{meta.model_name}_changelist'
+            )
         ]
 
         return urlpatterns
