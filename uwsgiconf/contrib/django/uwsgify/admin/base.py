@@ -1,5 +1,5 @@
 try:
-    from django.conf import re_path
+    from django.urls import re_path
 
 except ImportError:
     # fallback for Django < 4.0
