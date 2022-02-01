@@ -2,8 +2,8 @@ uwsgiconf changelog
 ===================
 
 
-Unreleased
-----------
+v1.0.0 [2022-02-01]
+-------------------
 ! Python 3.6 QA is dropped.
 * Django 4 compatibility improved.
 
