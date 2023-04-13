@@ -10,7 +10,7 @@ How to get through
 Start with a preset configuration. For example, if you have a Python web-app try out ``uwsgiconf.presets.nice.PythonSection``.
 Basic things to do are: define ``wsgi_module`` and do ``.networking.register_socket``.
 
-This should already give a more or less decent decent configuration. 
+This should already give a more or less decent configuration. 
 
 After that you can skim through option groups (such as ``.networking``, ``.main_process``, ``.workers`` etc.) 
 and deep into uWSGI abilities.
