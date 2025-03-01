@@ -73,7 +73,11 @@ class Logging(OptionsGroup):
 
         :param str prefix: Prefix log items with a string.
 
+            .. note:: This will not work with `prefix_date` option.
+
         :param str|bool prefix_date: Prefix log items with date string.
+
+            .. note:: This will not work with `prefix` option.
         
             .. note:: This can be ``True`` or contain formatting placeholders (e.g. %Y-%m-%d %H:%M:%S) 
                if used with ``apply_strftime``.
@@ -390,13 +394,16 @@ class Logging(OptionsGroup):
         # The following are simple functions called to generate the logvar value.
 
         REQ_START_TS = '%(time)'
-        """Timestamp of the start of the request. E.g.: 1512623650"""
+        """Timestamp of the start of the request. 
+        E.g.: 1651848241"""
 
         REQ_START_CTIME = '%(ctime)'
-        """Ctime of the start of the request. E.g.: Thu Dec  7 08:05:35 2017"""
+        """Ctime of the start of the request. 
+        E.g.: Fri May  6 21:44:01 2022"""
 
         REQ_START_UNIX_US = '%(tmsecs)'
         """Timestamp of the start of the request in milliseconds since the epoch.
+        E.g.: 1651848241706
 
         .. note:: since 1.9.21
 
@@ -404,13 +411,15 @@ class Logging(OptionsGroup):
 
         REQ_START_UNIX_MS = '%(tmicros)'
         """Timestamp of the start of the request in microseconds since the epoch.
+        E.g.: 1651848241706778
 
         .. note:: since 1.9.21
 
         """
 
         REQ_START_HUMAN = '%(ltime)'
-        """Human-formatted (Apache style) request time."""
+        """Human-formatted (Apache style) request time.
+        E.g.: 06/May/2022:21:44:01 +0700"""
 
         REQ_START_FORMATTED = '%(ftime)'
         """Request time formatted with ``apply_strftime``. 
@@ -468,7 +477,8 @@ class Logging(OptionsGroup):
         """Number of generated response headers."""
 
         TIME_UNIX = '%(epoch)'
-        """The current time in Unix format."""
+        """The current time in Unix format.
+        E.g.: 1651848242"""
 
         WORKER_PID = '%(pid)'
         """pid of the worker handling the request."""
