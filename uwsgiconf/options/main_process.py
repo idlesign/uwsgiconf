@@ -1,10 +1,9 @@
 import os
-from pathlib import Path
-from typing import Optional, List, Union, Tuple
+from typing import Optional, List, Tuple, Union
 
 from .main_process_actions import *
 from ..base import OptionsGroup
-from ..typehints import Strint, Strlist
+from ..typehints import Strint, Strlist, Strpath
 
 TypeActionExt = Union[str, 'HookAction', List[Union[str, 'HookAction']]]
 
@@ -333,7 +332,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_hook_touch(self, fpath: Union[str, Path], action: TypeActionExt):
+    def set_hook_touch(self, fpath: Strpath, action: TypeActionExt):
         """Allows running certain action when the specified file is touched.
 
         :param fpath: File path.
@@ -400,7 +399,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_pid_file(self, fpath: Union[str, Path], *, before_priv_drop: bool = True, safe: bool = False):
+    def set_pid_file(self, fpath: Strpath, *, before_priv_drop: bool = True, safe: bool = False):
         """Creates pidfile before or after privileges drop.
 
         :param fpath: File path.
@@ -424,7 +423,7 @@ class MainProcess(OptionsGroup):
         if safe:
             command = 'safe-' + command
 
-        self._set(command, str(fpath))
+        self._set(command, f'{fpath}')
 
         return self._section
 

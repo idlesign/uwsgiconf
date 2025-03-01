@@ -1,7 +1,5 @@
-from pathlib import Path
-from typing import Union
-
 from ..base import ParametrizedValue
+from ..typehints import Strpath, Strlist
 from ..utils import listify
 
 
@@ -21,7 +19,7 @@ class ActionMount(HookAction):
 
     name = 'mount'
 
-    def __init__(self, mountpoint, *, fs=None, src=None, flags=None):
+    def __init__(self, mountpoint: str, *, fs: str = None, src: str = None, flags: Strlist = None):
         """
 
         :param str mountpoint:
@@ -63,7 +61,7 @@ class ActionExecute(HookAction):
     name = 'exec'
 
     # todo consider adding safeexec
-    def __init__(self, command):
+    def __init__(self, command: str):
         super().__init__(command)
 
 
@@ -72,14 +70,14 @@ class ActionCall(HookAction):
 
     name = 'call'
 
-    def __init__(self, target, *, honour_exit_status=False, arg_int=False):
+    def __init__(self, target: str, *, honour_exit_status: bool = False, arg_int: bool = False):
         """
-        :param str target: Symbol and args.
+        :param target: Symbol and args.
 
-        :param bool honour_exit_status: Expect an int return.
+        :param honour_exit_status: Expect an int return.
             Anything != 0 means failure.
 
-        :param bool arg_int: Parse the argument as an int.
+        :param arg_int: Parse the argument as an int.
 
         """
         name = self.name
@@ -103,7 +101,7 @@ class ActionDirChange(HookAction):
     """
     name = 'cd'
 
-    def __init__(self, target_dir):
+    def __init__(self, target_dir: str):
         super().__init__(target_dir)
 
 
@@ -112,7 +110,7 @@ class ActionDirCreate(HookAction):
 
     name = 'mkdir'
 
-    def __init__(self, target_dir):
+    def __init__(self, target_dir: str):
         super().__init__(target_dir)
 
 
@@ -121,7 +119,7 @@ class ActionFileCreate(HookAction):
 
     name = 'create'
 
-    def __init__(self, fpath: Union[str, Path]):
+    def __init__(self, fpath: Strpath):
         super().__init__(fpath)
 
 
@@ -133,7 +131,7 @@ class ActionExit(HookAction):
     """
     name = 'exit'
 
-    def __init__(self, status_code=None):
+    def __init__(self, status_code: int = None):
         super().__init__(status_code)
 
 
@@ -145,7 +143,7 @@ class ActionPrintout(HookAction):
     """
     name = 'print'
 
-    def __init__(self, text=None):
+    def __init__(self, text: str = None):
         super().__init__(text)
 
 
@@ -154,7 +152,7 @@ class ActionSetHostName(HookAction):
 
     name = 'hostname'
 
-    def __init__(self, name):
+    def __init__(self, name: str):
         super().__init__(name)
 
 
@@ -163,7 +161,7 @@ class ActionAlarm(HookAction):
 
     name = 'alarm'
 
-    def __init__(self, alarm, message):
+    def __init__(self, alarm, message: str):
         super().__init__(alarm, message)
 
 
@@ -177,16 +175,16 @@ class ActionFileWrite(HookAction):
     """
     name = 'write'
 
-    def __init__(self, target, text, *, append=False, newline=False):
+    def __init__(self, target: str, text: str, *, append: bool = False, newline: bool = False):
         """
 
-        :param str target: File to write to.
+        :param target: File to write to.
 
-        :param str text: Text to write into file.
+        :param text: Text to write into file.
 
-        :param bool append: Append text instead of rewrite.
+        :param append: Append text instead of rewrite.
 
-        :param bool newline: Add a newline at the end.
+        :param newline: Add a newline at the end.
 
         """
         if append:
@@ -203,9 +201,9 @@ class ActionFifoWrite(HookAction):
 
     name = 'writefifo'
 
-    def __init__(self, target, text, *, wait=False):
+    def __init__(self, target: str, text: str, *, wait: bool = False):
         """
-        :param bool wait: Wait until FIFO is available.
+        :param wait: Wait until FIFO is available.
 
         """
         if wait:
@@ -222,5 +220,5 @@ class ActionUnlink(HookAction):
     """
     name = 'unlink'
 
-    def __init__(self, target):
+    def __init__(self, target: str):
         super().__init__(target)

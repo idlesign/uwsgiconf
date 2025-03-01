@@ -90,7 +90,7 @@ class Monitoring(OptionsGroup):
 
         return self._section
 
-    def set_metrics_params(self, enable=None, store_dir=None, restore=None, no_cores=None):
+    def set_metrics_params(self, enable: bool = None, store_dir: str = None, restore: bool = None, no_cores: bool = None):
         """Sets basic Metrics subsystem params.
 
         uWSGI metrics subsystem allows you to manage "numbers" from your apps.
@@ -103,9 +103,9 @@ class Monitoring(OptionsGroup):
         * http://uwsgi.readthedocs.io/en/latest/Metrics.html
         * SNMP Integration - http://uwsgi.readthedocs.io/en/latest/Metrics.html#snmp-integration
 
-        :param bool enable: Enables the subsystem.
+        :param enable: Enables the subsystem.
 
-        :param str store_dir: Directory to store metrics.
+        :param store_dir: Directory to store metrics.
             The metrics subsystem can expose all of its metrics in the form
             of text files in a directory. The content of each file is the value
             of the metric (updated in real time).
@@ -113,12 +113,12 @@ class Monitoring(OptionsGroup):
             .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}/metrics/
               See ``Section.project_name`` and ``Section.runtime_dir``.
 
-        :param bool restore: Restore previous metrics from ``store_dir``.
+        :param restore: Restore previous metrics from ``store_dir``.
             When you restart a uWSGI instance, all of its metrics are reset.
             Use the option to force the metric subsystem to read-back the values
             from the metric directory before starting to collect values.
 
-        :param bool no_cores: Disable generation of cores-related metrics.
+        :param no_cores: Disable generation of cores-related metrics.
 
         """
         self._set('enable-metrics', enable, cast=bool)
@@ -128,20 +128,29 @@ class Monitoring(OptionsGroup):
 
         return self._section
 
-    def set_metrics_threshold(self, name, value, *, check_interval=None, reset_to=None, alarm=None, alarm_message=None):
+    def set_metrics_threshold(
+            self,
+            name: str,
+            value: str,
+            *,
+            check_interval: int = None,
+            reset_to: int = None,
+            alarm=None,
+            alarm_message: str = None
+    ):
         """Sets metric threshold parameters.
 
-        :param str name: Metric name.
+        :param name: Metric name.
 
-        :param int value: Threshold value.
+        :param value: Threshold value.
 
-        :param int reset_to: Reset value to when threshold is reached.
+        :param reset_to: Reset value to when threshold is reached.
 
-        :param int check_interval: Threshold check interval in seconds.
+        :param check_interval: Threshold check interval in seconds.
 
         :param str|AlarmType alarm: Alarm to trigger when threshold is reached.
 
-        :param str alarm_message: Message to pass to alarm. If not set metrics name is passed.
+        :param alarm_message: Message to pass to alarm. If not set metrics name is passed.
 
         """
         if alarm is not None and isinstance(alarm, AlarmType):
@@ -163,29 +172,36 @@ class Monitoring(OptionsGroup):
         return self._section
 
     def set_stats_params(
-            self, address=None, enable_http=None,
-            minify=None, no_cores=None, no_metrics=None, push_interval=None):
+            self,
+            address: str = None,
+            *,
+            enable_http: bool = None,
+            minify: bool = None,
+            no_cores: bool = None,
+            no_metrics: bool = None,
+            push_interval: int = None
+    ):
         """Enables stats server on the specified address.
 
         * http://uwsgi.readthedocs.io/en/latest/StatsServer.html
 
-        :param str address: Address/socket to make stats available on.
+        :param address: Address/socket to make stats available on.
 
             Examples:
                 * 127.0.0.1:1717
                 * /tmp/statsock
                 * :5050
 
-        :param bool enable_http: Server stats over HTTP.
+        :param enable_http: Server stats over HTTP.
             Prefixes stats server json output with http headers.
 
-        :param bool minify: Minify statistics json output.
+        :param minify: Minify statistics json output.
 
-        :param bool no_cores: Disable generation of cores-related stats.
+        :param no_cores: Disable generation of cores-related stats.
 
-        :param bool no_metrics: Do not include metrics in stats output.
+        :param no_metrics: Do not include metrics in stats output.
 
-        :param int push_interval: Set the default frequency of stats pushers in seconds/
+        :param push_interval: Set the default frequency of stats pushers in seconds/
 
         """
         self._set('stats-server', address)
@@ -208,7 +224,7 @@ class Monitoring(OptionsGroup):
 
         return self._section
 
-    def enable_snmp(self, address, community_string):
+    def enable_snmp(self, address: str, community_string: str):
         """Enables SNMP.
 
         uWSGI server embeds a tiny SNMP server that you can use to integrate

@@ -1,3 +1,4 @@
+from typehints import Strlist
 from ..base import OptionsGroup
 
 
@@ -12,8 +13,10 @@ class Empire(OptionsGroup):
     """
 
     def set_emperor_params(
-            self, *, vassals_home=None, name=None, scan_interval=None, pid_file=None, spawn_asap=None,
-            stats_address=None, trigger_socket=None, links_no_follow=None):
+            self, *, vassals_home: Strlist = None, name: str = None, scan_interval: int = None, pid_file: str = None,
+            spawn_asap: bool = None, stats_address: str = None, trigger_socket:str = None,
+            links_no_follow: bool = None,
+    ):
         """
 
         .. note:: The emperor should generally not be run with master, unless master features like advanced
@@ -24,21 +27,21 @@ class Empire(OptionsGroup):
             emperor reloads are a bit drastic, reloading all vassals at once.
             Instead vassals should be reloaded individually when needed, in the manner of the imperial monitor in use.
 
-        :param str|list[str] vassals_home: Set vassals home and enable Emperor mode.
+        :param vassals_home: Set vassals home and enable Emperor mode.
 
-        :param str name: Set the Emperor process name.
+        :param name: Set the Emperor process name.
 
-        :param int scan_interval: Set the Emperor scan frequency. Default: 3 seconds.
+        :param scan_interval: Set the Emperor scan frequency. Default: 3 seconds.
 
-        :param str pid_file: Write the Emperor pid in the specified file.
+        :param pid_file: Write the Emperor pid in the specified file.
 
-        :param bool spawn_asap: Spawn the Emperor as soon as possible.
+        :param spawn_asap: Spawn the Emperor as soon as possible.
 
-        :param str stats_address: Run the Emperor stats server on specified address.
+        :param stats_address: Run the Emperor stats server on specified address.
 
-        :param str trigger_socket: Enable the Emperor trigger socket.
+        :param trigger_socket: Enable the Emperor trigger socket.
 
-        :param bool links_no_follow: Do not follow symlinks when checking for mtime.
+        :param links_no_follow: Do not follow symlinks when checking for mtime.
 
         """
         self._set('emperor', vassals_home, multi=True)
@@ -48,7 +51,7 @@ class Empire(OptionsGroup):
         self._set('early-emperor', spawn_asap, cast=bool)
         self._set('emperor-stats-server', stats_address)
         self._set('emperor-trigger-socket', trigger_socket)
-        self._set('emperor-nofollow', links_no_follow)
+        self._set('emperor-nofollow', links_no_follow, cast=bool)
 
         return self._section
 
@@ -60,18 +63,22 @@ class Empire(OptionsGroup):
         return self._section
 
     def set_emperor_command_params(
-            self, command_socket=None, *,
-            wait_for_command=None, wait_for_command_exclude=None):
+            self,
+            command_socket: str = None,
+            *,
+            wait_for_command: bool = None,
+            wait_for_command_exclude: Strlist = None
+    ):
         """Emperor commands related parameters.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/tutorials/EmperorSubscriptions.html
 
-        :param str command_socket: Enable the Emperor command socket.
+        :param command_socket: Enable the Emperor command socket.
             It is a channel allowing external process to govern vassals.
 
-        :param bool wait_for_command: Always wait for a 'spawn' Emperor command before starting a vassal.
+        :param wait_for_command: Always wait for a 'spawn' Emperor command before starting a vassal.
 
-        :param str|list[str] wait_for_command_exclude: Vassals that will ignore ``wait_for_command``.
+        :param wait_for_command_exclude: Vassals that will ignore ``wait_for_command``.
 
         """
         self._set('emperor-command-socket', command_socket)
@@ -80,14 +87,14 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_vassals_wrapper_params(self, *, wrapper=None, overrides=None, fallbacks=None):
+    def set_vassals_wrapper_params(self, *, wrapper: str = None, overrides: Strlist = None, fallbacks: Strlist = None):
         """Binary wrapper for vassals parameters.
 
-        :param str wrapper: Set a binary wrapper for vassals.
+        :param wrapper: Set a binary wrapper for vassals.
 
-        :param str|list[str] overrides: Set a binary wrapper for vassals to try before the default one
+        :param overrides: Set a binary wrapper for vassals to try before the default one
 
-        :param str|list[str] fallbacks: Set a binary wrapper for vassals to try as a last resort.
+        :param fallbacks: Set a binary wrapper for vassals to try as a last resort.
             Allows you to specify an alternative binary to execute when running a vassal
             and the default binary_path is not found (or returns an error).
 
@@ -98,15 +105,15 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_throttle_params(self, *, level=None, level_max=None):
+    def set_throttle_params(self, *, level: int = None, level_max: int = None):
         """Throttling options.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#throttling
         * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#loyalty
 
-        :param int level: Set throttling level (in milliseconds) for bad behaving vassals. Default: 1000.
+        :param level: Set throttling level (in milliseconds) for bad behaving vassals. Default: 1000.
 
-        :param int level_max: Set maximum throttling level (in milliseconds)
+        :param level_max: Set maximum throttling level (in milliseconds)
             for bad behaving vassals. Default: 3 minutes.
 
         """
@@ -115,14 +122,14 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_tolerance_params(self, *, for_heartbeat=None, for_cursed_vassals=None):
+    def set_tolerance_params(self, *, for_heartbeat: int = None, for_cursed_vassals: int = None):
         """Various tolerance options.
 
-        :param int for_heartbeat: Set the Emperor tolerance about heartbeats.
+        :param for_heartbeat: Set the Emperor tolerance about heartbeats.
 
             * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#heartbeat-system
 
-        :param int for_cursed_vassals: Set the Emperor tolerance about cursed vassals.
+        :param for_cursed_vassals: Set the Emperor tolerance about cursed vassals.
 
             * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#blacklist-system
 
@@ -132,7 +139,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_mode_tyrant_params(self, enable=None, *, links_no_follow=None, use_initgroups=None):
+    def set_mode_tyrant_params(self, enable: bool = None, *, links_no_follow: bool = None, use_initgroups: bool = None):
         """Tyrant mode (secure multi-user hosting).
 
         In Tyrant mode the Emperor will run the vassal using the UID/GID of the vassal
@@ -142,9 +149,9 @@ class Empire(OptionsGroup):
 
         :param enable: Puts the Emperor in Tyrant mode.
 
-        :param bool links_no_follow: Do not follow symlinks when checking for uid/gid in Tyrant mode.
+        :param links_no_follow: Do not follow symlinks when checking for uid/gid in Tyrant mode.
 
-        :param bool use_initgroups: Add additional groups set via initgroups() in Tyrant mode.
+        :param use_initgroups: Add additional groups set via initgroups() in Tyrant mode.
 
         """
         self._set('emperor-tyrant', enable, cast=bool)
@@ -154,8 +161,12 @@ class Empire(OptionsGroup):
         return self._section
 
     def set_mode_broodlord_params(
-            self, zerg_count=None, *,
-            vassal_overload_sos_interval=None, vassal_queue_items_sos=None):
+            self,
+            zerg_count: int = None,
+            *,
+            vassal_overload_sos_interval: int = None,
+            vassal_queue_items_sos: int = None
+    ):
         """This mode is a way for a vassal to ask for reinforcements to the Emperor.
 
         Reinforcements are new vassals spawned on demand generally bound on the same socket.
@@ -165,12 +176,12 @@ class Empire(OptionsGroup):
 
             *Broodlord mode is for spawning totally new instances.*
 
-        :param int zerg_count: Maximum number of zergs to spawn.
+        :param zerg_count: Maximum number of zergs to spawn.
 
-        :param int vassal_overload_sos_interval: Ask emperor for reinforcement when overloaded.
+        :param vassal_overload_sos_interval: Ask emperor for reinforcement when overloaded.
             Accepts the number of seconds to wait between asking for a new reinforcements.
 
-        :param int vassal_queue_items_sos: Ask emperor for sos if listen queue (backlog) has more
+        :param vassal_queue_items_sos: Ask emperor for sos if listen queue (backlog) has more
             items than the value specified
 
         """

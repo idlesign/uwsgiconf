@@ -39,11 +39,11 @@ class CollectorFile(Collector):
 
     name = 'file'
 
-    def __init__(self, fpath, *, get_slot=None):
+    def __init__(self, fpath: str, *, get_slot: int = None):
         """
-        :param str fpath: File path.
+        :param fpath: File path.
 
-        :param int get_slot: Get value from the given slot number.
+        :param get_slot: Get value from the given slot number.
             Slots: the content is split (using \\n, \\t, spaces, \\r and zero as separator)
             and the item (the returned array is zero-based) used as the return value.
 
@@ -66,9 +66,9 @@ class CollectorFunction(Collector):
 
     name = 'func'
 
-    def __init__(self, func):
+    def __init__(self, func: str):
         """
-        :param str func: Function to call.
+        :param func: Function to call.
         """
         value = KeyValue(locals(), aliases={'func': 'arg1'})
 
@@ -117,9 +117,9 @@ class CollectorAdder(Collector):
     """
     name = 'adder'
 
-    def __init__(self, what, value):
+    def __init__(self, what, value: int):
         """
-        :param int value: Value to add (multiply if it is CollectorMultiplier).
+        :param value: Value to add (multiply if it is CollectorMultiplier).
 
         """
         value = KeyValue(filter_locals(locals(), drop=['what']), aliases={'value': 'arg1n'})

@@ -1,7 +1,5 @@
-from pathlib import Path
-from typing import Union
-
 from ..base import OptionsGroup
+from ..typehints import Strpath
 
 
 class Locks(OptionsGroup):
@@ -45,7 +43,7 @@ class Locks(OptionsGroup):
 
         return self._section
 
-    def lock_file(self, fpath: Union[str, Path], *, after_setup: bool = False, wait: bool = False):
+    def lock_file(self, fpath: Strpath, *, after_setup: bool = False, wait: bool = False):
         """Locks the specified file.
 
         :param fpath: File path.
@@ -64,6 +62,6 @@ class Locks(OptionsGroup):
         if after_setup:
             command = f'{command}2'
 
-        self._set(command, str(fpath))
+        self._set(command, f'{fpath}')
 
         return self._section

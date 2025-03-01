@@ -1,8 +1,5 @@
-from pathlib import Path
-from typing import Union
-
 from ..base import OptionsGroup
-from ..typehints import Strlist
+from ..typehints import Strlist, Strpath
 from ..utils import KeyValue
 
 
@@ -65,7 +62,7 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_file(self, filepath: Union[str, Path], *, gzip: bool = False, cache_name: str = None):
+    def add_file(self, filepath: Strpath, *, gzip: bool = False, cache_name: str = None):
         """Load a static file in the cache.
 
         .. note:: Items are stored with the filepath as is (relative or absolute) as the key.

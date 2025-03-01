@@ -1,7 +1,10 @@
+from typing import Union
+
+from typehints import Strlist, Strint
 from ..base import OptionsGroup, ParametrizedValue
 from ..utils import KeyValue, filter_locals
 from .routing_modifiers import Modifier, ModifierWsgi
-from .networking_sockets import SocketShared
+from .networking_sockets import SocketShared, StrShaSoc
 
 
 class RouterBase(OptionsGroup):
@@ -14,9 +17,9 @@ class RouterBase(OptionsGroup):
         args[0] = f'{self.alias}-{args[0]}'
         self._set(*args, **kwargs)
 
-    def __init__(self, on=None):
+    def __init__(self, on: StrShaSoc = None):
         """
-        :param SocketShared|str on: Activates the router on the given address.
+        :param on: Activates the router on the given address.
         """
         self._make_section_like()
 
@@ -54,26 +57,33 @@ class RouterBase(OptionsGroup):
 class _RouterCommon(RouterBase):
 
     def set_basic_params(
-            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
-            cheap_mode=None, stats_server=None):
+            self,
+            *,
+            workers: int = None,
+            zerg_server: str = None,
+            fallback_node: str = None,
+            concurrent_events: int = None,
+            cheap_mode: bool = None,
+            stats_server: str = None
+    ):
         """
 
-        :param int workers: Number of worker processes to spawn.
+        :param workers: Number of worker processes to spawn.
 
-        :param str zerg_server: Attach the router to a zerg server.
+        :param zerg_server: Attach the router to a zerg server.
 
-        :param str fallback_node: Fallback to the specified node in case of error.
+        :param fallback_node: Fallback to the specified node in case of error.
 
-        :param int concurrent_events: Set the maximum number of concurrent events router can manage.
+        :param concurrent_events: Set the maximum number of concurrent events router can manage.
 
             Default: system dependent.
 
-        :param bool cheap_mode: Enables cheap mode. When the router is in cheap mode,
+        :param cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str stats_server: Router stats server address to run at.
+        :param stats_server: Router stats server address to run at.
 
         """
         self._set_aliased('workers', workers)
@@ -85,14 +95,20 @@ class _RouterCommon(RouterBase):
 
         return self
 
-    def set_connections_params(self, *, harakiri=None, timeout_socket=None, retry_delay=None):
+    def set_connections_params(
+            self,
+            *,
+            harakiri: int = None,
+            timeout_socket: int = None,
+            retry_delay: int = None
+    ):
         """Sets connection-related parameters.
 
-        :param int harakiri: Set gateway harakiri timeout (seconds).
+        :param harakiri: Set gateway harakiri timeout (seconds).
 
-        :param int timeout_socket: Node socket timeout (seconds). Default: 60.
+        :param timeout_socket: Node socket timeout (seconds). Default: 60.
 
-        :param int retry_delay: Retry connections to dead static nodes after the specified
+        :param retry_delay: Retry connections to dead static nodes after the specified
             amount of seconds. Default: 30.
 
         """
@@ -106,6 +122,9 @@ class _RouterCommon(RouterBase):
 class Forwarder(ParametrizedValue):
 
     opt_key = True
+
+
+ForwStrlist = Union[Strlist, Forwarder]
 
 
 class ForwarderPath(Forwarder):
@@ -122,9 +141,9 @@ class ForwarderPath(Forwarder):
 
     name = 'use-base'
 
-    def __init__(self, sockets_dir):
+    def __init__(self, sockets_dir: str):
         """
-        :param str sockets_dir: UNIX sockets directory.
+        :param sockets_dir: UNIX sockets directory.
             Allows %s to denote key (domain).
 
         """
@@ -149,13 +168,13 @@ class ForwarderCode(Forwarder):
     name = 'use-code-string'
     args_joiner = ':'
 
-    def __init__(self, script, func, *, modifier=None):
+    def __init__(self, script: str, func: str, *, modifier: Modifier=None):
         """
-        :param str script: Script (module for Python) name to get function from.
+        :param script: Script (module for Python) name to get function from.
 
-        :param str func:  Function name.
+        :param func:  Function name.
 
-        :param Modifier modifier: Routing modifier.
+        :param modifier: Routing modifier.
 
         """
         modifier = modifier or ModifierWsgi
@@ -170,9 +189,9 @@ class ForwarderCache(Forwarder):
     """
     name = 'use-cache'
 
-    def __init__(self, cache_name=None):
+    def __init__(self, cache_name: str = None):
         """
-        :param str cache_name: Cache name to use.
+        :param cache_name: Cache name to use.
         """
         super().__init__(cache_name)
 
@@ -182,9 +201,9 @@ class ForwarderSocket(Forwarder):
 
     name = 'use-socket'
 
-    def __init__(self, socket):
+    def __init__(self, socket: str):
         """
-        :param str socket: Socket filepath.
+        :param socket: Socket filepath.
         """
         super().__init__(socket)
 
@@ -201,9 +220,9 @@ class ForwarderSubscriptionServer(Forwarder):
     """
     name = 'subscription-server'
 
-    def __init__(self, address):
+    def __init__(self, address: str):
         """
-        :param str address: Address (including port) to run the subscription server on.
+        :param address: Address (including port) to run the subscription server on.
         """
         super().__init__(address)
 
@@ -221,12 +240,12 @@ class _RouterWithForwarders(_RouterCommon):
         socket = ForwarderSocket
         subscription_server = ForwarderSubscriptionServer
 
-    def __init__(self, on=None, *, forward_to=None):
+    def __init__(self, on: StrShaSoc = None, *, forward_to: ForwStrlist = None):
         """Activates the router on the given address.
 
-        :param SocketShared|str on: Activates the router on the given address.
+        :param on: Activates the router on the given address.
 
-        :param Forwarder|str|list[str] forward_to: Where to forward requests.
+        :param forward_to: Where to forward requests.
             Expects a forwarder instance or one or more node names.
 
         """
@@ -242,32 +261,39 @@ class _RouterWithForwarders(_RouterCommon):
                 self._set_aliased('to', forward_to, multi=True)
 
     def set_basic_params(
-            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
-            cheap_mode=None, stats_server=None, quiet=None, buffer_size=None):
+            self,
+            *,
+            workers: int = None,
+            zerg_server: str = None,
+            fallback_node: str = None,
+            concurrent_events: int = None,
+            cheap_mode: bool = None,
+            stats_server: str = None,
+            quiet: bool = None,
+            buffer_size: int = None
+    ):
         """
 
-        :param int workers: Number of worker processes to spawn.
+        :param workers: Number of worker processes to spawn.
 
-        :param str zerg_server: Attach the router to a zerg server.
+        :param zerg_server: Attach the router to a zerg server.
 
-        :param str fallback_node: Fallback to the specified node in case of error.
+        :param fallback_node: Fallback to the specified node in case of error.
 
-        :param int concurrent_events: Set the maximum number of concurrent events router can manage.
+        :param concurrent_events: Set the maximum number of concurrent events router can manage.
 
             Default: system dependent.
 
-        :param bool cheap_mode: Enables cheap mode. When the router is in cheap mode,
+        :param cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all the nodes go down, the router will return in cheap mode.
 
-        :param str stats_server: Router stats server address to run at.
+        :param stats_server: Router stats server address to run at.
 
-        :param bool quiet: Do not report failed connections to instances.
+        :param quiet: Do not report failed connections to instances.
 
-        :param int buffer_size: Set the internal buffer size (default: page size).
-
-        :param forward_to: Forward request to the given node.
+        :param buffer_size: Set the internal buffer size (default: page size).
 
         """
         super().set_basic_params(**filter_locals(locals(), drop=[
@@ -309,38 +335,48 @@ class RouterHttp(_RouterWithForwarders):
     # http-manage-expect
 
     def set_basic_params(
-            self, *, workers=None, zerg_server=None, fallback_node=None, concurrent_events=None,
-            cheap_mode=None, stats_server=None, quiet=None, buffer_size=None,
-            keepalive=None, resubscribe_addresses=None):
+            self,
+            *,
+            workers: int = None,
+            zerg_server: str = None,
+            fallback_node: str = None,
+            concurrent_events: int = None,
+            cheap_mode: bool = None,
+            stats_server: str = None,
+            quiet: bool = None,
+            buffer_size: int = None,
+            keepalive: int = None,
+            resubscribe_addresses: Strlist = None
+    ):
         """
-        :param int workers: Number of worker processes to spawn.
+        :param workers: Number of worker processes to spawn.
 
-        :param str zerg_server: Attach the router to a zerg server.
+        :param zerg_server: Attach the router to a zerg server.
 
-        :param str fallback_node: Fallback to the specified node in case of error.
+        :param fallback_node: Fallback to the specified node in case of error.
 
-        :param int concurrent_events: Set the maximum number of concurrent events router can manage.
+        :param concurrent_events: Set the maximum number of concurrent events router can manage.
 
             Default: system dependent.
 
-        :param bool cheap_mode: Enables cheap mode. When the router is in cheap mode,
+        :param cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
             When all of the nodes go down, the router will return in cheap mode.
 
-        :param str stats_server: Router stats server address to run at.
+        :param stats_server: Router stats server address to run at.
 
-        :param bool quiet: Do not report failed connections to instances.
+        :param quiet: Do not report failed connections to instances.
 
-        :param int buffer_size: Set internal buffer size in bytes. Default: page size.
+        :param buffer_size: Set internal buffer size in bytes. Default: page size.
 
-        :param int keepalive: Allows holding the connection open even if the request has a body.
+        :param keepalive: Allows holding the connection open even if the request has a body.
 
             * http://uwsgi.readthedocs.io/en/latest/HTTP.html#http-keep-alive
 
             .. note:: See http11 socket type for an alternative.
 
-        :param str|list[str] resubscribe_addresses: Forward subscriptions
+        :param resubscribe_addresses: Forward subscriptions
             to the specified subscription server.
 
 
@@ -356,25 +392,32 @@ class RouterHttp(_RouterWithForwarders):
         return self
 
     def set_connections_params(
-            self, *, harakiri=None, timeout_socket=None, retry_delay=None, timeout_headers=None, timeout_backend=None):
+            self,
+            *,
+            harakiri: int = None,
+            timeout_socket: int = None,
+            retry_delay: int = None,
+            timeout_headers: int = None,
+            timeout_backend: int = None
+    ):
         """Sets connection-related parameters.
 
-        :param int harakiri: Set gateway harakiri timeout (seconds).
+        :param harakiri: Set gateway harakiri timeout (seconds).
 
-        :param int timeout_socket: Node socket timeout (seconds).
+        :param timeout_socket: Node socket timeout (seconds).
             Used to set the SPDY timeout. This is the maximum amount of inactivity after
             the SPDY connection is closed.
 
             Default: 60.
 
-        :param int retry_delay: Retry connections to dead static nodes after the specified
+        :param retry_delay: Retry connections to dead static nodes after the specified
             amount of seconds. Default: 30.
 
-        :param int timeout_headers: Defines the timeout (seconds) while waiting for http headers.
+        :param timeout_headers: Defines the timeout (seconds) while waiting for http headers.
 
             Default: `socket_timeout`.
 
-        :param int timeout_backend: Defines the timeout (seconds) when connecting to backend instances.
+        :param timeout_backend: Defines the timeout (seconds) when connecting to backend instances.
 
             Default: `socket_timeout`.
 
@@ -389,29 +432,37 @@ class RouterHttp(_RouterWithForwarders):
         return self
 
     def set_manage_params(
-            self, *, chunked_input=None, chunked_output=None, gzip=None, websockets=None, source_method=None,
-            rtsp=None, proxy_protocol=None):
+            self,
+            *,
+            chunked_input: bool = None,
+            chunked_output: bool = None,
+            gzip: bool = None,
+            websockets: bool = None,
+            source_method: bool = None,
+            rtsp: bool = None,
+            proxy_protocol: bool = None
+    ):
         """Allows enabling various automatic management mechanics.
 
         * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.html#http-router-keepalive-auto-chunking-auto-gzip-and-transparent-websockets
 
-        :param bool chunked_input: Automatically detect chunked input requests and put the session in raw mode.
+        :param chunked_input: Automatically detect chunked input requests and put the session in raw mode.
 
-        :param bool chunked_output: Automatically transform output to chunked encoding
+        :param chunked_output: Automatically transform output to chunked encoding
             during HTTP 1.1 keepalive (if needed).
 
-        :param bool gzip: Automatically gzip content if uWSGI-Encoding header is set to gzip,
+        :param gzip: Automatically gzip content if uWSGI-Encoding header is set to gzip,
             but content size (Content-Length/Transfer-Encoding) and Content-Encoding are not specified.
 
-        :param bool websockets: Automatically detect websockets connections and put the session in raw mode.
+        :param websockets: Automatically detect websockets connections and put the session in raw mode.
 
-        :param bool source_method: Automatically put the session in raw mode for `SOURCE` HTTP method.
+        :param source_method: Automatically put the session in raw mode for `SOURCE` HTTP method.
 
             * http://uwsgi.readthedocs.io/en/latest/Changelog-2.0.5.html#icecast2-protocol-helpers
 
-        :param bool rtsp: Allow the HTTP router to detect RTSP and chunked requests automatically.
+        :param rtsp: Allow the HTTP router to detect RTSP and chunked requests automatically.
 
-        :param bool proxy_protocol: Allows the HTTP router to manage PROXY1 protocol requests,
+        :param proxy_protocol: Allows the HTTP router to manage PROXY1 protocol requests,
             such as those made by Haproxy or Amazon Elastic Load Balancer (ELB).
 
         """
@@ -425,12 +476,12 @@ class RouterHttp(_RouterWithForwarders):
 
         return self
 
-    def set_owner_params(self, uid=None, gid=None):
+    def set_owner_params(self, uid: Strint = None, gid: Strint = None):
         """Drop http router privileges to specified user and group.
 
-        :param str|int uid: Set uid to the specified username or uid.
+        :param uid: Set uid to the specified username or uid.
 
-        :param str|int gid: Set gid to the specified groupname or gid.
+        :param gid: Set gid to the specified groupname or gid.
 
         """
         self._set_aliased('uid', uid)
@@ -458,17 +509,26 @@ class RouterHttps(RouterHttp):
     on_command = 'https2'
 
     def __init__(
-            self, on, *, cert, key, ciphers=None, client_ca=None, session_context=None, use_spdy=None,
-            export_cert_var=None):
+            self,
+            on: StrShaSoc,
+            *,
+            cert: str,
+            key: str,
+            ciphers: str = None,
+            client_ca: str = None,
+            session_context: str = None,
+            use_spdy: bool = None,
+            export_cert_var: bool = None
+    ):
         """Binds https router to run on the given address.
 
-        :param SocketShared|str on: Activates the router on the given address.
+        :param on: Activates the router on the given address.
 
-        :param str cert: Certificate file.
+        :param cert: Certificate file.
 
-        :param str key: Private key file.
+        :param key: Private key file.
 
-        :param str ciphers: Ciphers [alias] string.
+        :param ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -477,21 +537,21 @@ class RouterHttps(RouterHttp):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str client_ca: Client CA file for client-based auth.
+        :param client_ca: Client CA file for client-based auth.
 
             .. note: You can prepend ! (exclamation mark) to make client certificate
                 authentication mandatory.
 
-        :param str session_context: Session context identifying string. Can be set to static shared value
+        :param session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
             Default: a value built from the HTTP server address.
 
             * http://uwsgi.readthedocs.io/en/latest/SSLScaling.html#setup-2-synchronize-caches-of-different-https-routers
 
-        :param bool use_spdy: Use SPDY.
+        :param use_spdy: Use SPDY.
 
-        :param bool export_cert_var: Export uwsgi variable `HTTPS_CC` containing the raw client certificate.
+        :param export_cert_var: Export uwsgi variable `HTTPS_CC` containing the raw client certificate.
 
         """
         on = KeyValue(
@@ -515,19 +575,30 @@ class RouterSsl(_RouterWithForwarders):
     plugin = alias
     on_command = 'sslrouter2'
 
-    def __init__(self, on, cert, key, forward_to=None, ciphers=None, client_ca=None, session_context=None, use_sni=None):
+    def __init__(
+            self,
+            on: StrShaSoc,
+            *,
+            forward_to: ForwStrlist =None,
+            cert: str,
+            key: str,
+            ciphers: str = None,
+            client_ca: str = None,
+            session_context: str = None,
+            use_sni: bool = None
+    ):
         """Activates the router on the given address.
 
-        :param SocketShared|str on: Activates the router on the given address.
+        :param on: Activates the router on the given address.
 
-        :param str cert: Certificate file.
+        :param cert: Certificate file.
 
-        :param str key: Private key file.
+        :param key: Private key file.
 
-        :param Forwarder|str|list[str] forward_to: Where to forward requests.
+        :param forward_to: Where to forward requests.
             Expects a forwarder instance or one or more node names.
 
-        :param str ciphers: Ciphers [alias] string.
+        :param ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -536,16 +607,16 @@ class RouterSsl(_RouterWithForwarders):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str client_ca: Client CA file for client-based auth.
+        :param client_ca: Client CA file for client-based auth.
 
-        :param str session_context: Session context identifying string. Can be set to static shared value
+        :param session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
             Default: a value built from the HTTP server address.
 
             * http://uwsgi.readthedocs.io/en/latest/SSLScaling.html#setup-2-synchronize-caches-of-different-https-routers
 
-        :param bool use_sni: Use SNI to route requests.
+        :param use_sni: Use SNI to route requests.
 
         """
         on = KeyValue(
@@ -558,17 +629,24 @@ class RouterSsl(_RouterWithForwarders):
 
         super().__init__(on, forward_to=forward_to)
 
-    def set_connections_params(self, harakiri=None, timeout_socket=None, retry_delay=None, retry_max=None):
+    def set_connections_params(
+            self,
+            *,
+            harakiri: int = None,
+            timeout_socket: int = None,
+            retry_delay: int = None,
+            retry_max: int = None
+    ):
         """Sets connection-related parameters.
 
-        :param int harakiri: Set gateway harakiri timeout (seconds).
+        :param harakiri: Set gateway harakiri timeout (seconds).
 
-        :param int timeout_socket: Node socket timeout (seconds). Default: 60.
+        :param timeout_socket: Node socket timeout (seconds). Default: 60.
 
-        :param int retry_delay: Retry connections to dead static nodes after the specified
+        :param retry_delay: Retry connections to dead static nodes after the specified
             amount of seconds. Default: 30.
 
-        :param int retry_max: Maximum number of retries/fallbacks to other nodes. Default: 3.
+        :param retry_max: Maximum number of retries/fallbacks to other nodes. Default: 3.
 
         """
         super().set_connections_params(**filter_locals(locals(), drop=['retry_max']))
@@ -754,10 +832,10 @@ class RouterForkPty(_RouterCommon):
     alias = 'forkptyrouter'
     plugin = alias
 
-    def __init__(self, on=None, undeferred=False):
+    def __init__(self, on: StrShaSoc = None, undeferred=False):
         """Binds router to run on the given address.
 
-        :param SocketShared|str on: Activates the router on the given address.
+        :param on: Activates the router on the given address.
 
         :param bool undeferred: Run router in undeferred mode.
 

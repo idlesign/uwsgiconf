@@ -5,7 +5,11 @@ def test_statics_basics(assert_lines):
 
     assert_lines([
         'static-index = index.html',
-    ], Section().statics.set_basic_params(index_file='index.html'))
+        'fileserve-mode = x-sendfile',
+    ], Section().statics.set_basic_params(
+        index_file='index.html',
+        transfer_mode=Section.statics.transfer_modes.SENDFILE
+    ))
 
     assert_lines([
         'check-static-docroot = true',

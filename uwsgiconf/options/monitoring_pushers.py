@@ -1,4 +1,5 @@
 from ..base import ParametrizedValue
+from ..typehints import Strlist
 from ..utils import KeyValue
 
 
@@ -17,11 +18,11 @@ class PusherSocket(Pusher):
     name = 'socket'
     plugin = 'stats_pusher_socket'
 
-    def __init__(self, address, *, prefix=None):
+    def __init__(self, address: str, *, prefix: str = None):
         """
-        :param str address:
+        :param address:
 
-        :param str prefix: Arbitrary prefix to differentiate sender.
+        :param prefix: Arbitrary prefix to differentiate sender.
 
         """
         super().__init__(address, prefix)
@@ -36,13 +37,13 @@ class PusherRrdtool(Pusher):
     name = 'rrdtool'
     plugin = 'rrdtool'
 
-    def __init__(self, target_dir, *, library=None, push_interval=None):
+    def __init__(self, target_dir: str, *, library: str = None, push_interval: int = None):
         """
-        :param str target_dir: Directory to store rrd files into.
+        :param target_dir: Directory to store rrd files into.
 
-        :param str library: Set the name of rrd library. Default: librrd.so.
+        :param library: Set the name of rrd library. Default: librrd.so.
 
-        :param int push_interval: Set push frequency.
+        :param push_interval: Set push frequency.
 
         """
         super().__init__(target_dir)
@@ -57,15 +58,15 @@ class PusherStatsd(Pusher):
     name = 'statsd'
     plugin = 'stats_pusher_statsd'
 
-    def __init__(self, address, *, prefix=None, no_workers=None, all_gauges=None):
+    def __init__(self, address: str, *, prefix: str = None, no_workers: bool = None, all_gauges: bool = None):
         """
-        :param str address:
+        :param address:
 
-        :param str prefix: Arbitrary prefix to differentiate sender.
+        :param prefix: Arbitrary prefix to differentiate sender.
 
-        :param bool no_workers: Disable generation of single worker metrics.
+        :param no_workers: Disable generation of single worker metrics.
 
-        :param bool all_gauges: Push all metrics to statsd as gauges.
+        :param all_gauges: Push all metrics to statsd as gauges.
         """
         super().__init__(address, prefix)
 
@@ -87,39 +88,50 @@ class PusherCarbon(Pusher):
     opt_key = name
 
     def __init__(
-            self, address, *, node_realm=None, node_root=None, push_interval=None, idle_avg_source=None,
-            use_metrics=None, no_workers=None, timeout=None, retries=None, retries_delay=None,
-            hostname_dots_replacer=None):
+            self,
+            address: Strlist,
+            *,
+            node_realm: str = None,
+            node_root: str = None,
+            push_interval: int = None,
+            idle_avg_source: str = None,
+            use_metrics: bool = None,
+            no_workers: bool = None,
+            timeout: int = None,
+            retries: int = None,
+            retries_delay: int = None,
+            hostname_dots_replacer: str = None
+    ):
         """
-        :param str|list[str] address: Host and port. Example: 127.0.0.1:2004
+        :param address: Host and port. Example: 127.0.0.1:2004
 
-        :param str node_realm: Set carbon metrics realm node.
+        :param node_realm: Set carbon metrics realm node.
 
-        :param str node_root: Set carbon metrics root node. Default: uwsgi.
+        :param node_root: Set carbon metrics root node. Default: uwsgi.
 
-        :param int push_interval: Set carbon push frequency in seconds. Default: 60.
+        :param push_interval: Set carbon push frequency in seconds. Default: 60.
 
-        :param bool no_workers: Disable generation of single worker metrics.
+        :param no_workers: Disable generation of single worker metrics.
 
-        :param str idle_avg_source: Average values source during idle period (no requests).
+        :param idle_avg_source: Average values source during idle period (no requests).
 
             Variants:
                 * last (default)
                 * zero
                 * none
 
-        :param bool use_metrics: Don't compute all statistics, use metrics subsystem data
+        :param use_metrics: Don't compute all statistics, use metrics subsystem data
             instead.
 
             .. warning:: Key names of built-in stats are different from those of metrics system.
 
-        :param int timeout: Set carbon connection timeout in seconds. Default: 3.
+        :param timeout: Set carbon connection timeout in seconds. Default: 3.
 
-        :param int retries: Set maximum number of retries in case of connection errors. Default: 1.
+        :param retries: Set maximum number of retries in case of connection errors. Default: 1.
 
-        :param int retries_delay: Set connection retry delay in seconds. Default: 7.
+        :param retries_delay: Set connection retry delay in seconds. Default: 7.
 
-        :param str hostname_dots_replacer: Set char to use as a replacement for
+        :param hostname_dots_replacer: Set char to use as a replacement for
             dots in hostname in `<node_root>.hostname.<node_realm>.metrics_data``
 
             This affects Graphite aggregation mechanics.
@@ -150,13 +162,13 @@ class PusherZabbix(Pusher):
     name = 'zabbix'
     plugin = 'zabbix'
 
-    def __init__(self, address, *, prefix=None, template=None):
+    def __init__(self, address: str, *, prefix: str = None, template: str = None):
         """
-        :param str address:
+        :param address:
 
-        :param str prefix: Arbitrary prefix to differentiate sender.
+        :param prefix: Arbitrary prefix to differentiate sender.
 
-        :param str template: Print (or store to a file) the zabbix template
+        :param template: Print (or store to a file) the zabbix template
             for the current metrics setup.
 
         """
@@ -171,13 +183,13 @@ class PusherMongo(Pusher):
     name = 'mongodb'
     plugin = 'stats_pusher_mongodb'
 
-    def __init__(self, *, address=None, collection=None, push_interval=None):
+    def __init__(self, *, address: str = None, collection: str = None, push_interval: int = None):
         """
-        :param str address: Default: 127.0.0.1:27017
+        :param address: Default: 127.0.0.1:27017
 
-        :param str collection: MongoDB colection to write into. Default: uwsgi.statistics
+        :param collection: MongoDB colection to write into. Default: uwsgi.statistics
 
-        :param int push_interval: Write interval in seconds.
+        :param push_interval: Write interval in seconds.
         """
         value = KeyValue(locals(), aliases={'push_interval': 'freq'})
 
@@ -193,13 +205,13 @@ class PusherFile(Pusher):
     name = 'file'
     plugin = 'stats_pusher_file'
 
-    def __init__(self, fpath=None, *, separator=None, push_interval=None):
+    def __init__(self, fpath: str = None, *, separator: str = None, push_interval: int = None):
         """
-        :param str fpath: File path. Default: uwsgi.stats
+        :param fpath: File path. Default: uwsgi.stats
 
-        :param str separator: New entry separator. Default: \n\n
+        :param separator: New entry separator. Default: \n\n
 
-        :param int push_interval: Write interval in seconds.
+        :param push_interval: Write interval in seconds.
         """
         value = KeyValue(locals(), aliases={'fpath': 'path', 'push_interval': 'freq'})
 

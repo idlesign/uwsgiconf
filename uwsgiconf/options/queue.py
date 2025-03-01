@@ -12,16 +12,16 @@ class Queue(OptionsGroup):
 
     """
 
-    def enable(self, size, *, block_size=None, store=None, store_sync_interval=None):
+    def enable(self, size: int, *, block_size: int = None, store: str = None, store_sync_interval: int = None):
         """Enables shared queue of the given size.
 
-        :param int size: Queue size.
+        :param size: Queue size.
 
-        :param int block_size: Block size in bytes. Default: 8 KiB.
+        :param block_size: Block size in bytes. Default: 8 KiB.
 
-        :param str store: Persist the queue into file.
+        :param store: Persist the queue into file.
 
-        :param int store_sync_interval: Store sync interval in master cycles (usually seconds).
+        :param store_sync_interval: Store sync interval in master cycles (usually seconds).
 
         """
         self._set('queue', size)

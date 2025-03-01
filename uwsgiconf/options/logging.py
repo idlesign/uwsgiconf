@@ -1,6 +1,7 @@
-from ..base import OptionsGroup, TemplatedValue
-from .logging_loggers import *
+from typehints import Strlist, Strbool
 from .logging_encoders import *
+from .logging_loggers import *
+from ..base import OptionsGroup
 from ..utils import listify
 
 
@@ -61,37 +62,46 @@ class Logging(OptionsGroup):
         # todo consider adding msgpack encoder
 
     def set_basic_params(
-            self, *, no_requests=None, template=None, memory_report=None, prefix=None, prefix_date=None,
-            apply_strftime=None, response_ms=None, ip_x_forwarded=None):
+            self,
+            *,
+            no_requests: bool = None,
+            template: str = None,
+            memory_report: int = None,
+            prefix: str = None,
+            prefix_date: Strbool = None,
+            apply_strftime: bool = None,
+            response_ms: bool = None,
+            ip_x_forwarded: bool = None
+    ):
         """
 
-        :param bool no_requests: Disable requests logging - only uWSGI internal messages
+        :param no_requests: Disable requests logging - only uWSGI internal messages
             and errors will be logged.
 
-        :param str template: Set advanced format for request logging.
+        :param template: Set advanced format for request logging.
             This template string can use variables from ``Logging.Vars``.
 
-        :param str prefix: Prefix log items with a string.
+        :param prefix: Prefix log items with a string.
 
             .. note:: This will not work with `prefix_date` option.
 
-        :param str|bool prefix_date: Prefix log items with date string.
+        :param prefix_date: Prefix log items with date string.
 
             .. note:: This will not work with `prefix` option.
         
             .. note:: This can be ``True`` or contain formatting placeholders (e.g. %Y-%m-%d %H:%M:%S) 
                if used with ``apply_strftime``.
 
-        :param int memory_report: Enable memory report.
+        :param memory_report: Enable memory report.
                 * **1** - basic (default);
                 * **2** - uss/pss (Linux only)
 
-        :param bool apply_strftime: Apply strftime to dates in log entries. 
+        :param apply_strftime: Apply strftime to dates in log entries.
             E.g. ``prefix_date`` can contain format placeholders. See also ``vars.REQ_START_FORMATTED``.
 
-        :param bool response_ms: Report response time in microseconds instead of milliseconds.
+        :param response_ms: Report response time in microseconds instead of milliseconds.
 
-        :param bool ip_x_forwarded: Use the IP from X-Forwarded-For header instead of REMOTE_ADDR.
+        :param ip_x_forwarded: Use the IP from X-Forwarded-For header instead of REMOTE_ADDR.
             Used when uWSGI is run behind multiple proxies.
 
         """
@@ -111,15 +121,15 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def log_into(self, target, *, before_priv_drop=True):
+    def log_into(self, target: str, *, before_priv_drop: bool = True):
         """Simple file or UDP logging.
 
         .. note:: This doesn't require any Logger plugin and can be used
             if no log routing is required.
 
-        :param str target: Filepath or UDP address.
+        :param target: Filepath or UDP address.
 
-        :param bool before_priv_drop: Whether to log data before or after privileges drop.
+        :param before_priv_drop: Whether to log data before or after privileges drop.
 
         """
         command = 'logto'
@@ -132,34 +142,43 @@ class Logging(OptionsGroup):
         return self._section
 
     def set_file_params(
-            self, *, reopen_on_reload=None, trucate_on_statup=None, max_size=None, rotation_fname=None,
-            touch_reopen=None, touch_rotate=None, owner=None, mode=None):
+            self,
+            *,
+            reopen_on_reload: bool = None,
+            truncate_on_startup: bool = None,
+            max_size: int = None,
+            rotation_fname: str = None,
+            touch_reopen: Strlist = None,
+            touch_rotate: Strlist = None,
+            owner: str = None,
+            mode: str = None
+    ):
         """Set various parameters related to file logging.
 
-        :param bool reopen_on_reload: Reopen log after reload.
+        :param reopen_on_reload: Reopen log after reload.
 
-        :param bool trucate_on_statup: Truncate log on startup.
+        :param truncate_on_startup: Truncate log on startup.
 
-        :param int max_size: Set maximum logfile size in bytes after which log should be rotated.
+        :param max_size: Set maximum logfile size in bytes after which log should be rotated.
 
-        :param str rotation_fname: Set log file name after rotation.
+        :param rotation_fname: Set log file name after rotation.
 
-        :param str|list touch_reopen: Trigger log reopen if the specified file
+        :param touch_reopen: Trigger log reopen if the specified file
             is modified/touched.
 
             .. note:: This can be set to a file touched by ``postrotate`` script of ``logrotate``
                 to implement rotation.
 
-        :param str|list touch_rotate: Trigger log rotation if the specified file
+        :param touch_rotate: Trigger log rotation if the specified file
             is modified/touched.
 
-        :param str owner: Set owner chown() for logs.
+        :param owner: Set owner chown() for logs.
         
-        :param str mode: Set mode chmod() for logs.
+        :param mode: Set mode chmod() for logs.
 
         """
         self._set('log-reopen', reopen_on_reload, cast=bool)
-        self._set('log-truncate', trucate_on_statup, cast=bool)
+        self._set('log-truncate', truncate_on_startup, cast=bool)
         self._set('log-maxsize', max_size)
         self._set('log-backupname', rotation_fname)
 
@@ -171,28 +190,36 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def set_filters(self, *, include=None, exclude=None, write_errors=None, write_errors_tolerance=None, sigpipe=None):
+    def set_filters(
+            self,
+            *,
+            include: Strlist = None,
+            exclude: Strlist = None,
+            write_errors: bool = None,
+            write_errors_tolerance: int = None,
+            sigpipe: bool = None
+    ):
         """Set various log data filters.
 
-        :param str|list include: Show only log lines matching the specified regexp.
+        :param include: Show only log lines matching the specified regexp.
 
             .. note:: Requires enabled PCRE support.
 
-        :param str|list exclude: Do not show log lines matching the specified regexp.
+        :param exclude: Do not show log lines matching the specified regexp.
 
             .. note:: Requires enabled PCRE support.
 
-        :param bool write_errors: Log (annoying) write()/writev() errors. Default: ``True``.
+        :param write_errors: Log (annoying) write()/writev() errors. Default: ``True``.
 
             .. note:: If both this and ``sigpipe`` set to ``False``, it's the same
                as setting ``write-errors-exception-only`` uWSGI option.
 
-        :param int write_errors_tolerance: Set the maximum number of allowed write errors before exception
+        :param write_errors_tolerance: Set the maximum number of allowed write errors before exception
             is raised. Default: no tolerance.
 
             .. note:: Available for Python, Perl, PHP.
 
-        :param bool sigpipe: Log (annoying) SIGPIPE. Default: ``True``.
+        :param sigpipe: Log (annoying) SIGPIPE. Default: ``True``.
 
             .. note:: If both this and ``write_errors`` set to ``False``, it's the same
                as setting ``write-errors-exception-only`` uWSGI option.
@@ -215,23 +242,31 @@ class Logging(OptionsGroup):
         return self._section
 
     def set_requests_filters(
-            self, *, slower=None, bigger=None, status_4xx=None, status_5xx=None,
-            no_body=None, sendfile=None, io_errors=None):
+            self,
+            *,
+            slower: int = None,
+            bigger: int = None,
+            status_4xx: bool = None,
+            status_5xx: bool = None,
+            no_body: bool = None,
+            sendfile: bool = None,
+            io_errors: bool = None
+    ):
         """Set various log data filters.
 
-        :param int slower: Log requests slower than the specified number of milliseconds.
+        :param slower: Log requests slower than the specified number of milliseconds.
 
-        :param int bigger: Log requests bigger than the specified size in bytes.
+        :param bigger: Log requests bigger than the specified size in bytes.
 
         :param status_4xx: Log requests with a 4xx response.
 
         :param status_5xx: Log requests with a 5xx response.
 
-        :param bool no_body: Log responses without body.
+        :param no_body: Log responses without body.
 
-        :param bool sendfile: Log sendfile requests.
+        :param sendfile: Log sendfile requests.
 
-        :param bool io_errors: Log requests with io errors.
+        :param io_errors: Log requests with io errors.
 
         """
         self._set('log-slow', slower)
@@ -245,27 +280,33 @@ class Logging(OptionsGroup):
         return self._section
 
     def set_master_logging_params(
-            self, enable=None, *, dedicate_thread=None, buffer=None,
-            sock_stream=None, sock_stream_requests_only=None):
+            self,
+            enable: bool = None,
+            *,
+            dedicate_thread: bool = None,
+            buffer: int = None,
+            sock_stream: bool = None,
+            sock_stream_requests_only: bool = None
+    ):
         """Sets logging params for delegating logging to master process.
 
-        :param bool enable: Delegate logging to master process.
+        :param enable: Delegate logging to master process.
             Delegate the write of the logs to the master process
             (this will put all of the logging I/O to a single process).
             Useful for system with advanced I/O schedulers/elevators.
 
-        :param bool dedicate_thread: Delegate log writing to a thread.
+        :param dedicate_thread: Delegate log writing to a thread.
 
             As error situations could cause the master to block while writing
             a log line to a remote server, it may be a good idea to use this option and delegate
             writes to a secondary thread.
 
-        :param int buffer: Set the buffer size for the master logger in bytes.
+        :param buffer: Set the buffer size for the master logger in bytes.
             Bigger log messages will be truncated.
 
-        :param bool|tuple sock_stream: Create the master logpipe as SOCK_STREAM.
+        :param sock_stream: Create the master logpipe as SOCK_STREAM.
 
-        :param bool|tuple sock_stream_requests_only: Create the master requests logpipe as SOCK_STREAM.
+        :param sock_stream_requests_only: Create the master requests logpipe as SOCK_STREAM.
 
         """
         self._set('log-master', enable, cast=bool)
@@ -286,15 +327,14 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def add_logger(self, logger, *, requests_only=False, for_single_worker=False):
+    def add_logger(self, logger, *, requests_only: bool = False, for_single_worker: bool = False):
         """Set/add a common logger or a request requests only.
 
         :param str|list|Logger|list[Logger] logger:
 
-        :param bool requests_only: Logger used only for requests information messages.
+        :param requests_only: Logger used only for requests information messages.
 
-        :param bool for_single_worker: Logger to be used in single-worker setup.
-
+        :param for_single_worker: Logger to be used in single-worker setup.
 
         """
         if for_single_worker:
@@ -307,14 +347,14 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def add_logger_route(self, logger, matcher, *, requests_only=False):
+    def add_logger_route(self, logger, matcher: str, *, requests_only: bool = False):
         """Log to the specified named logger if regexp applied on log item matches.
 
         :param str|list|Logger|list[Logger] logger: Logger to associate route with.
 
-        :param str matcher: Regular expression to apply to log item.
+        :param matcher: Regular expression to apply to log item.
 
-        :param bool requests_only: Matching should be used only for requests information messages.
+        :param requests_only: Matching should be used only for requests information messages.
 
         """
         command = 'log-req-route' if requests_only else 'log-route'
@@ -324,7 +364,7 @@ class Logging(OptionsGroup):
 
         return self._section
 
-    def add_logger_encoder(self, encoder, *, logger=None, requests_only=False, for_single_worker=False):
+    def add_logger_encoder(self, encoder, *, logger=None, requests_only: bool = False, for_single_worker: bool = False):
         """Add an item in the log encoder or request encoder chain.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/LogEncoders.html
@@ -338,9 +378,9 @@ class Logging(OptionsGroup):
 
         :param str|Logger logger: Logger apply associate encoders to.
 
-        :param bool requests_only: Encoder to be used only for requests information messages.
+        :param requests_only: Encoder to be used only for requests information messages.
 
-        :param bool for_single_worker: Encoder to be used in single-worker setup.
+        :param for_single_worker: Encoder to be used in single-worker setup.
 
         """
         if for_single_worker:

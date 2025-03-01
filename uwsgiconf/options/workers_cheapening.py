@@ -19,9 +19,9 @@ class AlgoSpare(Algo):
     """
     name = 'spare'
 
-    def set_basic_params(self, *, check_interval_overload=None):
+    def set_basic_params(self, *, check_interval_overload: int = None):
         """
-        :param int check_interval_overload: Interval (sec) to wait after all workers are busy
+        :param check_interval_overload: Interval (sec) to wait after all workers are busy
             before new worker spawn.
 
         """
@@ -40,9 +40,9 @@ class AlgoSpare2(Algo):
 
     name = 'spare2'
 
-    def set_basic_params(self, *, check_interval_idle=None):
+    def set_basic_params(self, *, check_interval_idle: int = None):
         """
-        :param int check_interval_idle: Decrease workers after specified idle. Default: 10.
+        :param check_interval_idle: Decrease workers after specified idle. Default: 10.
 
         """
         self._set('cheaper-idle', check_interval_idle)
@@ -63,9 +63,9 @@ class AlgoQueue(Algo):
     """
     name = 'backlog'
 
-    def set_basic_params(self, *, check_num_overload=None):
+    def set_basic_params(self, *, check_num_overload: int = None):
         """
-        :param int check_num_overload: Number of backlog items in queue.
+        :param check_num_overload: Number of backlog items in queue.
 
         """
         self._set('cheaper-overload', check_num_overload)
@@ -88,27 +88,32 @@ class AlgoBusyness(Algo):
     plugin = 'cheaper_busyness'
 
     def set_basic_params(
-            self, *, check_interval_busy=None,
-            busy_max=None, busy_min=None,
-            idle_cycles_max=None, idle_cycles_penalty=None,
-            verbose=None):
+            self,
+            *,
+            check_interval_busy: int = None,
+            busy_max: int = None,
+            busy_min: int = None,
+            idle_cycles_max: int = None,
+            idle_cycles_penalty: int = None,
+            verbose: bool = None
+    ):
         """
-        :param int check_interval_busy: Interval (sec) to check worker busyness.
+        :param check_interval_busy: Interval (sec) to check worker busyness.
 
-        :param int busy_max: Maximum busyness (percents). Every time the calculated busyness
+        :param busy_max: Maximum busyness (percents). Every time the calculated busyness
             is higher than this value, uWSGI will spawn new workers. Default: 50.
 
-        :param int busy_min: Minimum busyness (percents). If busyness is below this value,
+        :param busy_min: Minimum busyness (percents). If busyness is below this value,
             the app is considered in an "idle cycle" and uWSGI will start counting them.
             Once we reach needed number of idle cycles uWSGI will kill one worker. Default: 25.
 
-        :param int idle_cycles_max: This option tells uWSGI how many idle cycles are allowed
+        :param idle_cycles_max: This option tells uWSGI how many idle cycles are allowed
             before stopping a worker.
 
-        :param int idle_cycles_penalty: Number of idle cycles to add to ``idle_cycles_max``
+        :param idle_cycles_penalty: Number of idle cycles to add to ``idle_cycles_max``
             in case worker spawned too early. Default is 1.
 
-        :param bool verbose: Enables debug logs for this algo.
+        :param verbose: Enables debug logs for this algo.
 
         """
         self._set('cheaper-overload', check_interval_busy)
@@ -121,20 +126,26 @@ class AlgoBusyness(Algo):
         return self._section
 
     def set_emergency_params(
-            self, *, workers_step=None, idle_cycles_max=None, queue_size=None, queue_nonzero_delay=None):
+            self,
+            *,
+            workers_step: int = None,
+            idle_cycles_max: int = None,
+            queue_size: int = None,
+            queue_nonzero_delay: int = None
+    ):
         """Sets busyness algorithm emergency workers related params.
 
         Emergency workers could be spawned depending upon uWSGI backlog state.
 
         .. note:: These options are Linux only.
 
-        :param int workers_step: Number of emergency workers to spawn. Default: 1.
+        :param workers_step: Number of emergency workers to spawn. Default: 1.
 
-        :param int idle_cycles_max: Idle cycles to reach before stopping an emergency worker. Default: 3.
+        :param idle_cycles_max: Idle cycles to reach before stopping an emergency worker. Default: 3.
 
-        :param int queue_size: Listen queue (backlog) max size to spawn an emergency worker. Default: 33.
+        :param queue_size: Listen queue (backlog) max size to spawn an emergency worker. Default: 33.
 
-        :param int queue_nonzero_delay: If the request listen queue is > 0 for more than given amount of seconds
+        :param queue_nonzero_delay: If the request listen queue is > 0 for more than given amount of seconds
             new emergency workers will be spawned. Default: 60.
 
         """
@@ -173,22 +184,28 @@ class Cheapening(OptionsGroup):
         spare2 = AlgoSpare2
 
     def set_basic_params(
-            self, *, spawn_on_request=None,
-            cheaper_algo=None, workers_min=None, workers_startup=None, workers_step=None):
+            self,
+            *,
+            spawn_on_request: bool = None,
+            cheaper_algo: Algo = None,
+            workers_min: int = None,
+            workers_startup: int = None,
+            workers_step: int = None
+    ):
         """
-        :param bool spawn_on_request: Spawn workers only after the first request.
+        :param spawn_on_request: Spawn workers only after the first request.
 
-        :param Algo cheaper_algo: The algorithm object to be used used for adaptive process spawning.
+        :param cheaper_algo: The algorithm object to be used for adaptive process spawning.
             Default: ``spare``. See ``.algorithms``.
 
-        :param int workers_min: Minimal workers count. Enables cheaper mode (adaptive process spawning).
+        :param workers_min: Minimal workers count. Enables cheaper mode (adaptive process spawning).
 
             .. note:: Must be lower than max workers count.
 
-        :param int workers_startup: The number of workers to be started when starting the application.
+        :param workers_startup: The number of workers to be started when starting the application.
             After the app is started the algorithm can stop or start workers if needed.
 
-        :param int workers_step: Number of additional processes to spawn at a time if they are needed,
+        :param workers_step: Number of additional processes to spawn at a time if they are needed,
 
         """
         self._set('cheap', spawn_on_request, cast=bool)
@@ -207,16 +224,16 @@ class Cheapening(OptionsGroup):
 
         return self._section
 
-    def set_memory_limits(self, *, rss_soft=None, rss_hard=None):
+    def set_memory_limits(self, *, rss_soft: int = None, rss_hard: int = None):
         """Sets worker memory limits for cheapening.
 
-        :param int rss_soft: Don't spawn new workers if total resident memory usage
+        :param rss_soft: Don't spawn new workers if total resident memory usage
             of all workers is higher than this limit in bytes.
             
             .. warning:: This option expects memory reporting enabled:
                 ``.logging.set_basic_params(memory_report=1)``
 
-        :param int rss_hard: Try to stop workers if total workers resident memory usage
+        :param rss_hard: Try to stop workers if total workers resident memory usage
             is higher that thi limit in bytes.
 
         """

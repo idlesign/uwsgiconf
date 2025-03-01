@@ -99,7 +99,7 @@ class Cache:
         if timeout is None:
             timeout = self.timeout
 
-        return uwsgi.cache_set(key, str(value), timeout, self.name)
+        return uwsgi.cache_set(key, f'{value}', timeout, self.name)
 
     __setitem__ = set
 

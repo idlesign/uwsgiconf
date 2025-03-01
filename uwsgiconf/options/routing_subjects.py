@@ -1,3 +1,6 @@
+from typing import Union
+
+from .routing_vars import Var
 from ..base import ParametrizedValue
 
 
@@ -14,11 +17,11 @@ class SubjectCustom(ParametrizedValue):
 
     args_joiner = ';'
 
-    def __init__(self, subject, *, negate=False):
+    def __init__(self, subject: Union[Var, str], *, negate: bool = False):
         """
-        :param Var|str subject: Handwritten subject or a Var heir representing it.
+        :param subject: Handwritten subject or a Var heir representing it.
 
-        :param bool negate: Use to negate subject for rule.
+        :param negate: Use to negate subject for rule.
             .. note:: You can also use tilde (~) instead of this argument for nagation.
 
         """

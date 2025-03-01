@@ -166,7 +166,7 @@ class Spooler:
             msg['spooler'] = spooler
 
         if priority:
-            msg['priority'] = str(priority)
+            msg['priority'] = f'{priority}'
 
         if postpone:
 

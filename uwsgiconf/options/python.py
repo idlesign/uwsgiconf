@@ -4,7 +4,7 @@ from typing import Union
 
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..typehints import Strint, Strlist
+from ..typehints import Strint, Strlist, Strpath
 
 AUTO = -1
 
@@ -43,7 +43,7 @@ class Python(OptionsGroup):
 
         :param python_home: Set python executable directory - PYTHONHOME/virtualenv.
 
-        :param bool enable_threads: Enable threads in the embedded languages.
+        :param enable_threads: Enable threads in the embedded languages.
             This will allow to spawn threads in your app.
 
             .. warning:: Threads will simply *not work* if this option is not enabled.
@@ -119,7 +119,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_wsgi_params(self, *, module: Union[str, Path] = None, callable_name: str = None, env_strategy: str = None):
+    def set_wsgi_params(self, *, module: Strpath = None, callable_name: str = None, env_strategy: str = None):
         """Set wsgi related parameters.
 
         :param module:

@@ -91,7 +91,7 @@ class Mule:
         self.id = id
 
     def __str__(self):
-        return str(self.id)
+        return f'{self.id}'
 
     def offload(self) -> Callable:
         """Decorator. Allows to offload function execution on this mule.

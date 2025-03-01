@@ -2,14 +2,14 @@ from typing import Union, List
 
 from .workers_cheapening import *  # noqa
 from ..base import OptionsGroup
-from ..typehints import Strlist
+from ..typehints import Strlist, Intlist
 from ..utils import listify
 
 
 class MuleFarm:
     """Represents a mule farm."""
 
-    def __init__(self, name: str, mule_numbers: Union[int, List[int]]):
+    def __init__(self, name: str, mule_numbers: Intlist):
         """
         :param name: Farm alias.
 
@@ -194,7 +194,7 @@ class Workers(OptionsGroup):
 
     def set_mules_params(
             self,
-            mules: Union[int, List[int]] = None,
+            mules: Intlist = None,
             *,
             touch_reload: Strlist = None,
             harakiri_timeout: int = None,
@@ -228,7 +228,7 @@ class Workers(OptionsGroup):
         :param msg_buffer: Set mule message buffer size (bytes) given
             for mule message queue.
 
-        :param msg_buffer: Set mule message recv buffer size (bytes).
+        :param msg_buffer_recv: Set mule message recv buffer size (bytes).
 
         """
         farms = farms or []

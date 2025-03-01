@@ -5,22 +5,22 @@ from ..exceptions import ConfigurationError
 
 class Metric(ParametrizedValue):
 
-    type_str = None
-    type_id = None
+    type_str: str = None
+    type_id: int = None
     name_separator = ','
 
     def __init__(
-            self, name, *, oid=None, alias_for=None, collector=None,
-            initial_value=None, collect_interval=None, reset_after_push=None):
+            self, name: str, *, oid: str = None, alias_for: str = None, collector=None,
+            initial_value: int = None, collect_interval: int = None, reset_after_push: bool = None):
         """
 
-        :param str name: Metric name.
+        :param name: Metric name.
 
             .. note:: Only numbers, letters, underscores, dashes and dots.
 
-        :param str alias_for: If set metric will be a simple alias for the specified one.
+        :param alias_for: If set metric will be a simple alias for the specified one.
 
-        :param str oid: Metric OID.
+        :param oid: Metric OID.
 
             Required for SNMP.
 
@@ -31,11 +31,11 @@ class Metric(ParametrizedValue):
 
             * http://uwsgi-docs.readthedocs.io/en/latest/Metrics.html#api
 
-        :param int initial_value: Set the metric to a specific value on startup.
+        :param initial_value: Set the metric to a specific value on startup.
 
-        :param int collect_interval: How ofter the metric should be gathered. In seconds.
+        :param collect_interval: How ofter the metric should be gathered. In seconds.
 
-        :param bool reset_after_push: Reset the metric to zero (or the configured initial_value)
+        :param reset_after_push: Reset the metric to zero (or the configured initial_value)
             after it's been pushed.
 
         """

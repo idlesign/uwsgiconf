@@ -1,8 +1,8 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 from ..base import ParametrizedValue
+from ..typehints import Strlist
 from ..utils import listify
-
 
 if False:  # pragma: nocover
     from .routing_modifiers import Modifier  # noqa
@@ -13,16 +13,16 @@ class Socket(ParametrizedValue):
     opt_key = ''
     args_joiner = ','
 
-    def __init__(self, address, *, bound_workers=None, modifier=None):
+    def __init__(self, address: 'StrShaSoc', *, bound_workers: Strlist = None, modifier: 'Modifier' = None):
         """
-        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param address: Address ([host]:port or socket file) to bind socket to.
 
-        :param  str|int|list bound_workers: Map socket to specific workers.
+        :param  bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
 
-        :param Modifier modifier: Socket routing modifier.
+        :param modifier: Socket routing modifier.
 
         """
         self.address = address
@@ -51,6 +51,49 @@ class Socket(ParametrizedValue):
         return result
 
 
+class SocketShared(Socket):
+    """Create a shared socket for advanced jailing or IPC purposes.
+
+    Allows you to create a socket early in the server's startup
+    and use it after privileges drop or jailing. This can be used
+    to bind to privileged (<1024) ports.
+
+    Shared sockets are a way to share sockets among various uWSGI components:
+    you can use that to share a socket between the fastrouter and uWSGI instance.
+
+    """
+    name = 'shared-socket'
+
+    def __init__(
+            self,
+            address: str,
+            *,
+            undeferred: bool = False,
+            bound_workers: Strlist = None,
+            modifier: 'Modifier' = None
+    ):
+        """
+        :param address: Address ([host]:port or socket file) to bind socket to.
+
+        :param undeferred: Use shared socket undeferred mode.
+
+        :param bound_workers: Map socket to specific workers.
+            As you can bind a uWSGI instance to multiple sockets, you can use this option to map
+            specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
+            If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
+
+        :param Modifier modifier: Socket routing modifier.
+
+        """
+        if undeferred:
+            self.name = 'undeferred-shared-socket'
+
+        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
+
+
+StrShaSoc = Union[SocketShared, str]
+
+
 class SocketDefault(Socket):
     """Bind using default protocol. See ``default_socket_type`` option."""
 
@@ -62,11 +105,18 @@ class SocketHttp(Socket):
 
     name = 'http-socket'
 
-    def __init__(self, address, *, http11=False, bound_workers=None, modifier=None):
+    def __init__(
+            self,
+            address: StrShaSoc,
+            *,
+            http11: bool = False,
+            bound_workers: Strlist = None,
+            modifier: 'Modifier' = None
+    ):
         """
-        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param address: Address ([host]:port or socket file) to bind socket to.
 
-        :param bool http11: Keep-Alive support. If set the server will try to maintain
+        :param http11: Keep-Alive support. If set the server will try to maintain
             the connection opened if a bunch of rules are respected.
 
             This is not a smart http 1.1 parser (to avoid parsing the whole response)
@@ -74,12 +124,12 @@ class SocketHttp(Socket):
 
             This has been added to support RTSP protocol for video streaming.
 
-        :param  str|int|list bound_workers: Map socket to specific workers.
+        :param  bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
 
-        :param Modifier modifier: Socket routing modifier.
+        :param modifier: Socket routing modifier.
 
         """
         if http11:
@@ -93,15 +143,25 @@ class SocketHttps(Socket):
 
     name = 'https-socket'
 
-    def __init__(self, address, *, cert, key, ciphers=None, client_ca=None, bound_workers=None, modifier=None):
+    def __init__(
+            self,
+            address: StrShaSoc,
+            *,
+            cert: str,
+            key: str,
+            ciphers: str = None,
+            client_ca: str = None,
+            bound_workers: Strlist = None,
+            modifier: 'Modifier' = None
+    ):
         """
-        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param address: Address ([host]:port or socket file) to bind socket to.
 
-        :param str cert: Certificate file.
+        :param cert: Certificate file.
 
-        :param str key: Private key file.
+        :param key: Private key file.
 
-        :param str ciphers: Ciphers [alias] string.
+        :param ciphers: Ciphers [alias] string.
 
             Example:
                 * DEFAULT
@@ -110,12 +170,12 @@ class SocketHttps(Socket):
 
             * https://www.openssl.org/docs/man1.1.0/apps/ciphers.html
 
-        :param str client_ca: Client CA file for client-based auth.
+        :param client_ca: Client CA file for client-based auth.
 
             .. note: You can prepend ! (exclamation mark) to make client certificate
                 authentication mandatory.
 
-        :param  str|int|list bound_workers: Map socket to specific workers.
+        :param bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
@@ -149,7 +209,7 @@ class SocketHttps(Socket):
         certs_private = certs_root / domain / 'privkey.pem'
 
         if certs_chain.exists() and certs_private.exists():
-            return str(certs_chain), str(certs_private)
+            return f'{certs_chain}', f'{certs_private}'
 
         return '', ''
 
@@ -159,18 +219,25 @@ class SocketUwsgi(Socket):
 
     name = 'uwsgi-socket'
 
-    def __init__(self, address, *, persistent=False, bound_workers=None, modifier=None):
+    def __init__(
+            self,
+            address: StrShaSoc,
+            *,
+            persistent: bool = False,
+            bound_workers: Strlist = None,
+            modifier: 'Modifier' = None
+    ):
         """
-        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param address: Address ([host]:port or socket file) to bind socket to.
 
-        :param bool persistent: Use persistent uwsgi protocol (puwsgi).
+        :param persistent: Use persistent uwsgi protocol (puwsgi).
 
-        :param  str|int|list bound_workers: Map socket to specific workers.
+        :param  bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
 
-        :param Modifier modifier: Socket routing modifier.
+        :param modifier: Socket routing modifier.
 
         """
         if persistent:
@@ -199,19 +266,26 @@ class SocketFastcgi(Socket):
 
     name = 'fastcgi-socket'
 
-    def __init__(self, address, *, nph=False, bound_workers=None, modifier=None):
+    def __init__(
+            self,
+            address: StrShaSoc,
+            *,
+            nph: bool = False,
+            bound_workers: Strlist = None,
+            modifier: 'Modifier' = None
+    ):
         """
-        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param address: Address ([host]:port or socket file) to bind socket to.
 
-        :param bool nph: Use NPH mode ("no-parsed-header" - bypass the server completely by sending
+        :param nph: Use NPH mode ("no-parsed-header" - bypass the server completely by sending
             the complete HTTP header directly to the browser).
 
-        :param  str|int|list bound_workers: Map socket to specific workers.
+        :param  bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
 
-        :param Modifier modifier: Socket routing modifier.
+        :param modifier: Socket routing modifier.
 
         """
         if nph:
@@ -225,19 +299,26 @@ class SocketScgi(Socket):
 
     name = 'scgi-socket'
 
-    def __init__(self, address, *, nph=False, bound_workers=None, modifier=None):
+    def __init__(
+            self,
+            address: StrShaSoc,
+            *,
+            nph: bool = False,
+            bound_workers: Strlist = None,
+            modifier: 'Modifier' = None
+    ):
         """
-        :param str|SocketShared address: Address ([host]:port or socket file) to bind socket to.
+        :param address: Address ([host]:port or socket file) to bind socket to.
 
-        :param bool nph: Use NPH mode ("no-parsed-header" - bypass the server completely by sending
+        :param nph: Use NPH mode ("no-parsed-header" - bypass the server completely by sending
             the complete HTTP header directly to the browser).
 
-        :param  str|int|list bound_workers: Map socket to specific workers.
+        :param  bound_workers: Map socket to specific workers.
             As you can bind a uWSGI instance to multiple sockets, you can use this option to map
             specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
             If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
 
-        :param Modifier modifier: Socket routing modifier.
+        :param modifier: Socket routing modifier.
 
         """
         if nph:
@@ -261,39 +342,6 @@ class SocketRaw(Socket):
 
     """
     name = 'raw-socket'
-
-
-class SocketShared(Socket):
-    """Create a shared socket for advanced jailing or IPC purposes.
-
-    Allows you to create a socket early in the server's startup
-    and use it after privileges drop or jailing. This can be used
-    to bind to privileged (<1024) ports.
-
-    Shared sockets are a way to share sockets among various uWSGI components:
-    you can use that to share a socket between the fastrouter and uWSGI instance.
-
-    """
-    name = 'shared-socket'
-
-    def __init__(self, address, *, undeferred=False, bound_workers=None, modifier=None):
-        """
-        :param str address: Address ([host]:port or socket file) to bind socket to.
-
-        :param bool undeferred: Use shared socket undeferred mode.
-
-        :param  str|int|list bound_workers: Map socket to specific workers.
-            As you can bind a uWSGI instance to multiple sockets, you can use this option to map
-            specific workers to specific sockets to implement a sort of in-process Quality of Service scheme.
-            If you host multiple apps in the same uWSGI instance, you can easily dedicate resources to each of them.
-
-        :param Modifier modifier: Socket routing modifier.
-
-        """
-        if undeferred:
-            self.name = 'undeferred-shared-socket'
-
-        super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
 class SocketZeromq(Socket):

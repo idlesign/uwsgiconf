@@ -3,7 +3,7 @@ from typing import Union, Callable, Optional
 
 from ..config import Section as _Section
 from ..settings import ENV_MAINTENANCE, ENV_MAINTENANCE_INPLACE
-from ..typehints import Strlist
+from ..typehints import Strlist, Strpath
 
 
 class Section(_Section):
@@ -132,7 +132,7 @@ class Section(_Section):
         """
         return str(Path(__file__).parent.parent / 'contrib/django/uwsgify/static/uwsgify' / filename)
 
-    def configure_maintenance_mode(self, trigger: Union[str, Path], response: str):
+    def configure_maintenance_mode(self, trigger: Strpath, response: str):
         """Allows maintenance mode when a certain response
         is given for every request if a trigger is set.
 

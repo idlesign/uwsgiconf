@@ -12,7 +12,7 @@ from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
 from .formatters import FORMATTERS, format_print_text
 from .options import *
-from .typehints import Strlist
+from .typehints import Strlist, Strpath
 from .utils import listify, UwsgiRunner
 
 
@@ -317,7 +317,7 @@ class Section(OptionsGroup):
         if indent is None:
             indent = '>   '
 
-        text = indent + str(value)
+        text = f'{indent}{value}'
 
         if format_options is None:
             format_options = 'gray'
@@ -716,7 +716,7 @@ class Configuration:
         """Print out this configuration as .ini."""
         return self.format(do_print=True)
 
-    def tofile(self, filepath: Union[str, Path] = None) -> str:
+    def tofile(self, filepath: Strpath = None) -> str:
         """Saves configuration into a file and returns its path.
 
         Convenience method.
@@ -735,7 +735,7 @@ class Configuration:
             if filepath.is_dir():
                 filepath = filepath / f'{self.alias}.ini'
 
-        filepath = str(filepath)
+        filepath = f'{filepath}'
 
         with open(filepath, 'w') as target_file:
             target_file.write(self.format())

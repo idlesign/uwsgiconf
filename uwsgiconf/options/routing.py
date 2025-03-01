@@ -156,7 +156,7 @@ class RouteRule:
         # router_memcached: memcached, memcached-continue, memcachedstore
         # router_redis: redis, redis-continue, redisstore
 
-    def __init__(self, action, subject=None, stage=stages.REQUEST):
+    def __init__(self, action, subject=None, stage: str = stages.REQUEST):
         """
         :param RouteAction action: Action (or transformation) to perfrom.
             See ``.actions`` and ``.transforms``.
@@ -167,7 +167,7 @@ class RouteRule:
             * String values are automatically transformed into ``subjects.path_info``.
             * If ``None`` action is performed always w/o subject check.
 
-        :param str stage: Stage on which the action needs to be performed.
+        :param stage: Stage on which the action needs to be performed.
             See ``.stages``.
 
         """
@@ -271,12 +271,12 @@ class Routing(OptionsGroup):
         wsgi = ModifierWsgi
         xslt = ModifierXslt
 
-    def use_router(self, router, *, force=None):
+    def use_router(self, router, *, force: bool = None):
         """
 
         :param RouterBase router: Dedicated router object. See `.routers`.
 
-        :param bool force: All of the gateways (routers) has to be run under the master process,
+        :param force: All of the gateways (routers) has to be run under the master process,
             supplying this you can try to bypass this limit.
 
         """
@@ -286,7 +286,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def register_route(self, route_rules, *, label=None):
+    def register_route(self, route_rules, *, label: str = None):
         """Registers a routing rule.
 
         :param RouteRule|list[RouteRule] route_rules:
@@ -362,7 +362,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def set_geoip_params(self, *, db_country=None, db_city=None):
+    def set_geoip_params(self, *, db_country: str = None, db_city: str = None):
         """Sets GeoIP parameters.
 
         * http://uwsgi.readthedocs.io/en/latest/GeoIP.html
@@ -377,37 +377,37 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def header_add(self, name, value):
+    def header_add(self, name: str, value: str):
         """Automatically add HTTP headers to response.
 
-        :param str name:
+        :param name:
 
-        :param str value:
+        :param value:
 
         """
         self._set('add-header', f'{name}: {value}', multi=True)
 
         return self._section
 
-    def header_remove(self, value):
+    def header_remove(self, value: str):
         """Automatically remove specified HTTP header from the response.
 
-        :param str value:
+        :param value:
 
         """
         self._set('del-header', value, multi=True)
 
         return self._section
 
-    def header_collect(self, name, target_var, *, pull=False):
+    def header_collect(self, name: str, target_var: str, *, pull: bool = False):
         """Store the specified response header in a request var
         (optionally removing it from the response).
 
-        :param str name:
+        :param name:
 
-        :param str target_var:
+        :param target_var:
 
-        :param bool pull: Whether to remove header from response.
+        :param pull: Whether to remove header from response.
 
         """
         self._set(

@@ -1,3 +1,5 @@
+from typing import List
+
 from ..exceptions import ConfigurationError
 
 
@@ -7,9 +9,9 @@ RANGE_255 = list(range(256))
 class Modifier:
 
     _submod = None
-    subcodes = None
+    subcodes: List[int] = None
 
-    code = None
+    code: int = None
     submod = property()
 
     def __init__(self, submod=None):
@@ -21,7 +23,7 @@ class Modifier:
         :param src:
 
         """
-        return str(src) if src is not None else ''
+        return f'{src}' if src is not None else ''
 
     def __str__(self):
         return self._get_code_str(self.code)

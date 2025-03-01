@@ -55,7 +55,7 @@ def make_rpc_call(func_name: str, *, args: Sequence[str] = None, remote: str = N
 
     """
     args = args or []
-    args = [encode(str(arg)) for arg in args]
+    args = [encode(f'{arg}') for arg in args]
 
     func_name = encode(func_name)
 

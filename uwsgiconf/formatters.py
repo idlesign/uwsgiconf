@@ -85,7 +85,7 @@ class FormatterBase:
     def iter_options(self) -> Generator[Tuple[str, str, Any], None, None]:
         """Iterates configuration sections groups options."""
         for section in self.sections:
-            name = str(section)
+            name = f'{section}'
             for key, value in section._get_options():
                 yield name, key, value
 
@@ -124,7 +124,7 @@ class ArgsFormatter(FormatterBase):
         for section_name, key, value in self.iter_options():
 
             if section_name == 'uwsgi':
-                value = str(value).strip()
+                value = f'{value}'.strip()
 
                 if value == 'true':
                     lines.append(f'--{key}')

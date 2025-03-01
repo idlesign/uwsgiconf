@@ -4,6 +4,7 @@ from urllib.parse import urlsplit, parse_qs
 from .networking_sockets import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
+from ..typehints import Strbool, Intlist
 
 
 class Networking(OptionsGroup):
@@ -25,24 +26,22 @@ class Networking(OptionsGroup):
         zeromq = SocketZeromq
 
         @classmethod
-        def from_dsn(cls, dsn, *, allow_shared_sockets=None) -> 'Socket':
+        def from_dsn(cls, dsn: str, *, allow_shared_sockets: bool = None) -> 'Socket':
             """Constructs socket configuration object from DSN.
 
             .. note:: This will also automatically use shared sockets
                 to bind to priviledged ports when non root.
 
-            :param str dsn: Data source name, e.g:
+            :param dsn: Data source name, e.g:
                 * http://127.0.0.1:8000
                 * https://127.0.0.1:443?cert=/here/there.crt&key=/that/my.key
 
                 .. note:: Some schemas:
                     fastcgi, http, https, raw, scgi, shared, udp, uwsgi, suwsgi, zeromq
 
-            :param bool allow_shared_sockets: Allows using shared sockets to bind
-                to priviledged ports. If not provided automatic mode is enabled:
+            :param allow_shared_sockets: Allows using shared sockets to bind
+                to privileged ports. If not provided automatic mode is enabled:
                 shared are allowed if current user is not root.
-
-            :rtype Socket
 
             """
             split = urlsplit(dsn)
@@ -80,10 +79,17 @@ class Networking(OptionsGroup):
 
         self._sockets = []  # Registered sockets list.
 
-    def set_basic_params(self, *, queue_size=None, freebind=None, default_socket_type=None, buffer_size=None):
+    def set_basic_params(
+            self,
+            *,
+            queue_size: int = None,
+            freebind: bool = None,
+            default_socket_type: str = None,
+            buffer_size: int = None
+    ):
         """
 
-        :param int queue_size: Also known as a backlog. Every socket has an associated queue 
+        :param queue_size: Also known as a backlog. Every socket has an associated queue
             where request will be put waiting for a process to became ready to accept them. 
             When this queue is full, requests will be rejected.
             
@@ -93,15 +99,15 @@ class Networking(OptionsGroup):
             .. note:: The maximum value is system/kernel dependent. Before increasing it you may 
                 need to increase your kernel limit too.
 
-        :param bool freebind: Put socket in freebind mode.
+        :param freebind: Put socket in freebind mode.
             Allows binding to non-existent network addresses.
 
             .. note:: Linux only.
 
-        :param str default_socket_type: Force the socket type as default.
+        :param default_socket_type: Force the socket type as default.
             See ``.socket_types``.
 
-        :param int buffer_size:
+        :param buffer_size:
             Set the internal buffer max size - size of a request (request-body excluded),
             this generally maps to the size of request headers.  Default: 4096 bytes (4k) / page size.
 
@@ -121,22 +127,28 @@ class Networking(OptionsGroup):
         return self._section
 
     def set_socket_params(
-            self, *, send_timeout=None, keep_alive=None, no_defer_accept=None,
-            buffer_send=None, buffer_receive=None):
+            self,
+            *,
+            send_timeout: int = None,
+            keep_alive: bool = None,
+            no_defer_accept: bool = None,
+            buffer_send: int = None,
+            buffer_receive: int = None
+    ):
         """Sets common socket params.
 
-        :param int send_timeout: Send (write) timeout in seconds.
+        :param send_timeout: Send (write) timeout in seconds.
 
-        :param bool keep_alive: Enable TCP KEEPALIVEs.
+        :param keep_alive: Enable TCP KEEPALIVEs.
 
-        :param bool no_defer_accept: Disable deferred ``accept()`` on sockets
+        :param no_defer_accept: Disable deferred ``accept()`` on sockets
             by default (where available) uWSGI will defer the accept() of requests until some data
             is sent by the client (this is a security/performance measure).
             If you want to disable this feature for some reason, specify this option.
 
-        :param int buffer_send: Set SO_SNDBUF (bytes).
+        :param buffer_send: Set SO_SNDBUF (bytes).
 
-        :param int buffer_receive: Set SO_RCVBUF (bytes).
+        :param buffer_receive: Set SO_RCVBUF (bytes).
 
         """
         self._set('so-send-timeout', send_timeout)
@@ -147,21 +159,28 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_unix_socket_params(self, *, abstract=None, permissions=None, owner=None, umask=None):
+    def set_unix_socket_params(
+            self,
+            *,
+            abstract: bool = None,
+            permissions: str = None,
+            owner: str = None,
+            umask: str = None
+    ):
         """Sets Unix-socket related params.
 
-        :param bool abstract: Force UNIX socket into abstract mode (Linux only).
+        :param abstract: Force UNIX socket into abstract mode (Linux only).
 
-        :param str permissions: UNIX sockets are filesystem objects that obey
+        :param permissions: UNIX sockets are filesystem objects that obey
             UNIX permissions like any other filesystem object.
 
             You can set the UNIX sockets' permissions with this option if your webserver
             would otherwise have no access to the uWSGI socket. When used without a parameter,
             the permissions will be set to 666. Otherwise the specified chmod value will be used.
 
-        :param str owner: Chown UNIX sockets.
+        :param owner: Chown UNIX sockets.
 
-        :param str umask: Set UNIX socket umask.
+        :param umask: Set UNIX socket umask.
 
         """
         self._set('abstract-socket', abstract, cast=bool)
@@ -171,10 +190,10 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_bsd_socket_params(self, *, port_reuse=None):
+    def set_bsd_socket_params(self, *, port_reuse: bool = None):
         """Sets BSD-sockets related params.
 
-        :param bool port_reuse: Enable REUSE_PORT flag on socket to allow multiple
+        :param port_reuse: Enable REUSE_PORT flag on socket to allow multiple
             instances binding on the same address (BSD only).
 
         """
@@ -182,7 +201,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def _get_shared_socket_idx(self, shared):
+    def _get_shared_socket_idx(self, shared: 'SocketShared'):
         return f'={self._sockets.index(shared)}'
 
     def register_socket(self, socket):
@@ -225,14 +244,21 @@ class Networking(OptionsGroup):
         return self._section
 
     def set_ssl_params(
-            self, *, verbose_errors=None,
-            sessions_cache=None, sessions_timeout=None, session_context=None,
-            raw_options=None, dir_tmp=None, client_cert_var=None):
+            self,
+            *,
+            verbose_errors: bool = None,
+            sessions_cache: Strbool = None,
+            sessions_timeout: int = None,
+            session_context: str = None,
+            raw_options: Intlist = None,
+            dir_tmp: str = None,
+            client_cert_var: str = None
+    ):
         """
 
-        :param bool verbose_errors: Be verbose about SSL errors.
+        :param verbose_errors: Be verbose about SSL errors.
 
-        :param str|bool sessions_cache: Use uWSGI cache for ssl sessions storage.
+        :param sessions_cache: Use uWSGI cache for ssl sessions storage.
 
             Accepts either bool or cache name string.
 
@@ -240,20 +266,20 @@ class Networking(OptionsGroup):
 
             .. warning:: Please be sure to configure cache before setting this.
 
-        :param int sessions_timeout: Set SSL sessions timeout in seconds. Default: 300.
+        :param sessions_timeout: Set SSL sessions timeout in seconds. Default: 300.
 
-        :param str session_context: Session context identifying string. Can be set to static shared value
+        :param session_context: Session context identifying string. Can be set to static shared value
             to avoid session rejection.
 
             Default: a value built from the HTTP server address.
 
             * http://uwsgi.readthedocs.io/en/latest/SSLScaling.html#setup-2-synchronize-caches-of-different-https-routers
 
-        :param int|list[int] raw_options: Set a raw ssl option by its numeric value.
+        :param raw_options: Set a raw ssl option by its numeric value.
 
-        :param str dir_tmp: Store ssl-related temp files (e.g. pem data) in the specified directory.
+        :param dir_tmp: Store ssl-related temp files (e.g. pem data) in the specified directory.
 
-        :param str client_cert_var: Export uWSGI variable ``HTTPS_CC`` containing the raw client certificate.
+        :param client_cert_var: Export uWSGI variable ``HTTPS_CC`` containing the raw client certificate.
 
         """
         self._set('ssl-verbose', verbose_errors, cast=bool)
@@ -318,7 +344,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_sni_dir_params(self, dir, ciphers=None):
+    def set_sni_dir_params(self, dir: str, ciphers: str = None):
         """Enable checking for cert/key/client_ca file in the specified directory
         and create a sni/ssl context on demand.
 

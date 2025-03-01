@@ -24,8 +24,8 @@ class Applications(OptionsGroup):
         :param single_interpreter: Do not use multiple interpreters (where available).
             Some of the supported languages (such as Python) have the concept of "multiple interpreters".
             By default every app is loaded in a new python interpreter (that means a pretty-well isolated
-            namespace for each app). If you want all of the app to be loaded in the same python vm,
-            use the this option.
+            namespace for each app). If all you want of the app is to be loaded in the same python vm,
+            use this option.
 
         :param no_default: Do not automatically fallback to default app. By default, the first loaded app
             is mounted as the "default one". That app will be served when no mountpoint matches.

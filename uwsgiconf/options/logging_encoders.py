@@ -11,10 +11,10 @@ class EncoderPrefix(Encoder):
 
     name = 'prefix'
 
-    def __init__(self, value):
+    def __init__(self, value: str):
         """
 
-        :param str value: Value to be used as affix
+        :param value: Value to be used as affix
 
         """
         super().__init__(value)
@@ -69,10 +69,10 @@ class EncoderFormat(Encoder):
 
     name = 'format'
 
-    def __init__(self, template):
+    def __init__(self, template: str):
         """
 
-        :param str template: Template string.
+        :param template: Template string.
             Available variables are listed in ``FormatEncoder.Vars``.
 
         """
