@@ -80,7 +80,7 @@ class Networking(OptionsGroup):
 
         self._sockets = []  # Registered sockets list.
 
-    def set_basic_params(self, *, queue_size=None, freebind=None, default_socket_type=None):
+    def set_basic_params(self, *, queue_size=None, freebind=None, default_socket_type=None, buffer_size=None):
         """
 
         :param int queue_size: Also known as a backlog. Every socket has an associated queue 
@@ -101,10 +101,22 @@ class Networking(OptionsGroup):
         :param str default_socket_type: Force the socket type as default.
             See ``.socket_types``.
 
+        :param int buffer_size:
+            Set the internal buffer max size - size of a request (request-body excluded),
+            this generally maps to the size of request headers.  Default: 4096 bytes (4k) / page size.
+
+            The amount of variables you can add per-request is limited by the uwsgi packet buffer ().
+            You can increase it up to 65535 (64k) with this option.
+
+            .. note:: If you receive a bigger request (for example with big cookies or query string)
+                so that "invalid request block size" is logged in your logs you may need to increase it.
+                It is a security measure too, so adapt to your app needs instead of maxing it out.
+
         """
         self._set('listen', queue_size)
         self._set('freebind', freebind, cast=bool)
         self._set('socket-protocol', default_socket_type)
+        self._set('buffer-size', buffer_size)
 
         return self._section
 

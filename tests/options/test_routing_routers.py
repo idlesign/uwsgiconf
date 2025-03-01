@@ -8,7 +8,8 @@ def test_http(assert_lines):
     router = routers.http(
         on='127.0.0.1:3111'
     ).set_basic_params(
-        keepalive=20
+        keepalive=20,
+        buffer_size=12345,
     ).set_connections_params(
         harakiri=20
     ).set_manage_params(
@@ -21,6 +22,7 @@ def test_http(assert_lines):
         'http-harakiri = 20',
         'http-websockets = true',
         'http-uid = idle',
+        'http-buffer-size = 123',
         ],
         Section().routing.use_router(router)
     )
@@ -47,6 +49,8 @@ def test_ssl(assert_lines):
         on='127.0.0.1:3112',
         cert='/here/mysert.cer',
         key='mykey',
+    ).set_basic_params(
+        buffer_size=123,
     ).set_connections_params(
         retry_max=5
     )
@@ -54,6 +58,7 @@ def test_ssl(assert_lines):
     assert_lines([
         'sslrouter2 = cert=/here/mysert.cer,key=mykey,addr=127.0.0.1:3112',
         'sslrouter-max-retries = 5',
+        'sslrouter-buffer-size = 123',
         ],
         Section().routing.use_router(router)
     )

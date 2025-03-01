@@ -4,6 +4,7 @@ uwsgiconf changelog
 
 Unreleased
 ----------
++ Add 'buffer_size' option to .networking.set_basic_params().
 * Add QA for Py 3.11.
 * Drop QA for Py 3.7, 3.8.
 

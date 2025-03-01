@@ -139,7 +139,7 @@ class Section(_Section):
         :param trigger: This triggers maintenance mode responses.
             Should be a path to a file: if file exists, maintenance mode is on.
 
-        :param response: Response to to give in maintenance mode.
+        :param response: Response to give in maintenance mode.
 
             Supported:
                 1. File path - this file will be served in response.
@@ -212,6 +212,7 @@ class Section(_Section):
     def configure_https_redirect(self):
         """Enables HTTP to HTTPS redirect."""
         rule = self.routing.route_rule
+        self.routing.set_basic_params()
 
         self.routing.register_route([
             rule(

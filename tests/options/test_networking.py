@@ -8,7 +8,8 @@ def test_networking_basics(assert_lines):
 
     assert_lines([
         'listen = 3',
-    ], Section().networking.set_basic_params(queue_size=3))
+        'buffer-size = 65535',
+    ], Section().networking.set_basic_params(queue_size=3, buffer_size=65535))
 
     assert_lines([
         'so-keepalive = true',
