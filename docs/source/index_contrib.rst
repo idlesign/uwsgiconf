@@ -19,6 +19,32 @@ First add ``uwsgify`` into ``INSTALLED_APPS``.
         ...
     ]
 
+After that nice ``uwsgi``-related staff will be available in your Django project. For example:
+
+* Manage commands (see below);
+* uWSGI summary and statistics in Django Admin interface;
+* Automatic DB connections closing after ``fork()``;
+* and more.
+
+
+UWSGIFY_MODULE_INIT
+~~~~~~~~~~~~~~~~~~~
+
+``uwsgify`` can import modules from your Django applications automatically on project startup.
+
+This is useful for background tasks (crons, timers, mules offloading), and other `uwsgi` stuff. E.g.::
+
+    from uwsgiconf.runtime.scheduling import register_cron
+
+    @register_cron(hour=-3)  # Every 3 hours.
+    def repeat():
+        print('hey')
+
+By default ``uwsgiinit.py`` modules are imported.
+
+One can change this behavior putting ``UWSGIFY_MODULE_INIT=mymodule`` in Django ``settings.py``.
+After that ``uwsgify`` will search for ``mymodule.py`` instead of ``uwsgiinit.py``.
+
 
 uwsgi_run
 ~~~~~~~~~
