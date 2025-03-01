@@ -1,5 +1,5 @@
-from typehints import Strlist
 from ..base import OptionsGroup
+from ..typehints import Strlist
 
 
 class Empire(OptionsGroup):

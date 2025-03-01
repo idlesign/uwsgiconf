@@ -1,7 +1,7 @@
-from typehints import Strlist, Strbool
 from .logging_encoders import *
 from .logging_loggers import *
 from ..base import OptionsGroup
+from ..typehints import Strlist, Strbool
 from ..utils import listify
 
 
