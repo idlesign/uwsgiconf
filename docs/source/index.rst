@@ -37,7 +37,7 @@ By that time you already know that **uwsgiconf** is just another configuration m
 Requirements
 ------------
 
-1. Python 3.7+
+1. Python 3.9+
 2. ``click`` package (optional, for CLI)
 3. uWSGI (``uwsgi`` or ``pyuwsgi``)
 

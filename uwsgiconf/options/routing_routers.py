@@ -259,7 +259,7 @@ class _RouterWithForwarders(_RouterCommon):
         :param bool cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
-            When all of the nodes go down, the router will return in cheap mode.
+            When all the nodes go down, the router will return in cheap mode.
 
         :param str stats_server: Router stats server address to run at.
 

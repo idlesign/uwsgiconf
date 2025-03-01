@@ -2,6 +2,12 @@ uwsgiconf changelog
 ===================
 
 
+Unreleased
+----------
+* Add QA for Py 3.11.
+* Drop QA for Py 3.7, 3.8.
+
+
 v1.0.0 [2022-02-01]
 -------------------
 ! Python 3.6 QA is dropped.
