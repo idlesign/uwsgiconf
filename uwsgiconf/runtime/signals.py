@@ -1,18 +1,28 @@
-from collections import namedtuple
-from typing import List, Callable
+from typing import List, Callable, Union, NamedTuple
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
 from ..settings import get_maintenance_inplace
+from ..typehints import Strint
 from ..utils import get_logger
 
 _LOG = get_logger(__name__)
 
 
-SignalDescription = namedtuple('SignalDescription', ['num', 'target', 'func'])
-"""Registered signal information."""
+class SignalDescription(NamedTuple):
+    """Registered signal information."""
 
-registry_signals: List[SignalDescription] = []
+    num: int
+    """Signal number."""
+
+    target: str
+    """Target: worker, mule, etc."""
+
+    func: Callable
+    """Function to run on signal."""
+
+
+REGISTERED_SIGNALS: List[SignalDescription] = []
 """Registered signals."""
 
 
@@ -115,7 +125,7 @@ class Signal:
             _LOG.debug(f"Registering '{func.__name__}' as signal '{sign_num}' handler ...")
 
             uwsgi.register_signal(sign_num, target, func)
-            registry_signals.append(SignalDescription(sign_num, target, func))
+            REGISTERED_SIGNALS.append(SignalDescription(sign_num, target, func))
 
             return func
 
@@ -151,7 +161,10 @@ class Signal:
         uwsgi.signal_wait(self.num)
 
 
-def _automate_signal(target, func):
+TypeTarget = Union[Strint, Signal, None]
+
+
+def _automate_signal(target: TypeTarget, func: Callable):
 
     if get_maintenance_inplace():
         # Prevent background works in maintenance mode.

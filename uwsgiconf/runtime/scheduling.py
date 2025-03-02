@@ -2,12 +2,11 @@ from datetime import datetime
 from functools import partial, wraps
 from typing import Union, Callable
 
-from .signals import _automate_signal, Signal
+from .signals import _automate_signal, TypeTarget
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
 from ..typehints import Strint
 
-TypeTarget = Union[Strint, Signal]
 TypeRegResult = Union[Callable, bool]
 
 

@@ -46,6 +46,7 @@ setup(
     tests_require=[
         'pytest',
         'pytest-djangoapp',
+        'freezegun',
 
         # pinned to support Python 3.7
         'django<4.0.0',

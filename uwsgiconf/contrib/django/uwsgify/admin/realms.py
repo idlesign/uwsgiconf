@@ -15,7 +15,7 @@ class SummaryAdmin(OnePageAdmin):
         from uwsgiconf.runtime.platform import uwsgi
         from uwsgiconf.runtime.logging import get_current_log_size
         from uwsgiconf.runtime.rpc import get_rpc_list
-        from uwsgiconf.runtime.signals import registry_signals
+        from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
         from uwsgiconf.runtime.spooler import Spooler
         from uwsgiconf.runtime.mules import Farm
 
@@ -61,7 +61,7 @@ class SummaryAdmin(OnePageAdmin):
             _('Log size'): get_current_log_size(),
             _('RPC'): '\n'.join(get_rpc_list()),
             _('Post fork hooks'): '\n'.join(map(get_func_name, uwsgi.postfork_hooks.funcs)),
-            _('Signals'): '\n'.join(get_signals_info(registry_signals)),
+            _('Signals'): '\n'.join(get_signals_info(REGISTERED_SIGNALS)),
             _('Spoolers'): '\n'.join(map(str, Spooler.get_spoolers())),
         }
 

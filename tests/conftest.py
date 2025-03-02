@@ -1,9 +1,11 @@
+import os
 import subprocess
 from os import environ
 
 import pytest
 
-from uwsgiconf.settings import ENV_FORCE_STUB
+from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
+from uwsgiconf.settings import ENV_FORCE_STUB, ENV_MAINTENANCE_INPLACE, ENV_MAINTENANCE
 
 # Force stub to allow shallow testing.
 environ[ENV_FORCE_STUB] = '1'
@@ -73,3 +75,10 @@ def mock_popen(monkeypatch):
         monkeypatch.setattr(subprocess, 'Popen', MockPopen)
 
     return mock
+
+
+@pytest.fixture(autouse=True)
+def cleanup():
+    os.environ.pop(ENV_MAINTENANCE, None)
+    os.environ.pop(ENV_MAINTENANCE_INPLACE, None)
+    REGISTERED_SIGNALS.clear()
