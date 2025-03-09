@@ -61,7 +61,7 @@ class SummaryAdmin(OnePageAdmin):
             _('Log size'): get_current_log_size(),
             _('RPC'): '\n'.join(get_rpc_list()),
             _('Post fork hooks'): '\n'.join(map(get_func_name, uwsgi.postfork_hooks.funcs)),
-            _('Signals'): '\n'.join(get_signals_info(REGISTERED_SIGNALS)),
+            _('Signals'): '\n'.join(get_signals_info(list(REGISTERED_SIGNALS.values()))),
             _('Spoolers'): '\n'.join(map(str, Spooler.get_spoolers())),
         }
 

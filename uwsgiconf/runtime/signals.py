@@ -1,4 +1,4 @@
-from typing import List, Callable, Union, NamedTuple
+from typing import Callable, Union, NamedTuple, Dict
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
@@ -22,7 +22,7 @@ class SignalDescription(NamedTuple):
     """Function to run on signal."""
 
 
-REGISTERED_SIGNALS: List[SignalDescription] = []
+REGISTERED_SIGNALS: Dict[int, SignalDescription] = {}
 """Registered signals."""
 
 
@@ -41,7 +41,9 @@ def get_available_num() -> int:
 
 def get_last_received() -> 'Signal':
     """Get the last signal received."""
-    return Signal(uwsgi.signal_received())
+    num = uwsgi.signal_received()
+    # uWSGI returns `0` both for Signal 0 and if thera was no signal
+    return REGISTERED_SIGNALS.get(num, Signal(num))
 
 
 class Signal:
@@ -87,9 +89,9 @@ class Signal:
     @property
     def registered(self) -> bool:
         """Whether the signal is registered."""
-        return uwsgi.signal_registered(self.num) or False
+        return bool(uwsgi.signal_registered(self.num))
 
-    def register_handler(self, *, target: str = None) -> Callable:
+    def register_handler(self, *, target: str = None, callback: Callable[['Signal'], None] = None) -> Callable:
         """Decorator for a function to be used as a signal handler.
 
         .. code-block:: python
@@ -116,6 +118,8 @@ class Signal:
 
             * http://uwsgi.readthedocs.io/en/latest/Signals.html#signals-targets
 
+        :param callback: Function to be called after the registration.
+
         """
         target = target or 'worker'
         sign_num = self.num
@@ -125,7 +129,8 @@ class Signal:
             _LOG.debug(f"Registering '{func.__name__}' as signal '{sign_num}' handler ...")
 
             uwsgi.register_signal(sign_num, target, func)
-            REGISTERED_SIGNALS.append(SignalDescription(sign_num, target, func))
+            callback and callback(self)
+            REGISTERED_SIGNALS[sign_num] = SignalDescription(sign_num, target, func)
 
             return func
 
@@ -165,16 +170,16 @@ TypeTarget = Union[Strint, Signal, None]
 
 
 def _automate_signal(target: TypeTarget, func: Callable):
-
+    """
+    :param target:
+    :param func: wrapper for uwsgi signal related function (e.g. add_timer())
+    """
     if get_maintenance_inplace():
         # Prevent background works in maintenance mode.
         return lambda *args, **kwarg: None
 
     if target is None or isinstance(target, str):
-        sig = Signal()
+        return Signal().register_handler(target=target, callback=func)
 
-        func(sig)
-
-        return sig.register_handler(target=target)
-
+    # Signal instance passed
     func(target)

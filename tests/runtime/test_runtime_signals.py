@@ -4,20 +4,30 @@ from uwsgiconf.runtime.scheduling import register_timer
 
 def test_signals():
 
-    available = get_available_num()
-    latest = get_last_received()
+    assert get_available_num() == 0
+    assert get_last_received().num == 0
 
     sig = Signal()
+    results = []
 
+    # register first handler
     @sig.register_handler()
-    def signalled():
-        pass
+    def signalled(sig):
+        results.append('signalled')
 
+    assert get_available_num() == 1
+
+    # send the signal
     sig.send()
     sig.wait()
 
+    # change handler
     @sig.register_handler()
-    def my(sign):
-        pass
+    def my(sig):
+        results.append('my')
 
+    # register a timer for the signal
     register_timer(3, target=sig)
+
+    sig.send()
+    assert results == ['signalled', 'my']

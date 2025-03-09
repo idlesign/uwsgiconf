@@ -1,5 +1,7 @@
 from typing import Optional, Type, Dict, Callable, List, Tuple, Union
 
+from .emulator import signals, scheduling
+
 is_stub: bool = True
 """Indicates whether stub is used instead of real `uwsgi` module."""
 
@@ -162,6 +164,7 @@ def add_ms_timer(signal: int, period: int):
     :raises ValueError: If unable to add timer.
 
     """
+    scheduling.add_ms_timer(signum=signal, period=period)
 
 
 def add_rb_timer(signal: int, period: int, repeat: int = 0):
@@ -171,12 +174,13 @@ def add_rb_timer(signal: int, period: int, repeat: int = 0):
 
     :param period: The interval (seconds) at which the signal is raised.
 
-    :param repeat: How many times to send signal. Will stop after ther number is reached.
+    :param repeat: How many times to send signal. Will stop after the number is reached.
         Default: 0 - infinitely.
 
     :raises ValueError: If unable to add timer.
 
     """
+    scheduling.add_rb_timer(signum=signal, period=period, repeat=repeat)
 
 
 def add_timer(signal: int, period: int):
@@ -189,6 +193,7 @@ def add_timer(signal: int, period: int):
     :raises ValueError: If unable to add timer.
 
     """
+    scheduling.add_timer(signum=signal, period=period)
 
 
 def add_var(name: str, value: str) -> bool:
@@ -832,6 +837,7 @@ def register_signal(number: int, target: str, func: Callable):
     :raises ValueError: If unable to register
 
     """
+    signals.register(num=number, target=target, func=func)
 
 
 def reload() -> bool:
@@ -998,6 +1004,7 @@ def signal(num: int, remote: str = ''):
     :raises IOError: If unable to deliver to remote.
 
     """
+    signals.do_signal(num=num)
 
 
 def signal_received() -> int:
@@ -1016,6 +1023,7 @@ def signal_registered(num: int) -> Optional[int]:
     :param num:
 
     """
+    return signals.is_registered(num=num)
 
 
 def signal_wait(num: int = None) -> str:

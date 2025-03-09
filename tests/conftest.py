@@ -4,6 +4,7 @@ from os import environ
 
 import pytest
 
+from uwsgiconf.emulator.signals import cleanup as cleanup_emu_signals
 from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
 from uwsgiconf.settings import ENV_FORCE_STUB, ENV_MAINTENANCE_INPLACE, ENV_MAINTENANCE
 
@@ -82,3 +83,4 @@ def cleanup():
     os.environ.pop(ENV_MAINTENANCE, None)
     os.environ.pop(ENV_MAINTENANCE_INPLACE, None)
     REGISTERED_SIGNALS.clear()
+    cleanup_emu_signals()

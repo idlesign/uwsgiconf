@@ -2,54 +2,59 @@ import freezegun
 import pytest
 
 from uwsgiconf.runtime.scheduling import *
-from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
 
 
 def test_timers():
 
-    a = 1
+    results = []
 
     @register_timer(20)
     def timer_1():
-        pass
+        results.append('timer')
 
     @register_timer_rb(3)
     def timer_2():
-        pass
+        results.append('rb')
 
     @register_timer_ms(200)
     def timer_3():
-        pass
+        results.append('ms')
 
-    assert len(REGISTERED_SIGNALS) == 3
-    assert REGISTERED_SIGNALS[0].func is timer_1
+    # check seamless function execution
+    timer_1()
+    timer_2()
+    timer_3()
+
+    assert results == ['timer', 'rb', 'ms']
 
 
 @freezegun.freeze_time('2025-02-05 15:00:00')
 def test_cron():
 
+    results = []
+
     @register_cron(hour=-3)
-    def fire1():
-        pass
+    def fire1(sig):
+        results.append('fire1')
 
     with pytest.raises(RuntimeConfigurationError, match='String cron rule without a range'):
         register_cron(hour='-%s/2')
 
     @register_cron(hour='15-18/2', weekday='0-6')
-    def runnable1():
-        return 100
+    def runnable1(sig):
+        results.append('runnable1')
 
     @register_cron(hour='15-18')
-    def runnable2():
-        return 200
+    def runnable2(sig):
+        results.append('runnable2')
 
     @register_cron(hour='12-14')
-    def not_runnable():
-        return 200
+    def not_runnable(sig):
+        results.append('not_runnable')
 
-    assert runnable1() == 100
-    assert runnable2() == 200
-    assert not_runnable() is None
+    fire1(0)
+    runnable1(0)
+    runnable2(0)
+    not_runnable(0)
 
-    assert len(REGISTERED_SIGNALS) == 4
-    assert REGISTERED_SIGNALS[0].func is fire1
+    assert results == ['fire1', 'runnable1', 'runnable2']
