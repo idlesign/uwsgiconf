@@ -1,4 +1,4 @@
-from typing import Callable, Sequence, Tuple, List, Optional
+from typing import Callable, Sequence, List, Optional
 
 from .. import uwsgi
 from ..utils import encode, decode, get_logger, decode_deep

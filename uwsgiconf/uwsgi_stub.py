@@ -1,6 +1,10 @@
 from typing import Optional, Type, Dict, Callable, List, Tuple, Union
 
-from .emulator import signals, scheduling
+from .emulator import (
+    signals as __signals,
+    scheduling as __scheduling,
+    rpc as __rpc,
+)
 
 is_stub: bool = True
 """Indicates whether stub is used instead of real `uwsgi` module."""
@@ -164,7 +168,7 @@ def add_ms_timer(signal: int, period: int):
     :raises ValueError: If unable to add timer.
 
     """
-    scheduling.add_ms_timer(signum=signal, period=period)
+    __scheduling.add_ms_timer(signum=signal, period=period)
 
 
 def add_rb_timer(signal: int, period: int, repeat: int = 0):
@@ -180,7 +184,7 @@ def add_rb_timer(signal: int, period: int, repeat: int = 0):
     :raises ValueError: If unable to add timer.
 
     """
-    scheduling.add_rb_timer(signum=signal, period=period, repeat=repeat)
+    __scheduling.add_rb_timer(signum=signal, period=period, repeat=repeat)
 
 
 def add_timer(signal: int, period: int):
@@ -193,7 +197,7 @@ def add_timer(signal: int, period: int):
     :raises ValueError: If unable to add timer.
 
     """
-    scheduling.add_timer(signum=signal, period=period)
+    __scheduling.add_timer(signum=signal, period=period)
 
 
 def add_var(name: str, value: str) -> bool:
@@ -404,7 +408,7 @@ def cache_update(key: str, value: str, expires: int = None, cache: str = None) -
     return False
 
 
-def call(func_name: bytes, *args: bytes) -> bytes:
+def call(func_name: bytes, *args: bytes) -> Optional[bytes]:
     """Performs an [RPC] function call with the given arguments.
 
     :param func_name: Function name to call
@@ -413,6 +417,7 @@ def call(func_name: bytes, *args: bytes) -> bytes:
     :param args:
 
     """
+    return __rpc.do_call(name=func_name, *args)
 
 
 def chunked_read(timeout: int) -> bytes:
@@ -808,7 +813,7 @@ def register_rpc(name: str, func: Callable) -> bool:
     :raises ValueError: If unable to register function
 
     """
-    return False
+    return __rpc.register(name=name, func=func)
 
 
 def register_signal(number: int, target: str, func: Callable):
@@ -837,7 +842,7 @@ def register_signal(number: int, target: str, func: Callable):
     :raises ValueError: If unable to register
 
     """
-    signals.register(num=number, target=target, func=func)
+    __signals.register(num=number, target=target, func=func)
 
 
 def reload() -> bool:
@@ -878,11 +883,12 @@ def rpc(address: Optional[bytes], func_name: bytes, *args: bytes) -> bytes:
     :raises ValueError: If unable to call RPC function.
 
     """
+    return __rpc.do_call(name=func_name, *args)
 
 
 def rpc_list() -> Tuple[bytes, ...]:
     """Returns registered RPC functions names."""
-    return tuple()
+    return __rpc.get_list()
 
 
 def send(fd_or_data: Union[int, bytes], data: bytes = None) -> bool:
@@ -1004,7 +1010,7 @@ def signal(num: int, remote: str = ''):
     :raises IOError: If unable to deliver to remote.
 
     """
-    signals.do_signal(num=num)
+    __signals.do_signal(num=num)
 
 
 def signal_received() -> int:
@@ -1023,7 +1029,7 @@ def signal_registered(num: int) -> Optional[int]:
     :param num:
 
     """
-    return signals.is_registered(num=num)
+    return __signals.is_registered(num=num)
 
 
 def signal_wait(num: int = None) -> str:
