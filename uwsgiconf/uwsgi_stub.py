@@ -1,6 +1,7 @@
 from typing import Optional, Type, Dict, Callable, List, Tuple, Union
 
 from .emulator import (
+    caching as __caching,
     signals as __signals,
     scheduling as __scheduling,
     rpc as __rpc,
@@ -253,6 +254,7 @@ def cache_clear(cache: str):
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
+    __caching.clear(cache=cache)
 
 
 def cache_dec(key: str, value: int = 1, expires: int = None, cache: str = None) -> bool:
@@ -269,7 +271,7 @@ def cache_dec(key: str, value: int = 1, expires: int = None, cache: str = None) 
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.do_dec(key=key, value=value, expires=expires, cache=cache)
 
 
 def cache_del(key: str, cache: str = None) -> bool:
@@ -280,7 +282,7 @@ def cache_del(key: str, cache: str = None) -> bool:
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.do_delete(key=key, cache=cache)
 
 
 def cache_div(key: str, value: int = 2, expires: int = None, cache: str = None) -> bool:
@@ -297,7 +299,7 @@ def cache_div(key: str, value: int = 2, expires: int = None, cache: str = None) 
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.do_div(key=key, value=value, expires=expires, cache=cache)
 
 
 def cache_exists(key: str, cache: str = None) -> bool:
@@ -319,6 +321,7 @@ def cache_get(key: str, cache: str = None) -> Optional[bytes]:
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
+    return __caching.get_value(key=key, cache=cache)
 
 
 def cache_inc(key: str, value: int = 1, expires: int = None, cache: str = None) -> bool:
@@ -335,7 +338,7 @@ def cache_inc(key: str, value: int = 1, expires: int = None, cache: str = None) 
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.do_inc(key=key, value=value, expires=expires, cache=cache)
 
 
 def cache_keys(cache: str = None) -> List:
@@ -346,7 +349,7 @@ def cache_keys(cache: str = None) -> List:
     :raises ValueError: If cache is unavailable.
 
     """
-    return []
+    return __caching.get_keys(cache=cache)
 
 
 def cache_mul(key: str, value: int = 2, expires: int = None, cache: str = None) -> bool:
@@ -363,7 +366,7 @@ def cache_mul(key: str, value: int = 2, expires: int = None, cache: str = None) 
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.do_mul(key=key, value=value, expires=expires, cache=cache)
 
 
 def cache_num(key: str, cache: str = None) -> Optional[int]:
@@ -376,9 +379,10 @@ def cache_num(key: str, cache: str = None) -> Optional[int]:
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
+    return __caching.get_value(key=key, cache=cache)
 
 
-def cache_set(key: str, value: str, expires: int = None, cache: str = None) -> bool:
+def cache_set(key: str, value: bytes, expires: int = None, cache: str = None) -> bool:
     """Sets the specified key value.
 
     :param key:
@@ -390,7 +394,7 @@ def cache_set(key: str, value: str, expires: int = None, cache: str = None) -> b
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
 def cache_update(key: str, value: str, expires: int = None, cache: str = None) -> bool:

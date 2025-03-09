@@ -21,7 +21,7 @@ class Cache:
         :param name: Cache name with optional address (if @-syntax is used).
 
         :param timeout: Expire timeout (seconds).
-            Default: 300 (5 minutes). Use 0 to not to set a timeout (not to expire).
+            Default: 300 (5 minutes). Use 0 for no expire.
 
             .. note:: This value is ignore if cache is configured not to expire.
 
@@ -50,26 +50,41 @@ class Cache:
         """Clears cache the cache."""
         uwsgi.cache_clear(self.name)
 
-    def get(self, key: str, *, default: Any = None, as_int: bool = False, setter: Callable = None) -> Strint:
+    def get(
+            self,
+            key: str,
+            *,
+            default: Any = None,
+            as_int: bool = False,
+            setter: Callable[[str], Any] = None,
+            preserve_bytes: bool = False,
+
+    ) -> Strint:
         """Gets a value from the cache.
 
         :param key: The cache key to get value for.
 
         :param default: Value to return if none found in cache.
 
-        :param as_int: Return 64bit number instead of str.
+        :param as_int: Return 64bit number instead of a str.
+            To be used with `incr`, `decr`, `mul`, `div`.
 
         :param setter: Setter callable to automatically set cache
             value if not already cached. Required to accept a key and return
             a value that will be cached.
 
+        :param preserve_bytes: If True, bytes representation is returned.
+
         """
         if as_int:
             val = uwsgi.cache_num(key, self.name)
-        else:
-            val = decode(uwsgi.cache_get(key, self.name))
 
-        if val is None:
+        else:
+            val = uwsgi.cache_get(key, self.name)
+            if not preserve_bytes:
+                val = decode(val)
+
+        if val is None:  # no cache entry
 
             if setter is None:
                 return default
@@ -88,18 +103,21 @@ class Cache:
     def set(self, key: str, value: Any, *, timeout: int = None) -> bool:
         """Sets the specified key value.
 
-        :param key:
+        :param key: Cache key to set.
 
-        :param value:
-            .. note:: This value will be casted to string as uWSGI cache works with strings.
+        :param value: Value to store in cache.
+            .. note:: This value will be casted to str->bytes (as uWSGI cache works with bytes-like objects).
 
-        :param timeout: 0 to not to expire. Object default is used if not set.
+        :param timeout: 0 not to expire. Object default is used if not set.
 
         """
         if timeout is None:
             timeout = self.timeout
 
-        return uwsgi.cache_set(key, f'{value}', timeout, self.name)
+        if not isinstance(value, bytes):
+            value = f'{value}'.encode()
+
+        return uwsgi.cache_set(key, value, timeout, self.name)
 
     __setitem__ = set
 

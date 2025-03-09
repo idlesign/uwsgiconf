@@ -26,14 +26,14 @@ def get_logger(name: str):
 
 def encode(value: str) -> bytes:
     """Encodes str into bytes."""
-    return value.encode('utf-8')
+    return value.encode()
 
 
 def decode(value: Optional[bytes]) -> Optional[str]:
     """Decodes bytes into str."""
     if value is None:
         return value
-    return value.decode('utf-8')
+    return value.decode()
 
 
 def decode_deep(value: Any) -> Any:
