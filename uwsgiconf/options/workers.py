@@ -9,7 +9,7 @@ from ..utils import listify
 class MuleFarm:
     """Represents a mule farm."""
 
-    def __init__(self, name: str, mule_numbers: Intlist):
+    def __init__(self, name: str, mule_numbers: Union[str, Intlist]):
         """
         :param name: Farm alias.
 
@@ -238,8 +238,12 @@ class Workers(OptionsGroup):
 
         for farm in farms:
 
-            if isinstance(farm.mule_numbers, int):
-                farm.mule_numbers = list(range(next_mule_number, next_mule_number + farm.mule_numbers))
+            mules_count = farm.mule_numbers
+            if isinstance(mules_count, str) and mules_count.isdigit():
+                mules_count = int(mules_count)
+
+            if isinstance(mules_count, int):
+                farm.mule_numbers = list(range(next_mule_number, next_mule_number + mules_count))
                 next_mule_number = farm.mule_numbers[-1] + 1
 
             farm_mules_count += len(farm.mule_numbers)
