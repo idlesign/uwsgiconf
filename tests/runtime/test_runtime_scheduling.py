@@ -1,18 +1,23 @@
 import freezegun
 import pytest
 
+from uwsgiconf.runtime.mules import Mule, Farm
 from uwsgiconf.runtime.scheduling import *
+from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
 
 
 def test_timers():
 
     results = []
 
-    @register_timer(20)
+    mule = Mule(10)
+    farm = Farm('myfa')
+
+    @register_timer(20, target=mule)
     def timer_1():
         results.append('timer')
 
-    @register_timer_rb(3)
+    @register_timer_rb(3, target=farm)
     def timer_2():
         results.append('rb')
 
@@ -26,6 +31,12 @@ def test_timers():
     timer_3()
 
     assert results == ['timer', 'rb', 'ms']
+
+    # check targets
+    signals = REGISTERED_SIGNALS
+    assert signals[0].target == 'mule10'
+    assert signals[1].target == 'farm_myfa'
+    assert signals[2].target == 'worker'
 
 
 @freezegun.freeze_time('2025-02-05 15:00:00')

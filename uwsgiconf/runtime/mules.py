@@ -9,9 +9,6 @@ from ..utils import decode, decode_deep, listify
 __offloaded_functions: Dict[str, Callable] = {}
 
 
-TypeMuleFarm = Union[Strint, 'Mule', 'Farm']
-
-
 def _get_farms() -> List[str]:
     return decode_deep(listify(uwsgi.opt.get(b'farm', [])))
 
@@ -32,45 +29,6 @@ def _mule_messages_hook(message: bytes):
 
 
 uwsgi.mule_msg_hook = _mule_messages_hook
-
-
-def __offload(func_name: str, mule_or_farm: TypeMuleFarm, *args, **kwargs) -> bool:
-    # Sends a message to a mule/farm, instructing it
-    # to run a function using given arguments,
-    target = Mule if isinstance(mule_or_farm, int) else Farm
-    return target(mule_or_farm).send(pickle.dumps(
-        (
-            'ucfg_off',
-            func_name,
-            args,
-            kwargs,
-        )
-    ))
-
-
-def mule_offload(mule_or_farm: TypeMuleFarm = None) -> Callable:
-    """Decorator. Use to offload function execution to a mule or a farm.
-
-    :param mule_or_farm: If not set, offloads to a first mule.
-
-    """
-    if isinstance(mule_or_farm, Mule):
-        target = mule_or_farm.id
-
-    elif isinstance(mule_or_farm, Farm):
-        target = mule_or_farm.name
-
-    else:
-        target = mule_or_farm
-
-    target = target or 1
-
-    def mule_offload_(func):
-        func_name = func.__name__
-        __offloaded_functions[func_name] = func
-        return partial(__offload, func_name, target)
-        
-    return mule_offload_
 
 
 class Mule:
@@ -240,3 +198,45 @@ class Farm:
         if isinstance(message, str):
             message = message.encode()
         return uwsgi.farm_msg(self.name, message)
+
+
+TypeMuleFarm = Union[Strint, Mule, Farm]
+
+
+def __offload(func_name: str, mule_or_farm: TypeMuleFarm, *args, **kwargs) -> bool:
+    # Sends a message to a mule/farm, instructing it
+    # to run a function using given arguments,
+    target = Mule if isinstance(mule_or_farm, int) else Farm
+    return target(mule_or_farm).send(pickle.dumps(
+        (
+            'ucfg_off',
+            func_name,
+            args,
+            kwargs,
+        )
+    ))
+
+
+def mule_offload(mule_or_farm: TypeMuleFarm = None) -> Callable:
+    """Decorator. Use to offload function execution to a mule or a farm.
+
+    :param mule_or_farm: If not set, offloads to a first mule.
+
+    """
+    if isinstance(mule_or_farm, Mule):
+        target = mule_or_farm.id
+
+    elif isinstance(mule_or_farm, Farm):
+        target = mule_or_farm.name
+
+    else:
+        target = mule_or_farm
+
+    target = target or 1
+
+    def mule_offload_(func):
+        func_name = func.__name__
+        __offloaded_functions[func_name] = func
+        return partial(__offload, func_name, target)
+
+    return mule_offload_

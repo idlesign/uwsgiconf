@@ -27,12 +27,13 @@ def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:
 
         Available targets:
 
+            * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
             * ``worker``/``worker0`` - run the signal handler on the first available worker
             * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-            * ``mules`` - run the signal handler on all of the mules
+            * ``mules`` - run the signal handler on all the mules
             * ``muleN`` - run the signal handler on mule N
             * ``mule``/``mule0`` - run the signal handler on the first available mule
 
@@ -63,12 +64,13 @@ def register_timer_rb(period: int, *, repeat: int = None, target: TypeTarget = N
 
         Available targets:
 
+            * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
             * ``worker``/``worker0`` - run the signal handler on the first available worker
             * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-            * ``mules`` - run the signal handler on all of the mules
+            * ``mules`` - run the signal handler on all the mules
             * ``muleN`` - run the signal handler on mule N
             * ``mule``/``mule0`` - run the signal handler on the first available mule
 
@@ -96,12 +98,13 @@ def register_timer_ms(period: int, *, target: TypeTarget = None) -> TypeRegResul
 
         Available targets:
 
+            * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
             * ``worker``/``worker0`` - run the signal handler on the first available worker
             * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-            * ``mules`` - run the signal handler on all of the mules
+            * ``mules`` - run the signal handler on all the mules
             * ``muleN`` - run the signal handler on mule N
             * ``mule``/``mule0`` - run the signal handler on the first available mule
 
@@ -141,7 +144,7 @@ def register_cron(
         Keep in mind, that your actual function will be wrapped into another one, which will check
         whether it is time to call your function.
 
-    :param weekday: Day of a the week number. Defaults to `each`.
+    :param weekday: Day of the week number. Defaults to `each`.
         0 - Sunday  1 - Monday  2 - Tuesday  3 - Wednesday
         4 - Thursday  5 - Friday  6 - Saturday
 
@@ -157,12 +160,13 @@ def register_cron(
 
         Available targets:
 
+            * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
             * ``worker``/``worker0`` - run the signal handler on the first available worker
             * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-            * ``mules`` - run the signal handler on all of the mules
+            * ``mules`` - run the signal handler on all the mules
             * ``muleN`` - run the signal handler on mule N
             * ``mule``/``mule0`` - run the signal handler on the first available mule
 

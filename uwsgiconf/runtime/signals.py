@@ -1,9 +1,9 @@
 from typing import Callable, Union, NamedTuple, Dict
 
+from .mules import TypeMuleFarm, Mule, Farm
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
 from ..settings import get_maintenance_inplace
-from ..typehints import Strint
 from ..utils import get_logger
 
 _LOG = get_logger(__name__)
@@ -91,7 +91,7 @@ class Signal:
         """Whether the signal is registered."""
         return bool(uwsgi.signal_registered(self.num))
 
-    def register_handler(self, *, target: str = None, callback: Callable[['Signal'], None] = None) -> Callable:
+    def register_handler(self, *, target: 'TypeTarget' = None, callback: Callable[['Signal'], None] = None) -> Callable:
         """Decorator for a function to be used as a signal handler.
 
         .. code-block:: python
@@ -104,12 +104,13 @@ class Signal:
 
         :param target: Where this signal will be delivered to. Default: ``worker``.
 
+            * Mule / Farm object - run on a certain mule or a farm.
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
             * ``worker``/``worker0`` - run the signal handler on the first available worker
             * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-            * ``mules`` - run the signal handler on all of the mules
+            * ``mules`` - run the signal handler on all the mules
             * ``muleN`` - run the signal handler on mule N
             * ``mule``/``mule0`` - run the signal handler on the first available mule
 
@@ -122,6 +123,13 @@ class Signal:
 
         """
         target = target or 'worker'
+
+        if isinstance(target, Mule):
+            target = f'mule{target.id}'
+
+        elif isinstance(target, Farm):
+            target = f'farm_{target.name}'
+
         sign_num = self.num
 
         def wrapper(func: Callable):
@@ -166,7 +174,7 @@ class Signal:
         uwsgi.signal_wait(self.num)
 
 
-TypeTarget = Union[Strint, Signal, None]
+TypeTarget = Union[Signal, None, TypeMuleFarm]
 
 
 def _automate_signal(target: TypeTarget, func: Callable):
@@ -178,7 +186,7 @@ def _automate_signal(target: TypeTarget, func: Callable):
         # Prevent background works in maintenance mode.
         return lambda *args, **kwarg: None
 
-    if target is None or isinstance(target, str):
+    if target is None or isinstance(target, (str, Mule, Farm)):
         return Signal().register_handler(target=target, callback=func)
 
     # Signal instance passed
