@@ -1,6 +1,4 @@
 import sys
-from pathlib import Path
-from typing import Union
 
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
@@ -126,7 +124,7 @@ class Python(OptionsGroup):
             * load .wsgi file as the Python application
             * load a WSGI module as the application.
 
-            .. note:: The module (sans ``.py``) must be importable, ie. be in ``PYTHONPATH``.
+            .. note:: The module (sans ``.py``) must be importable, i.e. be in ``PYTHONPATH``.
 
             Examples:
                 * mypackage.my_wsgi_module -- read from `application` attr of mypackage/my_wsgi_module.py
@@ -203,7 +201,7 @@ class Python(OptionsGroup):
         :param modules:
 
         :param shared: If shared import is done once in master process.
-            Otherwise import a python module in all of the processes.
+            Otherwise, import a python module in all the processes.
             This is done after fork but before request processing.
 
         :param into_spooler: Import a python module in the spooler.

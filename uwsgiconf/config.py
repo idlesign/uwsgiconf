@@ -612,7 +612,7 @@ class Section(OptionsGroup):
             allow_shared_sockets: bool = None,
             **init_kwargs: Any
     ) -> TypeSection:
-        """Constructs a section object performing it's basic (default) configuration.
+        """Constructs a section object performing its basic (default) configuration.
 
         :param dsn: Data source name, e.g:
                 * http://127.0.0.1:8000

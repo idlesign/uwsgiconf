@@ -61,7 +61,7 @@ class Workers(OptionsGroup):
         :param touch_chain_reload: Trigger chain workers reload on file touch.
             When in lazy/lazy_apps mode, you can simply destroy a worker to force it to reload the application code.
             A new reloading system named "chain reload", allows you to reload one worker at time
-            (opposed to the standard way where all of the workers are destroyed in bulk)
+            (opposed to the standard way where all the workers are destroyed in bulk)
 
             * http://uwsgi-docs.readthedocs.io/en/latest/articles/TheArtOfGracefulReloading.html#chain-reloading-lazy-apps
 

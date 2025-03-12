@@ -96,7 +96,7 @@ class Monitoring(OptionsGroup):
         uWSGI metrics subsystem allows you to manage "numbers" from your apps.
 
         When enabled, the subsystem configures a vast amount of metrics
-        (like requests per-core, memory usage, etc) but, in addition to this,
+        (like requests per-core, memory usage, etc.) but, in addition to this,
         you can configure your own metrics, such as the number of active users or, say,
         hits of a particular URL, as well as the memory consumption of your app or the whole server.
 

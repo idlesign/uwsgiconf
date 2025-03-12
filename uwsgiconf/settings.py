@@ -10,7 +10,7 @@ ENV_MAINTENANCE_INPLACE = 'UWSGICONF_MAINTENANCE_INPLACE'
 
 
 FORCE_STUB = int(environ.get(ENV_FORCE_STUB, 0))
-"""Forces using stub instead of uwsgi real module."""
+"""Forces using stub instead of a real uwsgi module."""
 
 
 def get_maintenance_path() -> str:

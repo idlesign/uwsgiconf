@@ -197,7 +197,7 @@ class MainProcess(OptionsGroup):
 
         :param priority: Set processes/threads priority (``nice``) value.
 
-        :param vacuum: Try to remove all of the generated files/sockets
+        :param vacuum: Try to remove all the generated files/sockets
             (UNIX sockets and pidfiles) upon exit.
 
         :param binary_path: Force uWSGI binary path.

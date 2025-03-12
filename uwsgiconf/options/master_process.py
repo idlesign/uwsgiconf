@@ -48,7 +48,7 @@ class MasterProcess(OptionsGroup):
             Instead of signals, you can tell the master to create a UNIX named pipe (FIFO)
             that you may use to issue commands to the master.
 
-            Up to 10 different FIFO files supported. By default the first specified is bound (mapped as '0').
+            Up to 10 different FIFO files supported. By default, the first specified is bound (mapped as '0').
 
             * http://uwsgi.readthedocs.io/en/latest/MasterFIFO.html#the-master-fifo
 
@@ -174,7 +174,7 @@ class MasterProcess(OptionsGroup):
 
         :param command: Command to execute on schedule (with or without path).
 
-        :param weekday: Day of a the week number. Defaults to `each`.
+        :param weekday: Day of the week number. Defaults to `each`.
             0 - Sunday  1 - Monday  2 - Tuesday  3 - Wednesday
             4 - Thursday  5 - Friday  6 - Saturday
 
@@ -205,7 +205,7 @@ class MasterProcess(OptionsGroup):
             bool_keys=['unique'],
         )
 
-        self._set('cron2', (f'{rule} {command}').strip(), multi=True)
+        self._set('cron2', f'{rule} {command}'.strip(), multi=True)
 
         return self._section
 

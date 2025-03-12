@@ -195,7 +195,7 @@ class SectionMutator:
         call_command('collectstatic', clear=True, interactive=False)
 
     def contribute_error_pages(self):
-        """Contributes generic static error massage pages to an existing section."""
+        """Contributes generic static error message pages to an existing section."""
 
         static_dir = self.settings.STATIC_ROOT
 
@@ -212,7 +212,7 @@ class SectionMutator:
         section = self.section
 
         if not section.get_runtime_dir(default=False):
-            # If runtime directory is not set by user, let's try use system default.
+            # If runtime directory is not set by user, let's try to use system default.
             section.set_runtime_dir(section.get_runtime_dir())
 
             if not self.options['compile']:
