@@ -1,4 +1,4 @@
-from uwsgiconf.runtime.mules import Mule, Farm, _mule_messages_hook
+from uwsgiconf.runtime.mules import Mule, Farm
 
 
 def test_mule(monkeypatch):
@@ -10,20 +10,17 @@ def test_mule(monkeypatch):
 
     monkeypatch.setattr('uwsgiconf.runtime.mules.Mule.get_current_id', lambda *args: 1)
     current_mule = Mule.get_current()
-    assert str(current_mule) == '1'
-    current_mule.send('some')
+    assert f"{current_mule}" == '1'
+    assert current_mule.send('some')
+
+    result = []
 
     @current_mule.offload()
     def offloaded(add):
-        return 33 + add
+        result.append(add)
 
-    def fake_send(self, message):
-        assert self.id is current_mule.id
-        return _mule_messages_hook(message)
-
-    monkeypatch.setattr('uwsgiconf.runtime.mules.Mule.send', fake_send)
-
-    assert offloaded(2) == 35
+    offloaded(2)
+    assert result == [2]
 
 
 def test_farm(monkeypatch):
@@ -40,6 +37,11 @@ def test_farm(monkeypatch):
     farm.send('ping')
     assert not farm.get_message()
 
+    result = []
+
     @farm.offload()
     def offloaded():
-        return 44
+        result.append(44)
+
+    offloaded()
+    assert result == [44]

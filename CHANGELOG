@@ -6,6 +6,7 @@ Unreleased
 ----------
 + Add 'buffer_size' option to .networking.set_basic_params().
 + Add stub emulation for caching.
++ Add stub emulation for Farms and Mules.
 + Add stub emulation for RPC.
 + Add stub emulation for signals and scheduling.
 + Introduce uWSGI emulation for stub module to facilitate testing.

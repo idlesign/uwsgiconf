@@ -19,11 +19,10 @@ def _get_farms() -> List[str]:
 def _mule_messages_hook(message: bytes):
     # Processes mule messages, tries to decode it.
     try:
-        print(Mule.get_current_id())
         loaded = pickle.loads(message)
 
     except pickle.UnpicklingError:
-        return
+        return message
 
     else:
         if not isinstance(loaded, tuple):
@@ -157,6 +156,8 @@ class Mule:
         :raises ValueError: If no mules, or mule ID or farm name is not recognized.
 
         """
+        if isinstance(message, str):
+            message = message.encode()
         return uwsgi.mule_msg(message, self.id)
 
 
@@ -236,4 +237,6 @@ class Farm:
         :param message:
 
         """
+        if isinstance(message, str):
+            message = message.encode()
         return uwsgi.farm_msg(self.name, message)

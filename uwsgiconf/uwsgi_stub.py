@@ -2,8 +2,9 @@ from typing import Optional, Type, Dict, Callable, List, Tuple, Union
 
 from .emulator import (
     caching as __caching,
-    signals as __signals,
+    mules as __mules,
     scheduling as __scheduling,
+    signals as __signals,
     rpc as __rpc,
 )
 
@@ -517,6 +518,7 @@ def farm_msg(farm: str, message: Union[str, bytes]):
     :param message:
 
     """
+    return __mules.send_farm_msg(farm=farm, message=message)
 
 
 def get_logvar(name: str) -> bytes:
@@ -760,7 +762,7 @@ def mule_msg(message: Union[str, bytes], mule_farm: Union[str, int] = None) -> b
     :raises ValueError: If no mules, or mule ID or farm name is not recognized.
 
     """
-    return False
+    return __mules.send_mule_msg(message=message, mule_farm=mule_farm)
 
 
 def offload(filename: str) -> bytes:
