@@ -198,14 +198,18 @@ class Section(_Section):
 
         return self
 
-    def configure_owner(self, owner: str = 'www-data'):
+    def configure_owner(self, owner: str = 'www-data', *, drop_after: str = ''):
         """Shortcut to set process owner data.
 
         :param owner: Sets user and group. Default: ``www-data``.
 
+        :param drop_after: When to drop privileges (e.g. if initially run as `root`):
+            * 'init' - drop after plugin initialization
+            * 'apps' - drop after apps loading
+
         """
         if owner is not None:
-            self.main_process.set_owner_params(uid=owner, gid=owner)
+            self.main_process.set_owner_params(uid=owner, gid=owner, drop_after=drop_after)
 
         return self
 

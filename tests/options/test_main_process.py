@@ -30,7 +30,8 @@ def test_main_process_basics(assert_lines):
 
     assert_lines([
         'uid = 1001',
-    ], Section().main_process.set_owner_params(uid=1001))
+        'drop-after-init = true',
+    ], Section().main_process.set_owner_params(uid=1001, drop_after='init'))
 
     assert_lines([
         'exec-asap = date',

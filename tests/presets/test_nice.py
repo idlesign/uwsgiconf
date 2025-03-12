@@ -23,8 +23,9 @@ def test_nice_section(assert_lines):
         'uid = www-data',
         'gid = www-data',
         'logto = /a/b.log',
+        'drop-after-apps = true',
 
-    ], Section(threads=True, log_into='/a/b.log').configure_owner())
+    ], Section(threads=True, log_into='/a/b.log').configure_owner(drop_after='apps'))
 
     assert_lines([
         'workers = 13',

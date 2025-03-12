@@ -276,7 +276,8 @@ class MainProcess(OptionsGroup):
             uid: Strint = None,
             gid: Strint = None,
             add_gids: Union[Strint, List[Strint]] = None,
-            set_asap: bool = False
+            set_asap: bool = False,
+            drop_after: str = '',
     ):
         """Set process owner params - user, group.
 
@@ -292,12 +293,20 @@ class MainProcess(OptionsGroup):
             Setting them on top of your vassal file will force the instance to setuid()/setgid()
             as soon as possible and without the (theoretical) possibility to override them.
 
+        :param drop_after: When to drop privileges (e.g. if initially run as `root`):
+            * 'init' - drop after plugin initialization
+            * 'apps' - drop after apps loading
+
         """
         prefix = 'immediate-' if set_asap else ''
 
-        self._set(prefix + 'uid', uid)
-        self._set(prefix + 'gid', gid)
+        self._set(f'{prefix}uid', uid)
+        self._set(f'{prefix}gid', gid)
         self._set('add-gid', add_gids, multi=True)
+
+        if drop_after:
+            assert drop_after in ('init', 'apps')
+            self._set(f'drop-after-{drop_after}', True, cast=bool)
 
         # This may be wrong for subsequent method calls.
         self.owner = [uid, gid]

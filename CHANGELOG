@@ -5,6 +5,7 @@ uwsgiconf changelog
 Unreleased
 ----------
 + Add 'buffer_size' option to .networking.set_basic_params().
++ Add privileges drop support for .configure_owner() and .set_owner_params()  (closes #9).
 + Add stub emulation for caching.
 + Add stub emulation for Farms and Mules.
 + Add stub emulation for RPC.
