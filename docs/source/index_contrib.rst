@@ -4,7 +4,7 @@ Contrib
 Additional integrations with third parties.
 
 
-Django uwsigify
+Django uwsgify
 ---------------
 
 ``uwsgify`` adds integration with Django Framework.
@@ -44,6 +44,29 @@ By default ``uwsgiinit.py`` modules are imported.
 
 One can change this behavior putting ``UWSGIFY_MODULE_INIT=mymodule`` in Django ``settings.py``.
 After that ``uwsgify`` will search for ``mymodule.py`` instead of ``uwsgiinit.py``.
+
+
+Django cache
+~~~~~~~~~~~~
+
+You can use uWSGI shared cache.
+
+Just configure a backend in Django ``settings.py``.
+
+.. code-block:: python
+
+    CACHES = {
+        "default": {
+            "BACKEND": "uwsgiconf.contrib.django.uwsgify.cache.UwsgiCache",
+            "LOCATION": "mycache",
+        }
+    }
+
+And don't forget to define ``mycache`` cache in ``uwsgicfg.py``:
+
+.. code-block:: python
+
+    section.caching.add_cache("mycache", max_items=100)
 
 
 uwsgi_run

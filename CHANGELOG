@@ -10,6 +10,7 @@ Unreleased
 + Add stub emulation for Farms and Mules.
 + Add stub emulation for RPC.
 + Add stub emulation for signals and scheduling.
++ Django. Added uWSGI powered cache backend.
 + Introduce uWSGI emulation for stub module to facilitate testing.
 + Runtime. Allow Mule and Farm objects to be passed as 'target' for time and cron functions.
 + Runtime. Caching now can store bytes.

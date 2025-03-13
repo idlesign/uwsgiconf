@@ -311,7 +311,7 @@ def cache_exists(key: str, cache: str = None) -> bool:
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.has_key(key=key, cache=cache)
 
 
 def cache_get(key: str, cache: str = None) -> Optional[bytes]:
@@ -398,7 +398,7 @@ def cache_set(key: str, value: bytes, expires: int = None, cache: str = None) ->
     return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_update(key: str, value: str, expires: int = None, cache: str = None) -> bool:
+def cache_update(key: str, value: bytes, expires: int = None, cache: str = None) -> bool:
     """Updates the specified key value.
 
     :param key:
@@ -410,7 +410,7 @@ def cache_update(key: str, value: str, expires: int = None, cache: str = None) -
     :param cache: Cache name with optional address (if @-syntax is used).
 
     """
-    return False
+    return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
 def call(func_name: bytes, *args: bytes) -> Optional[bytes]:

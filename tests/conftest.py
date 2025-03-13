@@ -19,6 +19,12 @@ pytest_plugins = configure_djangoapp_plugin(
         'ROOT_URLCONF': 'tests.contrib.urls',
         'WSGI_APPLICATION': 'tests.contrib.app',
         'STATIC_ROOT': 'replaceit/',
+        'CACHES': {
+            "default": {
+                "BACKEND": "uwsgiconf.contrib.django.uwsgify.cache.UwsgiCache",
+                "LOCATION": "mycache",
+            }
+        }
     },
     app_name='uwsgiconf.contrib.django.uwsgify',
     extend_MIDDLEWARE=[

@@ -151,6 +151,8 @@ Run your Django-based project on uWSGI using manage command:
 
 * Other commands are available.
 * uWSGI summary and statistics are also available from Admin interface.
+* Django cache based on uWSGI cache.
+* and more
 
 
 System configs

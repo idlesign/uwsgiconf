@@ -48,3 +48,7 @@ def get_keys(*, cache: str) -> List[str]:
 def get_value(*, key: str, cache: str = None) -> Optional[Union[bytes, int]]:
     return __CACHES[cache].get(key)
 
+
+def has_key(*, key: str, cache: str = None) -> bool:
+    return key in __CACHES[cache]
+

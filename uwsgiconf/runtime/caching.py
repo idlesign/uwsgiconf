@@ -1,4 +1,4 @@
-from typing import List, Any, Callable
+from typing import List, Any, Callable, Union
 
 from .. import uwsgi
 from ..typehints import Strint
@@ -23,7 +23,7 @@ class Cache:
         :param timeout: Expire timeout (seconds).
             Default: 300 (5 minutes). Use 0 for no expire.
 
-            .. note:: This value is ignore if cache is configured not to expire.
+            .. note:: This value is ignored if cache is configured not to expire.
 
         """
         self.timeout = timeout or 300
@@ -59,7 +59,7 @@ class Cache:
             setter: Callable[[str], Any] = None,
             preserve_bytes: bool = False,
 
-    ) -> Strint:
+    ) -> Union[Strint, bytes]:
         """Gets a value from the cache.
 
         :param key: The cache key to get value for.
