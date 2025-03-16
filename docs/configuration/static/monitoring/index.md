@@ -1,0 +1,3 @@
+# Monitoring
+
+::: uwsgiconf.options.monitoring

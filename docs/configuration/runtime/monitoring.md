@@ -1,0 +1,3 @@
+# Monitoring
+
+::: uwsgiconf.runtime.monitoring

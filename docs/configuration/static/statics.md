@@ -1,0 +1,3 @@
+# Statics
+
+::: uwsgiconf.options.statics

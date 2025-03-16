@@ -1,0 +1,3 @@
+# Caching
+
+::: uwsgiconf.options.caching

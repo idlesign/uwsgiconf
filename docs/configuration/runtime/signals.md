@@ -1,0 +1,3 @@
+# Signals
+
+::: uwsgiconf.runtime.signals

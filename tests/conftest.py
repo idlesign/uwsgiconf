@@ -4,12 +4,12 @@ from os import environ
 
 import pytest
 
+# Force stub to allow shallow testing.
+environ['UWSGICONF_FORCE_STUB'] = '1'
+
 from uwsgiconf.emulator.signals import cleanup as cleanup_emu_signals
 from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
-from uwsgiconf.settings import ENV_FORCE_STUB, ENV_MAINTENANCE_INPLACE, ENV_MAINTENANCE
-
-# Force stub to allow shallow testing.
-environ[ENV_FORCE_STUB] = '1'
+from uwsgiconf.settings import ENV_MAINTENANCE_INPLACE, ENV_MAINTENANCE
 
 from pytest_djangoapp import configure_djangoapp_plugin
 

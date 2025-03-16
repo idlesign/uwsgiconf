@@ -1,0 +1,3 @@
+# Spooler
+
+::: uwsgiconf.options.spooler

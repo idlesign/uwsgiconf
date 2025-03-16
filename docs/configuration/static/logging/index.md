@@ -1,0 +1,3 @@
+# Logging
+
+::: uwsgiconf.options.logging

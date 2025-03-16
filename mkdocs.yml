@@ -1,0 +1,58 @@
+site_name: uwsgiconf
+site_url: !ENV READTHEDOCS_CANONICAL_URL
+
+copyright: Copyright &copy; 2017-2025, Igor Starikov
+
+repo_url: https://github.com/idlesign/uwsgiconf
+edit_uri: edit/master/docs/
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/idlesign
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+
+theme:
+  name: material
+  palette:
+    primary: green
+  features:
+    - navigation.tab
+    - navigation.tabs.sticky
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - content.action.edit
+    - content.code.copy
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - footnotes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.highlight:
+      anchor_linenums: true
+      linenums: true
+      line_spans: __span
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.smartsymbols
+  - pymdownx.tabbed:
+      alternate_style: true

@@ -1,0 +1,3 @@
+# Locks
+
+::: uwsgiconf.options.locks

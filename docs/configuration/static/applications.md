@@ -1,0 +1,3 @@
+# Applications
+
+::: uwsgiconf.options.applications
