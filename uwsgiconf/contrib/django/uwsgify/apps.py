@@ -9,6 +9,7 @@ class UwsgifyConfig(AppConfig):
 
     name = 'uwsgiconf.contrib.django.uwsgify'
     verbose_name = _('uWSGI Integration')
+    default_auto_field = 'django.db.models.BigAutoField'
 
     def ready(self):
 
