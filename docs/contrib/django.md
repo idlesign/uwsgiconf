@@ -1,4 +1,4 @@
-## uwsgify for Django
+# uwsgify for Django
 
 `uwsgify` adds integration with Django Framework.
 
@@ -20,12 +20,14 @@ project. For example:
 -   Automatic DB connections closing after `fork()`;
 -   and more.
 
+## Settings
+
 ### UWSGIFY_MODULE_INIT
 
 `uwsgify` can import modules from your Django applications automatically
 on project startup.
 
-This is useful for background tasks (crons, timers, mules offloading),
+This is useful for background tasks (crons, timers, mules offloading) registration,
 and other uwsgi stuff. E.g.:
 
 ```python
@@ -41,6 +43,15 @@ By default `uwsgiinit.py` modules are imported.
 One can change this behavior putting `UWSGIFY_MODULE_INIT=mymodule` in
 Django `settings.py`. After that `uwsgify` will search for `mymodule.py`
 instead of `uwsgiinit.py`.
+
+
+### UWSGIFY_SKIP_TASK_ENV_VAR
+
+Cen be used to set an environment variable name to check whether
+task execution should be skipped. E.g. for temporary maintenance.
+See `task` and `task_locked` decorators bolow.
+
+## Tools
 
 ### Django cache
 
@@ -62,6 +73,45 @@ And don't forget to define `mycache` cache in `uwsgicfg.py`:
 ```python
 section.caching.add_cache("mycache", max_items=100)
 ```
+
+### Decorators
+
+#### @task
+
+Decorator useful for task functions (e.g. uWSGI cron, timer).
+
+```python
+from uwsgiconf.contrib.django.uwsgify.decorators import task
+from uwsgiconf.runtime.scheduling import register_cron
+
+@task(cooldown=4, env_var_skip='SKIP_TASKS_RUN')
+@register_cron(hour=-3)
+def my_task():
+    ...
+```
+
+#### @task_locked
+
+Decorator to lock the execution of task function (e.g. uWSGI cron, timer)
+with the help of Django cache.
+
+Consecutive calls of the decorated function, when it is blocked, will be ignored
+(the decorator will return None).
+
+Can be useful to run scheduled functions exclusively in one datacenter
+(implies a distributed cache, such as Redis or Database).
+
+```python
+from uwsgiconf.contrib.django.uwsgify.decorators import task_locked
+from uwsgiconf.runtime.scheduling import register_cron
+
+@task_locked('myrediscache')
+@register_cron(hour=-3)
+def my_task():
+    ...
+```
+
+## Management commands
 
 ### uwsgi_run
 
