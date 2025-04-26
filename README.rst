@@ -169,4 +169,4 @@ Compile system service config (e.g ``systemd``) to run your uWSGI-powered projec
 Documentation
 -------------
 
-More information can be found at http://uwsgiconf.readthedocs.org/
+More information can be found at https://uwsgiconf.readthedocs.io/

@@ -13,6 +13,7 @@ extra:
 
 plugins:
   - search
+  - navsorted
   - mkdocstrings:
       default_handler: python
       handlers:
