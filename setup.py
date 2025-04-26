@@ -12,7 +12,7 @@ PYTEST_RUNNER = ['pytest-runner'] if 'test' in sys.argv else []
 
 def get_readme():
     # This will return README (including those with Unicode symbols).
-    with io.open(os.path.join(PATH_BASE, 'README.rst')) as f:
+    with io.open(os.path.join(PATH_BASE, 'README.md')) as f:
         return f.read()
 
 
