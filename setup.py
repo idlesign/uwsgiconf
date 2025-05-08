@@ -47,7 +47,7 @@ setup(
         'pytest',
         'pytest-djangoapp',
         'freezegun',
-        'django==4.2.20',
+        'django==4.2.21',
     ],
 
     classifiers=[
