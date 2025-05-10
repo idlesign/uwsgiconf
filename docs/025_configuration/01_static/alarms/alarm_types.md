@@ -1,3 +1,3 @@
 # Alarm Types
 
-::: uwsgiconf.options.alarm_types
+::: apidescribed: uwsgiconf.options.alarm_types

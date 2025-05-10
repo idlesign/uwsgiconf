@@ -1,3 +1,3 @@
 # Subjects
 
-::: uwsgiconf.options.routing_subjects
+::: apidescribed: uwsgiconf.options.routing_subjects

@@ -1,3 +1,3 @@
 # Caching
 
-::: uwsgiconf.options.caching
+::: apidescribed: uwsgiconf.options.caching

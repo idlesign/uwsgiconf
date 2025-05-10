@@ -1,3 +1,3 @@
 # Networking
 
-::: uwsgiconf.options.networking
+::: apidescribed: uwsgiconf.options.networking

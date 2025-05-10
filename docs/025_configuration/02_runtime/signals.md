@@ -1,3 +1,3 @@
 # Signals
 
-::: uwsgiconf.runtime.signals
+::: apidescribed: uwsgiconf.runtime.signals

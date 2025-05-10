@@ -1,3 +1,3 @@
 # Master process
 
-::: uwsgiconf.options.master_process
+::: apidescribed: uwsgiconf.options.master_process

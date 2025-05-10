@@ -1,3 +1,3 @@
 # Alarms
 
-::: uwsgiconf.options.alarms
+::: apidescribed: uwsgiconf.options.alarms

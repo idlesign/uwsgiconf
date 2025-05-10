@@ -5,10 +5,10 @@ with.
 
 ## Configuration
 
-::: uwsgiconf.config.Configuration
+::: apidescribed: uwsgiconf.config.Configuration
 
 ---
 
 ## Section
 
-::: uwsgiconf.config.Section
+::: apidescribed: uwsgiconf.config.Section

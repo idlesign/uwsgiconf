@@ -2,4 +2,4 @@
 
 Here belong tools for configuration formatting purposes.
 
-::: uwsgiconf.formatters
+::: apidescribed: uwsgiconf.formatters

@@ -1,3 +1,3 @@
 # Metric Types
 
-::: uwsgiconf.options.monitoring_metric_types
+::: apidescribed: uwsgiconf.options.monitoring_metric_types

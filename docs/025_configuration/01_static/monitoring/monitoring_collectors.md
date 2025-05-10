@@ -1,3 +1,3 @@
 # Collectors
 
-::: uwsgiconf.options.monitoring_collectors
+::: apidescribed: uwsgiconf.options.monitoring_collectors

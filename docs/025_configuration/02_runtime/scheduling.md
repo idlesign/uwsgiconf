@@ -15,4 +15,4 @@ def do_something():
     """This will be run every 3rd day, from 10 till 18 every 2 hours."""
 ```
 
-::: uwsgiconf.runtime.scheduling
+::: apidescribed: uwsgiconf.runtime.scheduling

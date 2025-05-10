@@ -1,3 +1,3 @@
 # Balancing Algorithms
 
-::: uwsgiconf.options.subscriptions_algos
+::: apidescribed: uwsgiconf.options.subscriptions_algos

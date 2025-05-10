@@ -14,37 +14,35 @@ extra:
 plugins:
   - search
   - navsorted
-  - mkdocstrings:
-      default_handler: python
-      handlers:
-        python:
-          options:
-            show_source: false
 
 theme:
   name: material
   palette:
     primary: green
   features:
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - navigation.indexes
     - navigation.tab
     - navigation.tabs.sticky
-    - navigation.indexes
     - navigation.top
     - toc.follow
-    - content.action.edit
-    - content.code.copy
 
 markdown_extensions:
+  - mkdocs_apidescribed.extension
   - abbr
   - admonition
   - footnotes
-  - tables
-  - toc:
-      permalink: true
+  - md_in_html
   - pymdownx.betterem
   - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.mark
-  - pymdownx.tilde
   - pymdownx.highlight:
       anchor_linenums: true
       linenums: true
@@ -55,5 +53,10 @@ markdown_extensions:
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.smartsymbols
+  - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tilde
+  - tables
+  - toc:
+      permalink: true

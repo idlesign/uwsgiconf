@@ -1,3 +1,3 @@
 # Sockets
 
-::: uwsgiconf.options.networking_sockets
+::: apidescribed: uwsgiconf.options.networking_sockets

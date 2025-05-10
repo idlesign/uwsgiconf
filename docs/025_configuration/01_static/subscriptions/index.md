@@ -1,3 +1,3 @@
 # Subscriptions
 
-::: uwsgiconf.options.subscriptions
+::: apidescribed: uwsgiconf.options.subscriptions

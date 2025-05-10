@@ -1,3 +1,3 @@
 # Applications
 
-::: uwsgiconf.options.applications
+::: apidescribed: uwsgiconf.options.applications

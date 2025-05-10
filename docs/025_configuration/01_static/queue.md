@@ -1,3 +1,3 @@
 # Queue
 
-::: uwsgiconf.options.queue
+::: apidescribed: uwsgiconf.options.queue

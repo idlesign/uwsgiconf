@@ -18,4 +18,4 @@ run_me('some', b='other')
 ...
 ```
 
-::: uwsgiconf.runtime.spooler
+::: apidescribed: uwsgiconf.runtime.spooler

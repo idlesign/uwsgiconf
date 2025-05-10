@@ -48,4 +48,4 @@ os.environ['UWSGICONF_FORCE_STUB'] = '1'
 
 ---
 
-::: uwsgiconf.uwsgi_stub
+::: apidescribed: uwsgiconf.uwsgi_stub

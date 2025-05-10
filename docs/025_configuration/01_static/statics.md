@@ -1,3 +1,3 @@
 # Statics
 
-::: uwsgiconf.options.statics
+::: apidescribed: uwsgiconf.options.statics

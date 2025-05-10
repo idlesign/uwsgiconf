@@ -1,3 +1,3 @@
 # Logging
 
-::: uwsgiconf.runtime.logging
+::: apidescribed: uwsgiconf.runtime.logging

@@ -1,3 +1,3 @@
 # Dedicated routers
 
-::: uwsgiconf.options.routing_routers
+::: apidescribed: uwsgiconf.options.routing_routers

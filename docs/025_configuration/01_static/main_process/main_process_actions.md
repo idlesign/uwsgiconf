@@ -1,3 +1,3 @@
 # Actions
 
-::: uwsgiconf.options.main_process_actions
+::: apidescribed: uwsgiconf.options.main_process_actions

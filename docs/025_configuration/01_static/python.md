@@ -1,3 +1,3 @@
 # Python
 
-::: uwsgiconf.options.python
+::: apidescribed: uwsgiconf.options.python

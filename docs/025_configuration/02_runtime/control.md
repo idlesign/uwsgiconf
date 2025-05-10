@@ -16,4 +16,4 @@ with harakiri_imposed(30):
 reload()
 ```
 
-::: uwsgiconf.runtime.control
+::: apidescribed: uwsgiconf.runtime.control

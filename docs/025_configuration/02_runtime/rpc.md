@@ -12,4 +12,4 @@ make_rpc_call('expose_me', ['value1'])
 all_rpc = get_rpc_list()  # Registered RPC items list.
 ```
 
-::: uwsgiconf.runtime.rpc
+::: apidescribed: uwsgiconf.runtime.rpc

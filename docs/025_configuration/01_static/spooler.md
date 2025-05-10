@@ -1,3 +1,3 @@
 # Spooler
 
-::: uwsgiconf.options.spooler
+::: apidescribed: uwsgiconf.options.spooler

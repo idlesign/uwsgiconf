@@ -1,3 +1,3 @@
 # Loggers
 
-::: uwsgiconf.options.logging_loggers
+::: apidescribed: uwsgiconf.options.logging_loggers

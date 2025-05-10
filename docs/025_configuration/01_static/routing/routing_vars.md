@@ -1,3 +1,3 @@
 # Variables and Functions
 
-::: uwsgiconf.options.routing_vars
+::: apidescribed: uwsgiconf.options.routing_vars

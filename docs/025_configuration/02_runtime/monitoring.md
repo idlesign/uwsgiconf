@@ -1,3 +1,3 @@
 # Monitoring
 
-::: uwsgiconf.runtime.monitoring
+::: apidescribed: uwsgiconf.runtime.monitoring

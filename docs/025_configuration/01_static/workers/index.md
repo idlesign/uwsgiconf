@@ -1,3 +1,3 @@
 # Workers
 
-::: uwsgiconf.options.workers
+::: apidescribed: uwsgiconf.options.workers

@@ -1,3 +1,3 @@
 # Alarms
 
-::: uwsgiconf.runtime.alarms
+::: apidescribed: uwsgiconf.runtime.alarms

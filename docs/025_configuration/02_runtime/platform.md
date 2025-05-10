@@ -15,6 +15,6 @@ def db_close_connections():
     print('Forked!')
 ```
 
-::: uwsgiconf.runtime.platform._Platform
+::: apidescribed: uwsgiconf.runtime.platform._Platform
 
-::: uwsgiconf.runtime.request._Request
+::: apidescribed: uwsgiconf.runtime.request._Request

@@ -17,4 +17,4 @@ def my_setter(key):
 yes_or_no = cache.get('anotherkey', setter=my_setter)
 ```
 
-::: uwsgiconf.runtime.caching
+::: apidescribed: uwsgiconf.runtime.caching

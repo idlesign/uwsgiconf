@@ -1,3 +1,3 @@
 # Monitoring
 
-::: uwsgiconf.options.monitoring
+::: apidescribed: uwsgiconf.options.monitoring

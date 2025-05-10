@@ -1,3 +1,3 @@
 # Main process
 
-::: uwsgiconf.options.main_process
+::: apidescribed: uwsgiconf.options.main_process

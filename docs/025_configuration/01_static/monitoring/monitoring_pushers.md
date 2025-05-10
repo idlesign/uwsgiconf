@@ -1,3 +1,3 @@
 # Pushers
 
-::: uwsgiconf.options.monitoring_pushers
+::: apidescribed: uwsgiconf.options.monitoring_pushers

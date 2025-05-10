@@ -1,3 +1,3 @@
 # Routing
 
-::: uwsgiconf.options.routing
+::: apidescribed: uwsgiconf.options.routing

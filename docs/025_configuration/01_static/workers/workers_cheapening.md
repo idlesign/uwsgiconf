@@ -1,3 +1,3 @@
 # Cheapening
 
-::: uwsgiconf.options.workers_cheapening
+::: apidescribed: uwsgiconf.options.workers_cheapening

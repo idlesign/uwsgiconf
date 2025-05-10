@@ -1,3 +1,3 @@
 # Modifiers
 
-::: uwsgiconf.options.routing_modifiers
+::: apidescribed: uwsgiconf.options.routing_modifiers

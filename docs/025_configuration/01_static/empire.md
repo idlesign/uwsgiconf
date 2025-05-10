@@ -1,3 +1,3 @@
 # Empire
 
-::: uwsgiconf.options.empire
+::: apidescribed: uwsgiconf.options.empire

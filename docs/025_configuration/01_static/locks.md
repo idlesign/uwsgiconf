@@ -1,3 +1,3 @@
 # Locks
 
-::: uwsgiconf.options.locks
+::: apidescribed: uwsgiconf.options.locks

@@ -1,3 +1,3 @@
 # Logging
 
-::: uwsgiconf.options.logging
+::: apidescribed: uwsgiconf.options.logging

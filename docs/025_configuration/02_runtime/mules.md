@@ -18,4 +18,4 @@ def for_farm(*args, **kwargs):
     ...
 ```
 
-::: uwsgiconf.runtime.mules
+::: apidescribed: uwsgiconf.runtime.mules

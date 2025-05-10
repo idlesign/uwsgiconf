@@ -1,3 +1,3 @@
 # Encoders
 
-::: uwsgiconf.options.logging_encoders
+::: apidescribed: uwsgiconf.options.logging_encoders

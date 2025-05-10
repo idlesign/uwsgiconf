@@ -15,4 +15,4 @@ with lock(2):
     ...
 ```
 
-::: uwsgiconf.runtime.locking
+::: apidescribed: uwsgiconf.runtime.locking

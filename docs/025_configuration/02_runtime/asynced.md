@@ -1,3 +1,3 @@
 # Asynced
 
-::: uwsgiconf.runtime.asynced
+::: apidescribed: uwsgiconf.runtime.asynced
