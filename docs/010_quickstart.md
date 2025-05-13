@@ -39,13 +39,13 @@ configure_uwsgi(get_configurations)
 Now we are ready to use this configuration:
 
 ```shell
-; compile our configuration to into myconf.ini
+; we can compile the configuration into myconf.ini
 uwsgiconf compile > myconf.ini
 
-; run it using uWSGI as usual:
+; and run it using uWSGI as usual:
 uwsgi myconf.ini
 
-; or run in with uwsgiconf instead:
+; or we can run uWSGI with our config directly with uwsgiconf:
 uwsgiconf run
 ```
 
