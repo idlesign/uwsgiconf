@@ -11,8 +11,8 @@
 * ++ Introduce uWSGI emulation for stub module to facilitate testing.
 * ++ Runtime. Allow Mule and Farm objects to be passed as 'target' for time and cron functions.
 * ++ Runtime. Caching now can store bytes.
-* ** Add QA for Py 3.11.
-* ** Drop QA for Py 3.7, 3.8.
+* ** Add QA for Py 3.11, 3.12, 3.13.
+* !! Drop QA for Py 3.7, 3.8, 3.9.
 * ** Workers. .set_mules_params() no allows handling farm mules count given as a digit string (closes #6).
 
 

@@ -32,7 +32,7 @@ configuration method.
 
 ## Requirements
 
-1.  Python 3.9+
+1.  Python 3.10+
 2.  `click` package (optional, for CLI)
 3.  uWSGI (`uwsgi` or `pyuwsgi`)
 
