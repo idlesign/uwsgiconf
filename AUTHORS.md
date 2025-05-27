@@ -1,19 +1,9 @@
-uwsgiconf authors
-=================
+# uwsgiconf authors
 
 Created by Igor `idle sign` Starikov.
 
 
-Contributors
-------------
+## Contributors
 
 Grace Shaw <https://github.com/graceshaw>
 Ilya_Sagaidac <https://github.com/blueflyingpanda>
-
-
-
-Translators
------------
-
-Here could be your name.
-
