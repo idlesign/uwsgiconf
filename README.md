@@ -4,7 +4,8 @@ https://github.com/idlesign/uwsgiconf
 
 [![PyPI - Version](https://img.shields.io/pypi/v/uwsgiconf)](https://pypi.python.org/pypi/uwsgiconf)
 [![License](https://img.shields.io/pypi/l/uwsgiconf)](https://pypi.python.org/pypi/uwsgiconf)
-[![Coverage](https://img.shields.io/coverallsCoverage/github/idlesign/uwsgiconf)](uwsgiconf)
+[![Coverage](https://img.shields.io/coverallsCoverage/github/idlesign/uwsgiconf)](https://coveralls.io/r/idlesign/uwsgiconf)
+[![Docs](https://img.shields.io/readthedocs/uwsgiconf)](https://uwsgiconf.readthedocs.io/)
 
 ## Description
 
