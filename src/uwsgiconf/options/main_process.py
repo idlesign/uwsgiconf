@@ -306,7 +306,7 @@ class MainProcess(OptionsGroup):
 
         if drop_after:
             assert drop_after in ('init', 'apps')
-            self._set(f'drop-after-{drop_after}', True, cast=bool)
+            self._set(f'drop-after-{drop_after}', value=True, cast=bool)
 
         # This may be wrong for subsequent method calls.
         self.owner = [uid, gid]

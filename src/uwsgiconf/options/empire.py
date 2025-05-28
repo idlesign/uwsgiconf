@@ -65,7 +65,7 @@ class Empire(OptionsGroup):
     def print_monitors(self):
         """Print out enabled imperial monitors."""
 
-        self._set('imperial-monitor-list', True, cast=bool)
+        self._set('imperial-monitor-list', value=True, cast=bool)
 
         return self._section
 

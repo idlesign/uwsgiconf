@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from threading import local
+from typing import ClassVar
 
 from .. import uwsgi as _uwsgi
 from ..utils import decode, decode_deep
@@ -8,7 +9,7 @@ from .request import _Request
 
 class _PostForkHooks:
 
-    funcs = []
+    funcs: ClassVar = []
 
     @classmethod
     def add(cls) -> Callable:

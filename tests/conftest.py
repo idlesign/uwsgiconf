@@ -50,7 +50,7 @@ def ini():
 @pytest.fixture(scope='session')
 def assert_lines(ini):
 
-    def wrapped(lines, source, assert_in=True, stamp=False):
+    def wrapped(lines, source, *, assert_in=True, stamp=False):
         source = ini(source, stamp)
 
         if not isinstance(lines, list):

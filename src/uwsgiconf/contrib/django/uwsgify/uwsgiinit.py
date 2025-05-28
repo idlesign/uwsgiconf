@@ -32,7 +32,7 @@ def check_for_stub():
 check_for_stub()
 
 
-from uwsgiconf.runtime.platform import uwsgi as uwsgi_platform
+from uwsgiconf.runtime.platform import uwsgi as uwsgi_platform  # noqa: E402
 
 
 @uwsgi_platform.postfork_hooks.add()

@@ -85,7 +85,7 @@ class Statics(OptionsGroup):
         """
 
         if static_dir == self.DIR_DOCUMENT_ROOT:
-            self._set('check-static-docroot', True, cast=bool)
+            self._set('check-static-docroot', value=True, cast=bool)
 
         else:
             self._set('static-check', static_dir, multi=True)

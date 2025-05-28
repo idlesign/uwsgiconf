@@ -4,7 +4,7 @@ import pickle
 from calendar import timegm
 from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from .. import uwsgi
 from ..utils import decode, decode_deep, encode, get_logger, listify
@@ -194,7 +194,7 @@ class Spooler:
 
         return uwsgi.send_to_spooler(_msg_encode(msg))
 
-    _valid_task_results = {uwsgi.SPOOL_OK, uwsgi.SPOOL_RETRY, uwsgi.SPOOL_IGNORE}
+    _valid_task_results: ClassVar = {uwsgi.SPOOL_OK, uwsgi.SPOOL_RETRY, uwsgi.SPOOL_IGNORE}
 
     @classmethod
     def _process_message_raw(cls, envelope) -> int:

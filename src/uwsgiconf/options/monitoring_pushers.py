@@ -160,7 +160,7 @@ class PusherCarbon(Pusher):
         self._set('carbon-hostname-dots', hostname_dots_replacer)
 
         if not address.split(':')[0].replace('.', '').isdigit():
-            self._set('carbon-name-resolve', True, cast=bool)
+            self._set('carbon-name-resolve', value=True, cast=bool)
 
 
 class PusherZabbix(Pusher):

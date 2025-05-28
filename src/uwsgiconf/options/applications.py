@@ -89,6 +89,6 @@ class Applications(OptionsGroup):
 
 
         """
-        self._set('lazy' if affect_master else 'lazy-apps', True, cast=bool)
+        self._set('lazy' if affect_master else 'lazy-apps', value=True, cast=bool)
 
         return self._section

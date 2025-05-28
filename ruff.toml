@@ -16,6 +16,7 @@ select = [
     "EXE",  # check executables
     "F",  # misc
     "FA",  # future annotations
+    "FBT",  # booleans
     "FURB",  # modernizing
     "G",  # logging format
     "I",  # imports
@@ -36,20 +37,16 @@ select = [
     "UP",  # py upgrade
 ]
 
-ignore = [
-    "E402",  # import not at the top
-    "E731",  # allow lambdas
-    "RUF012",  # mutable class vars [tmp]
-]
+ignore = []
 
 
 [lint.extend-per-file-ignores]
-"tests/*" = [
-    "FBT",
-]
+"tests/*" = []
+
 "uwsgi_stub.py" = [
     "FBT",  # boolean def
     "B026",  # *args unpacking
+    "E731",  # allow lambdas
 ]
 "config.py" = [
     "F403", "F405",  # * import

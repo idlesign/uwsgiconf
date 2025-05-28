@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from ..base import TemplatedValue
 
 
@@ -32,14 +34,14 @@ class VarGeoip(Var):
     DMA = 'dma'
     AREA = 'area'
 
-    vars_country = [
+    vars_country: ClassVar = [
         COUNTRY_CODE,
         COUNTRY_CODE3,
         COUNTRY_NAME,
     ]
     """Keys avaiable for country database."""
 
-    vars_city = [
+    vars_city: ClassVar = [
         CONTINENT,
         COUNTRY_CODE,
         COUNTRY_CODE3,

@@ -323,7 +323,7 @@ class Logging(OptionsGroup):
     def print_loggers(self):
         """Print out available (built) loggers."""
 
-        self._set('loggers-list', True, cast=bool)
+        self._set('loggers-list', value=True, cast=bool)
 
         return self._section
 

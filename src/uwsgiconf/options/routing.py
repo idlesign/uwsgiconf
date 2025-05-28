@@ -310,7 +310,7 @@ class Routing(OptionsGroup):
     def print_routing_rules(self):
         """Print out supported routing rules (actions, transforms, etc.)."""
 
-        self._set('routers-list', True, cast=bool)
+        self._set('routers-list', value=True, cast=bool)
 
         return self._section
 

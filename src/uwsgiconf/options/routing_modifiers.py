@@ -1,3 +1,4 @@
+from typing import ClassVar
 
 from ..exceptions import ConfigurationError
 
@@ -7,7 +8,7 @@ RANGE_255 = list(range(256))
 class Modifier:
 
     _submod = None
-    subcodes: list[int] = None
+    subcodes: ClassVar[list[int]] = None
 
     code: int = None
     submod = property()
@@ -45,25 +46,25 @@ class Modifier:
 
 class ModifierWsgi(Modifier):
     """Standard WSGI request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 0
 
 
 class ModifierPsgi(Modifier):
     """Standard PSGI request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 5
 
 
 class ModifierLua(Modifier):
     """Standard LUA/WSAPI request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 6
 
 
 class ModifierRack(Modifier):
     """Standard RACK request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 7
 
 
@@ -75,13 +76,13 @@ class ModifierJvm(Modifier):
     SUB_RING = 1
     """Use Clojure/Ring JVM request handler."""
 
-    subcodes = [0, SUB_RING]
+    subcodes: ClassVar[list[int]] = [0, SUB_RING]
     code = 8
 
 
 class ModifierCgi(Modifier):
     """Standard Running CGI scripts on uWSGI request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 9
 
 
@@ -91,7 +92,7 @@ class ModifierManage(Modifier):
     For a list of management flag look at ``ManagementFlag``.
 
     """
-    subcodes = RANGE_255
+    subcodes: ClassVar[list[int]] = RANGE_255
     code = 10
 
 
@@ -101,13 +102,13 @@ class ModifierGccgo(Modifier):
 
 class ModifierPhp(Modifier):
     """Standard Running PHP scripts in uWSGI request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 14
 
 
 class ModifierMono(Modifier):
     """Standard The Mono ASP.NET plugin request followed by the HTTP request body."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 15
 
 
@@ -116,7 +117,7 @@ class ModifierSpooler(Modifier):
     to a dictionary/hash/table and passed to the spooler callable.
 
     """
-    subcodes = RANGE_255
+    subcodes: ClassVar[list[int]] = RANGE_255
     code = 17
 
 
@@ -139,13 +140,13 @@ class ModifierEval(Modifier):
     SUB_PYTHON = 0
     SUB_PERL = 5
 
-    subcodes = [SUB_PYTHON, SUB_PERL]
+    subcodes: ClassVar[list[int]] = [SUB_PYTHON, SUB_PERL]
     code = 22
 
 
 class ModifierXslt(Modifier):
-    """Invoke the The XSLT plugin."""
-    subcodes = RANGE_255
+    """Invoke the XSLT plugin."""
+    subcodes: ClassVar[list[int]] = RANGE_255
     code = 23
 
 
@@ -230,7 +231,7 @@ class ModifierMulticastAnnounce(Modifier):
 
 class ModifierMulticast(Modifier):
     """Array of chars; a custom multicast message managed by uwsgi."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 74
 
 
@@ -249,7 +250,7 @@ class ModifierClusterNode(Modifier):
     SUB_ENABLE = 2
     SUB_DISABLE = 3
 
-    subcodes = [
+    subcodes: ClassVar[list[int]] = [
         SUB_ADD,
         SUB_REMOVE,
         SUB_ENABLE,
@@ -260,7 +261,7 @@ class ModifierClusterNode(Modifier):
 
 class ModifierRemoteLogging(Modifier):
     """Remote logging (clustering/multicast/unicast)."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 96
 
 
@@ -270,7 +271,7 @@ class ModifierReload(Modifier):
     SUB_REQUEST = 0
     SUB_CONFIRMATION = 1
 
-    subcodes = [SUB_REQUEST, SUB_CONFIRMATION]
+    subcodes: ClassVar[list[int]] = [SUB_REQUEST, SUB_CONFIRMATION]
     code = 98
 
 
@@ -281,7 +282,7 @@ class ModifierReloadBrutal(ModifierReload):
 
 class ModifierConfigFromNode(Modifier):
     """Request configuration data from a uwsgi node (even via multicast)."""
-    subcodes = [0, 1]
+    subcodes: ClassVar[list[int]] = [0, 1]
     code = 99
 
 
@@ -294,19 +295,19 @@ class ModifierPing(Modifier):
     SUB_PONG = 1
     """Response."""
 
-    subcodes = [SUB_PING, SUB_PONG]
+    subcodes: ClassVar[list[int]] = [SUB_PING, SUB_PONG]
     code = 100
 
 
 class ModifierEcho(Modifier):
     """ECHO service."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 101
 
 
 class ModifierLegionMsg(Modifier):
     """Legion msg (UDP, the body is encrypted)."""
-    subcodes = RANGE_255
+    subcodes: ClassVar[list[int]] = RANGE_255
     code = 109
 
 
@@ -344,7 +345,7 @@ class ModifierCache(Modifier):
     SUB_MAGIC = 17
     """Magic interface for plugins remote access."""
 
-    subcodes = [
+    subcodes: ClassVar[list[int]] = [
         SUB_GET,
         SUB_SET,
         SUB_DELETE,
@@ -392,7 +393,7 @@ class ModifierRpc(Modifier):
     
     """
 
-    subcodes = [
+    subcodes: ClassVar[list[int]] = [
         SUB_DEFAULT,
         SUB_RAW,
         SUB_USE_PATH_INFO,
@@ -405,13 +406,13 @@ class ModifierRpc(Modifier):
 
 class ModifierPersistentClose(Modifier):
     """Close mark for persistent connections."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 200
 
 
 class ModifierSubscription(Modifier):
     """Subscription packet. See ``subscriptions``."""
-    subcodes = [0]
+    subcodes: ClassVar[list[int]] = [0]
     code = 224
 
 

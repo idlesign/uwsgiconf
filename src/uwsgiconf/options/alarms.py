@@ -55,7 +55,7 @@ class Alarms(OptionsGroup):
     def print_alarms(self):
         """Print out enabled alarms."""
 
-        self._set('alarm-list', True, cast=bool)
+        self._set('alarm-list', value=True, cast=bool)
 
         return self._section
 

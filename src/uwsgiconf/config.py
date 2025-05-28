@@ -7,7 +7,7 @@ from functools import partial
 from itertools import chain
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, TypeVar, Union
+from typing import Any, ClassVar, TypeVar, Union
 
 from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
@@ -105,7 +105,7 @@ class Section(OptionsGroup):
     class embedded_plugins_presets:
         """These are plugin presets that can be used as ``embedded_plugins`` values."""
 
-        BASIC = [plugin.strip() for plugin in (
+        BASIC: ClassVar[list[str]] = [plugin.strip() for plugin in (
             'ping, cache, nagios, rrdtool, carbon, rpc, corerouter, fastrouter, http, ugreen, signal, '
             'syslog, rsyslog, logsocket, router_uwsgi, router_redirect, router_basicauth, zergpool, '
             'redislog, mongodblog, router_rewrite, router_http, logfile, router_cache, rawrouter, '
@@ -281,7 +281,7 @@ class Section(OptionsGroup):
     def print_plugins(self) -> TypeSection:
         """Print out enabled plugins."""
 
-        self._set('plugins-list', True, cast=bool)
+        self._set('plugins-list', value=True, cast=bool)
 
         return self
 
