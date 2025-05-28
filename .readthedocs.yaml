@@ -6,7 +6,7 @@ build:
     python: "3"
   jobs:
     pre_install:
-      - pip install mkdocs-material mkdocs-navsorted-plugin mkdocs-apidescribed-plugin
+      - pip install mkdocs-material mkdocs-navsorted-plugin mkdocs-apidescribed-plugin git+https://github.com/idlesign/uwsgiconf
 
 mkdocs:
   configuration: mkdocs.yml
