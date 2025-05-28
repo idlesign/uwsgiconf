@@ -27,7 +27,9 @@ jobs:
     - name: Install deps
       run: |
         uv sync --only-group tests
-        uv pip install coveralls
+        uv pip install coveralls ruff
+    - name: Run linting
+      run: ruff check --output-format=github .
     - name: Run tests
       env:
         GITHUB_TOKEN: ${{ secrets.github_token }}
