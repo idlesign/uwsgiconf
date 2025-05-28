@@ -1,6 +1,6 @@
 from ..base import ParametrizedValue
-from ..utils import KeyValue, filter_locals
 from ..exceptions import ConfigurationError
+from ..utils import KeyValue, filter_locals
 
 
 class Metric(ParametrizedValue):

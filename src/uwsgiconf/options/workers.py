@@ -1,9 +1,9 @@
-from typing import Union, List
+from typing import List, Union
 
-from .workers_cheapening import *  # noqa
 from ..base import OptionsGroup
-from ..typehints import Strlist, Intlist
+from ..typehints import Intlist, Strlist
 from ..utils import listify
+from .workers_cheapening import *  # noqa
 
 
 class MuleFarm:

@@ -1,11 +1,11 @@
 from os import geteuid
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import parse_qs, urlsplit
 
-from .networking_sockets import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..typehints import Strbool, Intlist
+from ..typehints import Intlist, Strbool
 from ..utils import listify
+from .networking_sockets import *
 
 
 class Networking(OptionsGroup):

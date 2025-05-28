@@ -1,7 +1,6 @@
-from typing import Type, Any, Union, Optional, Callable
+from typing import Any, Callable, Optional, Type, Union
 
 from .utils import listify
-
 
 if False:  # pragma: nocover
     from .config import Section  # noqa

@@ -1,7 +1,6 @@
 from .. import uwsgi
 from ..utils import decode
 
-
 variable_set = uwsgi.set_logvar
 
 

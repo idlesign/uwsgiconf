@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Dict, List, Union, Optional
+from typing import Dict, List, Optional, Union
 
 __CACHES: Dict[str, Dict[str, Union[bytes, int]]] = defaultdict(dict)
 

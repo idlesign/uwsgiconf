@@ -1,5 +1,6 @@
 from datetime import timedelta
-from uwsgiconf.runtime.spooler import Spooler, ResultProcessed, ResultRescheduled, ResultSkipped, spooler_task_types
+
+from uwsgiconf.runtime.spooler import ResultProcessed, ResultRescheduled, ResultSkipped, Spooler, spooler_task_types
 
 
 class FakeUwsgi(object):

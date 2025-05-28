@@ -1,13 +1,13 @@
 import os
 
+from ..base import OptionsGroup
+from ..exceptions import ConfigurationError
+from ..utils import listify
 from .routing_actions import *
 from .routing_modifiers import *
 from .routing_routers import *
 from .routing_subjects import *
 from .routing_vars import *
-from ..base import OptionsGroup
-from ..exceptions import ConfigurationError
-from ..utils import listify
 
 
 class RouteRule:

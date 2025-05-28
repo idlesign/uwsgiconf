@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union, List
+from typing import List, Union
 
 Intlist = Union[int, List[int]]
 Strbool = Union[str, bool]

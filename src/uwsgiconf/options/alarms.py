@@ -1,9 +1,9 @@
 from operator import attrgetter
 from typing import List
 
-from .alarm_types import AlarmType, AlarmCommand, AlarmSignal, AlarmCurl, AlarmLog, AlarmMule, AlarmXmpp
 from ..base import OptionsGroup
 from ..utils import listify
+from .alarm_types import AlarmCommand, AlarmCurl, AlarmLog, AlarmMule, AlarmSignal, AlarmType, AlarmXmpp
 
 TypeAlarmExt = List[AlarmType]
 

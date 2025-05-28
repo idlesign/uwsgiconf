@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Summary, Configuration, Workers, Maintenance
-from .realms import SummaryAdmin, ConfigurationAdmin, WorkersAdmin, MaintenanceAdmin
+from .models import Configuration, Maintenance, Summary, Workers
+from .realms import ConfigurationAdmin, MaintenanceAdmin, SummaryAdmin, WorkersAdmin
 
 admin.site.register(Summary, SummaryAdmin)
 admin.site.register(Configuration, ConfigurationAdmin)

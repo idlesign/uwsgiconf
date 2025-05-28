@@ -1,5 +1,5 @@
 from ..base import ParametrizedValue
-from ..typehints import Strpath, Strlist
+from ..typehints import Strlist, Strpath
 from ..utils import listify
 
 

@@ -1,9 +1,9 @@
-from .alarms import AlarmType
-from .monitoring_collectors import *
-from .monitoring_pushers import *
-from .monitoring_metric_types import *
 from ..base import OptionsGroup
 from ..utils import KeyValue, listify
+from .alarms import AlarmType
+from .monitoring_collectors import *
+from .monitoring_metric_types import *
+from .monitoring_pushers import *
 
 
 class Monitoring(OptionsGroup):

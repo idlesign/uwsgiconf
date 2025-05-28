@@ -1,4 +1,4 @@
-from typing import List, Generator, Tuple, Any, Dict, TypeVar, Type
+from typing import Any, Dict, Generator, List, Tuple, Type, TypeVar
 
 from .typehints import Strlist
 

@@ -1,4 +1,4 @@
-from uwsgiconf.runtime.mules import Mule, Farm
+from uwsgiconf.runtime.mules import Farm, Mule
 
 
 def test_mule(monkeypatch):

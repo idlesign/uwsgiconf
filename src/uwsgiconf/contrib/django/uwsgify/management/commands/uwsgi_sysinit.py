@@ -1,9 +1,9 @@
 from os import path
 
 from django.core.management.base import BaseCommand
-
-from uwsgiconf.sysinit import get_config, TYPE_SYSTEMD
+from uwsgiconf.sysinit import TYPE_SYSTEMD, get_config
 from uwsgiconf.utils import Finder
+
 from ...toolbox import SectionMutator
 
 

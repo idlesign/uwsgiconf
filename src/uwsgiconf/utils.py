@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from importlib import import_module
 from io import StringIO
 from types import ModuleType
-from typing import Optional, Any, List, Tuple, Dict, NamedTuple
+from typing import Any, Dict, List, NamedTuple, Optional, Tuple
 
 from .exceptions import UwsgiconfException
 from .settings import CONFIGS_MODULE_ATTR
@@ -269,7 +269,7 @@ def get_output(cmd: str, *, args: Strlist) -> str:
     :param args:
 
     """
-    from subprocess import Popen, STDOUT, PIPE
+    from subprocess import PIPE, STDOUT, Popen
 
     command = [cmd]
     command.extend(listify(args))

@@ -1,4 +1,4 @@
-from typing import List, Any, Callable, Union
+from typing import Any, Callable, List, Union
 
 from .. import uwsgi
 from ..typehints import Strint

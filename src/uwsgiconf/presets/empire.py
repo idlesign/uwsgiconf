@@ -1,8 +1,8 @@
 from typing import Tuple
 
 from ..config import Section
-from ..utils import filter_locals
 from ..typehints import Strlist
+from ..utils import filter_locals
 
 
 class Broodlord:

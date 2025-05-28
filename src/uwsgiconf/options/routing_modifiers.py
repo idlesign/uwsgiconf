@@ -2,7 +2,6 @@ from typing import List
 
 from ..exceptions import ConfigurationError
 
-
 RANGE_255 = list(range(256))
 
 

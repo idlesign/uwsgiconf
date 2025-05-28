@@ -1,6 +1,6 @@
 from ..base import ParametrizedValue
 from ..typehints import Strlist
-from ..utils import listify, filter_locals, KeyValue
+from ..utils import KeyValue, filter_locals, listify
 
 
 class AlarmType(ParametrizedValue):

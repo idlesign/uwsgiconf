@@ -1,11 +1,11 @@
 from datetime import datetime, timezone
 from functools import partial, wraps
-from typing import Union, Callable
+from typing import Callable, Union
 
-from .signals import _automate_signal, TypeTarget
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
 from ..typehints import Strint
+from .signals import TypeTarget, _automate_signal
 
 TypeRegResult = Union[Callable, bool]
 

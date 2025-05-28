@@ -1,10 +1,10 @@
 from django import db
 from django.apps import apps
 from django.utils.module_loading import autodiscover_modules
-
 from uwsgiconf import uwsgi
 from uwsgiconf.exceptions import RuntimeConfigurationError
 from uwsgiconf.settings import FORCE_STUB
+
 from .settings import MODULE_INIT, MODULE_INIT_DEFAULT
 
 

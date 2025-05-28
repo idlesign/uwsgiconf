@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Union, Callable, Optional
+from typing import Callable, Optional, Union
 
 from ..config import Section as _Section
 from ..settings import ENV_MAINTENANCE, ENV_MAINTENANCE_INPLACE

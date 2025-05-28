@@ -1,8 +1,8 @@
 from typing import Union
 
-from .signals import _automate_signal, Signal
 from .. import uwsgi
 from ..typehints import Strint
+from .signals import Signal, _automate_signal
 
 
 def register_file_monitor(filename: str, *, target: Union[Strint, Signal] = None):

@@ -6,15 +6,14 @@ from functools import partial
 from itertools import chain
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import List, Union, Callable, Optional, Any, Tuple, Dict, TypeVar
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union
 
 from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
 from .formatters import FORMATTERS, format_print_text
 from .options import *
 from .typehints import Strlist, Strpath
-from .utils import listify, UwsgiRunner
-
+from .utils import UwsgiRunner, listify
 
 TypeSection = TypeVar('TypeSection', bound='Section')
 
@@ -765,7 +764,7 @@ def configure_uwsgi(configurator_func: Callable) -> Optional[List[Configuration]
     :raises ConfigurationError:
 
     """
-    from .settings import ENV_CONF_READY, ENV_CONF_ALIAS, CONFIGS_MODULE_ATTR
+    from .settings import CONFIGS_MODULE_ATTR, ENV_CONF_ALIAS, ENV_CONF_READY
 
     if os.environ.get(ENV_CONF_READY):
         # This call is from uWSGI trying to load an application.

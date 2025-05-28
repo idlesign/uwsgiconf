@@ -1,6 +1,5 @@
 from .. import uwsgi
 
-
 connect = uwsgi.async_connect
 
 sleep = uwsgi.async_sleep

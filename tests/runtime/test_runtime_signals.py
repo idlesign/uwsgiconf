@@ -1,5 +1,5 @@
-from uwsgiconf.runtime.signals import Signal, get_available_num, get_last_received
 from uwsgiconf.runtime.scheduling import register_timer
+from uwsgiconf.runtime.signals import Signal, get_available_num, get_last_received
 
 
 def test_signals():

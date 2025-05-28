@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from ...toolbox import run_uwsgi, SectionMutator
+from ...toolbox import SectionMutator, run_uwsgi
 
 
 class Command(BaseCommand):

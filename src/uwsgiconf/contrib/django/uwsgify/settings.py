@@ -1,6 +1,5 @@
 from django.conf import settings
 
-
 MODULE_INIT_DEFAULT = 'uwsgiinit'
 """Default name for uwsgify init modules."""
 

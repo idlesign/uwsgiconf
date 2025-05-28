@@ -2,10 +2,14 @@ import os
 
 import pytest
 
-from uwsgiconf.utils import UwsgiRunner, parse_command_plugins_output, ConfModule, get_uwsgi_stub_attrs_diff, \
-    filter_locals
 from uwsgiconf.exceptions import UwsgiconfException
-
+from uwsgiconf.utils import (
+    ConfModule,
+    UwsgiRunner,
+    filter_locals,
+    get_uwsgi_stub_attrs_diff,
+    parse_command_plugins_output,
+)
 
 SAMPLE_OUT_PLUGINS_MANY = b'''
 

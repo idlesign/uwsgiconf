@@ -1,8 +1,8 @@
+from ..base import OptionsGroup
+from ..typehints import Strbool, Strlist
+from ..utils import listify
 from .logging_encoders import *
 from .logging_loggers import *
-from ..base import OptionsGroup
-from ..typehints import Strlist, Strbool
-from ..utils import listify
 
 
 class Var(TemplatedValue):

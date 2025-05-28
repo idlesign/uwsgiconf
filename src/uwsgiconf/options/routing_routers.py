@@ -1,10 +1,10 @@
 from typing import Union
 
+from ..base import OptionsGroup, ParametrizedValue
+from ..typehints import Strint, Strlist
+from ..utils import KeyValue, filter_locals
 from .networking_sockets import SocketShared, StrShaSoc
 from .routing_modifiers import Modifier, ModifierWsgi
-from ..base import OptionsGroup, ParametrizedValue
-from ..typehints import Strlist, Strint
-from ..utils import KeyValue, filter_locals
 
 
 class RouterBase(OptionsGroup):

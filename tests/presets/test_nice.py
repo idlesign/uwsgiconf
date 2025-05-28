@@ -1,6 +1,6 @@
 from os import environ
 
-from uwsgiconf.presets.nice import Section, PythonSection
+from uwsgiconf.presets.nice import PythonSection, Section
 
 
 def test_nice_section(assert_lines):

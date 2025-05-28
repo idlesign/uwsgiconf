@@ -5,7 +5,7 @@ import click
 
 from uwsgiconf import VERSION
 from uwsgiconf.exceptions import ConfigurationError
-from uwsgiconf.sysinit import TYPES, TYPE_SYSTEMD, get_config
+from uwsgiconf.sysinit import TYPE_SYSTEMD, TYPES, get_config
 from uwsgiconf.utils import ConfModule, UwsgiRunner
 
 

@@ -1,9 +1,9 @@
 from threading import local
-from typing import Callable, Type, Tuple, Union, Optional, Dict, List
+from typing import Callable, Dict, List, Optional, Tuple, Type, Union
 
-from .request import _Request
 from .. import uwsgi as _uwsgi
-from ..utils import decode_deep, decode
+from ..utils import decode, decode_deep
+from .request import _Request
 
 
 class _PostForkHooks:

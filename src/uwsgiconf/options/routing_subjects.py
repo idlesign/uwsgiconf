@@ -1,7 +1,7 @@
 from typing import Union
 
-from .routing_vars import Var
 from ..base import ParametrizedValue
+from .routing_vars import Var
 
 
 class SubjectBuiltin:

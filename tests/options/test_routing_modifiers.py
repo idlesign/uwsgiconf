@@ -1,8 +1,7 @@
 import pytest
 
-
-from uwsgiconf.options.routing_modifiers import ModifierCache
 from uwsgiconf.exceptions import ConfigurationError
+from uwsgiconf.options.routing_modifiers import ModifierCache
 
 
 def test_routing_modifiers():

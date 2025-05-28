@@ -1,7 +1,7 @@
-from typing import Callable, Sequence, List, Optional
+from typing import Callable, List, Optional, Sequence
 
 from .. import uwsgi
-from ..utils import encode, decode, get_logger, decode_deep
+from ..utils import decode, decode_deep, encode, get_logger
 
 _LOG = get_logger(__name__)
 

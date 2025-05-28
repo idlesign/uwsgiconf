@@ -1,10 +1,10 @@
-from typing import Callable, Union, NamedTuple, Dict
+from typing import Callable, Dict, NamedTuple, Union
 
-from .mules import TypeMuleFarm, Mule, Farm
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
 from ..settings import get_maintenance_inplace
 from ..utils import get_logger
+from .mules import Farm, Mule, TypeMuleFarm
 
 _LOG = get_logger(__name__)
 

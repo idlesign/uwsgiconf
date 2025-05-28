@@ -1,5 +1,5 @@
 import pickle
-from typing import Dict, Any
+from typing import Any, Dict
 
 from django.core.cache.backends.base import DEFAULT_TIMEOUT, BaseCache
 from uwsgiconf.runtime.caching import Cache as _Cache

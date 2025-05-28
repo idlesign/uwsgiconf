@@ -1,5 +1,4 @@
-from uwsgiconf.config import Section, Configuration, configure_uwsgi
-
+from uwsgiconf.config import Configuration, Section, configure_uwsgi
 
 print("this line won't print")
 

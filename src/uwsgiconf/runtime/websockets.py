@@ -2,7 +2,6 @@ from typing import Union
 
 from .. import uwsgi
 
-
 handshake = uwsgi.websocket_handshake
 
 

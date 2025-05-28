@@ -40,6 +40,7 @@ def application(env, start_response):
 
 def configure():
     from pathlib import Path
+
     from uwsgiconf.presets.nice import PythonSection
 
     filepath = Path(__file__).absolute()

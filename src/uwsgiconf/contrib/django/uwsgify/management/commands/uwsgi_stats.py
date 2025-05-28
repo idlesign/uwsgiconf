@@ -1,4 +1,4 @@
-from ._base import FifoCommand, Fifo
+from ._base import Fifo, FifoCommand
 
 
 class Command(FifoCommand):

@@ -1,6 +1,6 @@
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..typehints import Strlist, Strint
+from ..typehints import Strint, Strlist
 from ..utils import KeyValue
 
 

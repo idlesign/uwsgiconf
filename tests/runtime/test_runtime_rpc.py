@@ -1,4 +1,4 @@
-from uwsgiconf.runtime.rpc import register_rpc, make_rpc_call, get_rpc_list
+from uwsgiconf.runtime.rpc import get_rpc_list, make_rpc_call, register_rpc
 
 
 def test_rpc():

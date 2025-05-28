@@ -1,10 +1,9 @@
-from os.path import dirname, basename, abspath
+from os.path import abspath, basename, dirname
 from textwrap import dedent
-from typing import List, Dict, Callable, Union
+from typing import Callable, Dict, List, Union
 
 from .config import Configuration, Section
 from .utils import Finder, UwsgiRunner
-
 
 TYPE_UPSTART = 'upstart'
 TYPE_SYSTEMD = 'systemd'

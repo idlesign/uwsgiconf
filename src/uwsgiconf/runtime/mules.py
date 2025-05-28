@@ -1,6 +1,6 @@
 import pickle
 from functools import partial
-from typing import Union, Callable, Optional, List, Dict
+from typing import Callable, Dict, List, Optional, Union
 
 from .. import uwsgi
 from ..typehints import Strint

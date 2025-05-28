@@ -3,10 +3,10 @@ import os
 import pickle
 from calendar import timegm
 from datetime import datetime, timedelta, timezone
-from typing import List, Type, Callable, Dict, Union, Any, Optional
+from typing import Any, Callable, Dict, List, Optional, Type, Union
 
 from .. import uwsgi
-from ..utils import listify, get_logger, encode, decode, decode_deep
+from ..utils import decode, decode_deep, encode, get_logger, listify
 
 _LOG = get_logger(__name__)
 _MSG_MAX_SIZE = 64 * 1024  # 64 Kb https://uwsgi-docs.readthedocs.io/en/latest/Spooler.html#spool-files

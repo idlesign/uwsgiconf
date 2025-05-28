@@ -1,10 +1,11 @@
 import os
 from tempfile import NamedTemporaryFile, gettempdir
+
 import pytest
 
-from uwsgiconf.config import Section, Configuration
-from uwsgiconf.presets.nice import Section as NiceSection
+from uwsgiconf.config import Configuration, Section
 from uwsgiconf.exceptions import ConfigurationError
+from uwsgiconf.presets.nice import Section as NiceSection
 
 
 def test_section_basics(assert_lines):

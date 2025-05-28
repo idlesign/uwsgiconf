@@ -13,12 +13,12 @@ from .base import OnePageAdmin
 class SummaryAdmin(OnePageAdmin):
 
     def contribute_onepage_context(self, request, context):
-        from uwsgiconf.runtime.platform import uwsgi
         from uwsgiconf.runtime.logging import get_current_log_size
+        from uwsgiconf.runtime.mules import Farm
+        from uwsgiconf.runtime.platform import uwsgi
         from uwsgiconf.runtime.rpc import get_rpc_list
         from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
         from uwsgiconf.runtime.spooler import Spooler
-        from uwsgiconf.runtime.mules import Farm
 
         def get_func_name(func) -> str:
             """Returns a distinctive name for a given function."""
