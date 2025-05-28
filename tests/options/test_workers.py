@@ -124,4 +124,4 @@ def test_cheapening(assert_lines):
 
     assert_lines([
         'cheaper-algo-list = true',
-    ], Section().cheapening.print_alorithms())
+    ], Section().cheapening.print_algorithms())

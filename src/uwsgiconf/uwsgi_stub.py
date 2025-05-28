@@ -1220,7 +1220,7 @@ def workers() -> Tuple[dict, ...]:
     Returns tuple of dicts.
 
     """
-    return tuple()
+    return ()
 
 
 ##

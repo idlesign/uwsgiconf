@@ -32,10 +32,10 @@ def check_for_stub():
 check_for_stub()
 
 
-from uwsgiconf.runtime.platform import uwsgi
+from uwsgiconf.runtime.platform import uwsgi as uwsgi_platform
 
 
-@uwsgi.postfork_hooks.add()
+@uwsgi_platform.postfork_hooks.add()
 def db_close_connections():
     """Close db connections after fork()."""
     db.connections.close_all()

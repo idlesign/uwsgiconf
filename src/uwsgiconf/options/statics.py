@@ -172,8 +172,8 @@ class Statics(OptionsGroup):
 
             command += '-mtime'
 
-        for value in listify(value):
-            self._set(command, f'{value}{separator}{timeout}', multi=True)
+        for val in listify(value):
+            self._set(command, f'{val}{separator}{timeout}', multi=True)
 
         return self._section
 

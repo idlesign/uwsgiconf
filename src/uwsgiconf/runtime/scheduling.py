@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import partial, wraps
 from typing import Union, Callable
 
@@ -180,7 +180,7 @@ def register_cron(
     task_args_casted = {}
 
     def skip_task(check_funcs):
-        now = datetime.now()
+        now = datetime.now(tz=timezone.utc)
         allright = all((func(now) for func in check_funcs))
         return not allright
 
@@ -253,7 +253,7 @@ def register_cron(
 
         args = []
         for arg_name in ['minute', 'hour', 'day', 'month', 'weekday']:
-            arg = task_args_casted.get(arg_name, None)
+            arg = task_args_casted.get(arg_name)
             args.append(-1 if arg is None else arg)
 
         return _automate_signal(target, func=lambda sig: uwsgi.add_cron(int(sig), *args))(func_action_wrapper)

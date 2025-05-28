@@ -166,7 +166,7 @@ def test_configuration(capsys, assert_lines):
     assert_lines([
         'workers = 33',
 
-    ], Section(params_workers=dict(count=33)))
+    ], Section(params_workers={'count': 33}))
 
     assert 'testit' in Section().as_configuration(alias='testit').tofile()
 

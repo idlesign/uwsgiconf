@@ -1,8 +1,9 @@
 import freezegun
 import pytest
 
+from uwsgiconf.exceptions import RuntimeConfigurationError
 from uwsgiconf.runtime.mules import Mule, Farm
-from uwsgiconf.runtime.scheduling import *
+from uwsgiconf.runtime.scheduling import register_timer, register_timer_rb, register_timer_ms, register_cron
 from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
 
 

@@ -832,7 +832,7 @@ class RouterForkPty(_RouterCommon):
     alias = 'forkptyrouter'
     plugin = alias
 
-    def __init__(self, on: StrShaSoc = None, undeferred=False):
+    def __init__(self, on: StrShaSoc = None, *, undeferred=False):
         """Binds router to run on the given address.
 
         :param on: Activates the router on the given address.

@@ -143,7 +143,7 @@ class TestAdmin:
         data = client.post('/admin/uwsgify/maintenance/', data={'confirm': 'maintenance'}).content.decode()
         assert 'Maintenance mode is scheduled' in data
 
-        monkeypatch.setattr('uwsgiconf.settings.get_maintenance_path', lambda: f'/')
+        monkeypatch.setattr('uwsgiconf.settings.get_maintenance_path', lambda: '/')
         data = client.post('/admin/uwsgify/maintenance/', data={'confirm': 'maintenance'}).content.decode()
         assert 'Unable to schedule' in data
 

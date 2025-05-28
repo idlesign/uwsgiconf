@@ -302,8 +302,8 @@ class Routing(OptionsGroup):
         if route_rules and label:
             self._set(route_rules[0].command_label, label, multi=True)
 
-        for route_rules in route_rules:
-            self._set(route_rules.command, route_rules.value, multi=True)
+        for route_rule in route_rules:
+            self._set(route_rule.command, route_rule.value, multi=True)
 
         return self._section
 

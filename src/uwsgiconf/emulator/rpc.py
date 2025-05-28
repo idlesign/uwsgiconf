@@ -13,4 +13,4 @@ def do_call(*args: bytes, name: bytes) -> Optional[bytes]:
 
 
 def get_list() -> Tuple[bytes, ...]:
-    return tuple(key.encode() for key in __RPCS.keys())
+    return tuple(key.encode() for key in __RPCS)

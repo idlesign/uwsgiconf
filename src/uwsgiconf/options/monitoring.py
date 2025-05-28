@@ -85,12 +85,19 @@ class Monitoring(OptionsGroup):
         :param Metric|list[Metric] metric: Metric object.
 
         """
-        for metric in listify(metric):
-            self._set('metric', metric, multi=True)
+        for metric_ in listify(metric):
+            self._set('metric', metric_, multi=True)
 
         return self._section
 
-    def set_metrics_params(self, enable: bool = None, store_dir: str = None, restore: bool = None, no_cores: bool = None):
+    def set_metrics_params(
+            self,
+            enable: bool = None,
+            *,
+            store_dir: str = None,
+            restore: bool = None,
+            no_cores: bool = None
+    ):
         """Sets basic Metrics subsystem params.
 
         uWSGI metrics subsystem allows you to manage "numbers" from your apps.
@@ -219,8 +226,8 @@ class Monitoring(OptionsGroup):
         :param Pusher|list[Pusher] pusher:
 
         """
-        for pusher in listify(pusher):
-            self._set('stats-push', pusher, multi=True)
+        for pusher_ in listify(pusher):
+            self._set('stats-push', pusher_, multi=True)
 
         return self._section
 

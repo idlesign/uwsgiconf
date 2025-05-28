@@ -5,6 +5,7 @@ from .networking_sockets import *
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
 from ..typehints import Strbool, Intlist
+from ..utils import listify
 
 
 class Networking(OptionsGroup):
@@ -70,7 +71,7 @@ class Networking(OptionsGroup):
 
             except TypeError as e:
                 raise ConfigurationError(
-                    f'Unable to configure {socket.__name__} using `{dsn}` DSN: {e}')
+                    f'Unable to configure {socket.__name__} using `{dsn}` DSN: {e}') from None
 
             return socket
 
@@ -204,34 +205,34 @@ class Networking(OptionsGroup):
     def _get_shared_socket_idx(self, shared: 'SocketShared'):
         return f'={self._sockets.index(shared)}'
 
-    def register_socket(self, socket):
+    def register_socket(self, socket: Socket | list[Socket]):
         """Registers the given socket(s) for further use.
 
-        :param Socket|list[Socket] socket: Socket type object. See ``.sockets``.
+        :param socket: Socket type object. See ``.sockets``.
 
         """
         sockets = self._sockets
 
-        for socket in listify(socket):
+        for socket_ in listify(socket):
 
-            uses_shared = isinstance(socket.address, SocketShared)
+            uses_shared = isinstance(socket_.address, SocketShared)
 
             if uses_shared:
                 # Handling shared sockets involves socket index resolution.
 
-                shared_socket: SocketShared = socket.address
+                shared_socket: SocketShared = socket_.address
 
                 if shared_socket not in sockets:
                     self.register_socket(shared_socket)
 
-                socket.address = self._get_shared_socket_idx(shared_socket)
+                socket_.address = self._get_shared_socket_idx(shared_socket)
 
-            socket.address = self._section.replace_placeholders(socket.address)
-            self._set(socket.name, socket, multi=True)
+            socket_.address = self._section.replace_placeholders(socket_.address)
+            self._set(socket_.name, socket_, multi=True)
 
-            socket._contribute_to_opts(self)
+            socket_._contribute_to_opts(self)
 
-            bound_workers = socket.bound_workers
+            bound_workers = socket_.bound_workers
 
             if bound_workers:
                 self._set(
@@ -239,7 +240,7 @@ class Networking(OptionsGroup):
                     multi=True)
 
             if not uses_shared:
-                sockets.append(socket)
+                sockets.append(socket_)
 
         return self._section
 

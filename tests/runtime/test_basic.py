@@ -1,10 +1,10 @@
-from uwsgiconf.runtime.alarms import *
-from uwsgiconf.runtime.asynced import *
-from uwsgiconf.runtime.control import *
-from uwsgiconf.runtime.platform import uwsgi as platform
-from uwsgiconf.runtime.logging import *
-from uwsgiconf.runtime.request import *
-from uwsgiconf.runtime.websockets import *
+from uwsgiconf.runtime.alarms import *  # noqa smoke
+from uwsgiconf.runtime.asynced import *  # noqa smoke
+from uwsgiconf.runtime.control import harakiri_imposed
+from uwsgiconf.runtime.platform import uwsgi as platform  # noqa smoke
+from uwsgiconf.runtime.logging import *  # noqa smoke
+from uwsgiconf.runtime.request import *  # noqa smoke
+from uwsgiconf.runtime.websockets import *  # noqa smoke
 
 
 def test_harakiri_imposed():

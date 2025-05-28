@@ -37,7 +37,7 @@ class UwsgiCache(BaseCache):
             default=default,
             preserve_bytes=True
         )
-        return pickle.loads(value) if (value is not None and not value is default) else default
+        return pickle.loads(value) if (value is not None and value is not default) else default
 
     def set(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         self._set(key, value, timeout=timeout, version=version)

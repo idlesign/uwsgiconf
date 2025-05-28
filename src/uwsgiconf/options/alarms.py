@@ -60,10 +60,10 @@ class Alarms(OptionsGroup):
         :param alarm: Alarm.
 
         """
-        for alarm in listify(alarm):
-            if alarm not in self._alarms:
-                self._set('alarm', alarm, multi=True)
-                self._alarms.append(alarm)
+        for alarm_ in listify(alarm):
+            if alarm_ not in self._alarms:
+                self._set('alarm', alarm_, multi=True)
+                self._alarms.append(alarm_)
 
         return self._section
 

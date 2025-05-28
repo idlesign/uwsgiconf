@@ -1,7 +1,8 @@
+import logging
 import os
 import pickle
 from calendar import timegm
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Type, Callable, Dict, Union, Any, Optional
 
 from .. import uwsgi
@@ -171,7 +172,7 @@ class Spooler:
         if postpone:
 
             if isinstance(postpone, timedelta):
-                postpone += datetime.utcnow()
+                postpone += datetime.now(tz=timezone.utc)
 
             if isinstance(postpone, datetime):
                 postpone = timegm(postpone.timetuple())
@@ -226,7 +227,7 @@ class Spooler:
             result = task.process()
 
         except Exception as e:
-            _LOG.exception(f"Spooler. Unhandled exception in task '{task_name}'")
+            logging.exception("Spooler. Unhandled exception in task '%s'", task_name)
             result = ResultRescheduled(exception=e)
 
         if result is None:
@@ -369,13 +370,13 @@ class SpoolerTask:
 
         payload_.update(payload or {})
 
-        msg = dict(
-            message=f'ucfg_{cls.type_id}',
-            spooler=spooler,
-            priority=priority,
-            postpone=postpone,
-            payload=payload_,
-        )
+        msg = {
+            'message': f'ucfg_{cls.type_id}',
+            'spooler': spooler,
+            'priority': priority,
+            'postpone': postpone,
+            'payload': payload_,
+        }
         return msg
 
 

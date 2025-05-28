@@ -113,6 +113,7 @@ class SectionMutator:
             path_conf: str,
             name_module: str,
             name_project: str,
+            *,
             embedded: bool = False
     ) -> Optional['Section']:
         """Loads config section from existing configuration file (aka uwsgicfg.py)
@@ -218,7 +219,7 @@ class SectionMutator:
             if not self.options['compile']:
                 os.makedirs(self.runtime_dir, 0o755, True)
 
-    def mutate(self, embedded: bool = False):
+    def mutate(self, *, embedded: bool = False):
         """Mutates current section."""
         section = self.section
         project_name = self.project_name
@@ -277,7 +278,7 @@ class SectionMutator:
             self.contribute_error_pages()
 
 
-def run_uwsgi(config_section: 'Section', compile_only: bool = False, embedded: bool = False):
+def run_uwsgi(config_section: 'Section', *, compile_only: bool = False, embedded: bool = False):
     """Runs uWSGI using the given section configuration.
 
     :param config_section:

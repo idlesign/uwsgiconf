@@ -220,9 +220,9 @@ class OptionsGroup:
                 values = []
 
                 # First activate plugin if required.
-                for value in listify(value):
-                    handle_plugin_required(value)
-                    values.append(value)
+                for value_ in listify(value):
+                    handle_plugin_required(value_)
+                    values.append(value_)
 
                 # Second: list in new option.
                 if not handle_priority(values, use_list=True):

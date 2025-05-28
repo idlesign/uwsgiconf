@@ -156,11 +156,11 @@ def test_nice_python(assert_lines):
         'need-app = true',
 
     ], PythonSection(
-        params_python=dict(
+        params_python={
             # We'll run our app using virtualenv.
-            python_home='/home/idle/venv/',
-            search_path='/home/idle/apps/',
-        ),
+            'python_home': '/home/idle/venv/',
+            'search_path': '/home/idle/apps/',
+        },
         wsgi_module='somepackage.module',
         embedded_plugins=None
     ))

@@ -1,5 +1,3 @@
-from pathlib import Path
-from typing import Union
 
 from ..base import ParametrizedValue
 from ..typehints import Strpath

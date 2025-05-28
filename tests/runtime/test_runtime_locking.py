@@ -1,4 +1,4 @@
-from uwsgiconf.runtime.locking import *
+from uwsgiconf.runtime.locking import lock
 
 
 def test_locking():

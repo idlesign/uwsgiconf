@@ -14,7 +14,7 @@ class UwsgifyConfig(AppConfig):
     def ready(self):
 
         try:
-            import uwsgi
+            import uwsgi  # noqa F401
 
             # This will handle init modules discovery for non-embedded.
             # Part for embedding is done in toolbox.SectionMutator.mutate

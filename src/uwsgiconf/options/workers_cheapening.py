@@ -242,7 +242,7 @@ class Cheapening(OptionsGroup):
 
         return self._section
 
-    def print_alorithms(self):
+    def print_algorithms(self):
         """Print out enabled cheaper algorithms."""
 
         self._set('cheaper-algo-list', True, cast=bool)

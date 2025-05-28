@@ -7,7 +7,7 @@ JSON logging demo. It shows how to configure uWSGI to format log as JSON.
 
 """
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import partial
 
 from uwsgiconf.config import configure_uwsgi
@@ -30,7 +30,7 @@ def application(env, start_response):
 
     data = [
         '<h1>uwsgiconf demo: logging JSON</h1>',
-        f'<div>updated {datetime.now()}</div>',
+        f'<div>updated {datetime.now(tz=timezone.utc)}</div>',
     ]
 
     logging.warning('msg logging')

@@ -90,7 +90,7 @@ class FormatterBase:
                 yield name, key, value
 
     def format(self) -> Strlist:
-        raise NotImplementedError()  # pragma: nocover
+        raise NotImplementedError  # pragma: nocover
 
 
 class IniFormatter(FormatterBase):

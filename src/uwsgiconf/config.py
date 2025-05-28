@@ -1,7 +1,7 @@
 import os
 import sys
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import partial
 from itertools import chain
 from pathlib import Path
@@ -207,15 +207,15 @@ class Section(OptionsGroup):
         is_list = isinstance(value, list)
         values = []
 
-        for value in listify(value):
+        for value_ in listify(value):
             runtime_dir = self.get_runtime_dir()
             project_name = self.project_name
 
-            value = value.replace('{runtime_dir}', runtime_dir)
-            value = value.replace('{project_name}', project_name)
-            value = value.replace('{project_runtime_dir}', os.path.join(runtime_dir, project_name))
+            value_ = value_.replace('{runtime_dir}', runtime_dir)
+            value_ = value_.replace('{project_name}', project_name)
+            value_ = value_.replace('{project_runtime_dir}', os.path.join(runtime_dir, project_name))
 
-            values.append(value)
+            values.append(value_)
 
         value = values if is_list else values.pop()
 
@@ -290,7 +290,7 @@ class Section(OptionsGroup):
         print_out(
             'uwsgiconf v%s on %s' % (
                 '.'.join(map(str, VERSION)),
-                datetime.now().isoformat(' ')
+                datetime.now(tz=timezone.utc).isoformat(' ')
             ))
 
         return self

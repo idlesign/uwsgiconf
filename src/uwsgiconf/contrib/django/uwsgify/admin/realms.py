@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+import logging
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from django import forms
@@ -36,7 +37,7 @@ class SummaryAdmin(OnePageAdmin):
 
             return info
 
-        time_started = datetime.fromtimestamp(uwsgi.started_on)
+        time_started = datetime.fromtimestamp(uwsgi.started_on, tz=timezone.utc)
         rss, vsz = uwsgi.memory
         config = uwsgi.config
 
@@ -44,7 +45,7 @@ class SummaryAdmin(OnePageAdmin):
             _('Version'): uwsgi.get_version(),
             _('Hostname'): uwsgi.hostname,
             _('Serving since'): time_started,
-            _('Serving for'): datetime.now() - time_started,
+            _('Serving for'): datetime.now(tz=timezone.utc) - time_started,
             _('Clock'): uwsgi.clock,
             _('Master PID'): uwsgi.master_pid,
             _('Memory (RSS, VSZ)'): '\n'.join((filesizeformat(rss), filesizeformat(vsz))),
@@ -68,7 +69,7 @@ class SummaryAdmin(OnePageAdmin):
         context.update({
             'panels': {
                 '': {
-                    'rows': dict((key, [val]) for key, val in info_basic.items()),
+                    'rows': {key: [val] for key, val in info_basic.items()},
                 }
             },
         })
@@ -81,7 +82,7 @@ class ConfigurationAdmin(OnePageAdmin):
 
         context.update({
             'panels': {
-                '': {'rows': dict((key, [val]) for key, val in uwsgi.config.items())},
+                '': {'rows': {key: [val] for key, val in uwsgi.config.items()}},
             },
         })
 
@@ -149,7 +150,7 @@ class WorkersAdmin(OnePageAdmin):
 
             if keyname_worker == 'apps':
                 # Get info about applications served by worker,
-                for idx_app, keyname_app, name_app, value_app in value_worker:
+                for idx_app, __, name_app, value_app in value_worker:
                     app_key = f'%s {idx_worker + 1}. %s {idx_app}' % (_('Worker'), _('Application'))
                     info_apps.setdefault(app_key, {})[name_app] = [value_app]
 
@@ -216,6 +217,8 @@ class MaintenanceAdmin(OnePageAdmin):
                 self.message_user(
                     request,
                     _('Unable to schedule maintenance: %(error)s.') % {'error': f'{e}'})
+
+                logging.exception('Unable to schedule maintenance')
 
         else:
 

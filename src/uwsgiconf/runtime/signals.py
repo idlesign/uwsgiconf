@@ -32,7 +32,7 @@ def get_available_num() -> int:
     :raises UwsgiconfException: If no signal is available.
 
     """
-    for signum in range(0, 256):
+    for signum in range(256):
         if not uwsgi.signal_registered(signum):
             return signum
 

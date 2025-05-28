@@ -1,4 +1,4 @@
-from uwsgiconf.runtime.caching import *
+from uwsgiconf.runtime.caching import Cache
 
 
 def test_caching():

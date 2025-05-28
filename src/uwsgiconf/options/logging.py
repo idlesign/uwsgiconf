@@ -342,8 +342,8 @@ class Logging(OptionsGroup):
         else:
             command = 'logger-req' if requests_only else 'logger'
 
-        for logger in listify(logger):
-            self._set(command, logger, multi=True)
+        for logger_ in listify(logger):
+            self._set(command, logger_, multi=True)
 
         return self._section
 
@@ -359,8 +359,8 @@ class Logging(OptionsGroup):
         """
         command = 'log-req-route' if requests_only else 'log-route'
 
-        for logger in listify(logger):
-            self._set(command, f'{logger} {matcher}', multi=True)
+        for logger_ in listify(logger):
+            self._set(command, f'{logger_} {matcher}', multi=True)
 
         return self._section
 
@@ -388,9 +388,9 @@ class Logging(OptionsGroup):
         else:
             command = 'log-req-encoder' if requests_only else 'log-encoder'
 
-        for encoder in listify(encoder):
+        for encoder_ in listify(encoder):
 
-            value = f'{encoder}'
+            value = f'{encoder_}'
 
             if logger:
                 if isinstance(logger, Logger):

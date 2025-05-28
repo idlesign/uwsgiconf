@@ -1,12 +1,11 @@
 import logging
 import os
 import sys
-from collections import namedtuple
 from contextlib import contextmanager
 from importlib import import_module
 from io import StringIO
 from types import ModuleType
-from typing import Optional, Any, List, Tuple, Dict
+from typing import Optional, Any, List, Tuple, Dict, NamedTuple
 
 from .exceptions import UwsgiconfException
 from .settings import CONFIGS_MODULE_ATTR
@@ -16,7 +15,9 @@ if False:  # pragma: nocover
     from .config import Configuration  # noqa
 
 
-EmbeddedPlugins = namedtuple('EmbeddedPlugins', ['generic', 'request'])
+class EmbeddedPlugins(NamedTuple):
+    generic: list[str]
+    request: list[str]
 
 
 def get_logger(name: str):
@@ -463,7 +464,7 @@ class UwsgiRunner:
 
                 raise UwsgiconfException(
                     'uWSGI executable not found. '
-                    'Please make sure it is installed and available.')
+                    'Please make sure it is installed and available.') from None
 
         return os.spawnvp(os.P_NOWAIT, 'uwsgi', args)
 
@@ -517,12 +518,13 @@ def get_uwsgi_stub_attrs_diff() -> Tuple[List[str], List[str]]:
         from uwsgiconf.exceptions import UwsgiconfException
 
         raise UwsgiconfException(
-            '`uwsgi` module is unavailable. Calling `get_attrs_diff` in such environment makes no sense.')
+            '`uwsgi` module is unavailable. '
+            'Calling `get_attrs_diff` in such environment makes no sense.') from None
 
     from . import uwsgi_stub
 
     def get_attrs(src):
-        return set(attr for attr in dir(src) if not attr.startswith('_'))
+        return {attr for attr in dir(src) if not attr.startswith('_')}
 
     attrs_uwsgi = get_attrs(uwsgi)
     attrs_stub = get_attrs(uwsgi_stub)

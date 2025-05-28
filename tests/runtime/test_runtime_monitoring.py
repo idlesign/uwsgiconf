@@ -1,11 +1,11 @@
-from uwsgiconf.runtime.monitoring import *
+from uwsgiconf.runtime.monitoring import Metric, register_file_monitor
 
 
 def test_metric():
 
     m = Metric('mycounter')
 
-    value = m.value
+    assert m.value is None
 
     m.set(10)
     m.set(20, mode='min')

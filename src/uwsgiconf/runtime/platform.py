@@ -149,7 +149,7 @@ def __get_platform() -> _Platform:
         platform = _Platform()
         platform.request = _Request()
 
-        setattr(__THREAD_LOCAL, 'uwsgi_platform', platform)
+        __THREAD_LOCAL.uwsgi_platform = platform
 
     return platform
 
