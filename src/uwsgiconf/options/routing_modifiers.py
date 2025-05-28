@@ -1,4 +1,3 @@
-from typing import List
 
 from ..exceptions import ConfigurationError
 
@@ -8,7 +7,7 @@ RANGE_255 = list(range(256))
 class Modifier:
 
     _submod = None
-    subcodes: List[int] = None
+    subcodes: list[int] = None
 
     code: int = None
     submod = property()

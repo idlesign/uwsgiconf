@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from os.path import abspath, basename, dirname
 from textwrap import dedent
-from typing import Callable, Dict, List, Union
 
 from .config import Configuration, Section
 from .utils import Finder, UwsgiRunner
@@ -8,7 +8,7 @@ from .utils import Finder, UwsgiRunner
 TYPE_UPSTART = 'upstart'
 TYPE_SYSTEMD = 'systemd'
 
-TYPES: List[str] = [
+TYPES: list[str] = [
     TYPE_UPSTART,
     TYPE_SYSTEMD,
 ]
@@ -109,7 +109,7 @@ def get_tpl_upstart(conf: 'Section') -> str:
     return tpl
 
 
-TEMPLATES: Dict[str, Callable] = {
+TEMPLATES: dict[str, Callable] = {
     TYPE_SYSTEMD: get_tpl_systemd,
     TYPE_UPSTART: get_tpl_upstart,
 }
@@ -118,7 +118,7 @@ TEMPLATES: Dict[str, Callable] = {
 def get_config(
         systype: str,
         *,
-        conf: Union[Configuration, Section],
+        conf: Configuration | Section,
         conf_path: str,
         runner: str = None,
         project_name: str = None

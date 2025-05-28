@@ -1,4 +1,3 @@
-from typing import Tuple
 
 from ..config import Section
 from ..typehints import Strlist
@@ -66,7 +65,7 @@ class Broodlord:
         self.section_emperor = section_emperor
         self.section_zerg = section_zerg
 
-    def configure(self) -> Tuple[Section, Section]:
+    def configure(self) -> tuple[Section, Section]:
         """Configures broodlord mode and returns emperor and zerg sections."""
 
         section_emperor = self.section_emperor

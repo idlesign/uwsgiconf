@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional, Sequence
+from collections.abc import Callable, Sequence
 
 from .. import uwsgi
 from ..utils import decode, decode_deep, encode, get_logger
@@ -40,7 +40,7 @@ def register_rpc(name: str = None) -> Callable:
     return wrapper
 
 
-def make_rpc_call(func_name: str, *, args: Sequence[str] = None, remote: str = None) -> Optional[str]:
+def make_rpc_call(func_name: str, *, args: Sequence[str] = None, remote: str = None) -> str | None:
     """Performs an RPC function call (local or remote) with the given arguments.
 
     :param func_name: RPC function name to call.
@@ -68,6 +68,6 @@ def make_rpc_call(func_name: str, *, args: Sequence[str] = None, remote: str = N
     return decode(result)
 
 
-def get_rpc_list() -> List[str]:
+def get_rpc_list() -> list[str]:
     """Returns registered RPC functions names."""
     return decode_deep(uwsgi.rpc_list())

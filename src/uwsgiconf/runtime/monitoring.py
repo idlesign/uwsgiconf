@@ -1,11 +1,10 @@
-from typing import Union
 
 from .. import uwsgi
 from ..typehints import Strint
 from .signals import Signal, _automate_signal
 
 
-def register_file_monitor(filename: str, *, target: Union[Strint, Signal] = None):
+def register_file_monitor(filename: str, *, target: Strint | Signal = None):
     """Maps a specific file/directory modification event to a signal.
 
     :param filename: File or a directory to watch for its modification.

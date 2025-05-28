@@ -1,4 +1,3 @@
-from typing import Union
 
 from ..base import ParametrizedValue
 from .routing_vars import Var
@@ -17,7 +16,7 @@ class SubjectCustom(ParametrizedValue):
 
     args_joiner = ';'
 
-    def __init__(self, subject: Union[Var, str], *, negate: bool = False):
+    def __init__(self, subject: Var | str, *, negate: bool = False):
         """
         :param subject: Handwritten subject or a Var heir representing it.
 

@@ -1,15 +1,16 @@
 import pickle
+from collections.abc import Callable
 from functools import partial
-from typing import Callable, Dict, List, Optional, Union
+from typing import Optional, Union
 
 from .. import uwsgi
 from ..typehints import Strint
 from ..utils import decode, decode_deep, listify
 
-__offloaded_functions: Dict[str, Callable] = {}
+__offloaded_functions: dict[str, Callable] = {}
 
 
-def _get_farms() -> List[str]:
+def _get_farms() -> list[str]:
     return decode_deep(listify(uwsgi.opt.get(b'farm', [])))
 
 
@@ -106,7 +107,7 @@ class Mule:
         """
         return decode(uwsgi.mule_get_msg(signals, farms, buffer_size, timeout))
 
-    def send(self, message: Union[str, bytes]) -> bool:
+    def send(self, message: str | bytes) -> bool:
         """Sends a message to a mule(s)/farm.
 
         :param message:
@@ -128,7 +129,7 @@ class Farm:
     """
     __slots__ = ['name', 'mules']
 
-    def __init__(self, name: str, *, mules: List[int] = None):
+    def __init__(self, name: str, *, mules: list[int] = None):
         """
         :param name: Mule farm name.
         :param mules: Attached mules.
@@ -141,7 +142,7 @@ class Farm:
         return f"{self.name}: {', '.join(map(str, self.mules))}"
 
     @classmethod
-    def get_farms(cls) -> List['Farm']:
+    def get_farms(cls) -> list['Farm']:
         """Returns a list of registered farm objects.
 
         .. code-block:: python
@@ -189,7 +190,7 @@ class Farm:
          """
         return decode(uwsgi.farm_get_msg())
 
-    def send(self, message: Union[str, bytes]):
+    def send(self, message: str | bytes):
         """Sends a message to the given farm.
 
         :param message:

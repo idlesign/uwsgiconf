@@ -1,4 +1,5 @@
-from typing import Callable, Dict, NamedTuple, Union
+from collections.abc import Callable
+from typing import NamedTuple, Union
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
@@ -22,7 +23,7 @@ class SignalDescription(NamedTuple):
     """Function to run on signal."""
 
 
-REGISTERED_SIGNALS: Dict[int, SignalDescription] = {}
+REGISTERED_SIGNALS: dict[int, SignalDescription] = {}
 """Registered signals."""
 
 

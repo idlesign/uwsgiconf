@@ -1,4 +1,3 @@
-from typing import Dict
 
 from .. import uwsgi
 
@@ -9,7 +8,7 @@ class _Request:
     __slots__ = []
 
     @property
-    def env(self) -> Dict[str, str]:
+    def env(self) -> dict[str, str]:
         """Request environment dictionary."""
         return uwsgi.env
 

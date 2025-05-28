@@ -1,11 +1,11 @@
 import os
-from typing import List, Optional, Tuple, Union
+from typing import Union
 
 from ..base import OptionsGroup
 from ..typehints import Strint, Strlist, Strpath
 from .main_process_actions import *
 
-TypeActionExt = Union[str, 'HookAction', List[Union[str, 'HookAction']]]
+TypeActionExt = Union[str, 'HookAction', list[Union[str, 'HookAction']]]
 
 
 class MainProcess(OptionsGroup):
@@ -180,7 +180,7 @@ class MainProcess(OptionsGroup):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.owner: List[Optional[Strint], Optional[Strint]] = [None, None]
+        self.owner: list[Strint | None, Strint | None] = [None, None]
 
     def set_basic_params(
             self,
@@ -275,7 +275,7 @@ class MainProcess(OptionsGroup):
             *,
             uid: Strint = None,
             gid: Strint = None,
-            add_gids: Union[Strint, List[Strint]] = None,
+            add_gids: Strint | list[Strint] = None,
             set_asap: bool = False,
             drop_after: str = '',
     ):
@@ -313,7 +313,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def get_owner(self, *, default: bool = True) -> Tuple[Optional[Strint], Optional[Strint]]:
+    def get_owner(self, *, default: bool = True) -> tuple[Strint | None, Strint | None]:
         """Return (User ID, Group ID) tuple
 
         :param default: Whether to return default if not set.

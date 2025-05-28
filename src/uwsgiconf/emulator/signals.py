@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable, Dict
 
 
 @dataclass
@@ -11,7 +11,7 @@ class SignalInfo:
     schedule: str = ''
 
 
-__SIGNALS: Dict[int, SignalInfo] = {}
+__SIGNALS: dict[int, SignalInfo] = {}
 
 
 def register(*, num: int, target: str, func: Callable):

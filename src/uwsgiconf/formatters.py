@@ -1,4 +1,5 @@
-from typing import Any, Dict, Generator, List, Tuple, Type, TypeVar
+from collections.abc import Generator
+from typing import Any, TypeVar
 
 from .typehints import Strlist
 
@@ -79,10 +80,10 @@ class FormatterBase:
 
     alias: str = None
 
-    def __init__(self, sections: List['Section']):
+    def __init__(self, sections: list['Section']):
         self.sections = sections
 
-    def iter_options(self) -> Generator[Tuple[str, str, Any], None, None]:
+    def iter_options(self) -> Generator[tuple[str, str, Any], None, None]:
         """Iterates configuration sections groups options."""
         for section in self.sections:
             name = f'{section}'
@@ -118,7 +119,7 @@ class ArgsFormatter(FormatterBase):
 
     alias: str = 'args'
 
-    def format(self) -> List[str]:
+    def format(self) -> list[str]:
         lines = []
 
         for section_name, key, value in self.iter_options():
@@ -139,7 +140,7 @@ class ArgsFormatter(FormatterBase):
         return lines
 
 
-FORMATTERS: Dict[str, Type[FormatterBase]] = {formatter.alias: formatter for formatter in (
+FORMATTERS: dict[str, type[FormatterBase]] = {formatter.alias: formatter for formatter in (
     ArgsFormatter,
     IniFormatter,
 )}

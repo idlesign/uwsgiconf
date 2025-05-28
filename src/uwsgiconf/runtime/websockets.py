@@ -1,4 +1,3 @@
-from typing import Union
 
 from .. import uwsgi
 
@@ -19,7 +18,7 @@ def recv(*, request_context=None, non_blocking: bool = False) -> bytes:
     return uwsgi.websocket_recv_nb() if non_blocking else uwsgi.websocket_recv()
 
 
-def send(*, message: Union[str, bytes], request_context=None):
+def send(*, message: str | bytes, request_context=None):
     """Sends a message to websocket.
 
     :param message: data to send

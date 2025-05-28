@@ -1,5 +1,5 @@
 import pickle
-from typing import Any, Dict
+from typing import Any
 
 from django.core.cache.backends.base import DEFAULT_TIMEOUT, BaseCache
 from uwsgiconf.runtime.caching import Cache as _Cache
@@ -16,7 +16,7 @@ class UwsgiCache(BaseCache):
         }
     """
 
-    def __init__(self, name: str, params: Dict):
+    def __init__(self, name: str, params: dict):
         super().__init__(params)
         self._cache = _Cache(name)
 

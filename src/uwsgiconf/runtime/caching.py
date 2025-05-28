@@ -1,4 +1,5 @@
-from typing import Any, Callable, List, Union
+from collections.abc import Callable
+from typing import Any
 
 from .. import uwsgi
 from ..typehints import Strint
@@ -38,7 +39,7 @@ class Cache:
         return uwsgi.cache_exists(key, self.name)
 
     @property
-    def keys(self) -> List[str]:
+    def keys(self) -> list[str]:
         """Returns a list of keys available in cache.
 
         :raises ValueError: If cache is unavailable.
@@ -59,7 +60,7 @@ class Cache:
             setter: Callable[[str], Any] = None,
             preserve_bytes: bool = False,
 
-    ) -> Union[Strint, bytes]:
+    ) -> Strint | bytes:
         """Gets a value from the cache.
 
         :param key: The cache key to get value for.

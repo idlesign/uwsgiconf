@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Optional, Tuple, Type, Union
+from collections.abc import Callable
 
 from .emulator import (
     caching as __caching,
@@ -49,16 +49,16 @@ Something is temporarily wrong, the task will be retried at the next spooler ite
 
 """
 
-SymbolsImporter: Optional[Type] = None
+SymbolsImporter: type | None = None
 """SymbolsImporter type."""
 
-SymbolsZipImporter: Optional[Type] = None
+SymbolsZipImporter: type | None = None
 """SymbolsZipImporter type."""
 
-ZipImporter: Optional[Type] = None
+ZipImporter: type | None = None
 """ZipImporter type."""
 
-applications: Optional[dict] = None
+applications: dict | None = None
 """Applications dictionary mapping mountpoints to application callables.
 
 .. note:: Can be ``None``.
@@ -73,7 +73,7 @@ buffer_size: int = 0
 cores: int = 0
 """Detected number of processor cores."""
 
-env: Dict[str, str] = {}
+env: dict[str, str] = {}
 """Request environment dictionary."""
 
 has_threads: bool = False
@@ -92,7 +92,7 @@ magic_table: dict = {}
 numproc: int = 0
 """Number of workers (processes) currently running."""
 
-opt: Dict[bytes, bytes] = {}
+opt: dict[bytes, bytes] = {}
 """The current configuration options, including any custom placeholders."""
 
 post_fork_hook: Callable = lambda: None
@@ -101,10 +101,10 @@ post_fork_hook: Callable = lambda: None
 spooler: Callable = lambda: None
 """Function to be called for spooler messages processing."""
 
-sockets: List[int] = []
+sockets: list[int] = []
 """Current list of file descriptors for registered sockets."""
 
-start_response: Optional[Callable] = None
+start_response: Callable | None = None
 """Callable spitting UWSGI response."""
 
 started_on: int = 0
@@ -116,7 +116,7 @@ unbit: bool = False
 version: bytes = b'0.0.0'
 """The uWSGI version string."""
 
-version_info: Tuple[int, int, int, int, bytes] = (0, 0, 0, 0, b'')
+version_info: tuple[int, int, int, int, bytes] = (0, 0, 0, 0, b'')
 """Five-elements version number tuple."""
 
 # todo wait for install_mule_msg_hook merged in master and define here
@@ -322,7 +322,7 @@ def cache_exists(key: str, cache: str = None) -> bool:
     return __caching.has_key(key=key, cache=cache)
 
 
-def cache_get(key: str, cache: str = None) -> Optional[bytes]:
+def cache_get(key: str, cache: str = None) -> bytes | None:
     """Gets a value from the cache.
 
     :param key: The cache key to get value for.
@@ -350,7 +350,7 @@ def cache_inc(key: str, value: int = 1, expires: int = None, cache: str = None) 
     return __caching.do_inc(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_keys(cache: str = None) -> List:
+def cache_keys(cache: str = None) -> list:
     """Returns a list of keys available in cache.
 
     :param str cache: Cache name with optional address (if @-syntax is used).
@@ -378,7 +378,7 @@ def cache_mul(key: str, value: int = 2, expires: int = None, cache: str = None) 
     return __caching.do_mul(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_num(key: str, cache: str = None) -> Optional[int]:
+def cache_num(key: str, cache: str = None) -> int | None:
     """Gets the 64bit number from the specified item.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -421,7 +421,7 @@ def cache_update(key: str, value: bytes, expires: int = None, cache: str = None)
     return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
-def call(func_name: bytes, *args: bytes) -> Optional[bytes]:
+def call(func_name: bytes, *args: bytes) -> bytes | None:
     """Performs an [RPC] function call with the given arguments.
 
     :param func_name: Function name to call
@@ -508,7 +508,7 @@ def extract(fname: str) -> bytes:
     """
 
 
-def farm_get_msg() -> Optional[bytes]:
+def farm_get_msg() -> bytes | None:
     """Reads a mule farm message.
 
      * http://uwsgi.readthedocs.io/en/latest/Embed.html
@@ -518,7 +518,7 @@ def farm_get_msg() -> Optional[bytes]:
      """
 
 
-def farm_msg(farm: str, message: Union[str, bytes]):
+def farm_msg(farm: str, message: str | bytes):
     """Sends a message to the given farm.
 
     :param farm: Farm name to send message to.
@@ -555,7 +555,7 @@ def i_am_the_spooler() -> bool:
     return False
 
 
-def in_farm(name: str) -> Optional[bool]:
+def in_farm(name: str) -> bool | None:
     """Returns flag indicating whether you (mule) belong
     to the given farm. Returns ``None`` is not in a mule.
 
@@ -633,7 +633,7 @@ def logsize() -> int:
     return 0
 
 
-def loop() -> Optional[str]:
+def loop() -> str | None:
     """Returns current event loop name or None if loop is not set."""
 
 
@@ -642,7 +642,7 @@ def masterpid() -> int:
     return -1
 
 
-def mem() -> Tuple[int, int]:
+def mem() -> tuple[int, int]:
     """Returns memory usage tuple of ints: (rss, vsz)."""
     return 0, 0
 
@@ -760,7 +760,7 @@ def mule_id() -> int:
     return 0
 
 
-def mule_msg(message: Union[str, bytes], mule_farm: Union[str, int] = None) -> bool:
+def mule_msg(message: str | bytes, mule_farm: str | int = None) -> bool:
     """Sends a message to a mule(s)/farm.
 
     :param message:
@@ -883,7 +883,7 @@ def route(name: str, args_str: str) -> int:
     """
 
 
-def rpc(address: Optional[bytes], func_name: bytes, *args: bytes) -> bytes:
+def rpc(address: bytes | None, func_name: bytes, *args: bytes) -> bytes:
     """Performs an RPC function call with the given arguments.
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
@@ -900,12 +900,12 @@ def rpc(address: Optional[bytes], func_name: bytes, *args: bytes) -> bytes:
     return __rpc.do_call(name=func_name, *args)
 
 
-def rpc_list() -> Tuple[bytes, ...]:
+def rpc_list() -> tuple[bytes, ...]:
     """Returns registered RPC functions names."""
     return __rpc.get_list()
 
 
-def send(fd_or_data: Union[int, bytes], data: bytes = None) -> bool:
+def send(fd_or_data: int | bytes, data: bytes = None) -> bool:
     """Puts data into file descriptor.
 
     * One argument. Data to write into request file descriptor.
@@ -919,7 +919,7 @@ def send(fd_or_data: Union[int, bytes], data: bytes = None) -> bool:
     return False
 
 
-def sendfile(fd_or_name: Union[int, str], chunk_size: int = 0, start_pos: int = 0, filesize: int = 0) -> Optional[bool]:
+def sendfile(fd_or_name: int | str, chunk_size: int = 0, start_pos: int = 0, filesize: int = 0) -> bool | None:
     """Runs a sendfile.
 
     :param fd_or_name: File path or descriptor number.
@@ -933,7 +933,7 @@ def sendfile(fd_or_name: Union[int, str], chunk_size: int = 0, start_pos: int = 
     """
 
 
-def send_to_spooler(message: Dict[bytes, bytes] = None, **kwargs):
+def send_to_spooler(message: dict[bytes, bytes] = None, **kwargs):
     """Send data to the The uWSGI Spooler. Also known as spool().
 
     .. warning:: Either `message` argument should contain a dictionary
@@ -1037,7 +1037,7 @@ def signal_received() -> int:
     """
 
 
-def signal_registered(num: int) -> Optional[int]:
+def signal_registered(num: int) -> int | None:
     """Verifies the given signal has been registered.
 
     :param num:
@@ -1065,7 +1065,7 @@ def signal_wait(num: int = None) -> str:
 spool = send_to_spooler
 
 
-def spooler_get_task(path: str) -> Optional[dict]:
+def spooler_get_task(path: str) -> dict | None:
     """Returns a spooler task information.
 
     :param path: The relative or absolute path to the task to read.
@@ -1073,7 +1073,7 @@ def spooler_get_task(path: str) -> Optional[dict]:
     """
 
 
-def spooler_jobs() -> List[str]:
+def spooler_jobs() -> list[str]:
     """Returns a list of spooler jobs (filenames in spooler directory)."""
     return []
 
@@ -1083,12 +1083,12 @@ def spooler_pid() -> int:
     return -1
 
 
-def spooler_pids() -> List[int]:
+def spooler_pids() -> list[int]:
     """Returns a list of all spooler processes IDs."""
     return []
 
 
-def stop() -> Optional[bool]:
+def stop() -> bool | None:
     """Stops uWSGI."""
 
 
@@ -1222,7 +1222,7 @@ def worker_id() -> int:
     return 0
 
 
-def workers() -> Tuple[dict, ...]:
+def workers() -> tuple[dict, ...]:
     """Gets statistics for all the workers for the current server.
 
     Returns tuple of dicts.
@@ -1258,7 +1258,7 @@ def lord_scroll(legion_name: str) -> bool:
     return False
 
 
-def scrolls(legion_name: str) -> List[str]:
+def scrolls(legion_name: str) -> list[str]:
     """Returns a list of Legion scrolls defined on cluster.
 
     :param legion_name:

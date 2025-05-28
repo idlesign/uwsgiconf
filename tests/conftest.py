@@ -70,7 +70,7 @@ def mock_popen(monkeypatch):
 
     def mock(func_communicate):
 
-        class MockPopen(object):
+        class MockPopen:
 
             def __init__(self, *args, **kwargs):
                 pass

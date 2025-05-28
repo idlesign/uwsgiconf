@@ -1,7 +1,6 @@
 from collections import defaultdict
-from typing import Dict, List, Optional, Union
 
-__CACHES: Dict[str, Dict[str, Union[bytes, int]]] = defaultdict(dict)
+__CACHES: dict[str, dict[str, bytes | int]] = defaultdict(dict)
 
 
 def clear(*, cache: str):
@@ -41,11 +40,11 @@ def do_delete(*, key: str, cache: str = None) -> bool:
         return False
 
 
-def get_keys(*, cache: str) -> List[str]:
+def get_keys(*, cache: str) -> list[str]:
     return list(__CACHES[cache].keys())
 
 
-def get_value(*, key: str, cache: str = None) -> Optional[Union[bytes, int]]:
+def get_value(*, key: str, cache: str = None) -> bytes | int | None:
     return __CACHES[cache].get(key)
 
 

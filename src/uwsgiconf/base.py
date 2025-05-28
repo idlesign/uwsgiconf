@@ -1,4 +1,5 @@
-from typing import Any, Callable, Optional, Type, Union
+from collections.abc import Callable
+from typing import Any, Union
 
 from .utils import listify
 
@@ -9,14 +10,14 @@ if False:  # pragma: nocover
 class Options:
     """Options descriptor. Allows option."""
 
-    def __init__(self, opt_type: Type['OptionsGroup']):
+    def __init__(self, opt_type: type['OptionsGroup']):
         """
         :param opt_type:
 
         """
         self.opt_type = opt_type
 
-    def __get__(self, section: 'Section', section_cls: Type['Section']) -> Union['OptionsGroup', Type['OptionsGroup']]:
+    def __get__(self, section: 'Section', section_cls: type['Section']) -> Union['OptionsGroup', type['OptionsGroup']]:
         """
 
         :param section:
@@ -77,7 +78,7 @@ class OptionsGroup:
     _section: 'Section' = None
     """Section this option group belongs to."""
 
-    plugin: Union[bool, str] = False
+    plugin: bool | str = False
     """Indication this option group belongs to a plugin."""
 
     name: str = ''
@@ -121,7 +122,7 @@ class OptionsGroup:
             key: str,
             value: Any,
             *,
-            condition: Optional[Union[bool, str]] = True,
+            condition: bool | str | None = True,
             cast: Callable = None,
             multi: bool = False,
             plugin: str = None,
@@ -256,7 +257,7 @@ class ParametrizedValue(OptionsGroup):
     name_separator_strip: bool = False
     """Strip leading and trailing name separator from the result."""
 
-    opt_key: Optional[str] = None
+    opt_key: str | None = None
     """Allows swapping default option key with custom value."""
 
     def __init__(self, *args):

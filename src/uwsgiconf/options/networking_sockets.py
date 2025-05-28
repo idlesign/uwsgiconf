@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Union
 
 from ..base import ParametrizedValue
 from ..typehints import Strlist
@@ -191,7 +191,7 @@ class SocketHttps(Socket):
         self.args.extend(args)
 
     @classmethod
-    def get_certbot_paths(cls, domain: str) -> Tuple[str, str]:
+    def get_certbot_paths(cls, domain: str) -> tuple[str, str]:
         """Returns a tuple of paths for files (certificates_chain, private_key)
         from Certbot https://certbot.eff.org
 

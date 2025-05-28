@@ -5,7 +5,7 @@ from contextlib import contextmanager
 from importlib import import_module
 from io import StringIO
 from types import ModuleType
-from typing import Any, Dict, List, NamedTuple, Optional, Tuple
+from typing import Any, NamedTuple
 
 from .exceptions import UwsgiconfException
 from .settings import CONFIGS_MODULE_ATTR
@@ -30,7 +30,7 @@ def encode(value: str) -> bytes:
     return value.encode()
 
 
-def decode(value: Optional[bytes]) -> Optional[str]:
+def decode(value: bytes | None) -> str | None:
     """Decodes bytes into str."""
     if value is None:
         return value
@@ -95,7 +95,7 @@ class ConfModule:
         self.fpath = fpath
         self._confs = None
 
-    def spawn_uwsgi(self, *, only: str = None) -> List[Tuple[str, int]]:
+    def spawn_uwsgi(self, *, only: str = None) -> list[tuple[str, int]]:
         """Spawns uWSGI process(es) which will use configuration(s) from the module.
 
         Returns list of tuples:
@@ -128,7 +128,7 @@ class ConfModule:
         return spawned
 
     @property
-    def configurations(self) -> List['Configuration']:
+    def configurations(self) -> list['Configuration']:
         """Configurations from uwsgiconf module."""
 
         if self._confs is not None:
@@ -162,7 +162,7 @@ class ConfModule:
         return module
 
 
-def listify(src: Any) -> List:
+def listify(src: Any) -> list:
     """Make a list with source object if not already a list.
 
     :param src:
@@ -175,11 +175,11 @@ def listify(src: Any) -> List:
 
 
 def filter_locals(
-        locals_dict: Dict[str, Any],
+        locals_dict: dict[str, Any],
         *,
-        drop: List[str] = None,
-        include: List[str] = None
-) -> Dict[str, Any]:
+        drop: list[str] = None,
+        include: list[str] = None
+) -> dict[str, Any]:
     """Filters a dictionary produced by locals().
 
     :param locals_dict:
@@ -209,12 +209,12 @@ class KeyValue:
 
     def __init__(
             self,
-            locals_dict: Dict[str, Any],
+            locals_dict: dict[str, Any],
             *,
-            keys: List[str] = None,
-            aliases: Dict[str, str] = None,
-            bool_keys: List[str] = None,
-            list_keys: List[str] = None,
+            keys: list[str] = None,
+            aliases: dict[str, str] = None,
+            bool_keys: list[str] = None,
+            list_keys: list[str] = None,
             items_separator: str = ','
     ):
         """
@@ -502,7 +502,7 @@ def parse_command_plugins_output(out: str) -> EmbeddedPlugins:
     return plugins
 
 
-def get_uwsgi_stub_attrs_diff() -> Tuple[List[str], List[str]]:
+def get_uwsgi_stub_attrs_diff() -> tuple[list[str], list[str]]:
     """Returns attributes difference two elements tuple between
     real uwsgi module and its stub.
 

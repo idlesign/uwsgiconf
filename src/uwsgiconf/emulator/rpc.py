@@ -1,6 +1,6 @@
-from typing import Callable, Dict, Optional, Tuple
+from collections.abc import Callable
 
-__RPCS: Dict[str, Callable] = {}
+__RPCS: dict[str, Callable] = {}
 
 
 def register(*, name: str, func: Callable):
@@ -8,9 +8,9 @@ def register(*, name: str, func: Callable):
     return True
 
 
-def do_call(*args: bytes, name: bytes) -> Optional[bytes]:
+def do_call(*args: bytes, name: bytes) -> bytes | None:
     __RPCS[name.decode()](*args)
 
 
-def get_list() -> Tuple[bytes, ...]:
+def get_list() -> tuple[bytes, ...]:
     return tuple(key.encode() for key in __RPCS)

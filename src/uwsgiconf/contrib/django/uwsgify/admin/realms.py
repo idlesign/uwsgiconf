@@ -30,10 +30,10 @@ class SummaryAdmin(OnePageAdmin):
             return f'{module_path}.{func.__name__}'
 
         def get_signals_info(signals):
-            info = []
-
-            for signal in signals:
-                info.append(f'{signal.num} - {signal.target}: {get_func_name(signal.func)}')
+            info = [
+                f'{signal.num} - {signal.target}: {get_func_name(signal.func)}'
+                for signal in signals
+            ]
 
             return info
 

@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Optional, Union
 
 from ..config import Section as _Section
 from ..settings import ENV_MAINTENANCE, ENV_MAINTENANCE_INPLACE
@@ -15,7 +15,7 @@ class Section(_Section):
             *,
             touch_reload: Strlist =None,
             workers: int = None,
-            threads: Union[int, bool] = None,
+            threads: int | bool = None,
             mules: int = None,
             owner: str = None,
             log_into: str = None,
@@ -325,10 +325,10 @@ class PythonSection(Section):
             *,
             params_python: dict = None,
             wsgi_module: str = None,
-            wsgi_callable: Union[str, Callable] = None,
-            embedded_plugins: Optional[bool] = True,
+            wsgi_callable: str | Callable = None,
+            embedded_plugins: bool | None = True,
             require_app: bool = True,
-            threads: Union[bool, int] = True,
+            threads: bool | int = True,
             **kwargs
     ):
         """

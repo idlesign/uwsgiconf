@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from datetime import datetime, timezone
 from functools import partial, wraps
-from typing import Callable, Union
+from typing import Union
 
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
@@ -181,7 +182,7 @@ def register_cron(
 
     def skip_task(check_funcs):
         now = datetime.now(tz=timezone.utc)
-        allright = all((func(now) for func in check_funcs))
+        allright = all(func(now) for func in check_funcs)
         return not allright
 
     def check_date(now, attr, target_range):

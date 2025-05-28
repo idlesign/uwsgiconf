@@ -78,10 +78,7 @@ def test_conf_module_compile():
     assert module.configurations
     assert len(module.configurations) == 2
 
-    out = []
-    for conf in module.configurations:
-        out.append(conf.format())
-
+    out = [conf.format() for conf in module.configurations]
     out = '\n'.join(out)
 
     assert '[uwsgi]' in out

@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from threading import local
-from typing import Callable, Dict, List, Optional, Tuple, Type, Union
 
 from .. import uwsgi as _uwsgi
 from ..utils import decode, decode_deep
@@ -32,7 +32,7 @@ _uwsgi.post_fork_hook = _PostForkHooks.run
 
 class _Platform:
 
-    request: Type[_Request] = _Request
+    request: type[_Request] = _Request
     """Current request information. 
     
     .. note:: Object is attached runtime.
@@ -65,7 +65,7 @@ class _Platform:
     started_on: int = _uwsgi.started_on
     """uWSGI's startup Unix timestamp."""
 
-    apps_map: Optional[dict] = _uwsgi.applications
+    apps_map: dict | None = _uwsgi.applications
     """Applications dictionary mapping mountpoints to application callables."""
 
     @property
@@ -74,12 +74,12 @@ class _Platform:
         return decode(_uwsgi.hostname)
 
     @property
-    def config(self) -> Dict[str, Union[str, List[str]]]:
+    def config(self) -> dict[str, str | list[str]]:
         """The current configuration options, including any custom placeholders."""
         return decode_deep(_uwsgi.opt)
 
     @property
-    def config_variables(self) -> Dict[str, str]:
+    def config_variables(self) -> dict[str, str]:
         """Current mapping of configuration file "magic" variables."""
         return decode_deep(_uwsgi.magic_table)
 
@@ -89,7 +89,7 @@ class _Platform:
         return _uwsgi.worker_id()
 
     @property
-    def workers_info(self) -> Tuple[dict, ...]:
+    def workers_info(self) -> tuple[dict, ...]:
         """Gets statistics for all the workers for the current server.
 
         Returns tuple of dicts.
@@ -108,7 +108,7 @@ class _Platform:
         return _uwsgi.masterpid()
 
     @property
-    def memory(self) -> Tuple[int, int]:
+    def memory(self) -> tuple[int, int]:
         """Returns memory usage tuple of ints: (rss, vsz)."""
         return _uwsgi.mem()
 
@@ -127,7 +127,7 @@ class _Platform:
         """
         return _uwsgi.listen_queue(socket_num)
 
-    def get_version(self, *, as_tuple: bool = False) -> Union[str, Tuple[int, int, int, int, str]]:
+    def get_version(self, *, as_tuple: bool = False) -> str | tuple[int, int, int, int, str]:
         """Returns uWSGI version string or tuple.
 
         :param as_tuple:

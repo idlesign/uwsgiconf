@@ -1,4 +1,3 @@
-from typing import List, Union
 
 from ..base import OptionsGroup
 from ..typehints import Intlist, Strlist
@@ -9,7 +8,7 @@ from .workers_cheapening import *  # noqa
 class MuleFarm:
     """Represents a mule farm."""
 
-    def __init__(self, name: str, mule_numbers: Union[str, Intlist]):
+    def __init__(self, name: str, mule_numbers: str | Intlist):
         """
         :param name: Farm alias.
 
@@ -198,7 +197,7 @@ class Workers(OptionsGroup):
             *,
             touch_reload: Strlist = None,
             harakiri_timeout: int = None,
-            farms: List[MuleFarm] = None,
+            farms: list[MuleFarm] = None,
             reload_mercy: int = None,
             msg_buffer: int = None,
             msg_buffer_recv: int = None

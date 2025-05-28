@@ -3,7 +3,7 @@ from datetime import timedelta
 from uwsgiconf.runtime.spooler import ResultProcessed, ResultRescheduled, ResultSkipped, Spooler, spooler_task_types
 
 
-class FakeUwsgi(object):
+class FakeUwsgi:
 
     def __init__(self, send_to_spooler=None):
         self.send_func = send_to_spooler

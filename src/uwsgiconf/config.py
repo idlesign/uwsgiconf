@@ -1,12 +1,13 @@
 import os
 import sys
+from collections.abc import Callable
 from copy import deepcopy
 from datetime import datetime, timezone
 from functools import partial
 from itertools import chain
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, TypeVar, Union
 
 from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
@@ -118,7 +119,7 @@ class Section(OptionsGroup):
         def PROBE(uwsgi_binary: str = None):  # noqa
             """This preset allows probing real uWSGI to get actual embedded plugin list."""
 
-            def probe() -> List[str]:
+            def probe() -> list[str]:
                 return list(chain.from_iterable(UwsgiRunner(uwsgi_binary).get_plugins()))
 
             return probe
@@ -131,7 +132,7 @@ class Section(OptionsGroup):
             project_name: str = None,
             strict_config: bool = None,
             style_prints: bool = False,
-            embedded_plugins: Union[Callable, List[str]] = None,
+            embedded_plugins: Callable | list[str] = None,
             **kwargs
     ):
         """
@@ -189,7 +190,7 @@ class Section(OptionsGroup):
         self._set_basic_params_from_dict(kwargs)
         self.set_basic_params(strict_config=strict_config)
 
-    def replace_placeholders(self, value: Optional[Strlist]) -> Optional[Strlist]:
+    def replace_placeholders(self, value: Strlist | None) -> Strlist | None:
         """Replaces placeholders that can be used e.g. in filepaths.
 
         Supported placeholders:
@@ -299,7 +300,7 @@ class Section(OptionsGroup):
             value: Any,
             *,
             indent: str = None,
-            format_options: Union[dict, str] = None,
+            format_options: dict | str = None,
             asap: bool = False
     ) -> TypeSection:
         """Prints out the given value.
@@ -355,7 +356,7 @@ class Section(OptionsGroup):
     def set_plugins_params(
             self,
             *,
-            plugins: Union[List[str], List[OptionsGroup], str, OptionsGroup] = None,
+            plugins: list[str] | list[OptionsGroup] | str | OptionsGroup = None,
             search_dirs: Strlist = None,
             autoload: bool = None,
             required: bool = False
@@ -463,7 +464,7 @@ class Section(OptionsGroup):
 
         return self
 
-    def include(self, target: Union['Section', List['Section'], str, List[str]]) -> TypeSection:
+    def include(self, target: Union['Section', list['Section'], str, list[str]]) -> TypeSection:
         """Includes target contents into config.
 
         :param target: File path or Section to include.
@@ -505,13 +506,13 @@ class Section(OptionsGroup):
             if options_group is not None:
                 options_group.set_basic_params(**value)
 
-    def _get_options(self) -> List[Tuple[str, Any]]:
+    def _get_options(self) -> list[tuple[str, Any]]:
         options = []
 
         for name, val in self._section._opts.items():
 
             for val_ in listify(val):
-                options.append((name, val_))
+                options.append((name, val_))  # noqa: PERF401
 
         return options
 
@@ -562,7 +563,7 @@ class Section(OptionsGroup):
         """Use group name."""
 
         @classmethod
-        def get_descriptions(cls) -> Dict[str, str]:
+        def get_descriptions(cls) -> dict[str, str]:
             """Returns variable to description mapping."""
 
             descriptions = {
@@ -646,7 +647,7 @@ class Configuration:
 
     def __init__(
             self,
-            sections: List[Section] = None,
+            sections: list[Section] = None,
             *,
             autoinclude_sections: bool = False,
             alias: str = None
@@ -678,7 +679,7 @@ class Configuration:
         self.alias = alias or 'uwsgicfg'
 
     @classmethod
-    def _validate_sections(cls, sections: List[Section]):
+    def _validate_sections(cls, sections: list[Section]):
         """Validates sections types and uniqueness."""
         names = []
         for section in sections:
@@ -743,7 +744,7 @@ class Configuration:
         return filepath
 
 
-def configure_uwsgi(configurator_func: Callable) -> Optional[List[Configuration]]:
+def configure_uwsgi(configurator_func: Callable) -> list[Configuration] | None:
     """Allows configuring uWSGI using Configuration objects returned
     by the given configuration function.
 

@@ -2,8 +2,9 @@ import logging
 import os
 import pickle
 from calendar import timegm
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
-from typing import Any, Callable, Dict, List, Optional, Type, Union
+from typing import Any, Optional, Union
 
 from .. import uwsgi
 from ..utils import decode, decode_deep, encode, get_logger, listify
@@ -13,7 +14,7 @@ _MSG_MAX_SIZE = 64 * 1024  # 64 Kb https://uwsgi-docs.readthedocs.io/en/latest/S
 
 TypeTaskResult = Optional[Union['TaskResult', bool]]
 
-_task_functions: Dict[str, Callable] = {}
+_task_functions: dict[str, Callable] = {}
 
 spooler_task_types = {}
 """Known task types handlers will store here runtime.
@@ -24,11 +25,11 @@ in runtime by SpoolerTask.__init_subclass__.
 """
 
 
-def _get_spoolers() -> List[str]:
+def _get_spoolers() -> list[str]:
     return decode_deep(listify(uwsgi.opt.get(b'spooler', [])))
 
 
-def _register_task(spooler_obj: 'Spooler', spooler_cls: Type['Spooler']) -> Callable:
+def _register_task(spooler_obj: 'Spooler', spooler_cls: type['Spooler']) -> Callable:
     """
 
     :param spooler_obj:
@@ -71,10 +72,10 @@ def _register_task(spooler_obj: 'Spooler', spooler_cls: Type['Spooler']) -> Call
 class _TaskRegisterer:
     # Allows task decoration using both Spooler class and object.
 
-    def __get__(self, instance: 'Spooler', owner: Type['Spooler']):
+    def __get__(self, instance: 'Spooler', owner: type['Spooler']):
         return _register_task(instance, owner)
 
-    def __call__(self, *, priority: int = None, postpone: Union[datetime, timedelta] = None):
+    def __call__(self, *, priority: int = None, postpone: datetime | timedelta = None):
         """Decorator. Used to register a function which should be run in Spooler.
 
         :param priority: Number. The priority of the message. Larger - less important.
@@ -136,7 +137,7 @@ class Spooler:
             *,
             spooler: Union[str, 'Spooler'] = None,
             priority: int = None,
-            postpone: Union[datetime, timedelta] = None,
+            postpone: datetime | timedelta = None,
             payload: Any = None
     ) -> str:
         """Sends a message to a spooler.
@@ -239,7 +240,7 @@ class Spooler:
         return result.code_uwsgi
 
     @classmethod
-    def get_spoolers(cls) -> List['Spooler']:
+    def get_spoolers(cls) -> list['Spooler']:
         """Returns a list of registered spoolers."""
         return [Spooler(spooler_dir) for spooler_dir in _get_spoolers()]
 
@@ -266,7 +267,7 @@ class Spooler:
         return spooler
 
     @classmethod
-    def get_pids(cls) -> List[int]:
+    def get_pids(cls) -> list[int]:
         """Returns a list of all spooler processes IDs."""
         return uwsgi.spooler_pids()
 
@@ -280,7 +281,7 @@ class Spooler:
         return uwsgi.set_spooler_frequency(seconds)
 
     @classmethod
-    def get_tasks(cls) -> List[str]:
+    def get_tasks(cls) -> list[str]:
         """Returns a list of spooler jobs (filenames in spooler directory)."""
         return uwsgi.spooler_jobs()
 
@@ -357,9 +358,9 @@ class SpoolerTask:
     @classmethod
     def build_message(
             cls,
-            spooler: Optional[str],
+            spooler: str | None,
             priority: int,
-            postpone: Union[datetime, timedelta],
+            postpone: datetime | timedelta,
             payload: Any = None
     ) -> dict:
         payload_ = {
