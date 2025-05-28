@@ -1,4 +1,3 @@
-from typing import Union
 
 from ..base import ParametrizedValue
 from ..typehints import Strlist
@@ -91,7 +90,7 @@ class SocketShared(Socket):
         super().__init__(address, bound_workers=bound_workers, modifier=modifier)
 
 
-StrShaSoc = Union[SocketShared, str]
+StrShaSoc = SocketShared | str
 
 
 class SocketDefault(Socket):

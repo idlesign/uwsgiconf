@@ -9,7 +9,7 @@ def test_sysinit_systemd():
     section = PythonSection()
     config = get_config('systemd', conf=section, conf_path='/some/path')
 
-    assert ('-o %s -g %s' % (os.getuid(), os.getgid())) in config
+    assert f'-o {os.getuid()} -g {os.getgid()}' in config
     assert 'run /some/path' in config
     assert 'Description=some uWSGI Service' in config
 

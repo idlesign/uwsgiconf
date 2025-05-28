@@ -1,8 +1,7 @@
 from pathlib import Path
-from typing import Union
 
-Intlist = Union[int, list[int]]
-Strbool = Union[str, bool]
-Strpath = Union[str, Path]
-Strlist = Union[str, list[str]]
-Strint = Union[str, int]
+Intlist = int | list[int]
+Strbool = str | bool
+Strpath = str | Path
+Strlist = str | list[str]
+Strint = str | int

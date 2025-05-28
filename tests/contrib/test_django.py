@@ -77,8 +77,8 @@ def test_uwsgi_sysinit_systemd(patch_base_command, capsys, command_run):
     uid = os.getuid()
 
     assert not err
-    assert ('-o %s -g %s' % (uid, os.getgid())) in out
-    assert ('/run/user/%s/dummy' % uid) in out
+    assert f'-o {uid} -g {os.getgid()}' in out
+    assert f'/run/user/{uid}/dummy' in out
     assert 'Description=dummy uWSGI Service' in out
     assert 'bin/python' in out
     assert 'dummy/manage.py uwsgi_run --nostatic --noruntimes\n' in out

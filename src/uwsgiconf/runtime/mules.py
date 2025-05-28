@@ -1,7 +1,7 @@
 import pickle
 from collections.abc import Callable
 from functools import partial
-from typing import Optional, Union
+from typing import Optional
 
 from .. import uwsgi
 from ..typehints import Strint
@@ -127,7 +127,7 @@ class Farm:
         ``section.workers.set_mules_params(farms=section.workers.mule_farm('myfarm', 2))``
 
     """
-    __slots__ = ['name', 'mules']
+    __slots__ = ['mules', 'name']
 
     def __init__(self, name: str, *, mules: list[int] = None):
         """
@@ -201,7 +201,7 @@ class Farm:
         return uwsgi.farm_msg(self.name, message)
 
 
-TypeMuleFarm = Union[Strint, Mule, Farm]
+TypeMuleFarm = Strint | Mule | Farm
 
 
 def __offload(func_name: str, mule_or_farm: TypeMuleFarm, *args, **kwargs) -> bool:

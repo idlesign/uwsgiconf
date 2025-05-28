@@ -102,7 +102,7 @@ class Section(OptionsGroup):
     python: Python = Options(Python)
     """Python options group."""
 
-    class embedded_plugins_presets:  # noqa
+    class embedded_plugins_presets:
         """These are plugin presets that can be used as ``embedded_plugins`` values."""
 
         BASIC = [plugin.strip() for plugin in (
@@ -116,7 +116,7 @@ class Section(OptionsGroup):
         """Basic set of embedded plugins. This set is used in uWSGI package from PyPI."""
 
         @staticmethod
-        def PROBE(uwsgi_binary: str = None):  # noqa
+        def PROBE(uwsgi_binary: str = None):
             """This preset allows probing real uWSGI to get actual embedded plugin list."""
 
             def probe() -> list[str]:
@@ -287,11 +287,7 @@ class Section(OptionsGroup):
 
         print_out = partial(self.print_out, format_options='red')
         print_out('This configuration was automatically generated using')
-        print_out(
-            'uwsgiconf v%s on %s' % (
-                '.'.join(map(str, VERSION)),
-                datetime.now(tz=timezone.utc).isoformat(' ')
-            ))
+        print_out(f"uwsgiconf v{VERSION} on {datetime.now(tz=timezone.utc).isoformat(' ')}")
 
         return self
 
@@ -516,7 +512,7 @@ class Section(OptionsGroup):
 
         return options
 
-    class vars:  # noqa
+    class vars:
         """The following variables also known as magic variables
         could be used as option values where appropriate.
 
@@ -781,11 +777,11 @@ def configure_uwsgi(configurator_func: Callable) -> list[Configuration] | None:
     configurations = configurator_func()
     registry = {}
 
-    if not isinstance(configurations, (list, tuple)):
+    if not isinstance(configurations, list | tuple):
         configurations = [configurations]
 
     for conf_candidate in configurations:
-        if not isinstance(conf_candidate, (Section, Configuration)):
+        if not isinstance(conf_candidate, Section | Configuration):
             continue
 
         if isinstance(conf_candidate, Section):

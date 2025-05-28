@@ -12,11 +12,9 @@ def test_logging_basics(assert_lines):
 
     ], logging.set_basic_params(
         no_requests=True,
-        template='%s --> %s %s %s' % (
-            logging.vars.REQ_METHOD,
-            logging.vars.REQ_URI,
-            logging.vars.metric('my'),
-            logging.vars.request_var('X-Request-Id'),
+        template=(
+            f"{logging.vars.REQ_METHOD} --> {logging.vars.REQ_URI} "
+            f"{logging.vars.metric('my')} {logging.vars.request_var('X-Request-Id')}"
         ),
         prefix_date=True
     ))
@@ -165,5 +163,5 @@ def test_logging_add_logger_encoder(assert_lines):
         'log-encoder = format > ${msg} <:myfile',
 
     ], logging.add_logger_encoder([
-        enc_format('> %s <' % enc_format.vars.MESSAGE),
+        enc_format(f'> {enc_format.vars.MESSAGE} <'),
     ], logger=logging.loggers.file('/home/here.log', alias='myfile')))

@@ -65,12 +65,7 @@ def format_print_text(text: str, *, color_fg: str = None, color_bg: str = None) 
 
     mod = ';'.join([color_fg, color_bg])
 
-    text = '%(esc)s[%(mod)sm%(value)s%(end)s' % {
-        'esc': Section.vars.FORMAT_ESCAPE,
-        'end': Section.vars.FORMAT_END,
-        'mod': mod,
-        'value': text,
-    }
+    text = f'{Section.vars.FORMAT_ESCAPE}[{mod}m{text}{Section.vars.FORMAT_END}'
 
     return text
 

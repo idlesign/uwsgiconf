@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import NamedTuple, Union
+from typing import NamedTuple
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
@@ -175,7 +175,7 @@ class Signal:
         uwsgi.signal_wait(self.num)
 
 
-TypeTarget = Union[Signal, None, TypeMuleFarm]
+TypeTarget = Signal | TypeMuleFarm | None
 
 
 def _automate_signal(target: TypeTarget, func: Callable):
@@ -187,7 +187,7 @@ def _automate_signal(target: TypeTarget, func: Callable):
         # Prevent background works in maintenance mode.
         return lambda *args, **kwarg: None
 
-    if target is None or isinstance(target, (str, Mule, Farm)):
+    if target is None or isinstance(target, str | Mule | Farm):
         return Signal().register_handler(target=target, callback=func)
 
     # Signal instance passed

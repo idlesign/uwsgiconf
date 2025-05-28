@@ -414,7 +414,7 @@ def test_routing_actions(assert_lines):
     assert_lines(
         'route-run = alarm:pippo ${uwsgi[wid]} ${uwsgi[pid]}',
         Section().routing.register_route(rule(
-            rule.actions.alarm('pippo', '%s %s' % (uwsgi('wid'), uwsgi('pid'))), subject=None
+            rule.actions.alarm('pippo', f"{uwsgi('wid')} {uwsgi('pid')}"), subject=None
         ))
     )
 

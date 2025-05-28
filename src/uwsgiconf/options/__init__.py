@@ -20,6 +20,7 @@ __all__ = [
     'Alarms',
     'Applications',
     'Caching',
+    'Cheapening',
     'Empire',
     'Locks',
     'Logging',
@@ -34,5 +35,4 @@ __all__ = [
     'Statics',
     'Subscriptions',
     'Workers',
-    'Cheapening',
 ]

@@ -12,7 +12,7 @@ from ..utils import decode, decode_deep, encode, get_logger, listify
 _LOG = get_logger(__name__)
 _MSG_MAX_SIZE = 64 * 1024  # 64 Kb https://uwsgi-docs.readthedocs.io/en/latest/Spooler.html#spool-files
 
-TypeTaskResult = Optional[Union['TaskResult', bool]]
+TypeTaskResult = Union['TaskResult', bool] | None
 
 _task_functions: dict[str, Callable] = {}
 
@@ -330,7 +330,7 @@ class SpoolerTask:
     mark_skipped = ResultSkipped
     mark_rescheduled = ResultRescheduled
 
-    __slots__ = ['name', 'message', 'payload']
+    __slots__ = ['message', 'name', 'payload']
 
     type_id: str = ''
 
@@ -386,7 +386,7 @@ class SpoolerFunctionCallTask(SpoolerTask):
 
     type_id = 'fcall'
 
-    __slots__ = ['name', 'message', 'payload']
+    __slots__ = ['message', 'name', 'payload']
 
     def process(self) -> TypeTaskResult:
         payload = self.payload

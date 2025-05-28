@@ -356,7 +356,7 @@ class PythonSection(Section):
 
         """
         if embedded_plugins is True:
-            embedded_plugins = self.embedded_plugins_presets.BASIC + ['python', 'python2', 'python3']
+            embedded_plugins = [*self.embedded_plugins_presets.BASIC, 'python', 'python2', 'python3']
 
         super().__init__(
             name=name, embedded_plugins=embedded_plugins, threads=threads,

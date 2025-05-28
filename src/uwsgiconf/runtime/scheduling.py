@@ -1,14 +1,13 @@
 from collections.abc import Callable
 from datetime import datetime, timezone
 from functools import partial, wraps
-from typing import Union
 
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
 from ..typehints import Strint
 from .signals import TypeTarget, _automate_signal
 
-TypeRegResult = Union[Callable, bool]
+TypeRegResult = Callable | bool
 
 
 def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:

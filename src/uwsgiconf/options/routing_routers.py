@@ -1,4 +1,3 @@
-from typing import Union
 
 from ..base import OptionsGroup, ParametrizedValue
 from ..typehints import Strint, Strlist
@@ -124,7 +123,7 @@ class Forwarder(ParametrizedValue):
     opt_key = True
 
 
-ForwStrlist = Union[Strlist, Forwarder]
+ForwStrlist = Strlist | Forwarder
 
 
 class ForwarderPath(Forwarder):

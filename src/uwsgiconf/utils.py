@@ -437,7 +437,7 @@ class UwsgiRunner:
         args = ['uwsgi']
 
         if embedded:
-            import pyuwsgi  # noqa
+            import pyuwsgi
             args.extend(config.format(formatter='args'))
             pyuwsgi.run(args[1:])
 
