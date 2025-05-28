@@ -256,7 +256,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def change_dir(self, to: str, *, after_app_loading: bool = False):
+    def change_dir(self, to: Strpath, *, after_app_loading: bool = False):
         """Chdir to specified directory before or after apps loading.
 
         :param to: Target directory.
@@ -419,7 +419,7 @@ class MainProcess(OptionsGroup):
                 to delete PID file if it was created before dropping.
 
         :param safe: The safe-pidfile works similar to pidfile
-            but performs the write a little later in the loading process.
+            but performs write a little later in the loading process.
             This avoids overwriting the value when app loading fails,
             with the consequent loss of a valid PID number.
 
@@ -427,10 +427,10 @@ class MainProcess(OptionsGroup):
         command = 'pidfile'
 
         if not before_priv_drop:
-            command += '2'
+            command = f'{command}2'
 
         if safe:
-            command = 'safe-' + command
+            command = f'safe-{command}'
 
         self._set(command, f'{fpath}')
 

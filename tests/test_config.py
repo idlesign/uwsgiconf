@@ -169,13 +169,13 @@ def test_configuration(capsys, assert_lines):
 
     ], Section(params_workers={'count': 33}))
 
-    assert 'testit' in Section().as_configuration(alias='testit').tofile()
+    assert 'testit' in f"{Section().as_configuration(alias='testit').tofile()}"
 
     fpath = NamedTemporaryFile(delete=False).name
 
-    assert fpath == Section().as_configuration().tofile(fpath)
+    assert fpath == f"{Section().as_configuration().tofile(fpath)}"
 
-    assert Section().as_configuration(alias='uwsgitest').tofile(gettempdir()).endswith('uwsgitest.ini')
+    assert Section().as_configuration(alias='uwsgitest').tofile(gettempdir()).name == 'uwsgitest.ini'
 
     s1 = Section()
     s2 = 'some'

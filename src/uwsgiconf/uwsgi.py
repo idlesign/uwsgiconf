@@ -1,9 +1,10 @@
 from sys import modules as __modules
+from typing import TYPE_CHECKING
 
 from .exceptions import UwsgiconfException as __DummyException
 from .settings import FORCE_STUB as __FORCE_STUB
 
-if False:  # pragma: nocover
+if TYPE_CHECKING:
     from .uwsgi_stub import *  # noqa  # Give IDEs a chance to load stub symbols.
 
 

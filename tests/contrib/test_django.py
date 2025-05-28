@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import pytest
 
@@ -16,20 +17,20 @@ def patch_base_command(monkeypatch, patch_project_dir, tmpdir):
 
     monkeypatch.setattr(
         'uwsgiconf.contrib.django.uwsgify.toolbox.SectionMutator.get_fifo_filepath',
-        lambda project_name: f'{fifofile}')
+        lambda project_name: Path(f'{fifofile}'))
 
 
 def test_mutate_existing_section(patch_base_command):
     from uwsgiconf.contrib.django.uwsgify.toolbox import SectionMutator
 
-    mutator = SectionMutator.spawn(dir_base=os.path.dirname(__file__))
+    mutator = SectionMutator.spawn(dir_base=Path(__file__).parent)
     assert mutator.section.name == 'testdummy'
 
 
 def test_uwsgi_run(monkeypatch, patch_project_dir, command_run, settings, tmpdir, capsys):
 
     def runtime_dir(self):
-        return f'{tmpdir}'
+        return Path(f'{tmpdir}')
 
     monkeypatch.setattr('os.execvp', lambda *args, **kwargs: None)
     monkeypatch.setattr('uwsgiconf.contrib.django.uwsgify.toolbox.SectionMutator.runtime_dir', property(runtime_dir))

@@ -1,18 +1,19 @@
 import importlib.util
 import inspect
-import os
 from importlib import import_module
-from typing import Optional
+from pathlib import Path
+from typing import TYPE_CHECKING, Optional
 
 from uwsgiconf.presets.nice import PythonSection
 from uwsgiconf.settings import CONFIGS_MODULE_ATTR
+from uwsgiconf.typehints import Strpath
 from uwsgiconf.utils import ConfModule, UwsgiRunner
 
-if False:  # pragma: nocover
-    from uwsgiconf.base import Section  # noqa
+if TYPE_CHECKING:
+    from uwsgiconf.base import Section
 
 
-def find_project_dir() -> str:
+def find_project_dir() -> Path:
     """Runs up the stack to find the location of manage.py
     which will be considered a project base path.
 
@@ -21,50 +22,50 @@ def find_project_dir() -> str:
 
     while True:
         frame = frame.f_back
-        filename = frame.f_globals['__file__']
+        filename = Path(frame.f_globals['__file__'])
 
-        if os.path.basename(filename).startswith('manage.py'):  # support py, pyc, etc.
+        if filename.name.startswith('manage.py'):  # support py, pyc, etc.
             break
 
-    return os.path.dirname(filename)
+    return filename.parent
 
 
-def get_project_name(project_dir: str) -> str:
+def get_project_name(project_dir: Strpath) -> str:
     """Return project name from project directory.
 
     :param project_dir:
 
     """
-    return os.path.basename(project_dir)
+    return Path(project_dir).name
 
 
 class SectionMutator:
     """Configuration file section mutator."""
 
-    def __init__(self, section: 'Section', dir_base: str, project_name: str, options: dict):
+    def __init__(self, section: 'Section', dir_base: Strpath, project_name: str, options: dict):
         from django.conf import settings
 
         self.section = section
-        self.dir_base = dir_base
+        self.dir_base = Path(dir_base)
         self.project_name = project_name
         self.settings = settings
         self.options = options
 
     @property
-    def runtime_dir(self) -> str:
+    def runtime_dir(self) -> Path:
         """Project runtime directory."""
-        return self.section.replace_placeholders('{project_runtime_dir}')
+        return Path(self.section.replace_placeholders('{project_runtime_dir}'))
 
-    def get_pid_filepath(self) -> str:
+    def get_pid_filepath(self) -> Path:
         """Return pidfile path for the given project."""
-        return os.path.join(self.runtime_dir, 'uwsgi.pid')
+        return self.runtime_dir / 'uwsgi.pid'
 
-    def get_fifo_filepath(self) -> str:
+    def get_fifo_filepath(self) -> Path:
         """Return master FIFO path for the given project."""
-        return os.path.join(self.runtime_dir, 'uwsgi.fifo')
+        return self.runtime_dir / 'uwsgi.fifo'
 
     @classmethod
-    def spawn(cls, options: dict = None, dir_base: str = None) -> 'SectionMutator':
+    def spawn(cls, options: dict = None, dir_base: Strpath = None) -> 'SectionMutator':
         """Alternative constructor. Creates a mutator and returns section object.
 
         :param options:
@@ -81,17 +82,20 @@ class SectionMutator:
         }
         options_all.update(options or {})
 
-        dir_base = os.path.abspath(dir_base or find_project_dir())
+        dir_base = Path(dir_base or find_project_dir()).absolute()
 
         name_module = ConfModule.default_name
         name_project = get_project_name(dir_base)
-        path_conf = os.path.join(dir_base, name_module)
+        path_conf = dir_base / name_module
         embedded = options_all['embedded']
 
         # Read an existing config for further modification of first section.
         section = cls._get_section_existing(
-            path_conf, name_module, name_project,
-            embedded=embedded)
+            path_conf=path_conf,
+            name_module=name_module,
+            name_project=name_project,
+            embedded=embedded,
+        )
 
         if not section:
             # Create section on-fly.
@@ -109,11 +113,11 @@ class SectionMutator:
 
     @classmethod
     def _get_section_existing(
-            self,
-            path_conf: str,
+            cls,
+            *,
+            path_conf: Path,
             name_module: str,
             name_project: str,
-            *,
             embedded: bool = False
     ) -> Optional['Section']:
         """Loads config section from existing configuration file (aka uwsgicfg.py)
@@ -129,9 +133,9 @@ class SectionMutator:
 
         """
         def load():
-            module_fake_name = f'{name_project}.{os.path.splitext(name_module)[0]}'
+            module_fake_name = f'{name_project}.{Path(name_module).stem}'
 
-            spec = importlib.util.spec_from_file_location(module_fake_name, path_conf)
+            spec = importlib.util.spec_from_file_location(module_fake_name, f'{path_conf}')
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
@@ -145,7 +149,7 @@ class SectionMutator:
                 return None
 
         else:
-            if os.path.exists(path_conf):
+            if path_conf.exists():
                 module = load()
             else:
                 return None
@@ -156,7 +160,7 @@ class SectionMutator:
         return section
 
     @classmethod
-    def _get_section_new(cls, dir_base: str) -> PythonSection:
+    def _get_section_new(cls, dir_base: Path) -> PythonSection:
         """Creates a new section with default settings.
 
         :param dir_base:
@@ -172,7 +176,7 @@ class SectionMutator:
             wsgi_module=f'{name_package}.{name_module}',
         )
 
-        if os.path.exists(dir_base):
+        if dir_base.exists():
             section.main_process.change_dir(dir_base)
 
         return section
@@ -203,11 +207,11 @@ class SectionMutator:
         if not static_dir:
             # Source static directory is not configured. Use temporary.
             import tempfile
-            static_dir = os.path.join(tempfile.gettempdir(), self.project_name)
-            self.settings.STATIC_ROOT = static_dir
+            static_dir = Path(tempfile.gettempdir()) / self.project_name
+            self.settings.STATIC_ROOT = f'{static_dir}'
 
-        self.section.routing.set_error_pages(
-            common_prefix=os.path.join(static_dir, 'uwsgify'))
+        static_dir = Path(static_dir)
+        self.section.routing.set_error_pages(common_prefix=static_dir / 'uwsgify')
 
     def contribute_runtime_dir(self):
         section = self.section
@@ -217,7 +221,7 @@ class SectionMutator:
             section.set_runtime_dir(section.get_runtime_dir())
 
             if not self.options['compile']:
-                os.makedirs(self.runtime_dir, 0o755, True)
+                self.runtime_dir.mkdir(0o755, exist_ok=True)
 
     def mutate(self, *, embedded: bool = False):
         """Mutates current section."""

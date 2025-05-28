@@ -1,8 +1,9 @@
 from collections.abc import Callable
-from os.path import abspath, basename, dirname
+from pathlib import Path
 from textwrap import dedent
 
 from .config import Configuration, Section
+from .typehints import Strpath
 from .utils import Finder, UwsgiRunner
 
 TYPE_UPSTART = 'upstart'
@@ -119,8 +120,8 @@ def get_config(
         systype: str,
         *,
         conf: Configuration | Section,
-        conf_path: str,
-        runner: str = None,
+        conf_path: Strpath,
+        runner: Strpath = None,
         project_name: str = None
 ) -> str:
     """Returns init system configuration file contents.
@@ -133,7 +134,7 @@ def get_config(
 
     """
     runner = runner or f'{Finder.uwsgiconf()} run'
-    conf_path = abspath(conf_path)
+    conf_path = Path(conf_path).absolute()
 
     if isinstance(conf, Configuration):
         conf = conf.sections[0]  # todo Maybe something more intelligent.
@@ -141,7 +142,7 @@ def get_config(
     tpl = dedent(TEMPLATES.get(systype)(conf=conf))
 
     formatted = tpl.strip().format(
-        project=project_name or conf.project_name or basename(dirname(conf_path)),
+        project=project_name or conf.project_name or conf_path.parent.name,
         command=f'{runner} {conf_path}',
     )
 

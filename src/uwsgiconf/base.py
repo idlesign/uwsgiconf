@@ -1,10 +1,10 @@
 from collections.abc import Callable
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from .utils import listify
 
-if False:  # pragma: nocover
-    from .config import Section  # noqa
+if TYPE_CHECKING:
+    from .config import Section
 
 
 class Options:

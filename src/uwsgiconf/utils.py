@@ -4,15 +4,16 @@ import sys
 from contextlib import contextmanager
 from importlib import import_module
 from io import StringIO
+from pathlib import Path
 from types import ModuleType
-from typing import Any, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from .exceptions import UwsgiconfException
 from .settings import CONFIGS_MODULE_ATTR
-from .typehints import Strlist
+from .typehints import Strlist, Strpath
 
-if False:  # pragma: nocover
-    from .config import Configuration  # noqa
+if TYPE_CHECKING:
+    from .config import Configuration
 
 
 class EmbeddedPlugins(NamedTuple):
@@ -85,14 +86,14 @@ class ConfModule:
     """
     default_name: str = 'uwsgicfg.py'
 
-    def __init__(self, fpath: str):
+    def __init__(self, fpath: Strpath):
         """Module filepath.
 
         :param fpath:
 
         """
-        fpath = os.path.abspath(fpath)
-        self.fpath = fpath
+        fpath = Path(fpath).absolute()
+        self.fpath: Path = fpath
         self._confs = None
 
     def spawn_uwsgi(self, *, only: str = None) -> list[tuple[str, int]]:
@@ -144,15 +145,15 @@ class ConfModule:
         return confs
 
     @classmethod
-    def load(cls, fpath: str) -> ModuleType:
+    def load(cls, fpath: Path) -> ModuleType:
         """Loads a module and returns its object.
 
         :param fpath:
 
         """
-        module_name = os.path.splitext(os.path.basename(fpath))[0]
+        module_name = fpath.stem
 
-        sys.path.insert(0, os.path.dirname(fpath))
+        sys.path.insert(0, f"{fpath.parent}")
         try:
             module = import_module(module_name)
 
@@ -284,25 +285,25 @@ class Finder:
     """Finds various entities."""
 
     @classmethod
-    def uwsgiconf(cls) -> str:
+    def uwsgiconf(cls) -> Path:
         """Finds uwsgiconf executable location."""
-        return get_output('which', args=['uwsgiconf']).strip()
+        return Path(get_output('which', args=['uwsgiconf']).strip())
 
     @classmethod
-    def python(cls) -> str:
+    def python(cls) -> Path:
         """Finds Python executable location."""
-        return sys.executable
+        return Path(sys.executable)
 
 
 class Fifo:
     """uWSGI Master FIFO interface."""
 
-    def __init__(self, fifo_filepath: str):
+    def __init__(self, fifo_filepath: Strpath):
         """
         :param fifo_filepath: Path to uWSGI Master FIFO file.
 
         """
-        self.fifo = fifo_filepath
+        self.fifo = Path(fifo_filepath)
 
     def cmd_log(self, *, reopen: bool = False, rotate: bool = False):
         """Allows managing of uWSGI log related stuff
@@ -359,7 +360,7 @@ class Fifo:
         if not cmd:
             return
 
-        with open(self.fifo, 'wb') as f:
+        with self.fifo.open('wb') as f:
             f.write(cmd)
 
 
@@ -389,7 +390,7 @@ class UwsgiRunner:
         to run uwsgiconf in (e.g. for virtualenv).
 
         """
-        return os.path.dirname(Finder.python()) + os.pathsep + os.environ['PATH']
+        return f"{Finder.python().parent}" + os.pathsep + os.environ['PATH']
 
     @classmethod
     def prepare_env(cls) -> str:
@@ -399,14 +400,14 @@ class UwsgiRunner:
 
         """
         os.environ['PATH'] = cls.get_env_path()
-        return os.path.basename(Finder.python())
+        return Finder.python().name
 
     def spawn(
             self,
             config: 'Configuration',
             *,
             replace: bool = False,
-            filepath: str = None,
+            filepath: str | Path = None,
             embedded: bool = False
     ):
         """Spawns uWSGI using the given configuration module.
@@ -444,9 +445,9 @@ class UwsgiRunner:
         else:
             args.append('--ini')
 
-            filepath = filepath or config.tofile()
+            filepath = Path(filepath or config.tofile())
 
-            if os.path.splitext(os.path.basename(filepath))[1] == '.ini':
+            if filepath.suffix == '.ini':
                 args.append(filepath)
 
             else:

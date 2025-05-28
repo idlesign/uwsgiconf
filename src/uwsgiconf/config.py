@@ -13,7 +13,7 @@ from .base import Options, OptionsGroup
 from .exceptions import ConfigurationError
 from .formatters import FORMATTERS, format_print_text
 from .options import *
-from .typehints import Strlist, Strpath
+from .typehints import Pathlist, Strlist, Strpath
 from .utils import UwsgiRunner, listify
 
 TypeSection = TypeVar('TypeSection', bound='Section')
@@ -128,7 +128,7 @@ class Section(OptionsGroup):
             self,
             name: str = None,
             *,
-            runtime_dir: str = None,
+            runtime_dir: Strpath = None,
             project_name: str = None,
             strict_config: bool = None,
             style_prints: bool = False,
@@ -182,7 +182,10 @@ class Section(OptionsGroup):
         self._opts: dict = {}
 
         self.name = name or 'uwsgi'
-        self._runtime_dir = runtime_dir or ''
+
+        self._runtime_dir: Path | None = None
+        self.set_runtime_dir(runtime_dir)
+
         self._project_name = project_name or ''
 
         super().__init__(**kwargs)
@@ -190,7 +193,7 @@ class Section(OptionsGroup):
         self._set_basic_params_from_dict(kwargs)
         self.set_basic_params(strict_config=strict_config)
 
-    def replace_placeholders(self, value: Strlist | None) -> Strlist | None:
+    def replace_placeholders(self, value: Strlist | Pathlist | None) -> Strlist | None:
         """Replaces placeholders that can be used e.g. in filepaths.
 
         Supported placeholders:
@@ -211,9 +214,10 @@ class Section(OptionsGroup):
             runtime_dir = self.get_runtime_dir()
             project_name = self.project_name
 
-            value_ = value_.replace('{runtime_dir}', runtime_dir)
+            value_ = f'{value_}'  # cast Path
+            value_ = value_.replace('{runtime_dir}', f'{runtime_dir}')
             value_ = value_.replace('{project_name}', project_name)
-            value_ = value_.replace('{project_runtime_dir}', os.path.join(runtime_dir, project_name))
+            value_ = value_.replace('{project_runtime_dir}', f'{runtime_dir / project_name}')
 
             values.append(value_)
 
@@ -230,7 +234,7 @@ class Section(OptionsGroup):
     def project_name(self, value: str):
         self._project_name = value or ''
 
-    def get_runtime_dir(self, *, default: bool = True) -> str:
+    def get_runtime_dir(self, *, default: bool = True) -> Path:
         """Directory to store runtime files.
         See ``.replace_placeholders()``
 
@@ -243,17 +247,20 @@ class Section(OptionsGroup):
 
         if not dir_ and default:
             uid = self.main_process.get_owner()[0]
-            dir_ = f'/run/user/{uid}/' if uid else '/run/'
+            dir_ = Path(f'/run/user/{uid}/' if uid else '/run/')
 
         return dir_
 
-    def set_runtime_dir(self, value) -> TypeSection:
+    def set_runtime_dir(self, value: Strpath) -> TypeSection:
         """Sets user-defined runtime directory value.
 
-        :param str value:
+        :param value:
 
         """
-        self._runtime_dir = value or ''
+        if value:
+            value = Path(value)
+
+        self._runtime_dir = value or None
         
         return self
 
@@ -712,7 +719,7 @@ class Configuration:
         """Print out this configuration as .ini."""
         return self.format(do_print=True)
 
-    def tofile(self, filepath: Strpath = None) -> str:
+    def tofile(self, filepath: Strpath = None) -> Path:
         """Saves configuration into a file and returns its path.
 
         Convenience method.
@@ -731,9 +738,9 @@ class Configuration:
             if filepath.is_dir():
                 filepath = filepath / f'{self.alias}.ini'
 
-        filepath = f'{filepath}'
+        filepath = Path(f'{filepath}')
 
-        with open(filepath, 'w') as target_file:
+        with filepath.open('w') as target_file:
             target_file.write(self.format())
             target_file.flush()
 

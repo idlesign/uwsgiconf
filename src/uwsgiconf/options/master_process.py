@@ -1,6 +1,7 @@
+
 from ..base import OptionsGroup
 from ..exceptions import ConfigurationError
-from ..typehints import Strint, Strlist
+from ..typehints import Pathlist, Strint, Strlist
 from ..utils import KeyValue
 
 
@@ -23,7 +24,7 @@ class MasterProcess(OptionsGroup):
             no_orphans: bool = None,
             as_root: bool = None,
             subproc_check_interval: int = None,
-            fifo_file: str = None
+            fifo_file: Strlist | Pathlist = None
     ):
         """
 

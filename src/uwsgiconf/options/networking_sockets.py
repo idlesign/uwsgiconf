@@ -1,10 +1,11 @@
+from typing import TYPE_CHECKING
 
 from ..base import ParametrizedValue
 from ..typehints import Strlist
 from ..utils import listify
 
-if False:  # pragma: nocover
-    from .routing_modifiers import Modifier  # noqa
+if TYPE_CHECKING:
+    from .routing_modifiers import Modifier
 
 
 class Socket(ParametrizedValue):

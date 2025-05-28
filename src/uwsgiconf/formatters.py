@@ -1,10 +1,10 @@
 from collections.abc import Generator
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from .typehints import Strlist
 
-if False:  # pragma: nocover
-    from .config import Section  # noqa
+if TYPE_CHECKING:
+    from .config import Section
 
 TypeFormatter = TypeVar('TypeFormatter', bound='FormatterBase')
 

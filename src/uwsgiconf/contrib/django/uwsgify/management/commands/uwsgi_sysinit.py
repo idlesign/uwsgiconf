@@ -1,4 +1,3 @@
-from os import path
 
 from django.core.management.base import BaseCommand
 from uwsgiconf.sysinit import TYPE_SYSTEMD, get_config
@@ -40,12 +39,12 @@ class Command(BaseCommand):
 
         for opt in ('nostatic', 'noruntimes', 'noerrpages'):
             if options.get(opt, False):
-                command = command + f' --{opt}'
+                command = f'{command} --{opt}'
 
         config = get_config(
             systype,
             conf=mutator.section,
-            conf_path=path.join(mutator.dir_base, command),
+            conf_path=mutator.dir_base / command,
             runner=Finder.python(),
         )
 

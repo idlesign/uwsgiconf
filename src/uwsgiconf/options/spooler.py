@@ -88,7 +88,7 @@ class Spooler(OptionsGroup):
     def add(self, work_dir: Strlist, *, external: bool = False):
         """Run a spooler on the specified directory.
 
-        :param work_dir: Spooler working directory path or it's name if
+        :param work_dir: Spooler working directory path or its name if
             `base_dir` argument of `spooler.set_basic_params()` is set.
 
             .. note:: Placeholders can be used to build paths, e.g.: {project_runtime_dir}/spool/
@@ -101,7 +101,7 @@ class Spooler(OptionsGroup):
 
         base_dir = self._base_dir
         if base_dir is not None:
-            work_dir = [path.join(base_dir, work_dir_) for work_dir_ in listify(work_dir)]
+            work_dir = [path.join(base_dir, work_dir_) for work_dir_ in listify(work_dir)]  # noqa: PTH118
 
         if external:
             command += '-external'

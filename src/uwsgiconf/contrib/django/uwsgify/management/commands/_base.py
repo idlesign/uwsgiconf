@@ -1,4 +1,3 @@
-import os
 
 from django.core.management.base import BaseCommand, CommandError
 from uwsgiconf.utils import Fifo
@@ -24,7 +23,7 @@ class FifoCommand(BaseCommand):
 
         fifo = Fifo(filepath)
 
-        if os.path.exists(filepath):
+        if filepath.exists():
 
             self.run_cmd(fifo, options)
 

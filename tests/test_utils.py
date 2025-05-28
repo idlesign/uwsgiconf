@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import pytest
 
@@ -71,10 +72,8 @@ def test_runner(mock_popen):
 
 
 def test_conf_module_compile():
-    fpath = os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py')
-
     # invalid objects
-    module = ConfModule(fpath)
+    module = ConfModule(Path(__file__).parent / 'confs' / 'dummy.py')
     assert module.configurations
     assert len(module.configurations) == 2
 
@@ -90,7 +89,7 @@ def test_conf_module_run(monkeypatch):
     executed = []
     monkeypatch.setattr(os, 'spawnvp', lambda *args: executed.append(True))
 
-    module = ConfModule(os.path.join(os.path.dirname(__file__), 'confs', 'dummy.py'))
+    module = ConfModule(Path(__file__).parent / 'confs' / 'dummy.py')
     module.spawn_uwsgi()
 
     assert len(executed) == 2
@@ -99,7 +98,7 @@ def test_conf_module_run(monkeypatch):
     executed = []
     monkeypatch.setattr(os, 'execvp', lambda *args: executed.append(True))
 
-    module = ConfModule(os.path.join(os.path.dirname(__file__), 'confs', 'dummyone.py'))
+    module = ConfModule(Path(__file__).parent / 'confs' / 'dummyone.py')
     module.spawn_uwsgi()
 
     assert len(executed) == 1
