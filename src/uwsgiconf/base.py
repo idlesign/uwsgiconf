@@ -123,10 +123,10 @@ class OptionsGroup:
             value: Any,
             *,
             condition: bool | str | None = True,
-            cast: Callable = None,
+            cast: Callable | None = None,
             multi: bool = False,
-            plugin: str = None,
-            priority: int = None
+            plugin: str | None = None,
+            priority: int | None = None
     ):
         """
 

@@ -96,7 +96,7 @@ class ConfModule:
         self.fpath: Path = fpath
         self._confs = None
 
-    def spawn_uwsgi(self, *, only: str = None) -> list[tuple[str, int]]:
+    def spawn_uwsgi(self, *, only: str | None = None) -> list[tuple[str, int]]:
         """Spawns uWSGI process(es) which will use configuration(s) from the module.
 
         Returns list of tuples:
@@ -178,8 +178,8 @@ def listify(src: Any) -> list:
 def filter_locals(
         locals_dict: dict[str, Any],
         *,
-        drop: list[str] = None,
-        include: list[str] = None
+        drop: list[str] | None = None,
+        include: list[str] | None = None
 ) -> dict[str, Any]:
     """Filters a dictionary produced by locals().
 
@@ -212,10 +212,10 @@ class KeyValue:
             self,
             locals_dict: dict[str, Any],
             *,
-            keys: list[str] = None,
-            aliases: dict[str, str] = None,
-            bool_keys: list[str] = None,
-            list_keys: list[str] = None,
+            keys: list[str] | None = None,
+            aliases: dict[str, str] | None = None,
+            bool_keys: list[str] | None = None,
+            list_keys: list[str] | None = None,
             items_separator: str = ','
     ):
         """
@@ -367,7 +367,7 @@ class Fifo:
 class UwsgiRunner:
     """Exposes methods to run uWSGI."""
 
-    def __init__(self, binary_path: str = None):
+    def __init__(self, binary_path: str | None = None):
         self.binary_uwsgi = binary_path or 'uwsgi'
         self.binary_python = self.prepare_env()
 
@@ -407,7 +407,7 @@ class UwsgiRunner:
             config: 'Configuration',
             *,
             replace: bool = False,
-            filepath: str | Path = None,
+            filepath: str | Path | None = None,
             embedded: bool = False
     ):
         """Spawns uWSGI using the given configuration module.

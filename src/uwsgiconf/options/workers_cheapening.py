@@ -19,7 +19,7 @@ class AlgoSpare(Algo):
     """
     name = 'spare'
 
-    def set_basic_params(self, *, check_interval_overload: int = None):
+    def set_basic_params(self, *, check_interval_overload: int | None = None):
         """
         :param check_interval_overload: Interval (sec) to wait after all workers are busy
             before new worker spawn.
@@ -40,7 +40,7 @@ class AlgoSpare2(Algo):
 
     name = 'spare2'
 
-    def set_basic_params(self, *, check_interval_idle: int = None):
+    def set_basic_params(self, *, check_interval_idle: int | None = None):
         """
         :param check_interval_idle: Decrease workers after specified idle. Default: 10.
 
@@ -63,7 +63,7 @@ class AlgoQueue(Algo):
     """
     name = 'backlog'
 
-    def set_basic_params(self, *, check_num_overload: int = None):
+    def set_basic_params(self, *, check_num_overload: int | None = None):
         """
         :param check_num_overload: Number of backlog items in queue.
 
@@ -90,12 +90,12 @@ class AlgoBusyness(Algo):
     def set_basic_params(
             self,
             *,
-            check_interval_busy: int = None,
-            busy_max: int = None,
-            busy_min: int = None,
-            idle_cycles_max: int = None,
-            idle_cycles_penalty: int = None,
-            verbose: bool = None
+            check_interval_busy: int | None = None,
+            busy_max: int | None = None,
+            busy_min: int | None = None,
+            idle_cycles_max: int | None = None,
+            idle_cycles_penalty: int | None = None,
+            verbose: bool | None = None
     ):
         """
         :param check_interval_busy: Interval (sec) to check worker busyness.
@@ -128,10 +128,10 @@ class AlgoBusyness(Algo):
     def set_emergency_params(
             self,
             *,
-            workers_step: int = None,
-            idle_cycles_max: int = None,
-            queue_size: int = None,
-            queue_nonzero_delay: int = None
+            workers_step: int | None = None,
+            idle_cycles_max: int | None = None,
+            queue_size: int | None = None,
+            queue_nonzero_delay: int | None = None
     ):
         """Sets busyness algorithm emergency workers related params.
 
@@ -186,11 +186,11 @@ class Cheapening(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            spawn_on_request: bool = None,
+            spawn_on_request: bool | None = None,
             cheaper_algo: Algo = None,
-            workers_min: int = None,
-            workers_startup: int = None,
-            workers_step: int = None
+            workers_min: int | None = None,
+            workers_startup: int | None = None,
+            workers_step: int | None = None
     ):
         """
         :param spawn_on_request: Spawn workers only after the first request.
@@ -224,7 +224,7 @@ class Cheapening(OptionsGroup):
 
         return self._section
 
-    def set_memory_limits(self, *, rss_soft: int = None, rss_hard: int = None):
+    def set_memory_limits(self, *, rss_soft: int | None = None, rss_hard: int | None = None):
         """Sets worker memory limits for cheapening.
 
         :param rss_soft: Don't spawn new workers if total resident memory usage

@@ -17,7 +17,7 @@ class Cache:
     """
     __slots__ = ['name', 'timeout']
 
-    def __init__(self, name: str, *, timeout: int = None):
+    def __init__(self, name: str, *, timeout: int | None = None):
         """
         :param name: Cache name with optional address (if @-syntax is used).
 
@@ -57,7 +57,7 @@ class Cache:
             *,
             default: Any = None,
             as_int: bool = False,
-            setter: Callable[[str], Any] = None,
+            setter: Callable[[str], Any] | None = None,
             preserve_bytes: bool = False,
 
     ) -> Strint | bytes:
@@ -101,7 +101,7 @@ class Cache:
 
     __getitem__ = get
 
-    def set(self, key: str, value: Any, *, timeout: int = None) -> bool:
+    def set(self, key: str, value: Any, *, timeout: int | None = None) -> bool:
         """Sets the specified key value.
 
         :param key: Cache key to set.

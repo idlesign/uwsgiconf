@@ -56,7 +56,7 @@ class Statics(OptionsGroup):
             index_file: Strlist = None,
             mime_file: Strlist = None,
             skip_ext: Strlist = None,
-            transfer_mode: str = None
+            transfer_mode: str | None = None
     ):
         """
 
@@ -180,7 +180,7 @@ class Statics(OptionsGroup):
     # todo consider adding:
     # static-gzip*
 
-    def set_paths_caching_params(self, *, timeout: int = None, cache_name: str = None):
+    def set_paths_caching_params(self, *, timeout: int | None = None, cache_name: str | None = None):
         """Use the uWSGI caching subsystem to store mappings from URI to filesystem paths.
 
         * http://uwsgi.readthedocs.io/en/latest/StaticFiles.html#caching-paths-mappings-resolutions

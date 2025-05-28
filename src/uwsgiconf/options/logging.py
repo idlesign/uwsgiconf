@@ -64,14 +64,14 @@ class Logging(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            no_requests: bool = None,
-            template: str = None,
-            memory_report: int = None,
-            prefix: str = None,
+            no_requests: bool | None = None,
+            template: str | None = None,
+            memory_report: int | None = None,
+            prefix: str | None = None,
             prefix_date: Strbool = None,
-            apply_strftime: bool = None,
-            response_ms: bool = None,
-            ip_x_forwarded: bool = None
+            apply_strftime: bool | None = None,
+            response_ms: bool | None = None,
+            ip_x_forwarded: bool | None = None
     ):
         """
 
@@ -144,14 +144,14 @@ class Logging(OptionsGroup):
     def set_file_params(
             self,
             *,
-            reopen_on_reload: bool = None,
-            truncate_on_startup: bool = None,
-            max_size: int = None,
-            rotation_fname: str = None,
+            reopen_on_reload: bool | None = None,
+            truncate_on_startup: bool | None = None,
+            max_size: int | None = None,
+            rotation_fname: str | None = None,
             touch_reopen: Strlist = None,
             touch_rotate: Strlist = None,
-            owner: str = None,
-            mode: str = None
+            owner: str | None = None,
+            mode: str | None = None
     ):
         """Set various parameters related to file logging.
 
@@ -195,9 +195,9 @@ class Logging(OptionsGroup):
             *,
             include: Strlist = None,
             exclude: Strlist = None,
-            write_errors: bool = None,
-            write_errors_tolerance: int = None,
-            sigpipe: bool = None
+            write_errors: bool | None = None,
+            write_errors_tolerance: int | None = None,
+            sigpipe: bool | None = None
     ):
         """Set various log data filters.
 
@@ -244,13 +244,13 @@ class Logging(OptionsGroup):
     def set_requests_filters(
             self,
             *,
-            slower: int = None,
-            bigger: int = None,
-            status_4xx: bool = None,
-            status_5xx: bool = None,
-            no_body: bool = None,
-            sendfile: bool = None,
-            io_errors: bool = None
+            slower: int | None = None,
+            bigger: int | None = None,
+            status_4xx: bool | None = None,
+            status_5xx: bool | None = None,
+            no_body: bool | None = None,
+            sendfile: bool | None = None,
+            io_errors: bool | None = None
     ):
         """Set various log data filters.
 
@@ -281,12 +281,12 @@ class Logging(OptionsGroup):
 
     def set_master_logging_params(
             self,
-            enable: bool = None,
+            enable: bool | None = None,
             *,
-            dedicate_thread: bool = None,
-            buffer: int = None,
-            sock_stream: bool = None,
-            sock_stream_requests_only: bool = None
+            dedicate_thread: bool | None = None,
+            buffer: int | None = None,
+            sock_stream: bool | None = None,
+            sock_stream_requests_only: bool | None = None
     ):
         """Sets logging params for delegating logging to master process.
 

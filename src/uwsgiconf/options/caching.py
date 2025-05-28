@@ -19,9 +19,9 @@ class Caching(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            no_expire: bool = None,
-            expire_scan_interval: int = None,
-            report_freed: bool = None
+            no_expire: bool | None = None,
+            expire_scan_interval: int | None = None,
+            report_freed: bool | None = None
     ):
         """
         :param no_expire: Disable auto sweep of expired items.
@@ -42,7 +42,7 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_item(self, key: str, value: str, *, cache_name: str = None):
+    def add_item(self, key: str, value: str, *, cache_name: str | None = None):
         """Add an item into the given cache.
 
         This is a commodity option (mainly useful for testing) allowing you
@@ -62,7 +62,7 @@ class Caching(OptionsGroup):
 
         return self._section
 
-    def add_file(self, filepath: Strpath, *, gzip: bool = False, cache_name: str = None):
+    def add_file(self, filepath: Strpath, *, gzip: bool = False, cache_name: str | None = None):
         """Load a static file in the cache.
 
         .. note:: Items are stored with the filepath as is (relative or absolute) as the key.
@@ -91,22 +91,22 @@ class Caching(OptionsGroup):
             name: str,
             *,
             max_items: int,
-            no_expire: bool = None,
-            store: str = None,
-            store_sync_interval: int = None,
-            store_delete: bool = None,
-            hash_algo: str = None,
-            hash_size: int = None,
-            key_size: int = None,
+            no_expire: bool | None = None,
+            store: str | None = None,
+            store_sync_interval: int | None = None,
+            store_delete: bool | None = None,
+            hash_algo: str | None = None,
+            hash_size: int | None = None,
+            key_size: int | None = None,
             udp_clients: Strlist = None,
             udp_servers: Strlist = None,
-            block_size: int = None,
-            block_count: int = None,
+            block_size: int | None = None,
+            block_count: int | None = None,
             sync_from: Strlist = None,
-            mode_bitmap: bool = None,
-            use_lastmod: bool = None,
-            full_silent: bool = None,
-            full_purge_lru: bool = None
+            mode_bitmap: bool | None = None,
+            use_lastmod: bool | None = None,
+            full_silent: bool | None = None,
+            full_purge_lru: bool | None = None
     ):
         """Creates cache. Default mode: single block.
 

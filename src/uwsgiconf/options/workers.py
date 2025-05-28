@@ -32,13 +32,13 @@ class Workers(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            count: int = None,
+            count: int | None = None,
             touch_reload: Strlist = None,
             touch_chain_reload: Strlist = None,
-            zombie_reaper: bool = None,
-            limit_addr_space: int = None,
-            limit_count: int = None,
-            cpu_affinity: int = None
+            zombie_reaper: bool | None = None,
+            limit_addr_space: int | None = None,
+            limit_count: int | None = None,
+            cpu_affinity: int | None = None
     ):
         """
 
@@ -125,7 +125,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_count_auto(self, count: int = None):
+    def set_count_auto(self, count: int | None = None):
         """Sets workers count.
 
         By default sets it to detected number of available cores
@@ -141,12 +141,12 @@ class Workers(OptionsGroup):
 
     def set_thread_params(
             self,
-            enable: bool = None,
+            enable: bool | None = None,
             *,
-            count: int = None,
-            count_offload: int = None,
-            stack_size: int = None,
-            no_wait: bool = None
+            count: int | None = None,
+            count_offload: int | None = None,
+            stack_size: int | None = None,
+            no_wait: bool | None = None
     ):
         """Sets threads related params.
 
@@ -196,11 +196,11 @@ class Workers(OptionsGroup):
             mules: Intlist = None,
             *,
             touch_reload: Strlist = None,
-            harakiri_timeout: int = None,
-            farms: list[MuleFarm] = None,
-            reload_mercy: int = None,
-            msg_buffer: int = None,
-            msg_buffer_recv: int = None
+            harakiri_timeout: int | None = None,
+            farms: list[MuleFarm] | None = None,
+            reload_mercy: int | None = None,
+            msg_buffer: int | None = None,
+            msg_buffer_recv: int | None = None
     ):
         """Sets mules related params.
 
@@ -273,18 +273,18 @@ class Workers(OptionsGroup):
     def set_reload_params(
             self,
             *,
-            min_lifetime: int = None,
-            max_lifetime: int = None,
-            max_requests: int = None,
-            max_requests_delta: int = None,
-            max_addr_space: int = None,
-            max_rss: int = None,
-            max_uss: int = None,
-            max_pss: int = None,
-            max_addr_space_forced: int = None,
-            max_rss_forced: int = None,
-            watch_interval_forced: int = None,
-            mercy: int = None
+            min_lifetime: int | None = None,
+            max_lifetime: int | None = None,
+            max_requests: int | None = None,
+            max_requests_delta: int | None = None,
+            max_addr_space: int | None = None,
+            max_rss: int | None = None,
+            max_uss: int | None = None,
+            max_pss: int | None = None,
+            max_addr_space_forced: int | None = None,
+            max_rss_forced: int | None = None,
+            watch_interval_forced: int | None = None,
+            mercy: int | None = None
     ):
         """Sets workers reload parameters.
 
@@ -361,10 +361,10 @@ class Workers(OptionsGroup):
     def set_reload_on_exception_params(
             self,
             *,
-            do_reload: bool = None,
-            etype: str = None,
-            evalue: str = None,
-            erepr: str = None
+            do_reload: bool | None = None,
+            etype: str | None = None,
+            evalue: str | None = None,
+            erepr: str | None = None
     ):
         """Sets workers reload on exceptions parameters.
 
@@ -384,7 +384,13 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_harakiri_params(self, *, timeout: int = None, verbose: bool = None, disable_for_arh: bool = None):
+    def set_harakiri_params(
+            self,
+            *,
+            timeout: int | None = None,
+            verbose: bool | None = None,
+            disable_for_arh: bool | None = None
+    ):
         """Sets workers harakiri parameters.
 
         :param timeout: Harakiri timeout in seconds.
@@ -438,7 +444,7 @@ class Workers(OptionsGroup):
 
         return self._section
 
-    def set_zerg_client_params(self, server_sockets: Strlist, *, use_fallback_socket: bool = None):
+    def set_zerg_client_params(self, server_sockets: Strlist, *, use_fallback_socket: bool | None = None):
         """Zerg mode. Zergs params.
 
         :param server_sockets: Attaches zerg to a zerg server.

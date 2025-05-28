@@ -51,7 +51,7 @@ class Metric:
         """Current metric value."""
         return uwsgi.metric_get(self.name)
 
-    def set(self, value: int, *, mode: str = None) -> bool:
+    def set(self, value: int, *, mode: str | None = None) -> bool:
         """Sets metric value.
 
         :param value: New value.

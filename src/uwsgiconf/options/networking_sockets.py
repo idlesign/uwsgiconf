@@ -149,8 +149,8 @@ class SocketHttps(Socket):
             *,
             cert: str,
             key: str,
-            ciphers: str = None,
-            client_ca: str = None,
+            ciphers: str | None = None,
+            client_ca: str | None = None,
             bound_workers: Strlist = None,
             modifier: 'Modifier' = None
     ):

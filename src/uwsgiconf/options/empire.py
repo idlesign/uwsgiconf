@@ -13,9 +13,16 @@ class Empire(OptionsGroup):
     """
 
     def set_emperor_params(
-            self, *, vassals_home: Strlist = None, name: str = None, scan_interval: int = None, pid_file: str = None,
-            spawn_asap: bool = None, stats_address: str = None, trigger_socket:str = None,
-            links_no_follow: bool = None,
+            self,
+            *,
+            vassals_home: Strlist = None,
+            name: str | None = None,
+            scan_interval: int | None = None,
+            pid_file: str | None = None,
+            spawn_asap: bool | None = None,
+            stats_address: str | None = None,
+            trigger_socket:str | None = None,
+            links_no_follow: bool | None = None,
     ):
         """
 
@@ -64,9 +71,9 @@ class Empire(OptionsGroup):
 
     def set_emperor_command_params(
             self,
-            command_socket: str = None,
+            command_socket: str | None = None,
             *,
-            wait_for_command: bool = None,
+            wait_for_command: bool | None = None,
             wait_for_command_exclude: Strlist = None
     ):
         """Emperor commands related parameters.
@@ -87,7 +94,13 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_vassals_wrapper_params(self, *, wrapper: str = None, overrides: Strlist = None, fallbacks: Strlist = None):
+    def set_vassals_wrapper_params(
+            self,
+            *,
+            wrapper: str | None = None,
+            overrides: Strlist = None,
+            fallbacks: Strlist = None
+    ):
         """Binary wrapper for vassals parameters.
 
         :param wrapper: Set a binary wrapper for vassals.
@@ -105,7 +118,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_throttle_params(self, *, level: int = None, level_max: int = None):
+    def set_throttle_params(self, *, level: int | None = None, level_max: int | None = None):
         """Throttling options.
 
         * http://uwsgi-docs.readthedocs.io/en/latest/Emperor.html#throttling
@@ -122,7 +135,7 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_tolerance_params(self, *, for_heartbeat: int = None, for_cursed_vassals: int = None):
+    def set_tolerance_params(self, *, for_heartbeat: int | None = None, for_cursed_vassals: int | None = None):
         """Various tolerance options.
 
         :param for_heartbeat: Set the Emperor tolerance about heartbeats.
@@ -139,7 +152,13 @@ class Empire(OptionsGroup):
 
         return self._section
 
-    def set_mode_tyrant_params(self, enable: bool = None, *, links_no_follow: bool = None, use_initgroups: bool = None):
+    def set_mode_tyrant_params(
+            self,
+            enable: bool | None = None,
+            *,
+            links_no_follow: bool | None = None,
+            use_initgroups: bool | None = None
+    ):
         """Tyrant mode (secure multi-user hosting).
 
         In Tyrant mode the Emperor will run the vassal using the UID/GID of the vassal
@@ -162,10 +181,10 @@ class Empire(OptionsGroup):
 
     def set_mode_broodlord_params(
             self,
-            zerg_count: int = None,
+            zerg_count: int | None = None,
             *,
-            vassal_overload_sos_interval: int = None,
-            vassal_queue_items_sos: int = None
+            vassal_overload_sos_interval: int | None = None,
+            vassal_queue_items_sos: int | None = None
     ):
         """This mode is a way for a vassal to ask for reinforcements to the Emperor.
 

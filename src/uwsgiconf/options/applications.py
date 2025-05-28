@@ -9,11 +9,11 @@ class Applications(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            exit_if_none: bool = None,
-            max_per_worker: int = None,
-            single_interpreter: bool = None,
-            no_default: bool = None,
-            manage_script_name: bool = None
+            exit_if_none: bool | None = None,
+            max_per_worker: int | None = None,
+            single_interpreter: bool | None = None,
+            no_default: bool | None = None,
+            manage_script_name: bool | None = None
     ):
         """
 
@@ -73,7 +73,7 @@ class Applications(OptionsGroup):
 
         return self._section
 
-    def switch_into_lazy_mode(self, *, affect_master: bool = None):
+    def switch_into_lazy_mode(self, *, affect_master: bool | None = None):
         """Load apps in workers instead of master.
 
         This option may have memory usage implications

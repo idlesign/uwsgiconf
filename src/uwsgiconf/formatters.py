@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 TypeFormatter = TypeVar('TypeFormatter', bound='FormatterBase')
 
 
-def format_print_text(text: str, *, color_fg: str = None, color_bg: str = None) -> str:
+def format_print_text(text: str, *, color_fg: str | None = None, color_bg: str | None = None) -> str:
     """Format given text using ANSI formatting escape sequences.
 
     Could be useful for print command.

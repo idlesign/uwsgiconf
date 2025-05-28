@@ -1,6 +1,6 @@
 
 
-def send_mule_msg(*, message: str | bytes, mule_farm: str | int = None) -> bool:
+def send_mule_msg(*, message: str | bytes, mule_farm: str | int | None = None) -> bool:
     from ..runtime.mules import _mule_messages_hook
     return _mule_messages_hook(message)
 

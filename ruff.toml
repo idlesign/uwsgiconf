@@ -40,7 +40,6 @@ ignore = [
     "E402",  # import not at the top
     "E731",  # allow lambdas
     "RUF012",  # mutable class vars [tmp]
-    "RUF013",  # implicit optional [tmp]
 ]
 
 

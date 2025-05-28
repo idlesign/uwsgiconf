@@ -27,7 +27,7 @@ class Networking(OptionsGroup):
         zeromq = SocketZeromq
 
         @classmethod
-        def from_dsn(cls, dsn: str, *, allow_shared_sockets: bool = None) -> 'Socket':
+        def from_dsn(cls, dsn: str, *, allow_shared_sockets: bool | None = None) -> 'Socket':
             """Constructs socket configuration object from DSN.
 
             .. note:: This will also automatically use shared sockets
@@ -83,10 +83,10 @@ class Networking(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            queue_size: int = None,
-            freebind: bool = None,
-            default_socket_type: str = None,
-            buffer_size: int = None
+            queue_size: int | None = None,
+            freebind: bool | None = None,
+            default_socket_type: str | None = None,
+            buffer_size: int | None = None
     ):
         """
 
@@ -130,11 +130,11 @@ class Networking(OptionsGroup):
     def set_socket_params(
             self,
             *,
-            send_timeout: int = None,
-            keep_alive: bool = None,
-            no_defer_accept: bool = None,
-            buffer_send: int = None,
-            buffer_receive: int = None
+            send_timeout: int | None = None,
+            keep_alive: bool | None = None,
+            no_defer_accept: bool | None = None,
+            buffer_send: int | None = None,
+            buffer_receive: int | None = None
     ):
         """Sets common socket params.
 
@@ -163,10 +163,10 @@ class Networking(OptionsGroup):
     def set_unix_socket_params(
             self,
             *,
-            abstract: bool = None,
-            permissions: str = None,
-            owner: str = None,
-            umask: str = None
+            abstract: bool | None = None,
+            permissions: str | None = None,
+            owner: str | None = None,
+            umask: str | None = None
     ):
         """Sets Unix-socket related params.
 
@@ -191,7 +191,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_bsd_socket_params(self, *, port_reuse: bool = None):
+    def set_bsd_socket_params(self, *, port_reuse: bool | None = None):
         """Sets BSD-sockets related params.
 
         :param port_reuse: Enable REUSE_PORT flag on socket to allow multiple
@@ -247,13 +247,13 @@ class Networking(OptionsGroup):
     def set_ssl_params(
             self,
             *,
-            verbose_errors: bool = None,
+            verbose_errors: bool | None = None,
             sessions_cache: Strbool = None,
-            sessions_timeout: int = None,
-            session_context: str = None,
+            sessions_timeout: int | None = None,
+            session_context: str | None = None,
             raw_options: Intlist = None,
-            dir_tmp: str = None,
-            client_cert_var: str = None
+            dir_tmp: str | None = None,
+            client_cert_var: str | None = None
     ):
         """
 
@@ -303,8 +303,8 @@ class Networking(OptionsGroup):
             *,
             cert: str,
             key: str,
-            ciphers: str = None,
-            client_ca: str = None,
+            ciphers: str | None = None,
+            client_ca: str | None = None,
             wildcard: bool = False
     ):
         """Allows setting Server Name Identification (virtual hosting for SSL nodes) params.
@@ -345,7 +345,7 @@ class Networking(OptionsGroup):
 
         return self._section
 
-    def set_sni_dir_params(self, dir: str, ciphers: str = None):
+    def set_sni_dir_params(self, dir: str, ciphers: str | None = None):
         """Enable checking for cert/key/client_ca file in the specified directory
         and create a sni/ssl context on demand.
 

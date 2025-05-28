@@ -60,16 +60,16 @@ class AlarmCurl(AlarmType):
             alias: str,
             url: str,
             *,
-            method: str = None,
-            ssl: bool = None,
-            ssl_insecure: bool = None,
-            auth_user: str = None,
-            auth_pass: str = None,
-            timeout: int = None,
-            conn_timeout: int = None,
-            mail_from: str = None,
-            mail_to: str = None,
-            subject: str = None
+            method: str | None = None,
+            ssl: bool | None = None,
+            ssl_insecure: bool | None = None,
+            auth_user: str | None = None,
+            auth_pass: str | None = None,
+            timeout: int | None = None,
+            conn_timeout: int | None = None,
+            mail_from: str | None = None,
+            mail_to: str | None = None,
+            subject: str | None = None
     ):
         opts = KeyValue(
             filter_locals(locals(), drop=['alias', 'url']),

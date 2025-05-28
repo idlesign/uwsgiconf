@@ -122,7 +122,7 @@ def get_config(
         conf: Configuration | Section,
         conf_path: Strpath,
         runner: Strpath = None,
-        project_name: str = None
+        project_name: str | None = None
 ) -> str:
     """Returns init system configuration file contents.
 

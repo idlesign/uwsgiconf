@@ -18,7 +18,7 @@ class PusherSocket(Pusher):
     name = 'socket'
     plugin = 'stats_pusher_socket'
 
-    def __init__(self, address: str, *, prefix: str = None):
+    def __init__(self, address: str, *, prefix: str | None = None):
         """
         :param address:
 
@@ -37,7 +37,7 @@ class PusherRrdtool(Pusher):
     name = 'rrdtool'
     plugin = 'rrdtool'
 
-    def __init__(self, target_dir: str, *, library: str = None, push_interval: int = None):
+    def __init__(self, target_dir: str, *, library: str | None = None, push_interval: int | None = None):
         """
         :param target_dir: Directory to store rrd files into.
 
@@ -58,7 +58,14 @@ class PusherStatsd(Pusher):
     name = 'statsd'
     plugin = 'stats_pusher_statsd'
 
-    def __init__(self, address: str, *, prefix: str = None, no_workers: bool = None, all_gauges: bool = None):
+    def __init__(
+            self,
+            address: str,
+            *,
+            prefix: str | None = None,
+            no_workers: bool | None = None,
+            all_gauges: bool | None = None
+    ):
         """
         :param address:
 
@@ -91,16 +98,16 @@ class PusherCarbon(Pusher):
             self,
             address: Strlist,
             *,
-            node_realm: str = None,
-            node_root: str = None,
-            push_interval: int = None,
-            idle_avg_source: str = None,
-            use_metrics: bool = None,
-            no_workers: bool = None,
-            timeout: int = None,
-            retries: int = None,
-            retries_delay: int = None,
-            hostname_dots_replacer: str = None
+            node_realm: str | None = None,
+            node_root: str | None = None,
+            push_interval: int | None = None,
+            idle_avg_source: str | None = None,
+            use_metrics: bool | None = None,
+            no_workers: bool | None = None,
+            timeout: int | None = None,
+            retries: int | None = None,
+            retries_delay: int | None = None,
+            hostname_dots_replacer: str | None = None
     ):
         """
         :param address: Host and port. Example: 127.0.0.1:2004
@@ -162,7 +169,7 @@ class PusherZabbix(Pusher):
     name = 'zabbix'
     plugin = 'zabbix'
 
-    def __init__(self, address: str, *, prefix: str = None, template: str = None):
+    def __init__(self, address: str, *, prefix: str | None = None, template: str | None = None):
         """
         :param address:
 
@@ -183,7 +190,7 @@ class PusherMongo(Pusher):
     name = 'mongodb'
     plugin = 'stats_pusher_mongodb'
 
-    def __init__(self, *, address: str = None, collection: str = None, push_interval: int = None):
+    def __init__(self, *, address: str | None = None, collection: str | None = None, push_interval: int | None = None):
         """
         :param address: Default: 127.0.0.1:27017
 
@@ -205,7 +212,7 @@ class PusherFile(Pusher):
     name = 'file'
     plugin = 'stats_pusher_file'
 
-    def __init__(self, fpath: str = None, *, separator: str = None, push_interval: int = None):
+    def __init__(self, fpath: str | None = None, *, separator: str | None = None, push_interval: int | None = None):
         """
         :param fpath: File path. Default: uwsgi.stats
 

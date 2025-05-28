@@ -129,7 +129,7 @@ class Farm:
     """
     __slots__ = ['mules', 'name']
 
-    def __init__(self, name: str, *, mules: list[int] = None):
+    def __init__(self, name: str, *, mules: list[int] | None = None):
         """
         :param name: Mule farm name.
         :param mules: Attached mules.

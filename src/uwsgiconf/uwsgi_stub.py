@@ -266,7 +266,7 @@ def cache_clear(cache: str):
     __caching.clear(cache=cache)
 
 
-def cache_dec(key: str, value: int = 1, expires: int = None, cache: str = None) -> bool:
+def cache_dec(key: str, value: int = 1, expires: int | None = None, cache: str | None = None) -> bool:
     """Decrements the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -283,7 +283,7 @@ def cache_dec(key: str, value: int = 1, expires: int = None, cache: str = None) 
     return __caching.do_dec(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_del(key: str, cache: str = None) -> bool:
+def cache_del(key: str, cache: str | None = None) -> bool:
     """Deletes the given cached key from the cache.
 
     :param key: The cache key to delete.
@@ -294,7 +294,7 @@ def cache_del(key: str, cache: str = None) -> bool:
     return __caching.do_delete(key=key, cache=cache)
 
 
-def cache_div(key: str, value: int = 2, expires: int = None, cache: str = None) -> bool:
+def cache_div(key: str, value: int = 2, expires: int | None = None, cache: str | None = None) -> bool:
     """Divides the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -311,7 +311,7 @@ def cache_div(key: str, value: int = 2, expires: int = None, cache: str = None) 
     return __caching.do_div(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_exists(key: str, cache: str = None) -> bool:
+def cache_exists(key: str, cache: str | None = None) -> bool:
     """Checks whether there is a value in the cache associated with the given key.
 
     :param key: The cache key to check.
@@ -322,7 +322,7 @@ def cache_exists(key: str, cache: str = None) -> bool:
     return __caching.has_key(key=key, cache=cache)
 
 
-def cache_get(key: str, cache: str = None) -> bytes | None:
+def cache_get(key: str, cache: str | None = None) -> bytes | None:
     """Gets a value from the cache.
 
     :param key: The cache key to get value for.
@@ -333,7 +333,7 @@ def cache_get(key: str, cache: str = None) -> bytes | None:
     return __caching.get_value(key=key, cache=cache)
 
 
-def cache_inc(key: str, value: int = 1, expires: int = None, cache: str = None) -> bool:
+def cache_inc(key: str, value: int = 1, expires: int | None = None, cache: str | None = None) -> bool:
     """Increments the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -350,7 +350,7 @@ def cache_inc(key: str, value: int = 1, expires: int = None, cache: str = None) 
     return __caching.do_inc(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_keys(cache: str = None) -> list:
+def cache_keys(cache: str | None = None) -> list:
     """Returns a list of keys available in cache.
 
     :param str cache: Cache name with optional address (if @-syntax is used).
@@ -361,7 +361,7 @@ def cache_keys(cache: str = None) -> list:
     return __caching.get_keys(cache=cache)
 
 
-def cache_mul(key: str, value: int = 2, expires: int = None, cache: str = None) -> bool:
+def cache_mul(key: str, value: int = 2, expires: int | None = None, cache: str | None = None) -> bool:
     """Multiplies the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -378,7 +378,7 @@ def cache_mul(key: str, value: int = 2, expires: int = None, cache: str = None) 
     return __caching.do_mul(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_num(key: str, cache: str = None) -> int | None:
+def cache_num(key: str, cache: str | None = None) -> int | None:
     """Gets the 64bit number from the specified item.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -391,7 +391,7 @@ def cache_num(key: str, cache: str = None) -> int | None:
     return __caching.get_value(key=key, cache=cache)
 
 
-def cache_set(key: str, value: bytes, expires: int = None, cache: str = None) -> bool:
+def cache_set(key: str, value: bytes, expires: int | None = None, cache: str | None = None) -> bool:
     """Sets the specified key value.
 
     :param key:
@@ -406,7 +406,7 @@ def cache_set(key: str, value: bytes, expires: int = None, cache: str = None) ->
     return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_update(key: str, value: bytes, expires: int = None, cache: str = None) -> bool:
+def cache_update(key: str, value: bytes, expires: int | None = None, cache: str | None = None) -> bool:
     """Updates the specified key value.
 
     :param key:
@@ -737,7 +737,12 @@ def micros() -> int:
     return 0
 
 
-def mule_get_msg(signals: bool = None, farms: bool = None, buffer_size: int = 65536, timeout: int = -1) -> bytes:
+def mule_get_msg(
+        signals: bool | None = None,
+        farms: bool | None = None,
+        buffer_size: int = 65536,
+        timeout: int = -1
+) -> bytes:
     """Block until a mule message is received and return it.
 
     This can be called from multiple threads in the same programmed mule.
@@ -760,7 +765,7 @@ def mule_id() -> int:
     return 0
 
 
-def mule_msg(message: str | bytes, mule_farm: str | int = None) -> bool:
+def mule_msg(message: str | bytes, mule_farm: str | int | None = None) -> bool:
     """Sends a message to a mule(s)/farm.
 
     :param message:
@@ -905,7 +910,7 @@ def rpc_list() -> tuple[bytes, ...]:
     return __rpc.get_list()
 
 
-def send(fd_or_data: int | bytes, data: bytes = None) -> bool:
+def send(fd_or_data: int | bytes, data: bytes | None = None) -> bool:
     """Puts data into file descriptor.
 
     * One argument. Data to write into request file descriptor.
@@ -933,7 +938,7 @@ def sendfile(fd_or_name: int | str, chunk_size: int = 0, start_pos: int = 0, fil
     """
 
 
-def send_to_spooler(message: dict[bytes, bytes] = None, **kwargs):
+def send_to_spooler(message: dict[bytes, bytes] | None = None, **kwargs):
     """Send data to the The uWSGI Spooler. Also known as spool().
 
     .. warning:: Either `message` argument should contain a dictionary
@@ -1046,7 +1051,7 @@ def signal_registered(num: int) -> int | None:
     return __signals.is_registered(num=num)
 
 
-def signal_wait(num: int = None) -> str:
+def signal_wait(num: int | None = None) -> str:
     """Waits for the given of any signal.
 
     Block the process/thread/async core until a signal is received. Use signal_received to get the number of
@@ -1119,7 +1124,7 @@ def unlock(lock_num: int = 0):
     """
 
 
-def wait_fd_read(fd: int, timeout: int = None) -> bytes:
+def wait_fd_read(fd: int, timeout: int | None = None) -> bytes:
     """Suspends handling of the current request until there is something
     to be read on file descriptor.
 
@@ -1137,7 +1142,7 @@ def wait_fd_read(fd: int, timeout: int = None) -> bytes:
     """
 
 
-def wait_fd_write(fd: int, timeout: int = None) -> bytes:
+def wait_fd_write(fd: int, timeout: int | None = None) -> bytes:
     """Suspends handling of the current request until there is nothing more
     to be written on file descriptor.
 
@@ -1154,7 +1159,7 @@ def wait_fd_write(fd: int, timeout: int = None) -> bytes:
     """
 
 
-def websocket_handshake(security_key: str = None, origin: str = None, proto: str = None):
+def websocket_handshake(security_key: str | None = None, origin: str | None = None, proto: str | None = None):
     """Waits for websocket handshake.
 
     :param security_key: Websocket security key to use.

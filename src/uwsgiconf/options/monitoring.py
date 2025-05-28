@@ -92,11 +92,11 @@ class Monitoring(OptionsGroup):
 
     def set_metrics_params(
             self,
-            enable: bool = None,
+            enable: bool | None = None,
             *,
-            store_dir: str = None,
-            restore: bool = None,
-            no_cores: bool = None
+            store_dir: str | None = None,
+            restore: bool | None = None,
+            no_cores: bool | None = None
     ):
         """Sets basic Metrics subsystem params.
 
@@ -140,10 +140,10 @@ class Monitoring(OptionsGroup):
             name: str,
             value: str,
             *,
-            check_interval: int = None,
-            reset_to: int = None,
+            check_interval: int | None = None,
+            reset_to: int | None = None,
             alarm=None,
-            alarm_message: str = None
+            alarm_message: str | None = None
     ):
         """Sets metric threshold parameters.
 
@@ -180,13 +180,13 @@ class Monitoring(OptionsGroup):
 
     def set_stats_params(
             self,
-            address: str = None,
+            address: str | None = None,
             *,
-            enable_http: bool = None,
-            minify: bool = None,
-            no_cores: bool = None,
-            no_metrics: bool = None,
-            push_interval: int = None
+            enable_http: bool | None = None,
+            minify: bool | None = None,
+            no_cores: bool | None = None,
+            no_metrics: bool | None = None,
+            push_interval: int | None = None
     ):
         """Enables stats server on the specified address.
 

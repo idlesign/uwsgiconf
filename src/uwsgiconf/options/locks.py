@@ -9,7 +9,13 @@ class Locks(OptionsGroup):
 
     """
 
-    def set_basic_params(self, *, count: int = None, thunder_lock: bool = None, lock_engine: str = None):
+    def set_basic_params(
+            self,
+            *,
+            count: int | None = None,
+            thunder_lock: bool | None = None,
+            lock_engine: str | None = None
+    ):
         """
         :param count: Create the specified number of shared locks.
 
@@ -30,7 +36,7 @@ class Locks(OptionsGroup):
 
         return self._section
 
-    def set_ipcsem_params(self, *, ftok: str = None, persistent: bool = None):
+    def set_ipcsem_params(self, *, ftok: str | None = None, persistent: bool | None = None):
         """Sets ipcsem lock engine params.
 
         :param ftok: Set the ipcsem key via ftok() for avoiding duplicates.

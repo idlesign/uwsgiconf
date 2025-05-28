@@ -65,7 +65,7 @@ class SectionMutator:
         return self.runtime_dir / 'uwsgi.fifo'
 
     @classmethod
-    def spawn(cls, options: dict = None, dir_base: Strpath = None) -> 'SectionMutator':
+    def spawn(cls, options: dict | None = None, dir_base: Strpath = None) -> 'SectionMutator':
         """Alternative constructor. Creates a mutator and returns section object.
 
         :param options:

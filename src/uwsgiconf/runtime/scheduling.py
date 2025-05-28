@@ -46,7 +46,7 @@ def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:
     return _automate_signal(target, func=lambda sig: uwsgi.add_timer(int(sig), period))
 
 
-def register_timer_rb(period: int, *, repeat: int = None, target: TypeTarget = None) -> TypeRegResult:
+def register_timer_rb(period: int, *, repeat: int | None = None, target: TypeTarget = None) -> TypeRegResult:
     """Add a red-black timer (based on black-red tree).
 
         .. code-block:: python

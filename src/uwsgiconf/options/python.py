@@ -21,14 +21,14 @@ class Python(OptionsGroup):
             self,
             *,
             version: Strint = AUTO,
-            python_home: str = None,
-            enable_threads: bool = None,
-            search_path: str = None,
-            python_binary: str = None,
-            tracebacker_path: str = None,
-            plugin_dir: str = None,
-            os_env_reload: bool = None,
-            optimization_level: int = None
+            python_home: str | None = None,
+            enable_threads: bool | None = None,
+            search_path: str | None = None,
+            python_binary: str | None = None,
+            tracebacker_path: str | None = None,
+            plugin_dir: str | None = None,
+            os_env_reload: bool | None = None,
+            optimization_level: int | None = None
     ):
         """
 
@@ -117,7 +117,13 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_wsgi_params(self, *, module: Strpath = None, callable_name: str = None, env_strategy: str = None):
+    def set_wsgi_params(
+            self,
+            *,
+            module: Strpath = None,
+            callable_name: str | None = None,
+            env_strategy: str | None = None
+    ):
         """Set wsgi related parameters.
 
         :param module:
@@ -165,7 +171,7 @@ class Python(OptionsGroup):
 
         return self._section
 
-    def set_autoreload_params(self, *, scan_interval: int = None, ignore_modules: Strlist = None):
+    def set_autoreload_params(self, *, scan_interval: int | None = None, ignore_modules: Strlist = None):
         """Sets autoreload related parameters.
 
         :param scan_interval: Seconds. Monitor Python modules' modification times to trigger reload.

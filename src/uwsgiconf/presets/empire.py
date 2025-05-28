@@ -21,11 +21,11 @@ class Broodlord:
             self,
             zerg_socket: str,
             *,
-            zerg_die_on_idle: int = None,
+            zerg_die_on_idle: int | None = None,
             vassals_home: Strlist = None,
-            zerg_count: int = None,
-            vassal_overload_sos_interval: int = None,
-            vassal_queue_items_sos: int = None,
+            zerg_count: int | None = None,
+            vassal_overload_sos_interval: int | None = None,
+            vassal_queue_items_sos: int | None = None,
             section_emperor: Section = None,
             section_zerg: Section = None
     ):

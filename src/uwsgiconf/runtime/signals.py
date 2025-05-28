@@ -71,7 +71,7 @@ class Signal:
     """
     __slots__ = ['num']
 
-    def __init__(self, num: int = None):
+    def __init__(self, num: int | None = None):
         """
         :param int num: Signal number (0-255).
 
@@ -92,7 +92,12 @@ class Signal:
         """Whether the signal is registered."""
         return bool(uwsgi.signal_registered(self.num))
 
-    def register_handler(self, *, target: 'TypeTarget' = None, callback: Callable[['Signal'], None] = None) -> Callable:
+    def register_handler(
+            self,
+            *,
+            target: 'TypeTarget' = None,
+            callback: Callable[['Signal'], None] | None = None
+    ) -> Callable:
         """Decorator for a function to be used as a signal handler.
 
         .. code-block:: python
@@ -145,7 +150,7 @@ class Signal:
 
         return wrapper
 
-    def send(self, *, remote: str = None):
+    def send(self, *, remote: str | None = None):
         """Sends the signal to master or remote.
 
         When you send a signal, it is copied into the master's queue.

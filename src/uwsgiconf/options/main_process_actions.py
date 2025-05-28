@@ -19,7 +19,7 @@ class ActionMount(HookAction):
 
     name = 'mount'
 
-    def __init__(self, mountpoint: str, *, fs: str = None, src: str = None, flags: Strlist = None):
+    def __init__(self, mountpoint: str, *, fs: str | None = None, src: str | None = None, flags: Strlist = None):
         """
 
         :param str mountpoint:
@@ -131,7 +131,7 @@ class ActionExit(HookAction):
     """
     name = 'exit'
 
-    def __init__(self, status_code: int = None):
+    def __init__(self, status_code: int | None = None):
         super().__init__(status_code)
 
 
@@ -143,7 +143,7 @@ class ActionPrintout(HookAction):
     """
     name = 'print'
 
-    def __init__(self, text: str = None):
+    def __init__(self, text: str | None = None):
         super().__init__(text)
 
 

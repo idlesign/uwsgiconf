@@ -116,7 +116,7 @@ class Section(OptionsGroup):
         """Basic set of embedded plugins. This set is used in uWSGI package from PyPI."""
 
         @staticmethod
-        def PROBE(uwsgi_binary: str = None):
+        def PROBE(uwsgi_binary: str | None = None):
             """This preset allows probing real uWSGI to get actual embedded plugin list."""
 
             def probe() -> list[str]:
@@ -126,13 +126,13 @@ class Section(OptionsGroup):
 
     def __init__(
             self,
-            name: str = None,
+            name: str | None = None,
             *,
             runtime_dir: Strpath = None,
-            project_name: str = None,
-            strict_config: bool = None,
+            project_name: str | None = None,
+            strict_config: bool | None = None,
             style_prints: bool = False,
-            embedded_plugins: Callable | list[str] = None,
+            embedded_plugins: Callable | list[str] | None = None,
             **kwargs
     ):
         """
@@ -264,7 +264,7 @@ class Section(OptionsGroup):
         
         return self
 
-    def set_basic_params(self, *, strict_config: bool = None, **kwargs) -> TypeSection:
+    def set_basic_params(self, *, strict_config: bool | None = None, **kwargs) -> TypeSection:
 
         self._set('strict', strict_config, cast=bool)
 
@@ -302,8 +302,8 @@ class Section(OptionsGroup):
             self,
             value: Any,
             *,
-            indent: str = None,
-            format_options: dict | str = None,
+            indent: str | None = None,
+            format_options: dict | str | None = None,
             asap: bool = False
     ) -> TypeSection:
         """Prints out the given value.
@@ -361,7 +361,7 @@ class Section(OptionsGroup):
             *,
             plugins: list[str] | list[OptionsGroup] | str | OptionsGroup = None,
             search_dirs: Strlist = None,
-            autoload: bool = None,
+            autoload: bool | None = None,
             required: bool = False
     ) -> TypeSection:
         """Sets plugin-related parameters.
@@ -482,7 +482,7 @@ class Section(OptionsGroup):
         return self
 
     @classmethod
-    def derive_from(cls, section: TypeSection, *, name: str = None) -> TypeSection:
+    def derive_from(cls, section: TypeSection, *, name: str | None = None) -> TypeSection:
         """Creates a new section based on the given.
 
         :param section: Section to derive from,
@@ -612,7 +612,7 @@ class Section(OptionsGroup):
             cls,
             dsn: Strlist,
             *,
-            allow_shared_sockets: bool = None,
+            allow_shared_sockets: bool | None = None,
             **init_kwargs: Any
     ) -> TypeSection:
         """Constructs a section object performing its basic (default) configuration.
@@ -650,10 +650,10 @@ class Configuration:
 
     def __init__(
             self,
-            sections: list[Section] = None,
+            sections: list[Section] | None = None,
             *,
             autoinclude_sections: bool = False,
-            alias: str = None
+            alias: str | None = None
     ):
         """
 

@@ -30,16 +30,16 @@ class Spooler(OptionsGroup):
             self,
             *,
             touch_reload: Strlist = None,
-            quiet: bool = None,
-            process_count: int = None,
-            max_tasks: int = None,
-            order_tasks: int = None,
-            harakiri: int = None,
-            change_dir: str = None,
-            poll_interval: int = None,
-            signal_as_task: bool = None,
-            cheap: bool = None,
-            base_dir: str = None
+            quiet: bool | None = None,
+            process_count: int | None = None,
+            max_tasks: int | None = None,
+            order_tasks: int | None = None,
+            harakiri: int | None = None,
+            change_dir: str | None = None,
+            poll_interval: int | None = None,
+            signal_as_task: bool | None = None,
+            cheap: bool | None = None,
+            base_dir: str | None = None
     ):
         """
 

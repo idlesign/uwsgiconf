@@ -19,11 +19,11 @@ class MasterProcess(OptionsGroup):
     def set_basic_params(
             self,
             *,
-            enable: bool = None,
-            name: str = None,
-            no_orphans: bool = None,
-            as_root: bool = None,
-            subproc_check_interval: int = None,
+            enable: bool | None = None,
+            name: str | None = None,
+            no_orphans: bool | None = None,
+            as_root: bool | None = None,
+            subproc_check_interval: int | None = None,
             fifo_file: Strlist | Pathlist = None
     ):
         """
@@ -68,10 +68,10 @@ class MasterProcess(OptionsGroup):
     def set_exit_events(
             self,
             *,
-            no_workers: bool = None,
-            idle: bool = None,
-            reload: bool = None,
-            sig_term: bool = None
+            no_workers: bool | None = None,
+            idle: bool | None = None,
+            reload: bool | None = None,
+            sig_term: bool | None = None
     ):
         """Do exit on certain events
 
@@ -97,8 +97,8 @@ class MasterProcess(OptionsGroup):
             self,
             *,
             handler: Strlist = None,
-            catch: bool = None,
-            no_write_exception: bool = None
+            catch: bool | None = None,
+            no_write_exception: bool | None = None
     ):
         """Exception handling related params.
 
@@ -121,7 +121,7 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_idle_params(self, *, timeout: int = None, exit: bool = None):
+    def set_idle_params(self, *, timeout: int | None = None, exit: bool | None = None):
         """Activate idle mode - put uWSGI in cheap mode after inactivity timeout.
 
         :param timeout: Inactivity timeout in seconds.
@@ -134,7 +134,7 @@ class MasterProcess(OptionsGroup):
 
         return self._section
 
-    def set_reload_params(self, *, mercy: int = None, exit: bool = None):
+    def set_reload_params(self, *, mercy: int | None = None, exit: bool | None = None):
         """Set reload related params.
 
         :param mercy: Set the maximum time (in seconds) we wait
@@ -157,9 +157,9 @@ class MasterProcess(OptionsGroup):
             day: Strint = None,
             hour: Strint = None,
             minute: Strint = None,
-            legion: str = None,
-            unique: bool = None,
-            harakiri: int = None
+            legion: str | None = None,
+            unique: bool | None = None,
+            harakiri: int | None = None
     ):
         """Adds a cron task running the given command on the given schedule.
         http://uwsgi.readthedocs.io/en/latest/Cron.html
@@ -273,18 +273,18 @@ class MasterProcess(OptionsGroup):
             command: str,
             *,
             for_legion: bool = False,
-            broken_counter: int = None,
-            pidfile: str = None,
-            control: bool = None,
-            daemonize: bool = None,
+            broken_counter: int | None = None,
+            pidfile: str | None = None,
+            control: bool | None = None,
+            daemonize: bool | None = None,
             touch_reload: Strlist = None,
-            signal_stop: int = None,
-            signal_reload: int = None,
-            honour_stdin: bool = None,
+            signal_stop: int | None = None,
+            signal_reload: int | None = None,
+            honour_stdin: bool | None = None,
             uid: Strint = None,
             gid: Strint = None,
-            new_pid_ns: bool = None,
-            change_dir: str = None
+            new_pid_ns: bool | None = None,
+            change_dir: str | None = None
     ):
         """Attaches a command/daemon to the master process.
 

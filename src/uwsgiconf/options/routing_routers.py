@@ -58,12 +58,12 @@ class _RouterCommon(RouterBase):
     def set_basic_params(
             self,
             *,
-            workers: int = None,
-            zerg_server: str = None,
-            fallback_node: str = None,
-            concurrent_events: int = None,
-            cheap_mode: bool = None,
-            stats_server: str = None
+            workers: int | None = None,
+            zerg_server: str | None = None,
+            fallback_node: str | None = None,
+            concurrent_events: int | None = None,
+            cheap_mode: bool | None = None,
+            stats_server: str | None = None
     ):
         """
 
@@ -97,9 +97,9 @@ class _RouterCommon(RouterBase):
     def set_connections_params(
             self,
             *,
-            harakiri: int = None,
-            timeout_socket: int = None,
-            retry_delay: int = None
+            harakiri: int | None = None,
+            timeout_socket: int | None = None,
+            retry_delay: int | None = None
     ):
         """Sets connection-related parameters.
 
@@ -188,7 +188,7 @@ class ForwarderCache(Forwarder):
     """
     name = 'use-cache'
 
-    def __init__(self, cache_name: str = None):
+    def __init__(self, cache_name: str | None = None):
         """
         :param cache_name: Cache name to use.
         """
@@ -262,14 +262,14 @@ class _RouterWithForwarders(_RouterCommon):
     def set_basic_params(
             self,
             *,
-            workers: int = None,
-            zerg_server: str = None,
-            fallback_node: str = None,
-            concurrent_events: int = None,
-            cheap_mode: bool = None,
-            stats_server: str = None,
-            quiet: bool = None,
-            buffer_size: int = None
+            workers: int | None = None,
+            zerg_server: str | None = None,
+            fallback_node: str | None = None,
+            concurrent_events: int | None = None,
+            cheap_mode: bool | None = None,
+            stats_server: str | None = None,
+            quiet: bool | None = None,
+            buffer_size: int | None = None
     ):
         """
 
@@ -336,15 +336,15 @@ class RouterHttp(_RouterWithForwarders):
     def set_basic_params(
             self,
             *,
-            workers: int = None,
-            zerg_server: str = None,
-            fallback_node: str = None,
-            concurrent_events: int = None,
-            cheap_mode: bool = None,
-            stats_server: str = None,
-            quiet: bool = None,
-            buffer_size: int = None,
-            keepalive: int = None,
+            workers: int | None = None,
+            zerg_server: str | None = None,
+            fallback_node: str | None = None,
+            concurrent_events: int | None = None,
+            cheap_mode: bool | None = None,
+            stats_server: str | None = None,
+            quiet: bool | None = None,
+            buffer_size: int | None = None,
+            keepalive: int | None = None,
             resubscribe_addresses: Strlist = None
     ):
         """
@@ -393,11 +393,11 @@ class RouterHttp(_RouterWithForwarders):
     def set_connections_params(
             self,
             *,
-            harakiri: int = None,
-            timeout_socket: int = None,
-            retry_delay: int = None,
-            timeout_headers: int = None,
-            timeout_backend: int = None
+            harakiri: int | None = None,
+            timeout_socket: int | None = None,
+            retry_delay: int | None = None,
+            timeout_headers: int | None = None,
+            timeout_backend: int | None = None
     ):
         """Sets connection-related parameters.
 
@@ -433,13 +433,13 @@ class RouterHttp(_RouterWithForwarders):
     def set_manage_params(
             self,
             *,
-            chunked_input: bool = None,
-            chunked_output: bool = None,
-            gzip: bool = None,
-            websockets: bool = None,
-            source_method: bool = None,
-            rtsp: bool = None,
-            proxy_protocol: bool = None
+            chunked_input: bool | None = None,
+            chunked_output: bool | None = None,
+            gzip: bool | None = None,
+            websockets: bool | None = None,
+            source_method: bool | None = None,
+            rtsp: bool | None = None,
+            proxy_protocol: bool | None = None
     ):
         """Allows enabling various automatic management mechanics.
 
@@ -513,11 +513,11 @@ class RouterHttps(RouterHttp):
             *,
             cert: str,
             key: str,
-            ciphers: str = None,
-            client_ca: str = None,
-            session_context: str = None,
-            use_spdy: bool = None,
-            export_cert_var: bool = None
+            ciphers: str | None = None,
+            client_ca: str | None = None,
+            session_context: str | None = None,
+            use_spdy: bool | None = None,
+            export_cert_var: bool | None = None
     ):
         """Binds https router to run on the given address.
 
@@ -581,10 +581,10 @@ class RouterSsl(_RouterWithForwarders):
             forward_to: ForwStrlist =None,
             cert: str,
             key: str,
-            ciphers: str = None,
-            client_ca: str = None,
-            session_context: str = None,
-            use_sni: bool = None
+            ciphers: str | None = None,
+            client_ca: str | None = None,
+            session_context: str | None = None,
+            use_sni: bool | None = None
     ):
         """Activates the router on the given address.
 
@@ -631,10 +631,10 @@ class RouterSsl(_RouterWithForwarders):
     def set_connections_params(
             self,
             *,
-            harakiri: int = None,
-            timeout_socket: int = None,
-            retry_delay: int = None,
-            retry_max: int = None
+            harakiri: int | None = None,
+            timeout_socket: int | None = None,
+            retry_delay: int | None = None,
+            retry_max: int | None = None
     ):
         """Sets connection-related parameters.
 

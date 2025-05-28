@@ -39,7 +39,7 @@ class CollectorFile(Collector):
 
     name = 'file'
 
-    def __init__(self, fpath: str, *, get_slot: int = None):
+    def __init__(self, fpath: str, *, get_slot: int | None = None):
         """
         :param fpath: File path.
 

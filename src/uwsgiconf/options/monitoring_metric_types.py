@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING
+
 from ..base import ParametrizedValue
 from ..exceptions import ConfigurationError
 from ..utils import KeyValue, filter_locals
+
+if TYPE_CHECKING:
+    from .monitoring_collectors import Collector
 
 
 class Metric(ParametrizedValue):
@@ -10,8 +15,16 @@ class Metric(ParametrizedValue):
     name_separator = ','
 
     def __init__(
-            self, name: str, *, oid: str = None, alias_for: str = None, collector=None,
-            initial_value: int = None, collect_interval: int = None, reset_after_push: bool = None):
+            self,
+            name: str,
+            *,
+            oid: str | None = None,
+            alias_for: str | None = None,
+            collector: 'Collector' = None,
+            initial_value: int | None = None,
+            collect_interval: int | None = None,
+            reset_after_push: bool | None = None
+    ):
         """
 
         :param name: Metric name.
@@ -26,7 +39,7 @@ class Metric(ParametrizedValue):
 
             * http://uwsgi-docs.readthedocs.io/en/latest/Metrics.html#oid-assigment-for-plugins
 
-        :param Collector collector: Collector to be used. If not set it is considered that the value must
+        :param collector: Collector to be used. If not set it is considered that the value must
             be updated manually from applications using the metrics API.
 
             * http://uwsgi-docs.readthedocs.io/en/latest/Metrics.html#api

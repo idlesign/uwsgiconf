@@ -11,17 +11,17 @@ class Section(_Section):
 
     def __init__(
             self,
-            name: str = None,
+            name: str | None = None,
             *,
             touch_reload: Strlist =None,
-            workers: int = None,
-            threads: int | bool = None,
-            mules: int = None,
-            owner: str = None,
-            log_into: str = None,
-            log_dedicated: bool = None,
-            process_prefix: str = None,
-            ignore_write_errors: bool = None,
+            workers: int | None = None,
+            threads: int | bool | None = None,
+            mules: int | None = None,
+            owner: str | None = None,
+            log_into: str | None = None,
+            log_dedicated: bool | None = None,
+            process_prefix: str | None = None,
+            ignore_write_errors: bool | None = None,
             **kwargs):
         """
 
@@ -231,8 +231,8 @@ class Section(_Section):
             domain: str,
             webroot: str,
             *,
-            address: str = None,
-            allow_shared_sockets: bool = None,
+            address: str | None = None,
+            allow_shared_sockets: bool | None = None,
             http_redirect: bool = False,
     ):
         """Enables HTTPS using certificates from Certbot https://certbot.eff.org.
@@ -321,11 +321,11 @@ class PythonSection(Section):
 
     def __init__(
             self,
-            name: str = None,
+            name: str | None = None,
             *,
-            params_python: dict = None,
-            wsgi_module: str = None,
-            wsgi_callable: str | Callable = None,
+            params_python: dict | None = None,
+            wsgi_module: str | None = None,
+            wsgi_callable: str | Callable | None = None,
             embedded_plugins: bool | None = True,
             require_app: bool = True,
             threads: bool | int = True,

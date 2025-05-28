@@ -186,10 +186,10 @@ class MainProcess(OptionsGroup):
             self,
             *,
             touch_reload: Strlist = None,
-            priority: int = None,
-            vacuum: bool = None,
-            binary_path: str = None,
-            honour_stdin: bool = None
+            priority: int | None = None,
+            vacuum: bool | None = None,
+            binary_path: str | None = None,
+            honour_stdin: bool | None = None
     ):
         """
 
@@ -217,7 +217,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_memory_params(self, *, ksm_interval: int = None, no_swap: bool = None):
+    def set_memory_params(self, *, ksm_interval: int | None = None, no_swap: bool | None = None):
         """Set memory related parameters.
 
         :param ksm_interval: Kernel Samepage Merging frequency option, that can reduce memory usage.
@@ -363,7 +363,7 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_on_exit_params(self, *, skip_hooks: bool = None, skip_teardown: bool = None):
+    def set_on_exit_params(self, *, skip_hooks: bool | None = None, skip_teardown: bool | None = None):
         """Set params related to process exit procedure.
 
         :param skip_hooks: Skip ``EXIT`` phase hook.
@@ -436,7 +436,14 @@ class MainProcess(OptionsGroup):
 
         return self._section
 
-    def set_naming_params(self, *, autonaming: bool = None, prefix: str = None, suffix: str = None, name: str = None):
+    def set_naming_params(
+            self,
+            *,
+            autonaming: bool | None = None,
+            prefix: str | None = None,
+            suffix: str | None = None,
+            name: str | None = None
+    ):
         """Setups processes naming parameters.
 
         :param autonaming: Automatically set process name to something meaningful.

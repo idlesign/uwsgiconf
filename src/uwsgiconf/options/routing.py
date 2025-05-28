@@ -271,7 +271,7 @@ class Routing(OptionsGroup):
         wsgi = ModifierWsgi
         xslt = ModifierXslt
 
-    def use_router(self, router, *, force: bool = None):
+    def use_router(self, router, *, force: bool | None = None):
         """
 
         :param RouterBase router: Dedicated router object. See `.routers`.
@@ -286,7 +286,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def register_route(self, route_rules, *, label: str = None):
+    def register_route(self, route_rules, *, label: str | None = None):
         """Registers a routing rule.
 
         :param RouteRule|list[RouteRule] route_rules:
@@ -335,7 +335,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def set_error_pages(self, codes_map: dict = None, *, common_prefix: Strpath = None):
+    def set_error_pages(self, codes_map: dict | None = None, *, common_prefix: Strpath = None):
         """Add an error pages for managed 403, 404, 500 responses.
 
         Shortcut for ``.set_error_page()``.
@@ -362,7 +362,7 @@ class Routing(OptionsGroup):
 
         return self._section
 
-    def set_geoip_params(self, *, db_country: str = None, db_city: str = None):
+    def set_geoip_params(self, *, db_country: str | None = None, db_city: str | None = None):
         """Sets GeoIP parameters.
 
         * http://uwsgi.readthedocs.io/en/latest/GeoIP.html
