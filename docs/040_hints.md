@@ -64,13 +64,13 @@ Section(embedded_plugins=Section.embedded_plugins_presets.PROBE)
 Using the above, `embedded_plugins` will be inhabited by plugins
 actually available in uWSGI.
 
-## Ways run uWSGI
+## Ways to run uWSGI
 
 !!! question
 
     Ok I have a config (e.g. `uwsgiconf.py`), how to run uWSGI with it?
 
-There are several ways to run uWSGI configure with `uwsgiconf.py`.
+There are several ways to run uWSGI configured with `uwsgiconf.py`.
 
 ### uwsgiconf run
 
@@ -82,7 +82,7 @@ You can omit `<filename>` if your file is named `uwsgiconf.py`.
 
 ### python uwsgiconf.py
 
-To make it working do not forget to define entry point for `__main__` in your `uwsgiconf.py`:
+To make it work, do not forget to define an entry point for `__main__` in your `uwsgiconf.py`:
 
 ```python
 ...
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     run_uwsgi()
 ```
 
-This will also facilitate running from IDEs.
+This change will also facilitate running from IDEs.
 
 
 ### manage.py uwsgi_run
