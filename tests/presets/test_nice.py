@@ -121,6 +121,29 @@ def test_configure_logging_json(assert_lines):
     ], section)
 
 
+def test_configure_logging_custom(assert_lines):
+
+    section = Section()
+    section.configure_logging_json(
+        tpl_msg='%(method)>%(status) %(msecs)ms %(vhost)%(uri)',
+        tpl_ctx={
+            'dt': '__dt_iso__',
+            'logger': '__src__',
+            'message': '__msg__',
+            'ctx': {
+                'http_referrer': '%(referer)',
+                'http_user_agent': '%(uagent)',
+            }
+        }
+    )
+
+    assert_lines([
+        'log-format = %(method)>%(status) %(msecs)ms %(vhost)%(uri)',
+        '"logger": "uwsgi.req", "message": "${msg}", "ctx": {"http_referrer": ',
+        '"logger": "uwsgi.out", "message": "${msg}", "ctx": {"http_referrer": '
+    ], section)
+
+
 def test_configure_certbot_https(assert_lines, monkeypatch):
 
     monkeypatch.setattr('pathlib.Path.exists', lambda self: True)

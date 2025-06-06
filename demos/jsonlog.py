@@ -53,7 +53,18 @@ def configure():
         workers=1,
     )
 
-    section.configure_logging_json()
+    section.configure_logging_json(
+        tpl_msg='%(method)>%(status) %(msecs)ms %(vhost)%(uri)',
+        tpl_ctx={
+            'dt': '__dt_iso__',
+            'logger': '__src__',
+            'message': '__msg__',
+            'ctx': {
+                'http_referrer': '%(referer)',
+                'http_user_agent': '%(uagent)',
+            }
+        }
+    )
 
     return section
 

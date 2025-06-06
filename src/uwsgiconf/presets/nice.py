@@ -1,3 +1,4 @@
+import json
 from collections.abc import Callable
 from pathlib import Path
 
@@ -278,9 +279,19 @@ class Section(_Section):
 
         return self
 
-    def configure_logging_json(self):
-        """Configures uWSGI output to be json-formatted."""
+    def configure_logging_json(self, *, tpl_msg: str = '', tpl_ctx: dict | None = None):
+        """Configures uWSGI output to be json-formatted.
 
+        :param tpl_msg: Custom template string for the message.
+
+        :param tpl_ctx: Custom addition context template dictionary.
+            The following macros are available for values:
+                * __src__ - uwsgi.req or uwsgi.out
+                * __msg__ - data from `tpl_msg` (if uwsgi.req) or out (if uwsgi.out)
+                * __dt_iso__ - iso datetime, e.g. 2025-06-06T22:47:03+0700
+                * __ts_ms__ - timestamp, e.g. 1749224823443
+
+        """
         logging = self.logging
 
         vars_enc = logging.encoders.format.vars
@@ -291,27 +302,45 @@ class Section(_Section):
 
         # Log essential request data to place into "msg".
         logging.set_basic_params(template=(
+            tpl_msg or
             f'{vars_req.REQ_METHOD} {vars_req.REQ_URI} -> {vars_req.RESP_STATUS}'
         ))
 
         new_line = logging.encoders.newline()
 
-        log_template = (
-            '{'
-            '"dt": "' + str(vars_enc.TIME_FORMAT('iso')) + '", '
-            '"src": "__src__", '
-            f'"msg": "{vars_enc.MESSAGE}", '
-            '"ctx": {}, '
-            f'"ms": {vars_enc.TIME_MS}'
-            '}'
-        )
+        if not tpl_ctx:
+            tpl_ctx = {
+                'dt': '__dt_iso__',
+                'src': '__src__',
+                'msg': '__msg__',
+                'ctx': {},
+                'ms': '__ts_ms__',
+            }
 
-        logging.add_logger_encoder(
-            [logging.encoders.json(log_template.replace('__src__', 'uwsgi.req')), new_line],
-            requests_only=True)
+        log_template = json.dumps(tpl_ctx, ensure_ascii=False)
 
-        logging.add_logger_encoder(
-            [logging.encoders.json(log_template.replace('__src__', 'uwsgi.out')), new_line])
+        def replace_macro(value: str, replace_map: dict[str, str]) -> str:
+            replace_map = {
+                '__dt_iso__': f"{vars_enc.TIME_FORMAT('iso')}",
+                '__ts_ms__': f'{vars_enc.TIME_MS}',
+                '__msg__': f'{vars_enc.MESSAGE}',
+                **replace_map,
+            }
+
+            for key, val in replace_map.items():
+                value = value.replace(key, val)
+
+            return value
+
+        logging.add_logger_encoder([
+            logging.encoders.json(replace_macro(log_template, {'__src__': 'uwsgi.req'})),
+            new_line
+        ], requests_only=True)
+
+        logging.add_logger_encoder([
+            logging.encoders.json(replace_macro(log_template, {'__src__': 'uwsgi.out'})),
+            new_line
+        ])
 
         return self
 
