@@ -24,6 +24,7 @@ dev = [
     {include-group = "docs"},
     {include-group = "linters"},
     {include-group = "tests"},
+    {include-group = "runtime"},
 ]
 docs = [
     "mkdocs-material",
@@ -37,7 +38,10 @@ tests = [
     "pytest",
     "pytest-djangoapp>=1.3.0",
     "freezegun",
+]
+runtime = [
     "django",
+    "uwsgi",
 ]
 
 [project.optional-dependencies]

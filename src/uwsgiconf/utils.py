@@ -3,6 +3,7 @@ import os
 import sys
 from contextlib import contextmanager
 from importlib import import_module
+from inspect import currentframe
 from io import StringIO
 from pathlib import Path
 from types import ModuleType
@@ -14,6 +15,13 @@ from .typehints import Strlist, Strpath
 
 if TYPE_CHECKING:
     from .config import Configuration
+
+
+def run_uwsgi():
+    """Allows running uwsgi right from uwsgiconf.py in if __name__ == '__main_'."""
+    caller = currentframe().f_back
+    filepath = caller.f_locals['__file__']
+    ConfModule(filepath).spawn_uwsgi()
 
 
 class EmbeddedPlugins(NamedTuple):
@@ -137,7 +145,7 @@ class ConfModule:
 
         with output_capturing():
             module = self.load(self.fpath)
-            confs = getattr(module, CONFIGS_MODULE_ATTR)
+            confs = getattr(module, CONFIGS_MODULE_ATTR, [])
             confs = listify(confs)
 
         self._confs = confs

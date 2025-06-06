@@ -1,6 +1,7 @@
 # uwsgiconf changelog
 
 ### Unreleased
+* !! Drop QA for Py 3.7, 3.8, 3.9.
 * ++ Add 'buffer_size' option to .networking.set_basic_params().
 * ++ Add privileges drop support for .configure_owner() and .set_owner_params()  (closes #9).
 * ++ Add stub emulation for caching.
@@ -8,11 +9,11 @@
 * ++ Add stub emulation for RPC.
 * ++ Add stub emulation for signals and scheduling.
 * ++ Django. Added uWSGI powered cache backend.
+* ++ Expose utils.run_uwsgi shortcut.
 * ++ Introduce uWSGI emulation for stub module to facilitate testing.
 * ++ Runtime. Allow Mule and Farm objects to be passed as 'target' for time and cron functions.
 * ++ Runtime. Caching now can store bytes.
 * ** Add QA for Py 3.11, 3.12, 3.13.
-* !! Drop QA for Py 3.7, 3.8, 3.9.
 * ** Workers. .set_mules_params() no allows handling farm mules count given as a digit string (closes #6).
 
 

@@ -102,3 +102,8 @@ def configure():
 
 
 configure_uwsgi(configure)
+
+
+if __name__ == '__main__':
+    from uwsgiconf.utils import run_uwsgi
+    run_uwsgi()
