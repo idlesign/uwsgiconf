@@ -6,10 +6,12 @@ from uwsgiconf.exceptions import ConfigurationError
 
 def test_networking_basics(assert_lines):
 
+    net = Section().networking
     assert_lines([
         'listen = 3',
         'buffer-size = 65535',
-    ], Section().networking.set_basic_params(queue_size=3, buffer_size=65535))
+        'socket-protocol = raw',
+    ], net.set_basic_params(queue_size=3, buffer_size=65535, default_socket_type=net.sockets.raw))
 
     assert_lines([
         'so-keepalive = true',

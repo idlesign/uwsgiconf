@@ -85,7 +85,7 @@ class Networking(OptionsGroup):
             *,
             queue_size: int | None = None,
             freebind: bool | None = None,
-            default_socket_type: str | None = None,
+            default_socket_type: str | None | type[Socket] = None,
             buffer_size: int | None = None
     ):
         """
@@ -106,7 +106,7 @@ class Networking(OptionsGroup):
             .. note:: Linux only.
 
         :param default_socket_type: Force the socket type as default.
-            See ``.socket_types``.
+            See ``.sockets``.
 
         :param buffer_size:
             Set the internal buffer max size - size of a request (request-body excluded),
@@ -122,7 +122,12 @@ class Networking(OptionsGroup):
         """
         self._set('listen', queue_size)
         self._set('freebind', freebind, cast=bool)
-        self._set('socket-protocol', default_socket_type)
+
+        if default_socket_type:
+            if issubclass(default_socket_type, Socket):
+                default_socket_type = default_socket_type.name.replace('-socket', '')
+            self._set('socket-protocol', default_socket_type)
+
         self._set('buffer-size', buffer_size)
 
         return self._section
