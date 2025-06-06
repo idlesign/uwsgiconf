@@ -80,7 +80,7 @@ class _RouterCommon(RouterBase):
         :param cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
-            When all of the nodes go down, the router will return in cheap mode.
+            When all the nodes go down, the router will return in cheap mode.
 
         :param stats_server: Router stats server address to run at.
 
@@ -361,7 +361,7 @@ class RouterHttp(_RouterWithForwarders):
         :param cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
-            When all of the nodes go down, the router will return in cheap mode.
+            When all the nodes go down, the router will return in cheap mode.
 
         :param stats_server: Router stats server address to run at.
 
@@ -683,7 +683,7 @@ class RouterFast(_RouterWithForwarders):
         :param bool cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
-            When all of the nodes go down, the router will return in cheap mode.
+            When all the nodes go down, the router will return in cheap mode.
 
         :param str stats_server: Router stats server address to run at.
 
@@ -713,7 +713,7 @@ class RouterFast(_RouterWithForwarders):
         return self
 
     def set_resubscription_params(self, addresses=None, bind_to=None):
-        """You can specify a dgram address (udp or unix) on which all of the subscriptions
+        """You can specify a dgram address (udp or unix) on which all the subscriptions
         request will be forwarded to (obviously changing the node address to the router one).
 
         The system could be useful to build 'federated' setup.
@@ -866,7 +866,7 @@ class RouterForkPty(_RouterCommon):
         :param bool cheap_mode: Enables cheap mode. When the router is in cheap mode,
             it will not respond to requests until a node is available.
             This means that when there are no nodes subscribed, only your local app (if any) will respond.
-            When all of the nodes go down, the router will return in cheap mode.
+            When all the nodes go down, the router will return in cheap mode.
 
         :param str stats_server: Router stats server address to run at.
 

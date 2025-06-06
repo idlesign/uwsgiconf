@@ -8,6 +8,7 @@
 * ++ Add stub emulation for Farms and Mules.
 * ++ Add stub emulation for RPC.
 * ++ Add stub emulation for signals and scheduling.
+* ++ Add support for socket-timeout and http-timeout (closes #13).
 * ++ Django. Added uWSGI powered cache backend.
 * ++ Expose utils.run_uwsgi shortcut.
 * ++ Introduce uWSGI emulation for stub module to facilitate testing.

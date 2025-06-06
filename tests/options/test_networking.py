@@ -15,7 +15,8 @@ def test_networking_basics(assert_lines):
 
     assert_lines([
         'so-keepalive = true',
-    ], Section().networking.set_socket_params(keep_alive=True))
+        'socket-timeout = 5',
+    ], Section().networking.set_socket_params(keep_alive=True, timeout=5))
 
     assert_lines([
         'abstract-socket = true',
@@ -90,12 +91,16 @@ def test_networking_basics(assert_lines):
         ])
     )
 
+
+    http_router = Section.routing.routers.http(sockets.shared(':80'))
+    http_router.set_connections_params(timeout_socket=18)
+
     assert_lines([
             'shared-socket = :80\nshared-socket = :443',
-            'http = =0\nhttps2 = cert=foobar.crt,key=foobar.key,addr==1',
+            'http = =0\nhttp-timeout = 18\nhttps2 = cert=foobar.crt,key=foobar.key,addr==1',
         ],
         Section().routing.use_router(
-            Section.routing.routers.http(sockets.shared(':80'))
+            http_router
 
         ).routing.use_router(
             Section.routing.routers.https(sockets.shared(':443'), cert='foobar.crt', key='foobar.key')
