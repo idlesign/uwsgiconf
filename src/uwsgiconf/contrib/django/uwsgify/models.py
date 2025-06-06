@@ -44,9 +44,19 @@ class TaskBase(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def get_owner(self) -> str:
-        """Returns the "owner" for this task."""
+    def _get_owner(self) -> str:
+        """Returns "owner" (executor) for this task."""
         return gethostname()
+
+    @classmethod
+    def _get_manager(cls) -> models.Manager:
+        """Returns model manager."""
+        return cls.objects
+
+    @classmethod
+    def register(cls, name: str, *, params: dict | None = None, **kwargs) -> 'TaskBase':
+        """Register a new task."""
+        return cls._get_manager().create(name=name, params=params or {}, **kwargs)
 
     @classmethod
     def acquire(cls, name: str) -> Optional['TaskBase']:
@@ -56,7 +66,7 @@ class TaskBase(models.Model):
         :param name: Task name
         """
         with atomic():
-            acquired: TaskBase = cls.objects.select_for_update(
+            acquired: TaskBase = cls._get_manager().select_for_update(
                 skip_locked=True
             ).filter(name=name, released=True).first()
 
@@ -64,7 +74,7 @@ class TaskBase(models.Model):
                 LOGGER.debug('Lock is acquired: %s', name)
                 acquired.released = False
                 acquired.dt_acquired = now()
-                acquired.owner = acquired.get_owner()
+                acquired.owner = acquired._get_owner()
                 acquired.save()
 
             else:
@@ -72,7 +82,7 @@ class TaskBase(models.Model):
 
         return acquired
 
-    def release(self, result: dict | None = None):
+    def release(self, *, result: dict | None = None):
         """Releases the task, thus making it available for another acquirement.
         Use `None` to keep an existing result.
 
@@ -87,12 +97,12 @@ class TaskBase(models.Model):
         self.save()
 
     @classmethod
-    def cleanup_stale(cls):
+    def reset_stale(cls):
         """Resets stale (hung up) tasks records, thus making them available
         for further acquirement."""
         LOGGER.debug('Cleanup stale tasks for "%s"', cls.__name__)
 
-        cls.objects.filter(
+        cls._get_manager().filter(
             released=False,
-            update_dt__lte=now() - timedelta(seconds=cls.STALE_TIMEOUT)
+            dt_updated__lte=now() - timedelta(seconds=cls.STALE_TIMEOUT)
         ).update(released=True)

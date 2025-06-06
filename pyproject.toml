@@ -35,7 +35,7 @@ linters = [
 ]
 tests = [
     "pytest",
-    "pytest-djangoapp",
+    "pytest-djangoapp>=1.3.0",
     "freezegun",
     "django",
 ]
