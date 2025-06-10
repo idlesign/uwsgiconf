@@ -1,4 +1,4 @@
-from uwsgiconf.contrib.django.uwsgify.models import TaskBase
+from uwsgiconf.contrib.django.uwsgify.taskutils.models import TaskBase
 
 
 class Task(TaskBase):

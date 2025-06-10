@@ -25,6 +25,7 @@ pytest_plugins = configure_djangoapp_plugin(
             }
         }
     },
+    app_name='tests.testapp',
     extend_MIDDLEWARE=[
         # messages in admin support
         'django.contrib.sessions.middleware.SessionMiddleware',

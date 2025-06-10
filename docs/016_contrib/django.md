@@ -49,7 +49,10 @@ instead of `uwsgiinit.py`.
 
 Cen be used to set an environment variable name to check whether
 task execution should be skipped. E.g. for temporary maintenance.
-See `task` and `task_locked` decorators bolow.
+
+!!! note
+    See notes on `@task` and decorator below.
+
 
 ## Tools
 
@@ -78,38 +81,101 @@ section.caching.add_cache("mycache", max_items=100)
 
 #### @task
 
-Decorator useful for task functions (e.g. uWSGI cron, timer).
+This decorator is useful to give task functions (e.g. uWSGI cron, timer) superpowers.
 
 ```python
-from uwsgiconf.contrib.django.uwsgify.decorators import task
+from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
 from uwsgiconf.runtime.scheduling import register_cron
 
-@task(cooldown=4, env_var_skip='SKIP_TASKS_RUN')
 @register_cron(hour=-3)
+@task(cooldown=4, env_var_skip='SKIP_TASKS_RUN')
 def my_task():
     ...
 ```
 
-#### @task_locked
+### Distributed tasks
 
-Decorator to lock the execution of task function (e.g. uWSGI cron, timer)
-with the help of Django cache.
+`@task` decorator can be particularly useful to run scheduled functions exclusively 
+in one datacenter (first datacenter acquired the lock is the winner). 
+
+This implies a distributed cache, such as Redis or Database 
+to store task state, including parameters and last run results.
 
 Consecutive calls of the decorated function, when it is blocked, will be ignored
-(the decorator will return None).
+(the decorated function if called directly will return `None`).
 
-Can be useful to run scheduled functions exclusively in one datacenter
-(implies a distributed cache, such as Redis or Database).
+Pass to the decorator a proper `backend` object. 
+
+#### Cache backend
+
+Let's say we want to use Valkey/Redis to store task locks.
+
+We configure `myrediscache` cache in Django settings:
 
 ```python
-from uwsgiconf.contrib.django.uwsgify.decorators import task_locked
+CACHES = {
+    # ...
+    "myrediscache": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+    }
+}
+```
+
+After that we pass `CacheBackend` to the decorator: 
+
+```python
+from uwsgiconf.contrib.django.uwsgify.taskutils.backends import CacheBackend
+from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
 from uwsgiconf.runtime.scheduling import register_cron
 
-@task_locked('myrediscache')
-@register_cron(hour=-3)
+
+@register_cron(minute=-10)
+@task(backend=CacheBackend(cache_name='myrediscache'))
 def my_task():
     ...
 ```
+
+#### Database backend
+
+Now let's suppose we need to have more control over our task, we need more context.
+
+For that we use `DbBackend`. This not only allows exclusive task execution, 
+but also is able to store task parameters and last run results.
+
+
+```python
+from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
+from uwsgiconf.contrib.django.uwsgify.taskutils.backends import DbBackend
+from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
+from uwsgiconf.runtime.scheduling import register_cron
+
+
+@register_cron(minute=-10)
+@task(backend=DbBackend())
+def my_task(*, ctx: TaskContext):  # task context is available through `ctx`
+    
+    if ctx.last_result.get('some') == 'other':
+        # we can adjust our logic on last run results 
+        ...
+    
+    # or we can consider parameters (can be set in Django admin)
+    if ctx.params.get('save_results'):    
+        # we can also store run results for further usage in next run
+        ctx.result = {'some': 'other'}
+```
+
+!!! note
+    Please note that for performance reasons `my_task` function needs 
+    to be registered in Database beforehand. For that you can use Django Admin interface,
+    or from Python (e.g. in migration file).
+
+    ```python
+    from uwsgiconf.contrib.django.uwsgify.models import Task
+
+    Task.register('my_task', params={'a': 'b'})
+    ```
+
 
 ## Management commands
 
