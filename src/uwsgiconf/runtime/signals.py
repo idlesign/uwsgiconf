@@ -78,7 +78,9 @@ class Signal:
             .. note:: If not set it will be chosen automatically.
 
         """
-        self.num = num or get_available_num()
+        if num is None:
+            num = get_available_num()
+        self.num = num
 
     def __int__(self):
         return self.num
