@@ -3,10 +3,7 @@ from typing import Any
 from uwsgiconf.contrib.django.uwsgify.taskutils.backends import BackendBase
 from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
 from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
-
-
-def mytask():
-    return 'some'
+from uwsgiconf.runtime.scheduling import register_cron
 
 
 def mytask_ctx(*, ctx: TaskContext):
@@ -14,7 +11,11 @@ def mytask_ctx(*, ctx: TaskContext):
 
 
 def test_basic():
-    task_1 = task()(mytask)
+    @register_cron()
+    @task()
+    def task_1():
+        return 'some'
+
     assert task_1() == 'some'
 
 
