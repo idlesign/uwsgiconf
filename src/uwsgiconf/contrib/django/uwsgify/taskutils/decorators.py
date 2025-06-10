@@ -36,7 +36,14 @@ def task(
 
     def task_(func):
 
-        pass_context = 'ctx' in inspect.signature(func).parameters
+        params = inspect.signature(func).parameters
+        params_len = len(params)
+        pass_context = 'ctx' in params
+
+        pass_args = True
+        if not params_len or (pass_context and params_len == 1):
+            # do not try to pass uwsgi signal num into func
+            pass_args = False
 
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -47,6 +54,10 @@ def task(
                 if ctx:
                     if pass_context:
                         kwargs['ctx'] = ctx
+
+                    if not pass_args:
+                        args = ()
+
                     result = func(*args, **kwargs)
 
                 else:

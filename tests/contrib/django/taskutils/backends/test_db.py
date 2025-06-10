@@ -2,6 +2,7 @@ from uwsgiconf.contrib.django.uwsgify.models import Task
 from uwsgiconf.contrib.django.uwsgify.taskutils.backends import DbBackend
 from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
 from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
+from uwsgiconf.runtime.scheduling import register_timer
 
 
 def mytask(*, ctx: TaskContext):
@@ -27,3 +28,25 @@ def test_db():
     assert task_obj.dt_acquired
     assert task_obj.dt_released
     assert task_obj.result == {'d': 'f'}  # new result is stored
+
+
+def test_admin_run_task(request_client, user_create):
+    @register_timer(10)
+    @task(backend=DbBackend())
+    def task_to_force(*, ctx):
+        ctx.result = {'q': 'w'}
+        return 'some'
+
+    client = request_client(user=user_create(superuser=True))
+    task_obj = Task.register('task_to_force')
+
+    data = client.post(
+        '/admin/uwsgify/task/',
+        data={
+            'action': 'run_now',
+            '_selected_action': f'{task_obj.id}',
+        },
+        follow=True
+    ).content.decode()
+
+    assert 'Running: task_to_force' in data
