@@ -4,20 +4,16 @@
 * !! Drop QA for Py 3.7, 3.8, 3.9.
 * ++ Add 'buffer_size' option to .networking.set_basic_params().
 * ++ Add privileges drop support for .configure_owner() and .set_owner_params()  (closes #9).
-* ++ Add stub emulation for caching.
-* ++ Add stub emulation for Farms and Mules.
-* ++ Add stub emulation for RPC.
-* ++ Add stub emulation for signals and scheduling.
 * ++ Add support for socket-timeout and http-timeout (closes #13).
 * ++ Added custom format support for '.configure_logging_json' (closes #10).
 * ++ Django. Add @task decorator with Cache and Db backends, and default 'Task' model.
 * ++ Django. Added uWSGI powered cache backend.
-* ++ Expose utils.run_uwsgi shortcut.
-* ++ Introduce uWSGI emulation for stub module to facilitate testing.
+* ++ Expose 'utils.run_uwsgi' shortcut.
+* ++ Introduce uWSGI emulation for stub module to facilitate testing: caching, Farms, Mules, RPC, signals and scheduling.
 * ++ Runtime. Allow Mule and Farm objects to be passed as 'target' for time and cron functions.
 * ++ Runtime. Caching now can store bytes.
 * ** Add QA for Py 3.11, 3.12, 3.13.
-* ** Workers. .set_mules_params() no allows handling farm mules count given as a digit string (closes #6).
+* ** Workers. .set_mules_params() now allows handling farm mules count given as a digit string (closes #6).
 
 
 ### v1.0.0 [2022-02-01]
