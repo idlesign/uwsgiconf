@@ -1,6 +1,6 @@
 # uwsgiconf changelog
 
-### Unreleased
+### v2.0.0 [2025-06-10]
 * !! Drop QA for Py 3.7, 3.8, 3.9.
 * ++ Add 'buffer_size' option to .networking.set_basic_params().
 * ++ Add privileges drop support for .configure_owner() and .set_owner_params()  (closes #9).
