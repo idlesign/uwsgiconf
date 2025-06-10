@@ -176,6 +176,23 @@ def my_task(*, ctx: TaskContext):  # task context is available through `ctx`
     Task.register('my_task', params={'a': 'b'})
     ```
 
+##### Reset stale task records
+
+Sometimes (e.g. when uWSGI stopped abruptly) task records in your database may "hung up", 
+as if their tasks are still running.
+
+For such occasions it's useful to have a watchdog task resetting stale records:
+
+```python
+from uwsgiconf.contrib.django.uwsgify.models import Task
+
+@register_cron(minute=-15)
+@task(backend=DbBackend())
+def reset_stale_tasks():
+    Task.reset_stale()
+
+```
+
 
 ## Management commands
 

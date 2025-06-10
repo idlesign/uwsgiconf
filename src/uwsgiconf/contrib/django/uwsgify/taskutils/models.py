@@ -97,12 +97,15 @@ class TaskBase(models.Model):
         self.save()
 
     @classmethod
-    def reset_stale(cls):
+    def reset_stale(cls, *, timeout: int = STALE_TIMEOUT):
         """Resets stale (hung up) tasks records, thus making them available
-        for further acquirement."""
+        for further acquirement.
+
+        :param timeout: Timeout (seconds) to consider the task stale (hung up).
+        """
         LOGGER.debug('Cleanup stale tasks for "%s"', cls.__name__)
 
         cls._get_manager().filter(
             released=False,
-            dt_updated__lte=now() - timedelta(seconds=cls.STALE_TIMEOUT)
+            dt_updated__lte=now() - timedelta(seconds=timeout)
         ).update(released=True)
