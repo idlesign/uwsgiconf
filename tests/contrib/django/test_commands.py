@@ -27,8 +27,10 @@ def test_mutate_existing_section(patch_base_command):
     assert mutator.section.name == 'testdummy'
 
 
-@pytest.mark.skip('Unstable if run from different dir levels')  # todo
 def test_uwsgi_run(monkeypatch, patch_project_dir, command_run, settings, tmpdir, capsys):
+
+    from django.core.files.storage import storages
+    storages['staticfiles'].location = f'{tmpdir}'  # prevent hitting cache
 
     def runtime_dir(self):
         return Path(f'{tmpdir}')
@@ -48,11 +50,10 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, command_run, settings, tmpdir
     out, err = capsys.readouterr()
     assert 'error-page-404 = replaceit/uwsgify/404.html' in out
 
-    with pytest.raises(ImportError) as e:  # py3 - ModuleNotFoundError
+    with pytest.raises(ImportError, match="No module named 'pyuwsgi"):
         command_run('uwsgi_run', options={'embedded': True})
     out, err = capsys.readouterr()
     assert 'Deleting' in out
-    assert f'{e.value}' == "No module named 'pyuwsgi'"
 
 
 def test_uwsgi_log(patch_base_command, command_run):
