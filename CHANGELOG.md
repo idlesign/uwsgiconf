@@ -10,7 +10,7 @@
 * ++ Add stub emulation for signals and scheduling.
 * ++ Add support for socket-timeout and http-timeout (closes #13).
 * ++ Added custom format support for '.configure_logging_json' (closes #10).
-* ++ Django. Add @task decorator widh Cache and Db backends, and default 'Task' model.
+* ++ Django. Add @task decorator with Cache and Db backends, and default 'Task' model.
 * ++ Django. Added uWSGI powered cache backend.
 * ++ Expose utils.run_uwsgi shortcut.
 * ++ Introduce uWSGI emulation for stub module to facilitate testing.
