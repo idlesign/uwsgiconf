@@ -1,6 +1,6 @@
 # uwsgiconf changelog
 
-### Unreleased
+### v2.1.0 [2025-06-17]
 * ++ uwsgify. Added 'lock_skip' parameter support for '@task'.
 * ++ uwsgify. Added locking emulation.
 * ** uwsgify. Fixed import when 'pkg_resources' API used.
