@@ -1,5 +1,10 @@
 # uwsgiconf changelog
 
+### Unreleased
+* ++ uwsgify. Added 'lock_skip' parameter support for '@task'.
+* ++ uwsgify. Added locking emulation.
+* ** uwsgify. Fixed import when 'pkg_resources' API used.
+
 ### v2.0.0 [2025-06-10]
 * !! Drop QA for Py 3.7, 3.8, 3.9.
 * ++ Add 'buffer_size' option to .networking.set_basic_params().

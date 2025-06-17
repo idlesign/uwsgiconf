@@ -4,6 +4,9 @@ from .emulator import (
     caching as __caching,
 )
 from .emulator import (
+    locking as __locking,
+)
+from .emulator import (
     mules as __mules,
 )
 from .emulator import (
@@ -589,7 +592,7 @@ def is_locked(lock_num: int = 0) -> bool:
     :raises ValueError: For Spooler or invalid lock number
 
     """
-    return False
+    return __locking.check_locked(lock_num)
 
 
 def listen_queue(socket_num: int = 0) -> int:
@@ -613,6 +616,7 @@ def lock(lock_num: int = 0):
     :raises ValueError: For Spooler or invalid lock number
 
     """
+    __locking.do_lock(lock_num)
 
 
 def log(message: str) -> bool:
@@ -1122,6 +1126,7 @@ def unlock(lock_num: int = 0):
     :raises ValueError: For Spooler or invalid lock number
 
     """
+    __locking.do_unlock(lock_num)
 
 
 def wait_fd_read(fd: int, timeout: int | None = None) -> bytes:
