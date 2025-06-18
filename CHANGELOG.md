@@ -1,6 +1,6 @@
 # uwsgiconf changelog
 
-### Unreleased
+### v2.1.1 [2025-06-18]
 * ** uwsgify. @task cooldown is now respected by short living tasks.
 
 ### v2.1.0 [2025-06-17]
