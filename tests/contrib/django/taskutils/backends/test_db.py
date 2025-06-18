@@ -1,3 +1,7 @@
+from unittest.mock import patch
+
+import pytest
+
 from uwsgiconf.contrib.django.uwsgify.models import Task
 from uwsgiconf.contrib.django.uwsgify.taskutils.backends import DbBackend
 from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
@@ -28,6 +32,43 @@ def test_db():
     assert task_obj.dt_acquired
     assert task_obj.dt_released
     assert task_obj.result == {'d': 'f'}  # new result is stored
+
+
+@patch('uwsgiconf.contrib.django.uwsgify.taskutils.decorators.sleep')
+def test_db_exception(sleep):
+
+    @register_timer(10)
+    @task(cooldown=10, backend=DbBackend())
+    def task_with_exc():
+        raise ValueError('dammed')
+
+    task_obj = Task.register('task_with_exc')
+
+    with pytest.raises(ValueError, match='dammed'):
+        task_with_exc()
+
+    task_obj.refresh_from_db()
+    assert task_obj.released
+
+    assert sleep.called
+
+
+@patch('uwsgiconf.contrib.django.uwsgify.taskutils.decorators.sleep')
+def test_db_sleep(sleep):
+
+    @register_timer(10)
+    @task(cooldown=10, backend=DbBackend())
+    def task_no_exc():
+        return 'done'
+
+    task_obj = Task.register('task_no_exc')
+
+    assert task_no_exc() == 'done'
+
+    task_obj.refresh_from_db()
+    assert task_obj.released
+
+    assert sleep.called
 
 
 def test_admin_run_task(request_client, user_create):

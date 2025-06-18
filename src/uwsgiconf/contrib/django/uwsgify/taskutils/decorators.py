@@ -62,19 +62,21 @@ def task(
                 return
 
             with backend(func) as ctx:
-                if ctx:
-                    if pass_context:
-                        kwargs['ctx'] = ctx
+                try:
+                    if ctx:
+                        if pass_context:
+                            kwargs['ctx'] = ctx
 
-                    if not pass_args:
-                        args = ()
+                        if not pass_args:
+                            args = ()
 
-                    result = func(*args, **kwargs)
+                        result = func(*args, **kwargs)
 
-                else:
-                    result = None
+                    else:
+                        result = None
 
-            cooldown and sleep(cooldown)
+                finally:
+                    cooldown and sleep(cooldown)
 
             return result
 

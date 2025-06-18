@@ -35,10 +35,15 @@ class BackendBase:
             self._handle_exception(e, name=name)
 
         finally:
-            yield ctx
+            try:
+                yield ctx
 
-            if ctx:
-                self._release(name=name, ctx=ctx)
+            except Exception as e:  # noqa: BLE001
+                self._handle_exception(e, name=name)
+
+            finally:
+                if ctx:
+                    self._release(name=name, ctx=ctx)
 
     def _get_name(self, func: Callable) -> str:
         return func.__name__
