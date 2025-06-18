@@ -6,6 +6,7 @@ from importlib import import_module
 from inspect import currentframe
 from io import StringIO
 from pathlib import Path
+from subprocess import PIPE, STDOUT, Popen
 from types import ModuleType
 from typing import TYPE_CHECKING, Any, NamedTuple
 
@@ -278,8 +279,6 @@ def get_output(cmd: str, *, args: Strlist) -> str:
     :param args:
 
     """
-    from subprocess import PIPE, STDOUT, Popen
-
     command = [cmd]
     command.extend(listify(args))
 
@@ -446,7 +445,7 @@ class UwsgiRunner:
         args = ['uwsgi']
 
         if embedded:
-            import pyuwsgi
+            import pyuwsgi  # noqa: PLC0415
             args.extend(config.format(formatter='args'))
             pyuwsgi.run(args[1:])
 
@@ -521,16 +520,14 @@ def get_uwsgi_stub_attrs_diff() -> tuple[list[str], list[str]]:
 
     """
     try:
-        import uwsgi
+        import uwsgi  # noqa: PLC0415
 
     except ImportError:
-        from uwsgiconf.exceptions import UwsgiconfException
-
         raise UwsgiconfException(
             '`uwsgi` module is unavailable. '
             'Calling `get_attrs_diff` in such environment makes no sense.') from None
 
-    from . import uwsgi_stub
+    from . import uwsgi_stub  # noqa: PLC0415
 
     def get_attrs(src):
         return {attr for attr in dir(src) if not attr.startswith('_')}

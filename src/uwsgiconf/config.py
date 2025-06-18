@@ -1,3 +1,4 @@
+import inspect
 import os
 import sys
 from collections.abc import Callable
@@ -290,7 +291,7 @@ class Section(OptionsGroup):
         such as what and when has generated this configuration.
 
         """
-        from . import VERSION
+        from . import VERSION  # noqa: PLC0415
 
         print_out = partial(self.print_out, format_options='red')
         print_out('This configuration was automatically generated using')
@@ -768,7 +769,7 @@ def configure_uwsgi(configurator_func: Callable) -> list[Configuration] | None:
     :raises ConfigurationError:
 
     """
-    from .settings import CONFIGS_MODULE_ATTR, ENV_CONF_ALIAS, ENV_CONF_READY
+    from .settings import CONFIGS_MODULE_ATTR, ENV_CONF_ALIAS, ENV_CONF_READY  # noqa: PLC0415
 
     if os.environ.get(ENV_CONF_READY):
         # This call is from uWSGI trying to load an application.
@@ -835,8 +836,6 @@ def configure_uwsgi(configurator_func: Callable) -> list[Configuration] | None:
 
     else:
         # This call is from module containing uWSGI configurations.
-        import inspect
-
         # Set module attribute automatically.
         config_module = inspect.currentframe().f_back
         config_module.f_locals[CONFIGS_MODULE_ATTR] = conf_list

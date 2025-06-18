@@ -13,12 +13,12 @@ from .base import OnePageAdmin
 class SummaryAdmin(OnePageAdmin):
 
     def contribute_onepage_context(self, request, context):
-        from uwsgiconf.runtime.logging import get_current_log_size
-        from uwsgiconf.runtime.mules import Farm
-        from uwsgiconf.runtime.platform import uwsgi
-        from uwsgiconf.runtime.rpc import get_rpc_list
-        from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
-        from uwsgiconf.runtime.spooler import Spooler
+        from uwsgiconf.runtime.logging import get_current_log_size  # noqa: PLC0415
+        from uwsgiconf.runtime.mules import Farm  # noqa: PLC0415
+        from uwsgiconf.runtime.platform import uwsgi  # noqa: PLC0415
+        from uwsgiconf.runtime.rpc import get_rpc_list  # noqa: PLC0415
+        from uwsgiconf.runtime.signals import REGISTERED_SIGNALS  # noqa: PLC0415
+        from uwsgiconf.runtime.spooler import Spooler  # noqa: PLC0415
 
         def get_func_name(func) -> str:
             """Returns a distinctive name for a given function."""
@@ -78,7 +78,7 @@ class SummaryAdmin(OnePageAdmin):
 class ConfigurationAdmin(OnePageAdmin):
 
     def contribute_onepage_context(self, request, context):
-        from uwsgiconf.runtime.platform import uwsgi
+        from uwsgiconf.runtime.platform import uwsgi  # noqa: PLC0415
 
         context.update({
             'panels': {
@@ -90,7 +90,7 @@ class ConfigurationAdmin(OnePageAdmin):
 class WorkersAdmin(OnePageAdmin):
 
     def contribute_onepage_context(self, request, context):
-        from uwsgiconf.runtime.platform import uwsgi
+        from uwsgiconf.runtime.platform import uwsgi  # noqa: PLC0415
 
         fromts = datetime.fromtimestamp
 
@@ -188,7 +188,7 @@ class MaintenanceAdmin(OnePageAdmin):
 
     def contribute_onepage_context(self, request, context):
 
-        from uwsgiconf.settings import get_maintenance_path
+        from uwsgiconf.settings import get_maintenance_path  # noqa: PLC0415
         maintenance = get_maintenance_path()
 
         if not maintenance:

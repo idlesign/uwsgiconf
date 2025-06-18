@@ -9,6 +9,7 @@ JSON logging demo. It shows how to configure uWSGI to format log as JSON.
 import logging
 from datetime import datetime, timezone
 from functools import partial
+from pathlib import Path
 
 from uwsgiconf.config import configure_uwsgi
 from uwsgiconf.runtime.logging import log_message
@@ -39,9 +40,7 @@ def application(env, start_response):
 
 
 def configure():
-    from pathlib import Path
-
-    from uwsgiconf.presets.nice import PythonSection
+    from uwsgiconf.presets.nice import PythonSection  # noqa: PLC0415
 
     filepath = Path(__file__).absolute()
     port = 8000

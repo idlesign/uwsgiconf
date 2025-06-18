@@ -1,5 +1,6 @@
 import importlib.util
 import inspect
+import tempfile
 from importlib import import_module
 from pathlib import Path
 from typing import TYPE_CHECKING, Optional
@@ -43,7 +44,7 @@ class SectionMutator:
     """Configuration file section mutator."""
 
     def __init__(self, section: 'Section', dir_base: Strpath, project_name: str, options: dict):
-        from django.conf import settings
+        from django.conf import settings  # noqa: PLC0415
 
         self.section = section
         self.dir_base = Path(dir_base)
@@ -166,7 +167,7 @@ class SectionMutator:
         :param dir_base:
 
         """
-        from django.conf import settings
+        from django.conf import settings  # noqa: PLC0415
 
         wsgi_app = settings.WSGI_APPLICATION
         name_package, name_module, name_func = wsgi_app.split('.')
@@ -196,7 +197,7 @@ class SectionMutator:
         if self.options['compile']:
             return
 
-        from django.core.management import call_command
+        from django.core.management import call_command  # noqa: PLC0415
         call_command('collectstatic', clear=True, interactive=False)
 
     def contribute_error_pages(self):
@@ -206,7 +207,6 @@ class SectionMutator:
 
         if not static_dir:
             # Source static directory is not configured. Use temporary.
-            import tempfile
             static_dir = Path(tempfile.gettempdir()) / self.project_name
             self.settings.STATIC_ROOT = f'{static_dir}'
 

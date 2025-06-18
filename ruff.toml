@@ -44,7 +44,9 @@ ignore = []
 
 
 [lint.extend-per-file-ignores]
-"tests/*" = []
+"tests/*" = [
+    "PLC0415",
+]
 
 "uwsgi_stub.py" = [
     "FBT",  # boolean def

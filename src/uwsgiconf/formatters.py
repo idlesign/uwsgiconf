@@ -19,7 +19,7 @@ def format_print_text(text: str, *, color_fg: str | None = None, color_bg: str |
     :param color_bg: text (background) color
 
     """
-    from .config import Section
+    from .config import Section  # noqa: PLC0415
 
     color_fg = {
 

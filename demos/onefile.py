@@ -6,7 +6,9 @@ Trick demo. It shows how to use one file both for uWSGI configuration and applic
         uwsgiconf run <path-to-this-file>
 
 """
+import random
 from functools import partial
+from pathlib import Path
 
 from uwsgiconf.config import configure_uwsgi
 
@@ -18,7 +20,7 @@ def encode(data):
 def app_1(env, start_response):
     """This is simple WSGI application that will be served by uWSGI."""
 
-    from uwsgiconf.runtime.platform import uwsgi
+    from uwsgiconf.runtime.platform import uwsgi  # noqa: PLC0415
 
     start_response('200 OK', [('Content-Type','text/html')])
 
@@ -34,9 +36,6 @@ def app_1(env, start_response):
 
 def app_2(env, start_response):
     """This is another simple WSGI application that will be served by uWSGI."""
-
-    import random
-
     start_response('200 OK', [('Content-Type','text/html')])
 
     data = [
@@ -57,9 +56,7 @@ def configure():
     Applications are on 127.0.0.1 on ports starting from 8000.
 
     """
-    from pathlib import Path
-
-    from uwsgiconf.presets.nice import PythonSection
+    from uwsgiconf.presets.nice import PythonSection  # noqa: PLC0415
 
     filepath = Path(__file__).absolute()
     port = 8000

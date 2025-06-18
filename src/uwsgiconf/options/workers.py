@@ -141,8 +141,8 @@ class Workers(OptionsGroup):
 
     def set_thread_params(
             self,
-            enable: bool | None = None,
             *,
+            enable: bool | None = None,
             count: int | None = None,
             count_offload: int | None = None,
             stack_size: int | None = None,

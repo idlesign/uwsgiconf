@@ -92,8 +92,8 @@ class Monitoring(OptionsGroup):
 
     def set_metrics_params(
             self,
-            enable: bool | None = None,
             *,
+            enable: bool | None = None,
             store_dir: str | None = None,
             restore: bool | None = None,
             no_cores: bool | None = None

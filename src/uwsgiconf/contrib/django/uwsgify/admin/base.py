@@ -29,7 +29,7 @@ class OnePageAdmin(admin.ModelAdmin):
 
         # Not on the top to protect from module caching
         # caused by 1. import from manage command 2. from uWSGI
-        from uwsgiconf import uwsgi
+        from uwsgiconf import uwsgi  # noqa: PLC0415
 
         is_stub = uwsgi.is_stub
 

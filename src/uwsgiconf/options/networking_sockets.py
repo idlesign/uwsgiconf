@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from ..base import ParametrizedValue
@@ -202,8 +203,6 @@ class SocketHttps(Socket):
         :param domain: Domain name to get filepaths for.
 
         """
-        from pathlib import Path
-
         certs_root = Path('/etc/letsencrypt/live/')
         certs_chain = certs_root / domain / 'fullchain.pem'
         certs_private = certs_root / domain / 'privkey.pem'

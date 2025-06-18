@@ -281,8 +281,8 @@ class Logging(OptionsGroup):
 
     def set_master_logging_params(
             self,
-            enable: bool | None = None,
             *,
+            enable: bool | None = None,
             dedicate_thread: bool | None = None,
             buffer: int | None = None,
             sock_stream: bool | None = None,

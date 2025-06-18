@@ -154,8 +154,8 @@ class Empire(OptionsGroup):
 
     def set_mode_tyrant_params(
             self,
-            enable: bool | None = None,
             *,
+            enable: bool | None = None,
             links_no_follow: bool | None = None,
             use_initgroups: bool | None = None
     ):

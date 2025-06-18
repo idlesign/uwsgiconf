@@ -1,5 +1,4 @@
 import os
-import subprocess
 from os import environ
 
 import pytest
@@ -79,7 +78,7 @@ def mock_popen(monkeypatch):
             def communicate(self, *args, **kwargs):
                 return func_communicate(*args, **kwargs)
 
-        monkeypatch.setattr(subprocess, 'Popen', MockPopen)
+        monkeypatch.setattr('uwsgiconf.utils.Popen', MockPopen)
 
     return mock
 
