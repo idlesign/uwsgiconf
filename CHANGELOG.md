@@ -1,5 +1,8 @@
 # uwsgiconf changelog
 
+### Unreleased
+* ** uwsgify. @task cooldown is now respected by short living tasks.
+
 ### v2.1.0 [2025-06-17]
 * ++ uwsgify. Added 'lock_skip' parameter support for '@task'.
 * ++ uwsgify. Added locking emulation.
