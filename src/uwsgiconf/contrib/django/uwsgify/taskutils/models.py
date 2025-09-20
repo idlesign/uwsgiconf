@@ -82,6 +82,16 @@ class TaskBase(models.Model):
 
         return acquired
 
+    @property
+    def duration(self) -> timedelta:
+        """Returns the duration of the task as a timedelta."""
+        result = timedelta()
+
+        if (dt_acquired := self.dt_acquired) and (dt_released := self.dt_released):
+            result = dt_released - dt_acquired
+
+        return result
+
     def release(self, *, result: dict | None = None):
         """Releases the task, thus making it available for another acquirement.
         Use `None` to keep an existing result.

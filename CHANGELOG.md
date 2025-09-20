@@ -1,5 +1,8 @@
 # uwsgiconf changelog
 
+### Unreleased
+* ++ Django Admin. Add execution duration to task list (see #15).
+
 ### v2.1.1 [2025-06-18]
 * ** uwsgify. @task cooldown is now respected by short living tasks.
 

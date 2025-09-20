@@ -1,3 +1,9 @@
+from datetime import timedelta
+
+from django.utils import timezone
+
+from uwsgiconf.contrib.django.uwsgify.models import Task
+
 
 def test_configuration(request_client, user_create):
 
@@ -19,6 +25,17 @@ def test_summary(request_client, user_create):
     data = client.get('/admin/uwsgify/summary/').content.decode()
     assert 'Requests total' in data
     assert '0 - worker: tests.contrib.django.test_admin.somefunc' in data
+
+
+def test_task(request_client, user_create):
+    now = timezone.now()
+    Task.register("task_1", dt_acquired=now-timedelta(hours=2), dt_released=now-timedelta(minutes=35))
+
+    client = request_client(user=user_create(superuser=True))
+    data = client.get('/admin/uwsgify/task/').content.decode()
+    assert '1 Task' in data
+    assert '>task_1<' in data
+    assert '>1:25:00<' in data  # duration
 
 
 def test_workers(request_client, user_create):

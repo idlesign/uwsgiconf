@@ -11,9 +11,10 @@ from ..utils import LOGGER
 
 class TaskAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'released', 'dt_acquired', 'dt_released', 'dt_created', 'dt_updated')
+    list_display = ('name', 'released', 'duration', 'dt_acquired', 'dt_released', 'dt_updated', 'dt_created')
     search_fields = ('name', 'owner')
     list_filter: ClassVar = ['released']
+    ordering = ['name']
 
     actions: ClassVar = [
         'run_now',
@@ -27,7 +28,7 @@ class TaskAdmin(admin.ModelAdmin):
         for sig in REGISTERED_SIGNALS.values():
             func_name = sig.func.__name__
             if func_name in names:
-                LOGGER.debug(f'Force run task. Send signal {sig.num} for task {func_name}')
+                LOGGER.info(f'Force run task. Send signal {sig.num} for task {func_name}')
                 run.append(func_name)
                 Signal(sig.num).send()
 
