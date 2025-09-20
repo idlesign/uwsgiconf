@@ -11,9 +11,9 @@ from ..utils import LOGGER
 
 class TaskAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'released', 'duration', 'dt_acquired', 'dt_released', 'dt_updated', 'dt_created')
+    list_display = ('name', 'active', 'released', 'duration', 'dt_acquired', 'dt_released', 'dt_updated')
     search_fields = ('name', 'owner')
-    list_filter: ClassVar = ['released']
+    list_filter: ClassVar = ['active', 'released']
     ordering = ['name']
 
     actions: ClassVar = [

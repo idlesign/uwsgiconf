@@ -50,6 +50,12 @@ def test_basic():
     assert Task.acquire(task_other_name)
 
 
+def test_acquire_active():
+    task = Task.register('one', active=False)
+    assert Task.acquire('one') is None
+    assert Task.acquire('one', active=False) == task
+
+
 def test_reset_stale():
     with freeze_time('2025-02-05 15:00:00'):
         task = Task.register("stale", released=False)

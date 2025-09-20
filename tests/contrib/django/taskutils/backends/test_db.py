@@ -33,6 +33,12 @@ def test_db():
     assert task_obj.dt_released
     assert task_obj.result == {'d': 'f'}  # new result is stored
 
+    # deactivate
+    task_obj.active = False
+    task_obj.save()
+    task_1 = task(backend=backend)(mytask)
+    assert task_1() is None
+
 
 @patch('uwsgiconf.contrib.django.uwsgify.taskutils.decorators.sleep')
 def test_db_exception(sleep):

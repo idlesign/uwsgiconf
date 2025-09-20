@@ -22,6 +22,8 @@ class TaskBase(models.Model):
     STALE_TIMEOUT = 1800  # 30 minutes
     """Timeout (seconds) to consider the task stale (hung up)."""
 
+    active = models.BooleanField(verbose_name=_("Active"), blank=True, default=True)
+
     dt_created = models.DateTimeField(verbose_name=_('Created at'), blank=True, auto_now_add=True, db_column='dt_add')
     dt_updated = models.DateTimeField(verbose_name=_('Updated at'), blank=True, auto_now=True, db_column='dt_upd')
 
@@ -59,16 +61,17 @@ class TaskBase(models.Model):
         return cls._get_manager().create(name=name, params=params or {}, **kwargs)
 
     @classmethod
-    def acquire(cls, name: str) -> Optional['TaskBase']:
+    def acquire(cls, name: str, **kwargs) -> Optional['TaskBase']:
         """Tries to acquire the task. Returns `None` on fail
         (e.g. the task has already been acquired).
 
         :param name: Task name
         """
         with atomic():
+            kwargs = {'active': True, **kwargs}
             acquired: TaskBase = cls._get_manager().select_for_update(
                 skip_locked=True
-            ).filter(name=name, released=True).first()
+            ).filter(name=name, released=True, **kwargs).first()
 
             if acquired:
                 LOGGER.debug('Task lock is acquired: %s', name)
