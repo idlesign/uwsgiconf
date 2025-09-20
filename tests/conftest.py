@@ -25,11 +25,6 @@ pytest_plugins = configure_djangoapp_plugin(
         }
     },
     app_name='tests.testapp',
-    extend_MIDDLEWARE=[
-        # messages in admin support
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-    ],
     extend_INSTALLED_APPS=[
         'django.contrib.staticfiles',
         'uwsgiconf.contrib.django.uwsgify',
