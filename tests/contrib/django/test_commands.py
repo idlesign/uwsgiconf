@@ -41,18 +41,18 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, command_run, settings, tmpdir
     with settings(STATIC_ROOT=f'{tmpdir}'):
         command_run('uwsgi_run')
 
-    out, err = capsys.readouterr()
+    out, __ = capsys.readouterr()
     assert tmpdir.join('admin').exists()
     assert tmpdir.join('uwsgify').exists()
     assert 'static files copied' in out
 
     command_run('uwsgi_run', options={'compile': True})
-    out, err = capsys.readouterr()
+    out, __ = capsys.readouterr()
     assert 'error-page-404 = replaceit/uwsgify/404.html' in out
 
     with pytest.raises(ImportError, match="No module named 'pyuwsgi"):
         command_run('uwsgi_run', options={'embedded': True})
-    out, err = capsys.readouterr()
+    out, __ = capsys.readouterr()
     assert 'Deleting' in out
 
 

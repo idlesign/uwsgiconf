@@ -10,4 +10,6 @@ if __name__ == "__main__":
 
     settings.configure(INSTALLED_APPS=apps)
 
-    execute_from_command_line(['localize.py', 'makemessages', '--locale=ru', '--symlinks', '--no-location', '--no-obsolete'])
+    execute_from_command_line([
+        'localize.py', 'makemessages', '--locale=ru', '--symlinks', '--no-location', '--no-obsolete'
+    ])

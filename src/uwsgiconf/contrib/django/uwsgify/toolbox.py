@@ -170,7 +170,7 @@ class SectionMutator:
         from django.conf import settings  # noqa: PLC0415
 
         wsgi_app = settings.WSGI_APPLICATION
-        name_package, name_module, name_func = wsgi_app.split('.')
+        name_package, name_module, _name_func = wsgi_app.split('.')
 
         section = PythonSection.bootstrap(
             'http://127.0.0.1:8000',
