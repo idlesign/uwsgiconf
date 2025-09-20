@@ -86,14 +86,16 @@ def test_admin_run_task(request_client, user_create):
 
     client = request_client(user=user_create(superuser=True))
     task_obj = Task.register('task_to_force')
+    task_missing = Task.register('task_unknown')
 
     data = client.post(
         '/admin/uwsgify/task/',
         data={
             'action': 'run_now',
-            '_selected_action': f'{task_obj.id}',
+            '_selected_action': [f'{task_obj.id}', f'{task_missing.id}'],
         },
         follow=True
     ).content.decode()
 
     assert 'Running: task_to_force' in data
+    assert 'Unable to run tasks unregistered with uWSGI: task_unknown' in data

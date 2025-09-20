@@ -3,6 +3,7 @@
 ### Unreleased
 * ++ Django Admin. Add 'active' flag for Task (see #15).
 * ++ Django Admin. Add execution duration to task list (see #15).
+* ++ Django Admin. Forced task run for task not registered with uWSGI now issues an error hint (see #15).
 
 ### v2.1.1 [2025-06-18]
 * ** uwsgify. @task cooldown is now respected by short living tasks.

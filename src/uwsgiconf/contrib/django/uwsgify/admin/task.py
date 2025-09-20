@@ -23,14 +23,19 @@ class TaskAdmin(admin.ModelAdmin):
     @admin.action(description=_('Run now'))
     def run_now(self, request: HttpRequest, queryset: QuerySet):
         names = set(queryset.values_list('name', flat=True))
+        known_tasks = {sig.func.__name__: sig for sig in REGISTERED_SIGNALS.values()}
+        tasks_set = set(known_tasks)
+        tasks_known = tasks_set.intersection(names)
         run = []
 
-        for sig in REGISTERED_SIGNALS.values():
-            func_name = sig.func.__name__
-            if func_name in names:
-                LOGGER.info(f'Force run task. Send signal {sig.num} for task {func_name}')
-                run.append(func_name)
-                Signal(sig.num).send()
+        for func_name in tasks_known:
+            sig = known_tasks[func_name]
+            LOGGER.info(f'Force run task. Send signal {sig.num} for task {func_name}')
+            run.append(func_name)
+            Signal(sig.num).send()
 
         if run:
             messages.info(request, _('Running: %s.') % ', '.join(sorted(run)))
+
+        if missing := tasks_set.symmetric_difference(names):
+            messages.error(request, _('Unable to run tasks unregistered with uWSGI: %s.') % ', '.join(sorted(missing)))
