@@ -16,6 +16,19 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ('name', 'owner')
     list_filter: ClassVar = ['active', 'released']
     ordering: ClassVar = ['name']
+    readonly_fields = ('duration', 'dt_updated', 'dt_created')
+
+    fieldsets = (
+        (_('Basic'), {
+            'fields': ('name', 'active', 'released', 'duration'),
+        }),
+        (_('Date and time'), {
+            'fields': ('dt_created', 'dt_updated', 'dt_acquired', 'dt_released'),
+        }),
+        (_('Context'), {
+            'fields': ('owner', 'params', 'result'),
+        }),
+    )
 
     formfield_overrides: ClassVar = {
         TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 40})},

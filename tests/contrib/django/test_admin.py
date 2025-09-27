@@ -30,12 +30,15 @@ def test_summary(request_client, user_create):
 def test_task(request_client, user_create):
     now = timezone.now()
     Task.register("task_1", dt_acquired=now-timedelta(hours=2), dt_released=now-timedelta(minutes=35))
+    Task.register("task_2", dt_acquired=now-timedelta(hours=1), dt_released=now-timedelta(hours=8))
 
     client = request_client(user=user_create(superuser=True))
     data = client.get('/admin/uwsgify/task/').content.decode()
-    assert '1 Task' in data
+    assert '2 Task' in data
     assert '>task_1<' in data
     assert '>1:25:00<' in data  # duration
+    assert '>task_2<' in data
+    assert '>1:00:00<' in data  # duration
 
 
 def test_workers(request_client, user_create):

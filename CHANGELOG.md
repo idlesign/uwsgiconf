@@ -1,5 +1,8 @@
 # uwsgiconf changelog
 
+### Unreleased
+* ** Django. Admin. Task representaion improved.
+
 ### v2.2.0 [2025-09-20]
 * ++ Django Admin. Add 'active' flag for Task (see #15).
 * ++ Django Admin. Add execution duration to task list (see #15).

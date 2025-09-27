@@ -14,6 +14,7 @@ from uwsgiconf.settings import ENV_MAINTENANCE, ENV_MAINTENANCE_INPLACE
 
 pytest_plugins = configure_djangoapp_plugin(
     {
+        'LANGUAGE_CODE': 'en',
         'ROOT_URLCONF': 'tests.contrib.urls',
         'WSGI_APPLICATION': 'tests.contrib.app',
         'STATIC_ROOT': 'replaceit/',

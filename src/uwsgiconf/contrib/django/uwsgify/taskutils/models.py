@@ -2,6 +2,7 @@ from datetime import timedelta
 from socket import gethostname
 from typing import Optional
 
+from django.contrib import admin
 from django.db import models
 from django.db.transaction import atomic
 from django.utils.timezone import now
@@ -86,12 +87,19 @@ class TaskBase(models.Model):
         return acquired
 
     @property
+    @admin.display(description=_('Duration'))
     def duration(self) -> timedelta:
         """Returns the duration of the task as a timedelta."""
         result = timedelta()
 
         if (dt_acquired := self.dt_acquired) and (dt_released := self.dt_released):
-            result = dt_released - dt_acquired
+            if dt_acquired > dt_released:
+                # still running
+                result = now() - dt_acquired
+            else:
+                result = dt_released - dt_acquired
+
+        result = timedelta(seconds=int(result.total_seconds()))
 
         return result
 

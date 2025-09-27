@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-20 18:42+0700\n"
-"PO-Revision-Date: 2025-09-20 18:50+0700\n"
+"POT-Creation-Date: 2025-09-27 11:18+0700\n"
+"PO-Revision-Date: 2025-09-27 11:18+0700\n"
 "Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -194,6 +194,15 @@ msgstr ""
 "включая данный административный интерфейс, станут доступны только лишь после "
 "внесения изменений в файловую систему и перезапуска uWSGI."
 
+msgid "Basic"
+msgstr "Базовое"
+
+msgid "Date and time"
+msgstr "Дата и время"
+
+msgid "Context"
+msgstr "Контекст"
+
 msgid "Run now"
 msgstr "Запустить сейчас"
 
@@ -203,7 +212,7 @@ msgstr "Выполняются: %s."
 
 #, python-format
 msgid "Unable to run tasks unregistered with uWSGI: %s."
-msgstr "Не удалось запустить задания незарегистрированные в uWSGI: %s"
+msgstr "Не удалось запустить задания незарегистрированные в uWSGI: %s."
 
 msgid "uWSGI Integration"
 msgstr "Интеграция с uWSGI"
@@ -215,7 +224,7 @@ msgid "Tasks"
 msgstr "Задачи"
 
 msgid "Active"
-msgstr "Активна"
+msgstr "Включена"
 
 msgid "Created at"
 msgstr "Создана"
@@ -243,6 +252,9 @@ msgstr "Параметры"
 
 msgid "Result"
 msgstr "Результат"
+
+msgid "Duration"
+msgstr "Длительность"
 
 msgid "Home"
 msgstr "Домой"
