@@ -1,7 +1,8 @@
 from typing import ClassVar
 
 from django.contrib import admin, messages
-from django.db.models import QuerySet
+from django.db.models import QuerySet, TextField
+from django.forms import Textarea
 from django.http import HttpRequest
 from django.utils.translation import gettext_lazy as _
 from uwsgiconf.runtime.signals import REGISTERED_SIGNALS, Signal
@@ -15,6 +16,10 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ('name', 'owner')
     list_filter: ClassVar = ['active', 'released']
     ordering: ClassVar = ['name']
+
+    formfield_overrides: ClassVar = {
+        TextField: {'widget': Textarea(attrs={'rows': 1, 'cols': 40})},
+    }
 
     actions: ClassVar = [
         'run_now',
