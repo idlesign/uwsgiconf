@@ -1,6 +1,6 @@
 # uwsgiconf changelog
 
-### Unreleased
+### v2.2.1 [2025-09-27]
 * ** Django. Admin. Task representaion improved.
 
 ### v2.2.0 [2025-09-20]
