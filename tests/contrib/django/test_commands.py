@@ -53,7 +53,7 @@ def test_uwsgi_run(monkeypatch, patch_project_dir, command_run, settings, tmpdir
     with pytest.raises(ImportError, match="No module named 'pyuwsgi"):
         command_run('uwsgi_run', options={'embedded': True})
     out, __ = capsys.readouterr()
-    assert 'Deleting' in out
+    assert 'static files' in out
 
 
 def test_uwsgi_log(patch_base_command, command_run):
