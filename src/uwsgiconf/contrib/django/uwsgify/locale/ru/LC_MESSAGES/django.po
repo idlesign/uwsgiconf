@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-27 11:18+0700\n"
-"PO-Revision-Date: 2025-09-27 11:18+0700\n"
+"POT-Creation-Date: 2025-12-06 20:06+0700\n"
+"PO-Revision-Date: 2025-12-06 20:09+0700\n"
 "Last-Translator: Igor 'idle sign' Starikov <idlesign@yandex.ru>\n"
 "Language-Team: \n"
 "Language: ru\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 
 msgid ""
 "This site is not served by uWSGI. Certain functionality or data may be "
@@ -214,6 +214,29 @@ msgstr "Выполняются: %s."
 msgid "Unable to run tasks unregistered with uWSGI: %s."
 msgstr "Не удалось запустить задания незарегистрированные в uWSGI: %s."
 
+msgid "Description"
+msgstr "Описание"
+
+msgid "Parameters"
+msgstr "Параметры"
+
+msgid "Target"
+msgstr "Цель"
+
+msgid "Signal"
+msgstr "Сигнал"
+
+msgid "Function"
+msgstr "Функция"
+
+msgid ""
+"No information available. Task with this name is not registered within uWSGI."
+msgstr ""
+"Информация недоступна. Задача с таким названием не зарегистрирована в uWSGI."
+
+msgid "Info"
+msgstr "Информация"
+
 msgid "uWSGI Integration"
 msgstr "Интеграция с uWSGI"
 
@@ -226,32 +249,68 @@ msgstr "Задачи"
 msgid "Active"
 msgstr "Включена"
 
+msgid ""
+"Task is available for the application to run. Use to temporarily disable "
+"runs."
+msgstr ""
+"Запуск задачи возможен. Используйте для временного отключения исполнения "
+"задачи."
+
 msgid "Created at"
 msgstr "Создана"
+
+msgid "Task record registration date and time."
+msgstr "Дата и время последнего создания этой записи о задаче."
 
 msgid "Updated at"
 msgstr "Изменена"
 
+msgid "Task record update date and time."
+msgstr "Дата и время последнего обновления этой записи о задаче."
+
 msgid "Name"
 msgstr "Название"
+
+msgid ""
+"Task name. Coincides with a function name defined in the application code."
+msgstr ""
+"Название задачи. Совпадает с именем функции, объявленной в коде приложения."
 
 msgid "Owner"
 msgstr "Владелец"
 
+msgid "Last owner of the task. By default a host name."
+msgstr "Последний владелец задачи. По умолчанию: название хоста."
+
 msgid "Released"
 msgstr "Доступна"
+
+msgid ""
+"Task is not currently running and is available for the application instance "
+"to acquire."
+msgstr ""
+"Задача сейчас не исполняется и может быть взята экземпляром приложения."
 
 msgid "Acquired at"
 msgstr "Взята"
 
+msgid "Date and time of the latest task run start."
+msgstr "Дата и время начала последнего исполнения функции."
+
 msgid "Released at"
 msgstr "Завершена"
 
-msgid "Parameters"
-msgstr "Параметры"
+msgid "Date and time of the latest task run finish."
+msgstr "Дата и время окончания последнего исполнения функции."
+
+msgid "Parameters passed to the task function."
+msgstr "Параметры, передаваемые в функцию задания."
 
 msgid "Result"
 msgstr "Результат"
+
+msgid "The result of the task function last run."
+msgstr "Результат последнего исполнения функции задания."
 
 msgid "Duration"
 msgstr "Длительность"

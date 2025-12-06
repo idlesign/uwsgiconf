@@ -1,6 +1,7 @@
 # uwsgiconf changelog
 
 ### Unreleased
+* ++ Django contrib. Task details pages now show additional information.
 * ** Django contrib. Fixed task forced task run missing tasks message (fixes #16).
 * ** Runtime. Scheduling module decorators now accept 'checker' argument.
 

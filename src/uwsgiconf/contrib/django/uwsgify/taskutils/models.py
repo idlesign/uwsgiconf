@@ -23,21 +23,46 @@ class TaskBase(models.Model):
     STALE_TIMEOUT = 1800  # 30 minutes
     """Timeout (seconds) to consider the task stale (hung up)."""
 
-    active = models.BooleanField(verbose_name=_("Active"), blank=True, default=True)
+    active = models.BooleanField(
+        verbose_name=_("Active"), blank=True, default=True,
+        help_text=_('Task is available for the application to run. Use to temporarily disable runs.'))
 
-    dt_created = models.DateTimeField(verbose_name=_('Created at'), blank=True, auto_now_add=True, db_column='dt_add')
-    dt_updated = models.DateTimeField(verbose_name=_('Updated at'), blank=True, auto_now=True, db_column='dt_upd')
+    dt_created = models.DateTimeField(
+        verbose_name=_('Created at'), blank=True, auto_now_add=True, db_column='dt_add',
+        help_text=_('Task record registration date and time.'))
 
-    name = models.TextField(verbose_name=_('Name'), unique=True)
-    owner = models.TextField(verbose_name=_('Owner'), blank=True, default='')
+    dt_updated = models.DateTimeField(
+        verbose_name=_('Updated at'), blank=True, auto_now=True, db_column='dt_upd',
+        help_text=_('Task record update date and time.'))
+
+    name = models.TextField(
+        verbose_name=_('Name'), unique=True,
+        help_text=_('Task name. Coincides with a function name defined in the application code.'))
+
+    owner = models.TextField(
+        verbose_name=_('Owner'), blank=True, default='',
+        help_text=_('Last owner of the task. By default a host name.')
+    )
     
-    released = models.BooleanField(verbose_name=_('Released'), blank=True, default=True, db_index=True)
+    released = models.BooleanField(
+        verbose_name=_('Released'), blank=True, default=True, db_index=True,
+        help_text=_('Task is not currently running and is available for the application instance to acquire.'))
 
-    dt_acquired = models.DateTimeField(verbose_name=_('Acquired at'), blank=True, null=True, db_column='dt_acc')
-    dt_released = models.DateTimeField(verbose_name=_('Released at'), blank=True, null=True, db_column='dt_rel')
+    dt_acquired = models.DateTimeField(
+        verbose_name=_('Acquired at'), blank=True, null=True, db_column='dt_acc',
+        help_text=_('Date and time of the latest task run start.'))
 
-    params = models.JSONField(verbose_name=_('Parameters'), blank=True, default=dict)
-    result = models.JSONField(verbose_name=_('Result'), blank=True, default=dict, help_text='The previous run result.')
+    dt_released = models.DateTimeField(
+        verbose_name=_('Released at'), blank=True, null=True, db_column='dt_rel',
+        help_text=_('Date and time of the latest task run finish.'))
+
+    params = models.JSONField(
+        verbose_name=_('Parameters'), blank=True, default=dict,
+        help_text=_('Parameters passed to the task function.'))
+
+    result = models.JSONField(
+        verbose_name=_('Result'), blank=True, default=dict,
+        help_text=_('The result of the task function last run.'))
 
     class Meta:
         abstract = True

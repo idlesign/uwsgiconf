@@ -274,8 +274,11 @@ def register_cron(
     checker = checker or TaskChecker()
     checker.checkers.append(partial(__check_skip_task, check_funcs=check_date_funcs))
 
+    args = list(task_args_casted.values())
+
     return _get_signal_decorator(
-        callback=lambda sig: uwsgi.add_cron(int(sig), *list(task_args_casted.values())),
+        callback=lambda sig: uwsgi.add_cron(int(sig), *args),
         target=target,
         checker=checker,
+        params_hint=task_args_casted,
     )

@@ -3,6 +3,8 @@ from datetime import timedelta
 from django.utils import timezone
 
 from uwsgiconf.contrib.django.uwsgify.models import Task
+from uwsgiconf.runtime.mules import Farm
+from uwsgiconf.runtime.scheduling import register_cron
 
 
 def test_configuration(request_client, user_create):
@@ -27,18 +29,42 @@ def test_summary(request_client, user_create):
     assert '0 - worker: tests.contrib.django.test_admin.somefunc' in data
 
 
-def test_task(request_client, user_create):
-    now = timezone.now()
-    Task.register("task_1", dt_acquired=now-timedelta(hours=2), dt_released=now-timedelta(minutes=35))
-    Task.register("task_2", dt_acquired=now-timedelta(hours=1), dt_released=now-timedelta(hours=8))
+def test_task(admin_client, user_create):
 
-    client = request_client(user=user_create(superuser=True))
-    data = client.get('/admin/uwsgify/task/').content.decode()
+    farm = Farm('farm1')
+
+    @register_cron(weekday=4, target=farm)
+    def task_1():
+        """My shiny task."""
+        print("task_1")
+
+    now = timezone.now()
+    task_1_obj = Task.register("task_1", dt_acquired=now-timedelta(hours=2), dt_released=now-timedelta(minutes=35))
+    task_2_obj = Task.register("task_2", dt_acquired=now-timedelta(hours=1), dt_released=now-timedelta(hours=8))
+
+    admin_client.configure(app='uwsgify', model=Task)
+
+    # Listing
+    response = admin_client.call_listing()
+    data = response.text
     assert '2 Task' in data
     assert '>task_1<' in data
     assert '>1:25:00<' in data  # duration
     assert '>task_2<' in data
     assert '>1:00:00<' in data  # duration
+
+    # Details
+    response = admin_client.call_change(task_1_obj)
+    data = response.text
+    assert 'task_1 at' in data
+    assert 'My shiny task.' in data
+    assert '<b>Target:</b> farm_farm1' in data
+    assert 'weekday&#x27;: 4' in data
+
+    # Details unknown task
+    response = admin_client.call_change(task_2_obj)
+    data = response.text
+    assert 'is not registered within' in data
 
 
 def test_workers(request_client, user_create):

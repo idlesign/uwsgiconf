@@ -36,7 +36,7 @@ linters = [
 ]
 tests = [
     "pytest",
-    "pytest-djangoapp>=1.4.2",
+    "pytest-djangoapp>=1.6.0",
     "freezegun",
 ]
 runtime = [

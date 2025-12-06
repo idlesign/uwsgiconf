@@ -15,11 +15,15 @@ def test_run_app(run_app, settings):
     farm = Farm('farm1')
 
     @register_cron(target=farm)
-    def task_null_acq(signum):
+    def task_null_acq():
         print("task_null_acq")
 
     @register_cron(target=farm)
-    def task_null_rel(signum):
+    def task_null_rel():
+        """Some description.
+
+        Multiline.
+        """
         print("task_null_rel")
 
     def get_time(hour: int):

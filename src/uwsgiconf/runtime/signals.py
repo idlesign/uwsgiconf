@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from functools import wraps
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
@@ -191,6 +191,7 @@ def _get_signal_decorator(
         callback: Callable,
         target: TypeTarget,
         checker: TaskChecker,
+        params_hint: Any = None,
 ):
 
     def decor(task_func: Callable):
@@ -199,6 +200,7 @@ def _get_signal_decorator(
         :param task_func: Actual task function.
         """
         abilities = taskfunc_inspect(task_func)
+        task_func.params_hint = params_hint
 
         @wraps(task_func)
         def task_func_wrapper(*args, **kwargs):
