@@ -1,10 +1,10 @@
-
 from .. import uwsgi
 from ..typehints import Strint
-from .signals import Signal, _automate_signal
+from .signals import Signal, _get_signal_decorator
+from .task_utils import TaskChecker
 
 
-def register_file_monitor(filename: str, *, target: Strint | Signal = None):
+def register_file_monitor(filename: str, *, target: Strint | Signal = None, checker: TaskChecker | None = None):
     """Maps a specific file/directory modification event to a signal.
 
     :param filename: File or a directory to watch for its modification.
@@ -12,24 +12,30 @@ def register_file_monitor(filename: str, *, target: Strint | Signal = None):
     :param target: Existing signal to raise
         or Signal Target to register signal implicitly.
 
-        Available targets:
+        Available signal targets:
 
             * ``workers``  - run the signal handler on all the workers
             * ``workerN`` - run the signal handler only on worker N
             * ``worker``/``worker0`` - run the signal handler on the first available worker
             * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-            * ``mules`` - run the signal handler on all of the mules
+            * ``mules`` - run the signal handler on all mules
             * ``muleN`` - run the signal handler on mule N
             * ``mule``/``mule0`` - run the signal handler on the first available mule
 
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
+    :param checker: TaskChecker to be used for task execution requirements checking.
+
     :raises ValueError: If unable to register monitor.
 
     """
-    return _automate_signal(target, func=lambda sig: uwsgi.add_file_monitor(int(sig), filename))
+    return _get_signal_decorator(
+        callback=lambda sig: uwsgi.add_file_monitor(int(sig), filename),
+        target=target,
+        checker=checker or TaskChecker(),
+    )
 
 
 class Metric:

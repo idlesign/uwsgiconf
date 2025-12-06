@@ -21,6 +21,10 @@ pip install uwsgiconf[cli]
 
 ## Running Python web application
 
+### Static configuration
+
+Static configuration is used to set up basic uWSGI parameters to start with. 
+
 Let's make `uwsgicfg.py`. There we configure uWSGI using nice
 `PythonSection` preset to run our web app (from `/home/idle/myapp/wsgi.py`).
 
@@ -30,11 +34,39 @@ from uwsgiconf.presets.nice import PythonSection
 
 
 def get_configurations():
-    return PythonSection.bootstrap('http://127.0.0.1:8000', wsgi_module='/home/idle/myapp/wsgi.py')
+    return PythonSection.bootstrap('http://127.0.0.1:8000', wsgi_module='/home/idle/myapp/wsgi.py', mules=1)
 
 
 configure_uwsgi(get_configurations)
 ```
+
+!!! tip
+    Interesting static configuration examples are located in `demos` directory of the repository. 
+
+
+### Dynamic configuration
+
+Dynamic configuration is used to set up additional parameters after uWSGI is started. 
+
+It can be done in `wsgi.py` (see above) or in any other file imported by your app.
+
+```python
+from uwsgiconf.runtime.mules import Mule
+from uwsgiconf.runtime.scheduling import register_timer 
+
+# Let's print 'tick' every second in background.
+# Background processing is handled by mules (note `mules=1` in PythonSection.bootstrap() above).
+@register_timer(1, target=Mule(1))
+def timer_1():
+    print('tick')
+
+```
+
+!!! note
+    There is much more than just background processing. See `Runtime` documentation section.
+
+
+### Running
 
 Now we are ready to use this configuration:
 
@@ -49,7 +81,7 @@ uwsgi myconf.ini
 uwsgiconf run
 ```
 
-## More details
+## Fine tune static configuration
 
 Fine tune is also available. 
 
@@ -91,44 +123,4 @@ def get_configurations():
     return section
 
 configure_uwsgi(get_configurations)
-```
-
-## Configuration with multiple sections
-
-Let's configure uWSGI to use Emperor Broodlord mode as described
-[here](http://uwsgi-docs.readthedocs.io/en/latest/Broodlord.html#a-simple-example)
-using `Broodlord` preset.
-
-```python
-from uwsgiconf.config import Section, Configuration
-from uwsgiconf.presets.empire import Broodlord
-
-emperor, zerg = Broodlord(
-
-    zerg_socket='/tmp/broodlord.sock',
-    zerg_count=40,
-    zerg_die_on_idle=30,
-
-    vassals_home='/etc/vassals',
-    vassal_queue_items_sos=10,
-
-    # We'll use the same basic params both for Broodlord Emperor and his zergs.
-    section_emperor=(Section().
-        # NOTE. Here we use a shortcut for ``set_basic_params`` methods:
-        # E.g.: instead of `master_process.set_basic_params(enable=True)`
-        # you say `master_process(enable=True)`.
-        # But in that case you won't get any arg hints from you IDE.
-        master_process(enable=True).
-        workers(count=1).
-        logging(no_requests=True).
-        python.set_wsgi_params(module='werkzeug.testapp:test_app')
-    ),
-
-).configure()
-
-# Bind Emperor to socket.
-emperor.networking.register_socket(Section.networking.sockets.default(':3031'))
-
-# Put Emperor and zerg sections into configuration.
-multisection_config = Configuration([emperor, zerg])
 ```

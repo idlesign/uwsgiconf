@@ -1,4 +1,3 @@
-from uwsgiconf.runtime.scheduling import register_timer
 from uwsgiconf.runtime.signals import Signal, get_available_num, get_last_received
 
 
@@ -25,9 +24,6 @@ def test_signals():
     @sig.register_handler()
     def my(sig):
         results.append('my')
-
-    # register a timer for the signal
-    register_timer(3, target=sig)
 
     sig.send()
     assert results == ['signalled', 'my']

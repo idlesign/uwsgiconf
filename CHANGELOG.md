@@ -1,7 +1,8 @@
 # uwsgiconf changelog
 
 ### Unreleased
-* ** Django.contrib. Fixed task forced task run missing tasks message (fixes #16).
+* ** Django contrib. Fixed task forced task run missing tasks message (fixes #16).
+* ** Runtime. Scheduling module decorators now accept 'checker' argument.
 
 ### v2.2.1 [2025-09-27]
 * ** Django. Admin. Task representation improved.

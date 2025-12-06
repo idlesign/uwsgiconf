@@ -1,68 +1,16 @@
 from collections.abc import Callable
-from contextlib import contextmanager
 from socket import gethostname
 
 from django.core.cache import caches
 from django.utils import timezone
+from uwsgiconf.runtime.task_utils import (
+    BackendBase,
+    DummyBackend,  # noqa backward compat
+    TaskContext,
+)
 
 from ..models import Task
-from .context import TaskContext
 from .models import TaskBase
-
-
-class BackendBase:
-
-    def __init__(self, *, strict: bool = True, context: type[TaskContext] | None = None):
-        """
-        :param strict: If False, exceptions related to task acquirement
-            are silenced, effectively allowing task run without a lock.
-
-        :param context: Task context class. If not set, default TaskContext is used.
-
-        """
-        self._strict = strict
-        self._ctx = context or TaskContext
-
-    @contextmanager
-    def __call__(self, func: Callable):
-        name = self._get_name(func)
-        ctx = None
-
-        try:
-            ctx = self._acquire(name)
-
-        except Exception as e:  # noqa: BLE001
-            self._handle_exception(e, name=name)
-
-        finally:
-            try:
-                yield ctx
-
-            except Exception as e:  # noqa: BLE001
-                self._handle_exception(e, name=name)
-
-            finally:
-                if ctx:
-                    self._release(name=name, ctx=ctx)
-
-    def _get_name(self, func: Callable) -> str:
-        return func.__name__
-
-    def _acquire(self, name: str) -> TaskContext | None:
-        return self._ctx()
-
-    def _handle_exception(self, exc: Exception, *, name: str) -> bool:
-        if not self._strict:
-            return False
-
-        raise exc
-
-    def _release(self, *, name: str, ctx: TaskContext):
-        pass
-
-
-class DummyBackend(BackendBase):
-    """Dummy distributed backend. Does nothing."""
 
 
 class CacheBackend(BackendBase):

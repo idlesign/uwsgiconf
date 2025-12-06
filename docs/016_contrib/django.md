@@ -145,9 +145,9 @@ but also is able to store task parameters and last run results.
 
 
 ```python
-from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
 from uwsgiconf.contrib.django.uwsgify.taskutils.backends import DbBackend
 from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
+from uwsgiconf.runtime.task_utils import TaskContext
 from uwsgiconf.runtime.scheduling import register_cron
 
 

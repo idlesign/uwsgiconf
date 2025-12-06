@@ -1,10 +1,9 @@
 from typing import Any
 
-from uwsgiconf.contrib.django.uwsgify.taskutils.backends import BackendBase
-from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
 from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
 from uwsgiconf.runtime.locking import Lock
 from uwsgiconf.runtime.scheduling import register_cron
+from uwsgiconf.runtime.task_utils import BackendBase, TaskContext
 
 
 def mytask_ctx(*, ctx: TaskContext):

@@ -4,9 +4,9 @@ import pytest
 
 from uwsgiconf.contrib.django.uwsgify.models import Task
 from uwsgiconf.contrib.django.uwsgify.taskutils.backends import DbBackend
-from uwsgiconf.contrib.django.uwsgify.taskutils.context import TaskContext
 from uwsgiconf.contrib.django.uwsgify.taskutils.decorators import task
 from uwsgiconf.runtime.scheduling import register_timer
+from uwsgiconf.runtime.task_utils import TaskContext
 
 
 def mytask(*, ctx: TaskContext):

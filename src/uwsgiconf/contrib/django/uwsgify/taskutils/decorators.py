@@ -1,11 +1,12 @@
-import inspect
+import warnings
 from functools import wraps
 from os import environ
 from time import sleep
 from typing import TYPE_CHECKING, Optional
 
+from uwsgiconf.runtime.task_utils import BackendBase, DummyBackend, taskfunc_get_args, taskfunc_inspect
+
 from ..settings import SKIP_TASK_ENV_VAR
-from .backends import BackendBase
 
 if TYPE_CHECKING:
     from uwsgiconf.runtime.locking import Lock
@@ -32,44 +33,36 @@ def task(
         when new background tasks are marked not to run from a worker process (e.g. by an API request),
         and then the app is stopped itself.
 
-    :param backend: Distributed task backend.
+    :param backend: Task context backend. Can be used for distributed task locks.
         Consecutive calls of the decorated task function, when it is blocked (already running),
         will be ignored (the decorated function will return None).
 
         Can be useful to run scheduled functions exclusively in one datacenter
         (implies a distributed cache, such as Redis or Database).
 
-        If not set, BackendBase is used.
+        If not set, DummyBackend is used.
         See .backends module for available backends.
 
     """
-    backend = backend or BackendBase()
+    backend = backend or DummyBackend()
 
     def task_(func):
 
-        params = inspect.signature(func).parameters
-        params_len = len(params)
-        pass_context = 'ctx' in params
-
-        pass_args = True
-        if not params_len or (pass_context and params_len == 1):
-            # do not try to pass uwsgi signal num into func
-            pass_args = False
+        abilities = taskfunc_inspect(func)
 
         @wraps(func)
         def wrapper(*args, **kwargs):
             if environ.get(env_var_skip) == '1' or (lock_skip and lock_skip.is_set):
-                return
+                warnings.warn(
+                    "Please pass 'checker' with arguments directly to cron or timer decorator.",
+                    DeprecationWarning, stacklevel=2
+                )
+                return None
 
             with backend(func) as ctx:
                 try:
                     if ctx:
-                        if pass_context:
-                            kwargs['ctx'] = ctx
-
-                        if not pass_args:
-                            args = ()
-
+                        args, kwargs = taskfunc_get_args(abilities=abilities, args=args, kwargs=kwargs, ctx=ctx)
                         result = func(*args, **kwargs)
 
                     else:

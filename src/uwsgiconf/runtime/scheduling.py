@@ -1,16 +1,22 @@
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import datetime, timezone
-from functools import partial, wraps
+from functools import partial
 
 from .. import uwsgi
 from ..exceptions import RuntimeConfigurationError
 from ..typehints import Strint
-from .signals import TypeTarget, _automate_signal
+from .signals import TypeTarget, _get_signal_decorator
+from .task_utils import TaskChecker
 
 TypeRegResult = Callable | bool
 
 
-def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:
+def register_timer(
+        period: int,
+        *,
+        target: TypeTarget = None,
+        checker: TaskChecker | None = None
+) -> TypeRegResult:
     """Add timer.
 
     Can be used as a decorator:
@@ -25,7 +31,7 @@ def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:
 
     :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
-        Available targets:
+        Available signal targets:
 
             * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
@@ -40,13 +46,25 @@ def register_timer(period: int, *, target: TypeTarget = None) -> TypeRegResult:
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
+    :param checker: TaskChecker to be used for task execution requirements checking.
+
     :raises ValueError: If unable to add timer.
 
     """
-    return _automate_signal(target, func=lambda sig: uwsgi.add_timer(int(sig), period))
+    return _get_signal_decorator(
+        callback=lambda sig: uwsgi.add_timer(int(sig), period),
+        target=target,
+        checker=checker or TaskChecker(),
+    )
 
 
-def register_timer_rb(period: int, *, repeat: int | None = None, target: TypeTarget = None) -> TypeRegResult:
+def register_timer_rb(
+        period: int,
+        *,
+        repeat: int | None = None,
+        target: TypeTarget = None,
+        checker: TaskChecker | None = None
+) -> TypeRegResult:
     """Add a red-black timer (based on black-red tree).
 
         .. code-block:: python
@@ -62,7 +80,7 @@ def register_timer_rb(period: int, *, repeat: int | None = None, target: TypeTar
 
     :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
-        Available targets:
+        Available signal targets:
 
             * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
@@ -77,13 +95,24 @@ def register_timer_rb(period: int, *, repeat: int | None = None, target: TypeTar
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
+    :param checker: TaskChecker to be used for task execution requirements checking.
+
     :raises ValueError: If unable to add timer.
 
     """
-    return _automate_signal(target, func=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0))
+    return _get_signal_decorator(
+        callback=lambda sig: uwsgi.add_rb_timer(int(sig), period, repeat or 0),
+        target=target,
+        checker=checker or TaskChecker(),
+    )
 
 
-def register_timer_ms(period: int, *, target: TypeTarget = None) -> TypeRegResult:
+def register_timer_ms(
+        period: int,
+        *,
+        target: TypeTarget = None,
+        checker: TaskChecker | None = None
+) -> TypeRegResult:
     """Add a millisecond resolution timer.
 
         .. code-block:: python
@@ -96,7 +125,7 @@ def register_timer_ms(period: int, *, target: TypeTarget = None) -> TypeRegResul
 
     :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
-        Available targets:
+        Available signal targets:
 
             * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
@@ -111,10 +140,30 @@ def register_timer_ms(period: int, *, target: TypeTarget = None) -> TypeRegResul
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
+    :param checker: TaskChecker to be used for task execution requirements checking.
+
     :raises ValueError: If unable to add timer.
 
     """
-    return _automate_signal(target, func=lambda sig: uwsgi.add_ms_timer(int(sig), period))
+    return _get_signal_decorator(
+        callback=lambda sig: uwsgi.add_ms_timer(int(sig), period),
+        target=target,
+        checker=checker or TaskChecker(),
+    )
+
+
+def __check_skip_task(task_name: str, check_funcs: Iterable[Callable[[datetime], bool]]) -> bool:
+    now = datetime.now(tz=timezone.utc)
+    return not all(func(now) for func in check_funcs)
+
+
+def __check_date(now: datetime, attr: str, target_range: set[int]) -> bool:
+    attr = getattr(now, attr)
+
+    if callable(attr):  # E.g. weekday.
+        attr = attr()
+
+    return attr in target_range
 
 
 def register_cron(
@@ -124,15 +173,17 @@ def register_cron(
         day: Strint = None,
         hour: Strint = None,
         minute: Strint = None,
-        target: TypeTarget = None
+        target: TypeTarget = None,
+        checker: TaskChecker | None = None,
 ) -> TypeRegResult:
     """Adds cron. The interface to the uWSGI signal cron facility.
 
-        .. code-block:: python
+    .. code-block:: python
 
-            @register_cron(hour=-3)  # Every 3 hours.
-            def repeat():
-                do()
+        # Every 3 hours. Don't run if env var NO_RUN_TASK=1
+        @register_cron(hour=-3, checker=TaskChecker(env='NO_RUN_TASK'))
+        def repeat():
+            do()
 
     .. note:: Arguments work similarly to a standard crontab,
         but instead of "*", use -1,
@@ -158,7 +209,7 @@ def register_cron(
 
     :param target: Existing signal to raise or Signal Target to register signal implicitly.
 
-        Available targets:
+        Available signal targets:
 
             * Mule / Farm / Signal object - run on a certain mule, farm or issue a signal.
             * ``workers``  - run the signal handler on all the workers
@@ -173,25 +224,14 @@ def register_cron(
             * ``spooler`` - run the signal on the first available spooler
             * ``farmN/farm_XXX``  - run the signal handler in the mule farm N or named XXX
 
+    :param checker: TaskChecker to be used for task execution requirements checking.
+
     :raises ValueError: If unable to add cron rule.
 
     """
-    task_args_initial = {name: val for name, val in locals().items() if val is not None and name != 'target'}
+    _locals = locals()
+    task_args_initial = {arg: _locals[arg] for arg in ['minute', 'hour', 'day', 'month', 'weekday']}
     task_args_casted = {}
-
-    def skip_task(check_funcs):
-        now = datetime.now(tz=timezone.utc)
-        allright = all(func(now) for func in check_funcs)
-        return not allright
-
-    def check_date(now, attr, target_range):
-        attr = getattr(now, attr)
-
-        if callable(attr):  # E.g. weekday.
-            attr = attr()
-
-        return attr in target_range
-
     check_date_funcs = []
 
     for name, val in task_args_initial.items():
@@ -224,38 +264,18 @@ def register_cron(
                     period_range.add(7)
 
             # Gather date checking functions in one place.
-            check_date_funcs.append(partial(check_date, attr=now_attr_name, target_range=period_range))
+            check_date_funcs.append(partial(__check_date, attr=now_attr_name, target_range=period_range))
 
             # Use minimal duration (-1).
             val = None
 
-        task_args_casted[name] = val
+        task_args_casted[name] = val or -1
 
-    if not check_date_funcs:
-        # No special handling of periods, quit early.
-        args = [(-1 if arg is None else arg) for arg in (minute, hour, day, month, weekday)]
-        return _automate_signal(target, func=lambda sig: uwsgi.add_cron(int(sig), *args))
+    checker = checker or TaskChecker()
+    checker.checkers.append(partial(__check_skip_task, check_funcs=check_date_funcs))
 
-    skip_task = partial(skip_task, check_date_funcs)
-
-    def decor(func_action):
-        """Decorator wrapping."""
-
-        @wraps(func_action)
-        def func_action_wrapper(*args, **kwargs):
-            """Action function wrapper to handle periods in rules."""
-
-            if skip_task():
-                # todo Maybe allow user defined value for this return.
-                return None
-
-            return func_action(*args, **kwargs)
-
-        args = []
-        for arg_name in ['minute', 'hour', 'day', 'month', 'weekday']:
-            arg = task_args_casted.get(arg_name)
-            args.append(-1 if arg is None else arg)
-
-        return _automate_signal(target, func=lambda sig: uwsgi.add_cron(int(sig), *args))(func_action_wrapper)
-
-    return decor
+    return _get_signal_decorator(
+        callback=lambda sig: uwsgi.add_cron(int(sig), *list(task_args_casted.values())),
+        target=target,
+        checker=checker,
+    )

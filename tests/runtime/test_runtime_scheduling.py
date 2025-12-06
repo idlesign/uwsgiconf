@@ -1,10 +1,12 @@
+from os import environ
+
 import freezegun
 import pytest
 
 from uwsgiconf.exceptions import RuntimeConfigurationError
 from uwsgiconf.runtime.mules import Farm, Mule
 from uwsgiconf.runtime.scheduling import register_cron, register_timer, register_timer_ms, register_timer_rb
-from uwsgiconf.runtime.signals import REGISTERED_SIGNALS
+from uwsgiconf.runtime.signals import REGISTERED_SIGNALS, Signal
 
 
 def test_timers():
@@ -26,10 +28,17 @@ def test_timers():
     def timer_3():
         results.append('ms')
 
+    environ['UWSGICONF_SKIP_TASK_TIMER_NO_RUN'] = '1'
+
+    @register_timer(2, target=farm)
+    def timer_no_run():
+        results.append('timernorun')
+
     # check seamless function execution
     timer_1()
     timer_2()
     timer_3()
+    timer_no_run()  # won't run due to the flag in environ (see above)
 
     assert results == ['timer', 'rb', 'ms']
 
@@ -53,7 +62,7 @@ def test_cron():
         register_cron(hour='-%s/2')
 
     @register_cron(hour='15-18/2', weekday='0-6')
-    def runnable1(sig):
+    def runnable1():  # run without passing signal number
         results.append('runnable1')
 
     @register_cron(hour='15-18')
@@ -64,9 +73,16 @@ def test_cron():
     def not_runnable(sig):
         results.append('not_runnable')
 
+    sig = Signal(0)
+
+    @register_cron(target=sig)
+    def fire2():
+        results.append('fire2')
+
     fire1(0)
+    sig.send()
     runnable1(0)
     runnable2(0)
     not_runnable(0)
 
-    assert results == ['fire1', 'runnable1', 'runnable2']
+    assert results == ['fire1', 'fire2', 'runnable1', 'runnable2']

@@ -1,11 +1,12 @@
 from collections.abc import Callable
+from functools import wraps
 from typing import NamedTuple
 
 from .. import uwsgi
 from ..exceptions import UwsgiconfException
-from ..settings import get_maintenance_inplace
 from ..utils import get_logger
 from .mules import Farm, Mule, TypeMuleFarm
+from .task_utils import TaskChecker, taskfunc_get_args, taskfunc_inspect
 
 _LOG = get_logger(__name__)
 
@@ -185,17 +186,40 @@ class Signal:
 TypeTarget = Signal | TypeMuleFarm | None
 
 
-def _automate_signal(target: TypeTarget, func: Callable):
-    """
-    :param target:
-    :param func: wrapper for uwsgi signal related function (e.g. add_timer())
-    """
-    if get_maintenance_inplace():
-        # Prevent background works in maintenance mode.
-        return lambda *args, **kwarg: None
+def _get_signal_decorator(
+        *,
+        callback: Callable,
+        target: TypeTarget,
+        checker: TaskChecker,
+):
 
-    if target is None or isinstance(target, str | Mule | Farm):
-        return Signal().register_handler(target=target, callback=func)
+    def decor(task_func: Callable):
+        """Decorator for a task function.
 
-    # Signal instance passed
-    func(target)
+        :param task_func: Actual task function.
+        """
+        abilities = taskfunc_inspect(task_func)
+
+        @wraps(task_func)
+        def task_func_wrapper(*args, **kwargs):
+            """This will wrap an actual task function."""
+
+            if checker.needs_skip(task_func.__name__):
+                return None
+
+            args, kwargs = taskfunc_get_args(abilities=abilities, args=args, kwargs=kwargs)
+            return task_func(*args, **kwargs)
+
+        if target is None or isinstance(target, str | Mule | Farm):
+            out = Signal().register_handler(target=target, callback=callback)(task_func_wrapper)
+
+        elif isinstance(target, Signal):
+            # Signal instance passed as target
+            out = target(task_func_wrapper)
+
+        else:
+            raise ValueError('Unsupported target type given.')
+
+        return out
+
+    return decor

@@ -851,7 +851,7 @@ def register_signal(number: int, target: str, func: Callable):
         * ``worker/worker0`` - run the signal handler on the first available worker
         * ``active-workers`` - run the signal handlers on all the active [non-cheaped] workers
 
-        * ``mules`` - run the signal handler on all of the mules
+        * ``mules`` - run the signal handler on all mules
         * ``muleN`` - run the signal handler on mule N
         * ``mule/mule0`` - run the signal handler on the first available mule
 
