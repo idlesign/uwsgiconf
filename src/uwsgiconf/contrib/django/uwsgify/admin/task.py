@@ -77,7 +77,7 @@ class TaskAdmin(admin.ModelAdmin):
                     _('Parameters'): f'{getattr(task_info.func, "params_hint", None)}',
                     _('Target'): task_info.target,
                     _('Signal'): task_info.num,
-                    _('Function'): task_info.func,
+                    _('Function'): task_info.func.__qualname__,
                 }.items()
             ) + '</div>'
 

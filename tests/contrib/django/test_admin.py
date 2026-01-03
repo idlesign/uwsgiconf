@@ -56,7 +56,7 @@ def test_task(admin_client, user_create):
     # Details
     response = admin_client.call_change(task_1_obj)
     data = response.text
-    assert 'task_1 at' in data
+    assert '.task_1' in data
     assert 'My shiny task.' in data
     assert '<b>Target:</b> farm_farm1' in data
     assert 'weekday&#x27;: 4' in data
