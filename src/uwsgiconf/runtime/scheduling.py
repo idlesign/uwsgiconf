@@ -269,7 +269,7 @@ def register_cron(
             # Use minimal duration (-1).
             val = None
 
-        task_args_casted[name] = val or -1
+        task_args_casted[name] = -1 if val is None else val
 
     checker = checker or TaskChecker()
     checker.checkers.append(partial(__check_skip_task, check_funcs=check_date_funcs))

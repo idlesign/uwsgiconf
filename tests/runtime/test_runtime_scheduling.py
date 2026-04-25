@@ -66,7 +66,7 @@ def test_cron():
         results.append('runnable1')
 
     @register_cron(hour='15-18')
-    def runnable2(sig):
+    def runnable2():
         results.append('runnable2')
 
     @register_cron(hour='12-14')
@@ -82,7 +82,20 @@ def test_cron():
     fire1(0)
     sig.send()
     runnable1(0)
-    runnable2(0)
+    runnable2()
     not_runnable(0)
 
     assert results == ['fire1', 'fire2', 'runnable1', 'runnable2']
+
+
+@freezegun.freeze_time('2025-02-05 15:00:00')
+def test_cron_zeros():
+
+    results = []
+    @register_cron(minute=0)
+    def fire_zero():
+        results.append('fire_zero')
+
+    signals = REGISTERED_SIGNALS
+    assert len(signals) == 1
+    assert signals[0].func.params_hint == {'day': -1, 'hour': -1, 'minute': 0, 'month': -1, 'weekday': -1}

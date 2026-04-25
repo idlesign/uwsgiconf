@@ -2,6 +2,7 @@
 
 ### Unreleased
 * ** Django contrib. Use qualname for task function name.
+* ** Runtime. Fixed zeros handling for 'register_cron' params (closes #18).
 
 ### v2.3.0 [2025-12-06]
 * ++ Django contrib. Task details pages now show additional information.
