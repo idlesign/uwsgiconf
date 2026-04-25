@@ -1,7 +1,7 @@
 site_name: uwsgiconf
 site_url: !ENV READTHEDOCS_CANONICAL_URL
 
-copyright: Copyright &copy; 2017-2025, Igor Starikov
+copyright: Copyright &copy; 2017-2026, Igor Starikov
 
 repo_url: https://github.com/idlesign/uwsgiconf
 edit_uri: edit/master/docs/
