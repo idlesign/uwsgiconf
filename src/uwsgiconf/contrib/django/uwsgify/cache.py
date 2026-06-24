@@ -18,13 +18,22 @@ class UwsgiCache(BaseCache):
 
     def __init__(self, name: str, params: dict):
         super().__init__(params)
-        self._cache = _Cache(name)
+        self._cache = _Cache(name, timeout=self._resolve_uwsgi_timeout())
+
+    def _resolve_uwsgi_timeout(self, timeout: object = DEFAULT_TIMEOUT) -> int:
+        if timeout is DEFAULT_TIMEOUT:
+            timeout = self.default_timeout
+
+        if timeout is None:
+            return 0
+
+        return int(timeout)
 
     def _set(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         self._cache.set(
             self.make_and_validate_key(key, version=version),
             pickle.dumps(value),
-            timeout=timeout
+            timeout=self._resolve_uwsgi_timeout(timeout)
         )
 
     def add(self, key, value, timeout=DEFAULT_TIMEOUT, version=None) -> bool:
