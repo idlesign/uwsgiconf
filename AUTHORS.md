@@ -5,5 +5,6 @@ Created by Igor `idle sign` Starikov.
 
 ## Contributors
 
-Grace Shaw <https://github.com/graceshaw>
-Ilya_Sagaidac <https://github.com/blueflyingpanda>
+* Grace Shaw <https://github.com/graceshaw>
+* Ilya_Sagaidac <https://github.com/blueflyingpanda>
+* Sangeeth Thilakarathna <https://github.com/sanmaxdev>
