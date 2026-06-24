@@ -1,3 +1,7 @@
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+
+from uwsgiconf.contrib.django.uwsgify.cache import UwsgiCache
+
 
 def test_cache():
     from django.core.cache import cache
@@ -20,3 +24,16 @@ def test_cache():
 
     cache.clear()
     assert not cache.has_key("some")
+
+
+def test_cache_default_timeout_is_resolved():
+    cache = UwsgiCache("some", {})
+
+    assert cache._resolve_uwsgi_timeout(DEFAULT_TIMEOUT) == 300
+
+
+def test_cache_none_timeout_never_expires():
+    cache = UwsgiCache("some", {"TIMEOUT": None})
+
+    assert cache._resolve_uwsgi_timeout(DEFAULT_TIMEOUT) == 0
+    assert cache._resolve_uwsgi_timeout(None) == 0
