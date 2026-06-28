@@ -10,8 +10,16 @@ def test_networking_basics(assert_lines):
     assert_lines([
         'listen = 3',
         'buffer-size = 65535',
+        'post-buffering = 65536',
+        'post-buffering-bufsize = 8192',
         'socket-protocol = raw',
-    ], net.set_basic_params(queue_size=3, buffer_size=65535, default_socket_type=net.sockets.raw))
+    ], net.set_basic_params(
+        queue_size=3,
+        buffer_size=65535,
+        buffer_post_size=65536,
+        buffer_post_chunk=8192,
+        default_socket_type=net.sockets.raw,
+    ))
 
     assert_lines([
         'so-keepalive = true',

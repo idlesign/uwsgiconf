@@ -86,7 +86,9 @@ class Networking(OptionsGroup):
             queue_size: int | None = None,
             freebind: bool | None = None,
             default_socket_type: str | None | type[Socket] = None,
-            buffer_size: int | None = None
+            buffer_size: int | None = None,
+            buffer_post_size: int | None = None,
+            buffer_post_chunk: int | None = None
     ):
         """
 
@@ -119,6 +121,13 @@ class Networking(OptionsGroup):
                 so that "invalid request block size" is logged in your logs you may need to increase it.
                 It is a security measure too, so adapt to your app needs instead of maxing it out.
 
+        :param buffer_post_size:
+            Set the size after which uWSGI buffers HTTP POST data to disk instead of memory
+            (``post-buffering``).
+
+        :param buffer_post_chunk:
+            Set the chunk size used while reading buffered POST data (``post-buffering-bufsize``).
+
         """
         self._set('listen', queue_size)
         self._set('freebind', freebind, cast=bool)
@@ -129,6 +138,8 @@ class Networking(OptionsGroup):
             self._set('socket-protocol', default_socket_type)
 
         self._set('buffer-size', buffer_size)
+        self._set('post-buffering', buffer_post_size)
+        self._set('post-buffering-bufsize', buffer_post_chunk)
 
         return self._section
 
