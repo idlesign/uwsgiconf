@@ -1,6 +1,6 @@
 # uwsgiconf changelog
 
-### Unreleased
+### v2.4.0 [2026-09-22]
 * ++ Add post buffering networking options (see #22).
 * ** Fix resolve django cache default timeout (see #20).
 
