@@ -1,5 +1,9 @@
 # uwsgiconf changelog
 
+### Unreleased
+* ++ Add post buffering networking options (see #22).
+* ** Fix resolve django cache default timeout (see #20).
+
 ### v2.3.1 [2026-04-25]
 * ** Django contrib. Use qualname for task function name.
 * ** Runtime. Fixed zeros handling for 'register_cron' params (closes #18).
