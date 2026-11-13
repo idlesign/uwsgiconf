@@ -134,7 +134,7 @@ def accepting():
     """
 
 
-def add_cron(signal: int, minute: int, hour: int, day: int, month: int, weekday: int) -> bool:
+def add_cron(signal: int, minute: int, hour: int, day: int, month: int, weekday: int, /) -> bool:
     """Adds cron. The interface to the uWSGI signal cron facility. The syntax is
 
     .. note:: The last 5 arguments work similarly to a standard crontab,
@@ -159,7 +159,7 @@ def add_cron(signal: int, minute: int, hour: int, day: int, month: int, weekday:
     """
 
 
-def add_file_monitor(signal: int, filename: str):
+def add_file_monitor(signal: int, filename: str, /):
     """Maps a specific file/directory modification event to a signal.
 
     :param signal: Signal to raise.
@@ -171,7 +171,7 @@ def add_file_monitor(signal: int, filename: str):
     """
 
 
-def add_ms_timer(signal: int, period: int):
+def add_ms_timer(signal: int, period: int, /):
     """Add a millisecond resolution timer.
 
     :param signal: Signal to raise.
@@ -184,7 +184,7 @@ def add_ms_timer(signal: int, period: int):
     __scheduling.add_ms_timer(signum=signal, period=period)
 
 
-def add_rb_timer(signal: int, period: int, repeat: int = 0):
+def add_rb_timer(signal: int, period: int, repeat: int = 0, /):
     """Add a red-black timer.
 
     :param signal: Signal to raise.
@@ -200,7 +200,7 @@ def add_rb_timer(signal: int, period: int, repeat: int = 0):
     __scheduling.add_rb_timer(signum=signal, period=period, repeat=repeat)
 
 
-def add_timer(signal: int, period: int):
+def add_timer(signal: int, period: int, /):
     """Add timer.
 
     :param signal: Signal to raise.
@@ -213,7 +213,7 @@ def add_timer(signal: int, period: int):
     __scheduling.add_timer(signum=signal, period=period)
 
 
-def add_var(name: str, value: str) -> bool:
+def add_var(name: str, value: str, /) -> bool:
     """Registers custom request variable.
 
     Can be used for better integration with the internal routing subsystem.
@@ -227,7 +227,7 @@ def add_var(name: str, value: str) -> bool:
     """
 
 
-def alarm(name: str, message: str):
+def alarm(name: str, message: str, /):
     """Issues the given alarm with the given message.
 
     .. note:: to register an alarm use
@@ -240,7 +240,7 @@ def alarm(name: str, message: str):
     """
 
 
-def async_connect(socket: str) -> int:
+def async_connect(socket: str, /) -> int:
     """Issues socket connection. And returns a file descriptor or -1.
 
     * http://uwsgi.readthedocs.io/en/latest/Async.html
@@ -250,7 +250,7 @@ def async_connect(socket: str) -> int:
     """
 
 
-def async_sleep(seconds: int) -> bytes:
+def async_sleep(seconds: int, /) -> bytes:
     """Suspends handling the current request and passes control to the next async core.
 
     * http://uwsgi.readthedocs.io/en/latest/Async.html
@@ -260,7 +260,7 @@ def async_sleep(seconds: int) -> bytes:
     """
 
 
-def cache_clear(cache: str):
+def cache_clear(cache: str, /):
     """Clears cache with the given name.
 
     :param cache: Cache name with optional address (if @-syntax is used).
@@ -269,7 +269,7 @@ def cache_clear(cache: str):
     __caching.clear(cache=cache)
 
 
-def cache_dec(key: str, value: int = 1, expires: int | None = None, cache: str | None = None) -> bool:
+def cache_dec(key: str, value: int = 1, expires: int | None = None, cache: str | None = None, /) -> bool:
     """Decrements the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -286,7 +286,7 @@ def cache_dec(key: str, value: int = 1, expires: int | None = None, cache: str |
     return __caching.do_dec(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_del(key: str, cache: str | None = None) -> bool:
+def cache_del(key: str, cache: str | None = None, /) -> bool:
     """Deletes the given cached key from the cache.
 
     :param key: The cache key to delete.
@@ -297,7 +297,7 @@ def cache_del(key: str, cache: str | None = None) -> bool:
     return __caching.do_delete(key=key, cache=cache)
 
 
-def cache_div(key: str, value: int = 2, expires: int | None = None, cache: str | None = None) -> bool:
+def cache_div(key: str, value: int = 2, expires: int | None = None, cache: str | None = None, /) -> bool:
     """Divides the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -314,7 +314,7 @@ def cache_div(key: str, value: int = 2, expires: int | None = None, cache: str |
     return __caching.do_div(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_exists(key: str, cache: str | None = None) -> bool:
+def cache_exists(key: str, cache: str | None = None, /) -> bool:
     """Checks whether there is a value in the cache associated with the given key.
 
     :param key: The cache key to check.
@@ -325,7 +325,7 @@ def cache_exists(key: str, cache: str | None = None) -> bool:
     return __caching.has_key(key=key, cache=cache)
 
 
-def cache_get(key: str, cache: str | None = None) -> bytes | None:
+def cache_get(key: str, cache: str | None = None, /) -> bytes | None:
     """Gets a value from the cache.
 
     :param key: The cache key to get value for.
@@ -336,7 +336,7 @@ def cache_get(key: str, cache: str | None = None) -> bytes | None:
     return __caching.get_value(key=key, cache=cache)
 
 
-def cache_inc(key: str, value: int = 1, expires: int | None = None, cache: str | None = None) -> bool:
+def cache_inc(key: str, value: int = 1, expires: int | None = None, cache: str | None = None, /) -> bool:
     """Increments the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -353,7 +353,7 @@ def cache_inc(key: str, value: int = 1, expires: int | None = None, cache: str |
     return __caching.do_inc(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_keys(cache: str | None = None) -> list:
+def cache_keys(cache: str | None = None, /) -> list:
     """Returns a list of keys available in cache.
 
     :param str cache: Cache name with optional address (if @-syntax is used).
@@ -364,7 +364,7 @@ def cache_keys(cache: str | None = None) -> list:
     return __caching.get_keys(cache=cache)
 
 
-def cache_mul(key: str, value: int = 2, expires: int | None = None, cache: str | None = None) -> bool:
+def cache_mul(key: str, value: int = 2, expires: int | None = None, cache: str | None = None, /) -> bool:
     """Multiplies the specified key value by the specified value.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -381,7 +381,7 @@ def cache_mul(key: str, value: int = 2, expires: int | None = None, cache: str |
     return __caching.do_mul(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_num(key: str, cache: str | None = None) -> int | None:
+def cache_num(key: str, cache: str | None = None, /) -> int | None:
     """Gets the 64bit number from the specified item.
 
     * http://uwsgi.readthedocs.io/en/latest/Changelog-1.9.9.html#math-for-cache
@@ -394,7 +394,7 @@ def cache_num(key: str, cache: str | None = None) -> int | None:
     return __caching.get_value(key=key, cache=cache)
 
 
-def cache_set(key: str, value: bytes, expires: int | None = None, cache: str | None = None) -> bool:
+def cache_set(key: str, value: bytes, expires: int | None = None, cache: str | None = None, /) -> bool:
     """Sets the specified key value.
 
     :param key:
@@ -409,7 +409,7 @@ def cache_set(key: str, value: bytes, expires: int | None = None, cache: str | N
     return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
-def cache_update(key: str, value: bytes, expires: int | None = None, cache: str | None = None) -> bool:
+def cache_update(key: str, value: bytes, expires: int | None = None, cache: str | None = None, /) -> bool:
     """Updates the specified key value.
 
     :param key:
@@ -424,7 +424,7 @@ def cache_update(key: str, value: bytes, expires: int | None = None, cache: str 
     return __caching.set_value(key=key, value=value, expires=expires, cache=cache)
 
 
-def call(func_name: bytes, *args: bytes) -> bytes | None:
+def call(func_name: bytes, /, *args: bytes) -> bytes | None:
     """Performs an [RPC] function call with the given arguments.
 
     :param func_name: Function name to call
@@ -436,7 +436,7 @@ def call(func_name: bytes, *args: bytes) -> bytes | None:
     return __rpc.do_call(name=func_name, *args)
 
 
-def chunked_read(timeout: int) -> bytes:
+def chunked_read(timeout: int, /) -> bytes:
     """Reads chunked input.
 
     * http://uwsgi.readthedocs.io/en/latest/Chunked.html
@@ -465,7 +465,7 @@ def cl() -> int:
     return 0
 
 
-def close(fd: int):
+def close(fd: int, /):
     """Closes the given file descriptor.
 
     :param fd: File descriptor.
@@ -473,7 +473,7 @@ def close(fd: int):
     """
 
 
-def connect(socket: str, timeout: int = 0) -> int:
+def connect(socket: str, timeout: int = 0, /) -> int:
     """Connects to the socket.
 
     :param socket: Socket name.
@@ -491,7 +491,7 @@ def disconnect():
     """Drops current connection."""
 
 
-def embedded_data(symbol_name: str) -> bytes:
+def embedded_data(symbol_name: str, /) -> bytes:
     """Reads a symbol from the uWSGI binary image.
 
     * http://uwsgi.readthedocs.io/en/latest/Embed.html
@@ -503,7 +503,7 @@ def embedded_data(symbol_name: str) -> bytes:
     """
 
 
-def extract(fname: str) -> bytes:
+def extract(fname: str, /) -> bytes:
     """Extracts file contents.
 
     :param fname:
@@ -521,7 +521,7 @@ def farm_get_msg() -> bytes | None:
      """
 
 
-def farm_msg(farm: str, message: str | bytes):
+def farm_msg(farm: str, message: str | bytes, /):
     """Sends a message to the given farm.
 
     :param farm: Farm name to send message to.
@@ -532,7 +532,7 @@ def farm_msg(farm: str, message: str | bytes):
     return __mules.send_farm_msg(farm=farm, message=message)
 
 
-def get_logvar(name: str) -> bytes:
+def get_logvar(name: str, /) -> bytes:
     """Return user-defined log variable contents.
 
     * http://uwsgi.readthedocs.io/en/latest/LogFormat.html#user-defined-logvars
@@ -558,7 +558,7 @@ def i_am_the_spooler() -> bool:
     return False
 
 
-def in_farm(name: str) -> bool | None:
+def in_farm(name: str, /) -> bool | None:
     """Returns flag indicating whether you (mule) belong
     to the given farm. Returns ``None`` is not in a mule.
 
@@ -573,7 +573,7 @@ def is_a_reload() -> bool:
     return False
 
 
-def is_connected(fd: int) -> bool:
+def is_connected(fd: int, /) -> bool:
     """Checks the given file descriptor.
 
     :param fd: File descriptor
@@ -582,7 +582,7 @@ def is_connected(fd: int) -> bool:
     return False
 
 
-def is_locked(lock_num: int = 0) -> bool:
+def is_locked(lock_num: int = 0, /) -> bool:
     """Checks for the given lock.
 
     .. note:: Lock 0 is always available.
@@ -595,7 +595,7 @@ def is_locked(lock_num: int = 0) -> bool:
     return __locking.check_locked(lock_num)
 
 
-def listen_queue(socket_num: int = 0) -> int:
+def listen_queue(socket_num: int = 0, /) -> int:
     """Returns listen queue (backlog size) of the given socket.
 
     :param socket_num: Socket number.
@@ -606,7 +606,7 @@ def listen_queue(socket_num: int = 0) -> int:
     return 0
 
 
-def lock(lock_num: int = 0):
+def lock(lock_num: int = 0, /):
     """Sets the given lock.
 
     .. note:: Lock 0 is always available.
@@ -619,7 +619,7 @@ def lock(lock_num: int = 0):
     __locking.do_lock(lock_num)
 
 
-def log(message: str) -> bool:
+def log(message: str, /) -> bool:
     """Logs a message.
 
     :param message:
@@ -651,7 +651,7 @@ def mem() -> tuple[int, int]:
     return 0, 0
 
 
-def metric_dec(key: str, value: int = 1) -> bool:
+def metric_dec(key: str, value: int = 1, /) -> bool:
     """Decrements the specified metric key value by the specified value.
 
     :param key:
@@ -662,7 +662,7 @@ def metric_dec(key: str, value: int = 1) -> bool:
     return False
 
 
-def metric_div(key: str, value: int = 1) -> bool:
+def metric_div(key: str, value: int = 1, /) -> bool:
     """Divides the specified metric key value by the specified value.
 
     :param key:
@@ -673,7 +673,7 @@ def metric_div(key: str, value: int = 1) -> bool:
     return False
 
 
-def metric_get(key: str) -> int:
+def metric_get(key: str, /) -> int:
     """Returns metric value by key.
 
     :param key:
@@ -681,7 +681,7 @@ def metric_get(key: str) -> int:
     """
 
 
-def metric_inc(key: str, value: int = 1) -> bool:
+def metric_inc(key: str, value: int = 1, /) -> bool:
     """Increments the specified metric key value by the specified value.
 
     :param key:
@@ -692,7 +692,7 @@ def metric_inc(key: str, value: int = 1) -> bool:
     return False
 
 
-def metric_mul(key: str, value: int = 1) -> bool:
+def metric_mul(key: str, value: int = 1, /) -> bool:
     """Multiplies the specified metric key value by the specified value.
 
     :param key:
@@ -703,7 +703,7 @@ def metric_mul(key: str, value: int = 1) -> bool:
     return False
 
 
-def metric_set(key: str, value: int) -> bool:
+def metric_set(key: str, value: int, /) -> bool:
     """Sets metric value.
 
     :param key:
@@ -714,7 +714,7 @@ def metric_set(key: str, value: int) -> bool:
     return False
 
 
-def metric_set_max(key: str, value: int) -> bool:
+def metric_set_max(key: str, value: int, /) -> bool:
     """Sets metric value if it is greater that the current one.
 
     :param key:
@@ -725,7 +725,7 @@ def metric_set_max(key: str, value: int) -> bool:
     return False
 
 
-def metric_set_min(key: str, value: int) -> bool:
+def metric_set_min(key: str, value: int, /) -> bool:
     """Sets metric value if it is less that the current one.
 
     :param key:
@@ -745,7 +745,8 @@ def mule_get_msg(
         signals: bool | None = None,
         farms: bool | None = None,
         buffer_size: int = 65536,
-        timeout: int = -1
+        timeout: int = -1,
+        /
 ) -> bytes:
     """Block until a mule message is received and return it.
 
@@ -769,7 +770,7 @@ def mule_id() -> int:
     return 0
 
 
-def mule_msg(message: str | bytes, mule_farm: str | int | None = None) -> bool:
+def mule_msg(message: str | bytes, mule_farm: str | int | None = None, /) -> bool:
     """Sends a message to a mule(s)/farm.
 
     :param message:
@@ -782,7 +783,7 @@ def mule_msg(message: str | bytes, mule_farm: str | int | None = None) -> bool:
     return __mules.send_mule_msg(message=message, mule_farm=mule_farm)
 
 
-def offload(filename: str) -> bytes:
+def offload(filename: str, /) -> bytes:
     """Offloads a file.
 
     .. warning:: Currently not implemented.
@@ -794,7 +795,7 @@ def offload(filename: str) -> bytes:
     """
 
 
-def parsefile(fpath: str):
+def parsefile(fpath: str, /):
     """Parses the given file.
 
     Currently implemented only Spooler file parsing.
@@ -814,7 +815,7 @@ def ready_fd() -> bool:
     return False
 
 
-def recv(fd: int, maxsize: int = 4096) -> bytes:
+def recv(fd: int, maxsize: int = 4096, /) -> bytes:
     """Reads data from the given file descriptor.
 
     :param fd:
@@ -824,7 +825,7 @@ def recv(fd: int, maxsize: int = 4096) -> bytes:
     """
 
 
-def register_rpc(name: str, func: Callable) -> bool:
+def register_rpc(name: str, func: Callable, /) -> bool:
     """Registers RPC function.
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
@@ -839,7 +840,7 @@ def register_rpc(name: str, func: Callable) -> bool:
     return __rpc.register(name=name, func=func)
 
 
-def register_signal(number: int, target: str, func: Callable):
+def register_signal(number: int, target: str, func: Callable, /):
     """Registers a signal handler.
 
     :param number: Signal number.
@@ -882,7 +883,7 @@ def request_id() -> int:
     return 0
 
 
-def route(name: str, args_str: str) -> int:
+def route(name: str, args_str: str, /) -> int:
     """Registers a named route for internal routing subsystem.
 
     :param name: Route name
@@ -892,7 +893,7 @@ def route(name: str, args_str: str) -> int:
     """
 
 
-def rpc(address: bytes | None, func_name: bytes, *args: bytes) -> bytes:
+def rpc(address: bytes | None, func_name: bytes, /, *args: bytes) -> bytes:
     """Performs an RPC function call with the given arguments.
 
     * http://uwsgi.readthedocs.io/en/latest/RPC.html
@@ -914,7 +915,7 @@ def rpc_list() -> tuple[bytes, ...]:
     return __rpc.get_list()
 
 
-def send(fd_or_data: int | bytes, data: bytes | None = None) -> bool:
+def send(fd_or_data: int | bytes, data: bytes | None = None, /) -> bool:
     """Puts data into file descriptor.
 
     * One argument. Data to write into request file descriptor.
@@ -928,7 +929,7 @@ def send(fd_or_data: int | bytes, data: bytes | None = None) -> bool:
     return False
 
 
-def sendfile(fd_or_name: int | str, chunk_size: int = 0, start_pos: int = 0, filesize: int = 0) -> bool | None:
+def sendfile(fd_or_name: int | str, chunk_size: int = 0, start_pos: int = 0, filesize: int = 0, /) -> bool | None:
     """Runs a sendfile.
 
     :param fd_or_name: File path or descriptor number.
@@ -942,7 +943,7 @@ def sendfile(fd_or_name: int | str, chunk_size: int = 0, start_pos: int = 0, fil
     """
 
 
-def send_to_spooler(message: dict[bytes, bytes] | None = None, **kwargs):
+def send_to_spooler(message: dict[bytes, bytes] | None = None, /, **kwargs):
     """Send data to the The uWSGI Spooler. Also known as spool().
 
     .. warning:: Either `message` argument should contain a dictionary
@@ -977,7 +978,7 @@ def send_to_spooler(message: dict[bytes, bytes] | None = None, **kwargs):
     """
 
 
-def set_logvar(name: str, value: str):
+def set_logvar(name: str, value: str, /):
     """Sets log variable.
 
     :param name:
@@ -987,7 +988,7 @@ def set_logvar(name: str, value: str):
     """
 
 
-def set_spooler_frequency(seconds: int) -> bool:
+def set_spooler_frequency(seconds: int, /) -> bool:
     """Sets how often the spooler runs.
 
     :param seconds:
@@ -996,7 +997,7 @@ def set_spooler_frequency(seconds: int) -> bool:
     return False
 
 
-def set_user_harakiri(timeout: int = 0):
+def set_user_harakiri(timeout: int = 0, /):
     """Sets user level harakiri.
 
     :param timeout: Seconds. ``0`` disable timer.
@@ -1004,7 +1005,7 @@ def set_user_harakiri(timeout: int = 0):
     """
 
 
-def set_warning_message(message: str) -> bool:
+def set_warning_message(message: str, /) -> bool:
     """Sets a warning. This will be reported by pingers.
 
     :param message:
@@ -1013,7 +1014,7 @@ def set_warning_message(message: str) -> bool:
     return False
 
 
-def setprocname(name: str):
+def setprocname(name: str, /):
     """Sets current process name.
 
     :param name:
@@ -1021,7 +1022,7 @@ def setprocname(name: str):
     """
 
 
-def signal(num: int, remote: str = ''):
+def signal(num: int, remote: str = '', /):
     """Sends the signal to master or remote.
 
     :param num: Signal number.
@@ -1046,7 +1047,7 @@ def signal_received() -> int:
     """
 
 
-def signal_registered(num: int) -> int | None:
+def signal_registered(num: int, /) -> int | None:
     """Verifies the given signal has been registered.
 
     :param num:
@@ -1055,7 +1056,7 @@ def signal_registered(num: int) -> int | None:
     return __signals.is_registered(num=num)
 
 
-def signal_wait(num: int | None = None) -> str:
+def signal_wait(num: int | None = None, /) -> str:
     """Waits for the given of any signal.
 
     Block the process/thread/async core until a signal is received. Use signal_received to get the number of
@@ -1074,7 +1075,7 @@ def signal_wait(num: int | None = None) -> str:
 spool = send_to_spooler
 
 
-def spooler_get_task(path: str) -> dict | None:
+def spooler_get_task(path: str, /) -> dict | None:
     """Returns a spooler task information.
 
     :param path: The relative or absolute path to the task to read.
@@ -1116,7 +1117,7 @@ def total_requests() -> int:
     return 0
 
 
-def unlock(lock_num: int = 0):
+def unlock(lock_num: int = 0, /):
     """Unlocks the given lock.
 
     .. note:: Lock 0 is always available.
@@ -1129,7 +1130,7 @@ def unlock(lock_num: int = 0):
     __locking.do_unlock(lock_num)
 
 
-def wait_fd_read(fd: int, timeout: int | None = None) -> bytes:
+def wait_fd_read(fd: int, timeout: int | None = None, /) -> bytes:
     """Suspends handling of the current request until there is something
     to be read on file descriptor.
 
@@ -1147,7 +1148,7 @@ def wait_fd_read(fd: int, timeout: int | None = None) -> bytes:
     """
 
 
-def wait_fd_write(fd: int, timeout: int | None = None) -> bytes:
+def wait_fd_write(fd: int, timeout: int | None = None, /) -> bytes:
     """Suspends handling of the current request until there is nothing more
     to be written on file descriptor.
 
@@ -1164,7 +1165,7 @@ def wait_fd_write(fd: int, timeout: int | None = None) -> bytes:
     """
 
 
-def websocket_handshake(security_key: str | None = None, origin: str | None = None, proto: str | None = None):
+def websocket_handshake(security_key: str | None = None, origin: str | None = None, proto: str | None = None, /):
     """Waits for websocket handshake.
 
     :param security_key: Websocket security key to use.
@@ -1178,7 +1179,7 @@ def websocket_handshake(security_key: str | None = None, origin: str | None = No
     """
 
 
-def websocket_recv(request_context=None) -> bytes:
+def websocket_recv(request_context=None, /) -> bytes:
     """Receives data from websocket.
 
     :param request_context:
@@ -1188,7 +1189,7 @@ def websocket_recv(request_context=None) -> bytes:
     """
 
 
-def websocket_recv_nb(request_context=None) -> bytes:
+def websocket_recv_nb(request_context=None, /) -> bytes:
     """Receives data from websocket (non-blocking variant).
 
     :param request_context:
@@ -1201,7 +1202,7 @@ def websocket_recv_nb(request_context=None) -> bytes:
 # todo uWSGI 2.1+ has uwsgi.request_context()
 
 
-def websocket_send(message: str, request_context=None):
+def websocket_send(message: str, request_context=None, /):
     """Sends a message to websocket.
 
     :param message: data to send
@@ -1214,7 +1215,7 @@ def websocket_send(message: str, request_context=None):
     """
 
 
-def websocket_send_binary(message: str, request_context=None):
+def websocket_send_binary(message: str, request_context=None, /):
     """Sends binary message to websocket.
 
     :param message: data to send
@@ -1245,7 +1246,7 @@ def workers() -> tuple[dict, ...]:
 # Legion-related stuff:
 
 
-def i_am_the_lord(legion_name: str) -> bool:
+def i_am_the_lord(legion_name: str, /) -> bool:
     """Returns flag indicating whether you are the lord
     of the given legion.
 
@@ -1257,7 +1258,7 @@ def i_am_the_lord(legion_name: str) -> bool:
     return False
 
 
-def lord_scroll(legion_name: str) -> bool:
+def lord_scroll(legion_name: str, /) -> bool:
     """Returns a Lord scroll for the Legion.
 
     * http://uwsgi.readthedocs.io/en/latest/Legion.html#lord-scroll-coming-soon
@@ -1268,7 +1269,7 @@ def lord_scroll(legion_name: str) -> bool:
     return False
 
 
-def scrolls(legion_name: str) -> list[str]:
+def scrolls(legion_name: str, /) -> list[str]:
     """Returns a list of Legion scrolls defined on cluster.
 
     :param legion_name:
