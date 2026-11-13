@@ -1,5 +1,8 @@
 # uwsgiconf changelog
 
+### Unreleased
+* ** uwsgi_stub function arguments are now positional-only as in the real uwsgi module (close #8).
+
 ### v2.4.0 [2026-09-22]
 * ++ Add post buffering networking options (see #22).
 * ** Fix resolve django cache default timeout (see #20).
