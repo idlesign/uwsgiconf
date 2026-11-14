@@ -1,6 +1,6 @@
 # uwsgiconf changelog
 
-### Unreleased
+### v2.4.1 [2026-11-14]
 * ** uwsgi_stub function arguments are now positional-only as in the real uwsgi module (close #8).
 
 ### v2.4.0 [2026-09-22]
