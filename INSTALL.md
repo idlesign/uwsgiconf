@@ -1,25 +1,29 @@
 # uwsgiconf installation
 
-Python `pip` package is required to install `uwsgiconf`.
-
-
-## From sources
-
-Use the following command line to install `uwsgiconf` from sources directory (containing `pyproject.toml`):
-
-    pip install .
-
+[uv](https://docs.astral.sh/uv/) is recommended for installation, though plain `pip` works too.
 
 ## From PyPI
 
-Alternatively you can install `uwsgiconf` from PyPI:
+Add the package to a project:
 
-    pip install uwsgiconf
+```bash
+uv add uwsgiconf
+```
 
-    ; Install with Click package for CLI:
-    pip install uwsgiconf[cli]
+or with pip:
 
+```bash
+pip install uwsgiconf
+```
 
-Use `-U` flag for upgrade:
+## From source
 
-    pip install -U uwsgiconf
+Clone the repository and synchronize its development environment:
+
+```bash
+git clone https://github.com/idlesign/uwsgiconf uwsgiconf
+cd uwsgiconf
+uv sync
+```
+
+Run commands in the project environment with `uv run`.
